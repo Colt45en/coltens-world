@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-02-12T21:09:10.870Z",
+  "operators": [
+    {
+      "id": "prompt.operator.optimize",
+      "label": "Optimize",
+      "intent": "Refine toward objective under constraints"
+    },
+    {
+      "id": "prompt.operator.validate",
+      "label": "Validate",
+      "intent": "Verify claims/contracts against tests and rules"
+    },
+    {
+      "id": "prompt.operator.diff",
+      "label": "Diff",
+      "intent": "Compare artifacts and produce deltas"
+    },
+    {
+      "id": "prompt.operator.summarize",
+      "label": "Summarize",
+      "intent": "Compress without losing key constraints"
+    },
+    {
+      "id": "prompt.operator.seed",
+      "label": "Seed",
+      "intent": "Create canonical scaffolding deterministically"
+    }
+  ],
+  "modules": [
+    {
+      "id": "core.protocol",
+      "label": "Protocol & Contracts"
+    },
+    {
+      "id": "core.engine",
+      "label": "ECS Runtime"
+    },
+    {
+      "id": "core.bus",
+      "label": "Bus & Routing"
+    },
+    {
+      "id": "agent.brain",
+      "label": "Brain & Thought"
+    },
+    {
+      "id": "agent.lexicon",
+      "label": "Lexicon & Operators"
+    },
+    {
+      "id": "app.ide",
+      "label": "IDE Web"
+    },
+    {
+      "id": "app.nucleus",
+      "label": "Nucleus Orchestrator"
+    },
+    {
+      "id": "app.sidecar",
+      "label": "Python Sidecar"
+    }
+  ],
+  "tags": [
+    {
+      "id": "contract.first",
+      "label": "Contract-First",
+      "moduleId": "core.protocol"
+    },
+    {
+      "id": "determinism",
+      "label": "Determinism",
+      "moduleId": "core.engine"
+    },
+    {
+      "id": "traceability",
+      "label": "Traceability",
+      "moduleId": "core.protocol"
+    },
+    {
+      "id": "memory.ndjson",
+      "label": "Memory NDJSON",
+      "moduleId": "agent.brain"
+    },
+    {
+      "id": "review.queue",
+      "label": "Review Queue",
+      "moduleId": "agent.brain"
+    },
+    {
+      "id": "lexicon.index",
+      "label": "Lexicon Index",
+      "moduleId": "agent.lexicon"
+    },
+    {
+      "id": "cli.bridge",
+      "label": "IDE↔Nucleus CLI Bridge",
+      "moduleId": "app.nucleus"
+    }
+  ],
+  "allowUnknownTags": false
+}

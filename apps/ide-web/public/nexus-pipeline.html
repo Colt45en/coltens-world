@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus Unified Pipeline | Engine-Grade Runner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --nexus-primary: #6366f1;
+        --nexus-bg: #0f172a;
+        --nexus-panel: #1e293b;
+        --nexus-accent: #22d3ee;
+      }
+
+      body {
+        background-color: var(--nexus-bg);
+        color: #f8fafc;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Inter,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
+        overflow: hidden;
+      }
+
+      .glass {
+        background: rgba(30, 41, 59, 0.7);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .z-depth-card {
+        transition:
+          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+
+      .z-depth-card:hover {
+        transform: translateZ(18px) rotateX(2deg);
+        border-color: rgba(99, 102, 241, 0.8) !important;
+        box-shadow: 0 18px 55px rgba(34, 211, 238, 0.06);
+      }
+
+      /* 3D Spinning Wheel visualization */
+      #visualization-container {
+        perspective: 1000px;
+      }
+
+      .nexus-wheel {
+        width: 220px;
+        height: 220px;
+        border: 2px solid var(--nexus-accent);
+        border-radius: 50%;
+        position: relative;
+        animation: rotate3D 10s linear infinite;
+        transform-style: preserve-3d;
+      }
+
+      @keyframes rotate3D {
+        0% {
+          transform: rotateY(0deg) rotateX(45deg);
+        }
+        100% {
+          transform: rotateY(360deg) rotateX(45deg);
+        }
+      }
+
+      .atom-node {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: var(--nexus-accent);
+        border-radius: 50%;
+        box-shadow: 0 0 15px var(--nexus-accent);
+      }
+
+      pre {
+        background: #000;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      /* Range Slider Styling */
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: var(--nexus-accent);
+        cursor: pointer;
+        margin-top: -6px;
+      }
+      input[type="range"]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: #334155;
+        border-radius: 2px;
+      }
+
+      .pill {
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(2, 6, 23, 0.35);
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 10px;
+        color: rgba(148, 163, 184, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+
+  <body class="h-screen w-screen flex flex-col p-4">
+    <!-- Header & Controls -->
+    <header class="flex justify-between items-center mb-6">
+      <div>
+        <h1
+          class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400"
+        >
+          Nexus Unified Pipeline
+        </h1>
+        <p class="text-xs text-slate-400">
+          Engine-Grade: Template Registry + Objective-Driven Scoring
+        </p>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <div class="flex flex-col items-end">
+          <label for="density-slider" class="text-[10px] uppercase text-slate-400 font-bold mb-1"
+            >Synthesis Density</label
+          >
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-slate-500">Atomic</span>
+            <input
+              type="range"
+              id="density-slider"
+              min="0"
+              max="100"
+              value="50"
+              class="w-32"
+              oninput="Nexus.runPipeline()"
+            />
+            <span class="text-[10px] text-slate-500">Module</span>
+          </div>
+        </div>
+
+        <div class="h-8 w-[1px] bg-slate-700"></div>
+
+        <select
+          id="mode-detect"
+          title="Detect input mode"
+          class="bg-slate-800 border border-slate-700 rounded px-3 py-1 text-sm text-slate-300 outline-none focus:border-indigo-500"
+        >
+          <option value="auto">Auto-Detect</option>
+          <option value="prose">Prose (English)</option>
+          <option value="code">Code (JS/HTML)</option>
+        </select>
+
+        <button
+          onclick="Nexus.runPipeline()"
+          class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-1 rounded text-sm font-bold transition-all shadow-lg shadow-indigo-500/20"
+        >
+          RUN PIPELINE
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 grid grid-cols-12 gap-4 overflow-hidden">
+      <!-- Left Column: Downward Ingestion -->
+      <section class="col-span-3 flex flex-col gap-4">
+        <div class="glass p-4 rounded-xl flex-1 flex flex-col">
+          <h3
+            class="text-sm font-bold mb-2 uppercase tracking-widest text-indigo-300 flex justify-between"
+          >
+            Input (Source)
+            <span
+              id="detected-mode-badge"
+              class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-400"
+              >WAITING</span
+            >
+          </h3>
+
+          <textarea
+            id="input-source"
+            oninput="Nexus.runPipeline()"
+            class="flex-1 bg-transparent border-none outline-none resize-none text-sm font-mono leading-relaxed text-slate-300 placeholder-slate-600"
+            placeholder="Enter prose (e.g., 'happiness reprocessing') or code (e.g., 'users.map(u=>u.n).filter(u=>u.a)')"
+          ></textarea>
+
+          <div class="mt-3 flex gap-2 flex-wrap">
+            <button
+              class="pill hover:border-indigo-400/70 hover:text-indigo-200 transition"
+              onclick="Nexus.setExample('code1')"
+            >
+              JS map/filter
+            </button>
+            <button
+              class="pill hover:border-indigo-400/70 hover:text-indigo-200 transition"
+              onclick="Nexus.setExample('code2')"
+            >
+              HTML component
+            </button>
+            <button
+              class="pill hover:border-indigo-400/70 hover:text-indigo-200 transition"
+              onclick="Nexus.setExample('prose1')"
+            >
+              Prose word
+            </button>
+            <button
+              class="pill hover:border-indigo-400/70 hover:text-indigo-200 transition"
+              onclick="Nexus.setExample('prose2')"
+            >
+              Prose phrase
+            </button>
+          </div>
+        </div>
+
+        <div id="stats-panel" class="glass p-4 rounded-xl h-1/3 overflow-y-auto">
+          <h3 class="text-sm font-bold mb-2 uppercase tracking-widest text-cyan-400">
+            Analysis Stats
+          </h3>
+          <div id="stats-content" class="text-xs space-y-2">
+            <p class="text-slate-500 italic">Waiting for input...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center: The Quantum Visualization -->
+      <section class="col-span-6 flex flex-col gap-4">
+        <div
+          class="glass rounded-xl flex-1 relative flex items-center justify-center overflow-hidden"
+          id="visualization-container"
+        >
+          <div class="nexus-wheel" id="main-wheel"></div>
+          <div
+            class="absolute bottom-4 left-4 right-4 flex justify-between text-[10px] uppercase tracking-tighter opacity-50"
+          >
+            <span>X: Matter (Structure)</span>
+            <span>Y: Energy (Action)</span>
+            <span>Z: Space (Context)</span>
+          </div>
+        </div>
+
+        <div class="glass p-4 rounded-xl h-1/4 flex flex-col">
+          <h3 class="text-sm font-bold mb-2 uppercase tracking-widest text-indigo-300">
+            Quantum Superposition (Motifs)
+          </h3>
+          <div id="quantum-priors" class="flex gap-2 overflow-x-auto pb-2 flex-1 items-center">
+            <span class="text-slate-600 text-xs italic pl-2"
+              >No motifs detected in superposition.</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Upward Recomposition -->
+      <section class="col-span-3 flex flex-col gap-4 overflow-hidden">
+        <div class="glass p-4 rounded-xl flex-1 overflow-y-auto" id="synthesis-panel">
+          <h3 class="text-sm font-bold mb-2 uppercase tracking-widest text-green-400">
+            Synthesized Candidates (Ranked by Objective)
+          </h3>
+          <div id="synthesis-content" class="space-y-3">
+            <p class="text-slate-500 italic text-sm">No synthesis available.</p>
+          </div>
+        </div>
+
+        <div class="glass p-4 rounded-xl h-1/3 overflow-y-auto">
+          <h3 class="text-sm font-bold mb-2 uppercase tracking-widest text-orange-400">
+            Provenance / Explain
+          </h3>
+          <div id="explain-content" class="text-xs">
+            <p class="text-slate-500">Select a candidate to see its "DNA" breakdown.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // =========================================================
+      // Nexus Unified Pipeline Runner — Engine-Grade Upgrade
+      // Template Registry + Scoring + Objective-driven Best Pick
+      // =========================================================
+
+      // ---------- Utils ----------
+      function fnv1a32(str) {
+        let h = 0x811c9dc5;
+        for (let i = 0; i < str.length; i++) {
+          h ^= str.codePointAt(i);
+          h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+        }
+        return h >>> 0;
+      }
+      function hex8(u32) {
+        return (u32 >>> 0).toString(16).padStart(8, "0");
+      }
+      function mulberry32(seed) {
+        let a = seed >>> 0;
+        return function () {
+          a = Math.trunc(a);
+          a = Math.trunc(a + 0x6d2b79f5);
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      function clamp(n, a, b) {
+        return Math.max(a, Math.min(b, n));
+      }
+      function nowMs() {
+        return performance && performance.now ? performance.now() : Date.now();
+      }
+      function escapeHTML(s) {
+        return String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      // ---------- Structural Templates ----------
+      const StructuralTemplates = {
+        js_map_filter: (data, transform, predicate) => {
+          return `${data}
+  .map(${transform})
+  .filter(${predicate});`;
+        },
+        html_component: (tag, className, content) => {
+          return `<${tag} class="${className}">
+  ${content}
+</${tag}>`;
+        },
+        css_variable_root: (vars) => {
+          return `:root {
+  ${vars.map((v) => `--${v.name}: ${v.value};`).join("\n  ")}
+}`;
+        },
+      };
+
+      // ---------- Lexical rules ----------
+      const OrthographicRules = {
+        yToI: (stem, affix) =>
+          stem.endsWith("y") && !/[aeiou]y$/.test(stem) && affix.length > 0
+            ? stem.slice(0, -1) + "i"
+            : stem,
+        dropSilentE: (stem, affix) =>
+          stem.endsWith("e") && /^[aeiou]/.test(affix) ? stem.slice(0, -1) : stem,
+        doubleConsonant: (stem, affix) => {
+          const CVC = /[^aeiou][aeiou][^aeiouhwxy]$/;
+          return CVC.test(stem) && /^[aeiou]/.test(affix) ? stem + stem.slice(-1) : stem;
+        },
+      };
+
+      // =========================================================
+      // Motif Detection (multi motif, extract args)
+      // =========================================================
+      const MotifDetectors = {
+        js_map_filter_chain(input) {
+          const re =
+            /([A-Za-z_$][\w$]*)\s*\.map\s*\(\s*([\s\S]*?)\s*\)\s*\.filter\s*\(\s*([\s\S]*?)\s*\)\s*;?\s*$/m;
+          const m = input.match(re);
+          if (!m) return null;
+          return {
+            id: "motif.js.map_filter",
+            domain: "code",
+            kind: "motif",
+            token: "[JS map/filter chain]",
+            confidence: 0.92,
+            complexity: 0.9,
+            data: { source: m[1], mapFn: m[2].trim(), filterFn: m[3].trim() },
+          };
+        },
+
+        html_component(input) {
+          const re = /<([a-zA-Z][\w:-]*)[^>]*\sclass\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/\1>/m;
+          const m = input.match(re);
+          if (!m) return null;
+          const inner = m[3].trim();
+          const content = inner.length > 120 ? inner.slice(0, 120) + "..." : inner;
+          return {
+            id: "motif.html.component",
+            domain: "code",
+            kind: "motif",
+            token: "[HTML component]",
+            confidence: 0.86,
+            complexity: 0.75,
+            data: { tag: m[1], className: m[2].trim(), content },
+          };
+        },
+
+        prose_transform(input) {
+          if (!/\binto\b|\-\>/.test(input)) return null;
+          return {
+            id: "motif.prose.transform",
+            domain: "prose",
+            kind: "motif",
+            token: "[Transform Chain]",
+            confidence: 0.78,
+            complexity: 0.55,
+            data: { hint: "transform" },
+          };
+        },
+      };
+
+      // =========================================================
+      // Engine-Grade: Template Registry
+      // - templates are objects with triggers and scoring hooks
+      // =========================================================
+      function makeTemplate(def) {
+        // minimal shape enforcement
+        if (!def || !def.id || !def.domain || typeof def.render !== "function") {
+          throw new Error("TemplateRegistry: invalid template definition");
+        }
+        return Object.freeze({
+          id: def.id,
+          domain: def.domain, // "code" | "prose"
+          label: def.label || def.id,
+          requiredMotifs: def.requiredMotifs || [],
+          optionalMotifs: def.optionalMotifs || [],
+          // claim: (motifGraph) => array of binding objects
+          claim: def.claim || (() => []),
+          // render: (binding, ctx) => string
+          render: def.render,
+          // baseScore: (binding, ctx) => number in [0..1]
+          baseScore: def.baseScore || (() => 0.5),
+          // featureScore: optional scoring hook returning feature map
+          featureScore: def.featureScore || (() => ({})),
+        });
+      }
+
+      const TemplateRegistry = (() => {
+        const templates = [];
+
+        // ---- CODE templates ----
+        templates.push(
+          makeTemplate({
+            id: "tpl.code.js_map_filter.direct",
+            domain: "code",
+            label: "JS map/filter (direct chain)",
+            requiredMotifs: ["motif.js.map_filter"],
+            claim: (graph) => {
+              const m = graph.byId["motif.js.map_filter"];
+              if (!m) return [];
+              return [{ motifId: m.id, args: m.data, confidence: m.confidence }];
+            },
+            render: (binding, ctx) => {
+              const { source, mapFn, filterFn } = binding.args;
+              return StructuralTemplates.js_map_filter(source, mapFn, filterFn);
+            },
+            baseScore: (binding, ctx) => clamp(0.82 + (binding.confidence - 0.85) * 0.2, 0, 1),
+            featureScore: (binding, ctx) => ({
+              modularity: ctx.density >= 60 ? 0.35 : 0.15,
+              readability: 0.75,
+              minimal_diff: 0.85,
+            }),
+          }),
+          makeTemplate({
+            id: "tpl.code.js_map_filter.module",
+            domain: "code",
+            label: "JS map/filter (helper module)",
+            requiredMotifs: ["motif.js.map_filter"],
+            claim: (graph) => {
+              const m = graph.byId["motif.js.map_filter"];
+              if (!m) return [];
+              return [{ motifId: m.id, args: m.data, confidence: m.confidence }];
+            },
+            render: (binding, ctx) => {
+              const { source, mapFn, filterFn } = binding.args;
+              return `// Module synthesis (density=${ctx.density}%)
+export function buildPipeline(${source}) {
+  return ${source}
+    .map(${mapFn})
+    .filter(${filterFn});
+}
+
+// Usage
+// const out = buildPipeline(${source});`;
+            },
+            baseScore: (binding, ctx) => {
+              // module only becomes "good" when density is higher
+              const densityBoost = clamp((ctx.density - 55) / 45, 0, 1) * 0.18;
+              return clamp(0.7 + densityBoost + (binding.confidence - 0.85) * 0.15, 0, 1);
+            },
+            featureScore: (binding, ctx) => ({
+              modularity: 0.92,
+              readability: 0.7,
+              minimal_diff: 0.55,
+            }),
+          }),
+          makeTemplate({
+            id: "tpl.code.html_component.direct",
+            domain: "code",
+            label: "HTML component (direct)",
+            requiredMotifs: ["motif.html.component"],
+            claim: (graph) => {
+              const m = graph.byId["motif.html.component"];
+              if (!m) return [];
+              return [{ motifId: m.id, args: m.data, confidence: m.confidence }];
+            },
+            render: (binding, ctx) => {
+              const { tag, className, content } = binding.args;
+              return StructuralTemplates.html_component(tag, className, content);
+            },
+            baseScore: (binding, ctx) => clamp(0.78 + (binding.confidence - 0.8) * 0.25, 0, 1),
+            featureScore: () => ({
+              modularity: 0.35,
+              readability: 0.72,
+              minimal_diff: 0.83,
+            }),
+          }),
+          makeTemplate({
+            id: "tpl.code.html_component.module",
+            domain: "code",
+            label: "HTML component + CSS stub (module)",
+            requiredMotifs: ["motif.html.component"],
+            claim: (graph) => {
+              const m = graph.byId["motif.html.component"];
+              if (!m) return [];
+              return [{ motifId: m.id, args: m.data, confidence: m.confidence }];
+            },
+            render: (binding, ctx) => {
+              const { tag, className, content } = binding.args;
+              const baseClass = (className || "container").split(/\s+/)[0] || "container";
+              const component = StructuralTemplates.html_component(tag, className, content);
+              return `<!-- Module synthesis (density=${ctx.density}%) -->
+${component}
+
+<!-- Optional: extracted CSS -->
+<style>
+  .${baseClass} {
+    /* TODO: style */
+  }
+</style>`;
+            },
+            baseScore: (binding, ctx) => {
+              const densityBoost = clamp((ctx.density - 60) / 40, 0, 1) * 0.16;
+              return clamp(0.68 + densityBoost + (binding.confidence - 0.8) * 0.12, 0, 1);
+            },
+            featureScore: () => ({
+              modularity: 0.88,
+              readability: 0.68,
+              minimal_diff: 0.52,
+            }),
+          }),
+          makeTemplate({
+            id: "tpl.prose.lexeme.recompose",
+            domain: "prose",
+            label: "Lexeme recomposition (orthography)",
+            requiredMotifs: [],
+            claim: (graph) => {
+              // create one binding per lexeme atom
+              return graph.lexemes.map((lx) => ({ lexeme: lx, confidence: lx.confidence }));
+            },
+            render: (binding, ctx) => {
+              const c = binding.lexeme;
+              let val = c.root || "";
+              (c.suffixes || []).forEach((s) => {
+                val = OrthographicRules.yToI(val, s);
+                val = OrthographicRules.dropSilentE(val, s);
+                val = OrthographicRules.doubleConsonant(val, s);
+                val += s;
+              });
+              (c.prefixes || []).forEach((p) => {
+                val = p + val;
+              });
+              return val;
+            },
+            baseScore: (binding, ctx) => clamp(0.72 + (binding.confidence - 0.7) * 0.2, 0, 1),
+            featureScore: () => ({
+              modularity: 0.25,
+              readability: 0.62,
+              minimal_diff: 0.9,
+            }),
+          }),
+          makeTemplate({
+            id: "tpl.prose.phrase.chain",
+            domain: "prose",
+            label: "Phrase chain (high density)",
+            requiredMotifs: [],
+            claim: (graph) => {
+              // only claim when we have multiple lexemes
+              if (graph.lexemes.length < 2) return [];
+              return [{ lexemes: graph.lexemes.slice(0, Math.min(5, graph.lexemes.length)) }];
+            },
+            render: (binding, ctx) => {
+              // bind wants already-recomposed? we'll just join roots as a placeholder phrase
+              const vals = binding.lexemes.map((lx) => lx.recomposed || lx.root || lx.token);
+              return vals.join(" → ");
+            },
+            baseScore: (binding, ctx) => {
+              const gate = clamp((ctx.density - 70) / 30, 0, 1);
+              return clamp(0.55 + gate * 0.35, 0, 1);
+            },
+            featureScore: (binding, ctx) => ({
+              modularity: 0.45,
+              readability: 0.7,
+              minimal_diff: 0.4,
+            }),
+          }),
+
+
+
+
+
+        );
+
+        function list(domain) {
+          return templates.filter((t) => t.domain === domain);
+        }
+
+        return { list };
+      })();
+
+      // =========================================================
+      // Objective System + Scoring
+      // =========================================================
+      const Objectives = {
+        readability: {
+          label: "Readability",
+          weights: { base: 0.55, readability: 0.3, modularity: 0.1, minimal_diff: 0.05 },
+        },
+        modularity: {
+          label: "Modularity",
+          weights: { base: 0.45, modularity: 0.35, readability: 0.15, minimal_diff: 0.05 },
+        },
+        minimal_diff: {
+          label: "Minimal Diff",
+          weights: { base: 0.6, minimal_diff: 0.3, readability: 0.07, modularity: 0.03 },
+        },
+      };
+
+      function computeReadabilityHeuristic(text) {
+        // deterministic heuristics: shorter lines, fewer nesting, fewer weird tokens => higher
+        const lines = text.split("\n");
+        const lineCount = lines.length || 1;
+        const maxLen = Math.max(...lines.map((l) => l.length), 0);
+        const avgLen = lines.reduce((a, l) => a + l.length, 0) / lineCount;
+
+        const braceCount = (text.match(/[{}]/g) || []).length;
+        const parenCount = (text.match(/[()]/g) || []).length;
+        const semis = (text.match(/;/g) || []).length;
+
+        // normalize
+        const lenPenalty =
+          clamp((avgLen - 38) / 60, 0, 1) * 0.35 + clamp((maxLen - 90) / 120, 0, 1) * 0.25;
+        const nestPenalty = clamp((braceCount + parenCount) / 40, 0, 1) * 0.3;
+        const punctPenalty = clamp(semis / 20, 0, 1) * 0.1;
+
+        return clamp(1 - (lenPenalty + nestPenalty + punctPenalty), 0, 1);
+      }
+
+      function computeModularityHeuristic(text) {
+        const exports = /\bexport\s+function\b|\bexport\s+const\b|\bmodule\b/i.test(text) ? 1 : 0;
+        const hasNamedFn = /\bfunction\s+[A-Za-z_$][\w$]*\b/.test(text) ? 1 : 0;
+        const hasSections = /\/\/\s*Usage|\/\*\s*|\n\s*<\/style>|\n\s*<style>/i.test(text) ? 1 : 0;
+        const lineCount = text.split("\n").length || 1;
+        const sizeGate = clamp((lineCount - 4) / 12, 0, 1); // modules tend to be longer
+
+        // modularity is higher when explicit structure exists
+        return clamp(
+          0.2 + exports * 0.35 + hasNamedFn * 0.2 + hasSections * 0.15 + sizeGate * 0.1,
+          0,
+          1,
+        );
+      }
+
+      function computeMinimalDiffHeuristic(text, input) {
+        // crude but stable: Jaccard on token sets
+        const tokenize = (s) =>
+          (s || "")
+            .split(/(\s+|[;(){}[\],.<>:=+\-*/%!&|?]+)/)
+            .filter((t) => t && !/^\s+$/.test(t))
+            .map((t) => t.trim())
+            .filter(Boolean);
+
+        const a = new Set(tokenize(input));
+        const b = new Set(tokenize(text));
+        const inter = [...a].filter((x) => b.has(x)).length;
+        const union = new Set([...a, ...b]).size || 1;
+        return clamp(inter / union, 0, 1);
+      }
+
+      function scoreCandidate(candidate, objectiveKey) {
+        const obj = Objectives[objectiveKey] || Objectives.readability;
+        const w = obj.weights;
+
+        const f = candidate.features || {};
+        const base = candidate.baseScore ?? 0.5;
+        const s =
+          w.base * base +
+          w.readability * (f.readability ?? 0.5) +
+          w.modularity * (f.modularity ?? 0.5) +
+          w.minimal_diff * (f.minimal_diff ?? 0.5);
+
+        return clamp(s, 0, 1);
+      }
+
+      // =========================================================
+      // Nexus Runner
+      // =========================================================
+      const Nexus = (() => {
+        const _state = {
+          mode: "prose",
+          density: 50,
+          objective: "readability",
+          input: "",
+          analysis: null,
+          collapsed: null,
+          choices: [],
+          bestId: null,
+          lastRun: null,
+        };
+
+        const Examples = {
+          code1: "users.map(u => u.name).filter(isActive)",
+          code2: `<article class="card shadow-lg">
+  <h1 class="title">Hello</h1>
+  <p>World</p>
+</article>`,
+          prose1: "happiness reprocessing",
+          prose2: "unpredictability is reprocessed into stability",
+        };
+
+        function setExample(which) {
+          const v = Examples[which] ?? Examples.code1;
+          document.getElementById("input-source").value = v;
+          runPipeline();
+        }
+
+        function detectMode(input) {
+          const s = input.trim();
+          if (!s) return "prose";
+          const looksHTML =
+            /<\/?[a-zA-Z][\w:-]*[\s\S]*?>/.test(s) && s.includes("<") && s.includes(">");
+          if (looksHTML) return "code";
+          const looksJS =
+            s.includes("=>") ||
+            /\b(const|let|var|function|return|class|import|export)\b/.test(s) ||
+            /[A-Za-z_$][\w$]*\s*\.\s*(map|filter|reduce|forEach)\s*\(/.test(s) ||
+            /{[\s\S]*}/.test(s);
+          if (looksJS) return "code";
+          return "prose";
+        }
+
+        function decomposeCode(input) {
+          const tokens = input
+            .split(/(\s+|[;(){}[\],.<>:=+\-*/%!&|?]+)/)
+            .filter((t) => t && !/^\s+$/.test(t));
+
+          const atoms = tokens.map((t) => ({
+            kind: "atom",
+            type: "code.token",
+            token: t,
+            complexity: clamp(t.length / 24, 0.05, 0.35),
+          }));
+
+          const motifs = [];
+          const m1 = MotifDetectors.js_map_filter_chain(input);
+          if (m1) motifs.push(m1);
+          const m2 = MotifDetectors.html_component(input);
+          if (m2) motifs.push(m2);
+
+          return { atoms, motifs };
+        }
+
+        function decomposeProse(input) {
+          const prefixes = [
+            "re",
+            "un",
+            "dis",
+            "pre",
+            "anti",
+            "counter",
+            "super",
+            "inter",
+            "trans",
+          ];
+          const suffixes = [
+            "ing",
+            "ed",
+            "ness",
+            "ly",
+            "tion",
+            "sion",
+            "able",
+            "ment",
+            "ity",
+            "ism",
+            "ize",
+          ];
+
+          const rawTokens = input.split(/\s+/).filter(Boolean);
+          const atoms = [];
+          for (const tok of rawTokens) {
+            const root = tok.toLowerCase().replaceAll(/[^a-z]/g, "");
+            if (!root) continue;
+
+            const prefFound = prefixes.filter((p) => root.startsWith(p));
+            const suffFound = suffixes.filter((s) => root.endsWith(s));
+
+            let core = root;
+            for (const p of prefFound) core = core.replace(new RegExp(`^${p}`), "");
+            for (const s of suffFound) core = core.replace(new RegExp(`${s}$`), "");
+
+            const complexity = clamp(
+              (prefFound.length + suffFound.length) * 0.22 + (core.length > 8 ? 0.15 : 0.05),
+              0.05,
+              0.85,
+            );
+
+            atoms.push({
+              kind: "atom",
+              type: "prose.lexeme",
+              token: tok,
+              root: core,
+              prefixes: prefFound,
+              suffixes: suffFound,
+              complexity,
+            });
+          }
+
+          const motifs = [];
+          const m3 = MotifDetectors.prose_transform(input);
+          if (m3) motifs.push(m3);
+
+          return { atoms, motifs };
+        }
+
+        function decompose(input, mode) {
+          return mode === "code" ? decomposeCode(input) : decomposeProse(input);
+        }
+
+        function collapse(analysis, seed, mode) {
+          const rnd = mulberry32(seed);
+          const out = [];
+
+          // atoms
+          analysis.atoms.forEach((a, idx) => {
+            const base = 0.72;
+            const noise = (rnd() - 0.5) * 0.12;
+            out.push({
+              ...a,
+              idx,
+              confidence: clamp(base + a.complexity * 0.12 + noise, 0.55, 0.98),
+              zIndex: 12,
+            });
+          });
+
+          // motifs
+          analysis.motifs.forEach((m, j) => {
+            const noise = (rnd() - 0.5) * 0.06;
+            out.push({
+              ...m,
+              idx: analysis.atoms.length + j,
+              confidence: clamp((m.confidence ?? 0.82) + noise, 0.55, 0.99),
+              zIndex: 60,
+            });
+          });
+
+          // For prose: precompute recomposed lexemes (so prose templates can chain them)
+          if (mode === "prose") {
+            out.forEach((x) => {
+              if (x.type !== "prose.lexeme") return;
+              let val = x.root || "";
+              (x.suffixes || []).forEach((s) => {
+                val = OrthographicRules.yToI(val, s);
+                val = OrthographicRules.dropSilentE(val, s);
+                val = OrthographicRules.doubleConsonant(val, s);
+                val += s;
+              });
+              (x.prefixes || []).forEach((p) => {
+                val = p + val;
+              });
+              x.recomposed = val;
+            });
+          }
+
+          return out;
+        }
+
+        function buildMotifGraph(collapsed) {
+          const byId = {};
+          const motifs = [];
+          const lexemes = [];
+
+          for (const x of collapsed) {
+            if (x.kind === "motif") {
+              byId[x.id] = x;
+              motifs.push(x);
+            }
+            if (x.type === "prose.lexeme") lexemes.push(x);
+          }
+          return { byId, motifs, lexemes };
+        }
+
+        function makeCandidate({ seed, templateId, type, value, baseScore, features, provenance }) {
+          const id = "c_" + hex8(fnv1a32(templateId + ":" + value + ":" + seed));
+          return { id, templateId, type, value, baseScore, features, provenance, score: 0 };
+        }
+
+        // =========================================================
+        // Core: Render + Score all templates for domain
+        // =========================================================
+        function orchestrate(domain, collapsed, ctx) {
+          const graph = buildMotifGraph(collapsed);
+          const templates = TemplateRegistry.list(domain);
+
+          const candidates = [];
+
+          for (const tpl of templates) {
+            // required motifs gate (for code)
+            let ok = true;
+            for (const req of tpl.requiredMotifs) {
+              if (!graph.byId[req]) {
+                ok = false;
+                break;
+              }
+            }
+            if (!ok) continue;
+
+            const bindings = tpl.claim(graph) || [];
+            for (const binding of bindings) {
+              const rendered = tpl.render(binding, ctx);
+
+              // deterministic feature calculation (combine template hints + heuristics)
+              const fHint = tpl.featureScore(binding, ctx) || {};
+              const f = {
+                readability: clamp(
+                  (fHint.readability ?? 0.5) * 0.55 + computeReadabilityHeuristic(rendered) * 0.45,
+                  0,
+                  1,
+                ),
+                modularity: clamp(
+                  (fHint.modularity ?? 0.5) * 0.55 + computeModularityHeuristic(rendered) * 0.45,
+                  0,
+                  1,
+                ),
+                minimal_diff: clamp(
+                  (fHint.minimal_diff ?? 0.5) * 0.55 +
+                    computeMinimalDiffHeuristic(rendered, ctx.input) * 0.45,
+                  0,
+                  1,
+                ),
+              };
+
+              const base = tpl.baseScore(binding, ctx);
+
+              const prov = {
+                orchestrator: domain === "code" ? "StructuralSynthesis" : "LexicalSynthesis",
+                template: tpl.id,
+                label: tpl.label,
+                density: ctx.density,
+                objective: ctx.objective,
+                binding,
+                features: f,
+                transforms: [
+                  `Template selected: ${tpl.id}`,
+                  ...(tpl.requiredMotifs.length
+                    ? [`Required motifs: ${tpl.requiredMotifs.join(", ")}`]
+                    : []),
+                  `Heuristic features computed: readability/modularity/minimal_diff`,
+                ],
+                logic: "template-registry + scoring-engine",
+              };
+
+              candidates.push(
+                makeCandidate({
+                  seed: ctx.seed,
+                  templateId: tpl.id,
+                  type: domain === "code" ? "Template (Structural)" : "Template (Lexical)",
+                  value: rendered,
+                  baseScore: base,
+                  features: f,
+                  provenance: prov,
+                }),
+              );
+            }
+          }
+
+          // Always add atomic fallback for code
+          if (domain === "code") {
+            const atoms = collapsed.filter((x) => x.kind === "atom" && x.type === "code.token");
+            const raw = atoms.map((a) => a.token).join("");
+            const base = clamp(0.58 + 0.18 * (1 - ctx.density / 100), 0, 1);
+            const features = {
+              readability: computeReadabilityHeuristic(raw),
+              modularity: computeModularityHeuristic(raw),
+              minimal_diff: computeMinimalDiffHeuristic(raw, ctx.input),
+            };
+            candidates.push(
+              makeCandidate({
+                seed: ctx.seed ^ 0x12345678,
+                templateId: "tpl.code.atomic_fallback",
+                type: "Atomic (Raw)",
+                value: `// Atomic reconstruction (density=${ctx.density}%)\n${raw}`,
+                baseScore: base,
+                features,
+                provenance: {
+                  orchestrator: "StructuralSynthesis",
+                  template: "tpl.code.atomic_fallback",
+                  density: ctx.density,
+                  objective: ctx.objective,
+                  transforms: ["Token stream concatenation"],
+                  features,
+                  logic: "atomic-fallback",
+                },
+              }),
+            );
+          }
+
+          // score + pick best
+          for (const c of candidates) {
+            c.score = scoreCandidate(c, ctx.objective);
+          }
+          candidates.sort((a, b) => b.score - a.score);
+
+          const best = candidates[0] ? candidates[0].id : null;
+
+          // cap list
+          return { candidates: candidates.slice(0, 12), bestId: best };
+        }
+
+        // =========================================================
+        // UI: Inject Objective Dropdown (engine-grade, no placeholders)
+        // =========================================================
+        function ensureObjectiveControl() {
+          if (document.getElementById("objective-select")) return;
+
+          const header = document.querySelector("header .flex.items-center.gap-6");
+          if (!header) return;
+
+          const divider = document.createElement("div");
+          divider.className = "h-8 w-[1px] bg-slate-700";
+
+          const wrap = document.createElement("div");
+          wrap.className = "flex flex-col items-end";
+
+          wrap.innerHTML = `
+          <label class="text-[10px] uppercase text-slate-400 font-bold mb-1">Objective</label>
+          <select id="objective-select" class="bg-slate-800 border border-slate-700 rounded px-3 py-1 text-sm text-slate-300 outline-none focus:border-indigo-500">
+            <option value="readability">Readability</option>
+            <option value="modularity">Modularity</option>
+            <option value="minimal_diff">Minimal Diff</option>
+          </select>
+        `;
+
+          header.insertBefore(divider, header.children[header.children.length - 1]); // before RUN button
+          header.insertBefore(wrap, header.children[header.children.length - 1]); // before RUN button
+
+          const sel = document.getElementById("objective-select");
+          sel.value = _state.objective;
+          sel.addEventListener("change", () => {
+            _state.objective = sel.value;
+            runPipeline();
+          });
+        }
+
+        function runPipeline() {
+          ensureObjectiveControl();
+
+          const t0 = nowMs();
+
+          const inputEl = document.getElementById("input-source");
+          const densityEl = document.getElementById("density-slider");
+          const modeEl = document.getElementById("mode-detect");
+          const objectiveEl = document.getElementById("objective-select");
+
+          const input = (inputEl.value ?? "").trim();
+          const density = parseInt(densityEl.value, 10);
+          const userMode = modeEl.value;
+          const objective = objectiveEl ? objectiveEl.value : _state.objective;
+
+          _state.input = input;
+          _state.density = clamp(Number.isFinite(density) ? density : 50, 0, 100);
+          _state.objective = Objectives[objective] ? objective : "readability";
+
+          const resolvedMode = userMode === "auto" ? detectMode(input) : userMode;
+          _state.mode = resolvedMode;
+
+          // badge
+          const badge = document.getElementById("detected-mode-badge");
+          badge.innerText = resolvedMode.toUpperCase();
+          badge.className = `text-[10px] px-2 py-0.5 rounded font-bold transition-colors ${
+            resolvedMode === "code" ? "bg-cyan-900 text-cyan-300" : "bg-purple-900 text-purple-300"
+          }`;
+
+          const seed = fnv1a32(
+            `nexus:${resolvedMode}:${_state.density}:${_state.objective}:${input}`,
+          );
+
+          const t1 = nowMs();
+          const analysis = decompose(input || "happiness reprocessing", resolvedMode);
+          const t2 = nowMs();
+
+          const collapsed = collapse(analysis, seed, resolvedMode);
+          const t3 = nowMs();
+
+          const ctx = { density: _state.density, objective: _state.objective, seed, input };
+
+          let out;
+          const t4 = nowMs();
+          if (resolvedMode === "code") out = orchestrate("code", collapsed, ctx);
+          else out = orchestrate("prose", collapsed, ctx);
+          const t5 = nowMs();
+
+          _state.analysis = analysis;
+          _state.collapsed = collapsed;
+          _state.choices = out.candidates;
+          _state.bestId = out.bestId;
+
+          _state.lastRun = {
+            seed: "0x" + hex8(seed),
+            objective: _state.objective,
+            timings: {
+              setup_ms: t1 - t0,
+              decompose_ms: t2 - t1,
+              collapse_ms: t3 - t2,
+              synthesize_ms: t5 - t4,
+              total_ms: t5 - t0,
+            },
+            counts: {
+              atoms: analysis.atoms.length,
+              motifs: analysis.motifs.length,
+              collapsed: collapsed.length,
+              candidates: _state.choices.length,
+            },
+          };
+
+          updateUI();
+        }
+
+        function updateUI() {
+          const analysis = _state.analysis || { atoms: [], motifs: [] };
+          const collapsed = _state.collapsed || [];
+          const run = _state.lastRun;
+
+          // Stats
+          document.getElementById("stats-content").innerHTML = `
+          <div class="flex justify-between border-b border-slate-700 pb-1 mb-1">
+            <span class="text-slate-400">Mode:</span>
+            <span class="text-white font-mono">${escapeHTML(_state.mode)}</span>
+          </div>
+
+          <div class="flex justify-between border-b border-slate-700 pb-1 mb-1">
+            <span class="text-slate-400">Objective:</span>
+            <span class="text-emerald-300 font-mono">${escapeHTML(_state.objective)}</span>
+          </div>
+
+          <div class="flex justify-between border-b border-slate-700 pb-1 mb-1">
+            <span class="text-slate-400">Atoms:</span>
+            <span class="text-white font-mono">${analysis.atoms.length}</span>
+          </div>
+
+          <div class="flex justify-between border-b border-slate-700 pb-1 mb-1">
+            <span class="text-slate-400">Motifs:</span>
+            <span class="text-pink-300 font-mono">${analysis.motifs.length}</span>
+          </div>
+
+          <div class="flex justify-between border-b border-slate-700 pb-1 mb-1">
+            <span class="text-slate-400">Density:</span>
+            <span class="text-indigo-400 font-mono">${_state.density}%</span>
+          </div>
+
+          <div class="mt-2 pt-2 border-t border-slate-700">
+            <div class="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Runner</div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Seed:</span>
+              <span class="text-slate-200 font-mono">${run ? run.seed : "-"}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Total:</span>
+              <span class="text-slate-200 font-mono">${run ? run.timings.total_ms.toFixed(1) + "ms" : "-"}</span>
+            </div>
+          </div>
+        `;
+
+          // Wheel
+          const wheel = document.getElementById("main-wheel");
+          wheel.innerHTML = "";
+
+          const visible = collapsed.filter((a) => !(a.kind === "motif" && _state.density < 25));
+          const count = Math.max(visible.length, 1);
+
+          visible.forEach((a, i) => {
+            const node = document.createElement("div");
+            node.className = "atom-node";
+
+            if (a.kind === "motif") {
+              node.style.background = "#f472b6";
+              node.style.boxShadow = "0 0 15px #f472b6";
+              node.style.width = "16px";
+              node.style.height = "16px";
+            }
+
+            const angle = (i / count) * Math.PI * 2;
+            const radius = 96;
+            node.style.left = `${102 + Math.cos(angle) * radius}px`;
+            node.style.top = `${102 + Math.sin(angle) * radius}px`;
+
+            const zBase = a.complexity * 26 + _state.density * 0.42;
+            const zMotif = a.kind === "motif" ? 18 : 0;
+            node.style.transform = `translateZ(${(zBase + zMotif).toFixed(1)}px)`;
+
+            wheel.appendChild(node);
+          });
+
+          // Priors
+          const priorsContainer = document.getElementById("quantum-priors");
+          priorsContainer.innerHTML = "";
+          const priors = collapsed
+            .filter((c) => c.kind === "motif" || c.complexity > 0.5)
+            .sort((a, b) => b.confidence - a.confidence);
+
+          if (!priors.length) {
+            priorsContainer.innerHTML = `<span class="text-slate-600 text-xs italic pl-2">No patterns in superposition.</span>`;
+          } else {
+            priors.slice(0, 12).forEach((m) => {
+              const card = document.createElement("div");
+              card.className =
+                "bg-slate-800 p-2 rounded border border-slate-700 min-w-[140px] flex flex-col gap-1";
+              const label = m.id || m.motif || "atom";
+              card.innerHTML = `
+              <span class="text-[9px] uppercase text-slate-400 tracking-wider">${escapeHTML(label)}</span>
+              <span class="text-xs font-mono text-indigo-300 truncate">${escapeHTML(m.token)}</span>
+              <div class="w-full bg-slate-900 h-1 rounded mt-1 overflow-hidden">
+                <div class="bg-indigo-500 h-full" style="width: ${(m.confidence * 100).toFixed(0)}%"></div>
+              </div>
+            `;
+              priorsContainer.appendChild(card);
+            });
+          }
+
+          // Synthesis
+          const synthPanel = document.getElementById("synthesis-content");
+          const choices = _state.choices || [];
+
+          if (!choices.length) {
+            synthPanel.innerHTML = `<p class="text-slate-500 italic text-sm">No synthesis available.</p>`;
+          } else {
+            synthPanel.innerHTML = choices
+              .map((c) => {
+                const isBest = c.id === _state.bestId;
+                const tagColor =
+                  c.type.includes("Structural") || c.type.includes("Atomic")
+                    ? "text-pink-400"
+                    : "text-cyan-400";
+                return `
+              <div onclick="Nexus.explain('${c.id}')" class="p-3 glass rounded cursor-pointer hover:border-indigo-500 transition-all z-depth-card group ${isBest ? "border border-emerald-500/70" : ""}">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-[10px] font-bold ${tagColor} uppercase border border-slate-600 px-1 rounded">${escapeHTML(c.type)}</span>
+                  <div class="flex items-center gap-2">
+                    ${isBest ? `<span class="text-[10px] font-bold text-emerald-300">★ BEST</span>` : ``}
+                    <span class="text-[10px] text-green-400 font-mono">${(c.score * 100).toFixed(0)}% Score</span>
+                  </div>
+                </div>
+                <div class="text-xs font-mono text-slate-300 whitespace-pre-wrap bg-black/30 p-2 rounded group-hover:text-white transition-colors">${escapeHTML(c.value)}</div>
+                <div class="mt-2 text-[10px] text-slate-500 font-mono">
+                  r:${(c.features.readability * 100).toFixed(0)} m:${(c.features.modularity * 100).toFixed(0)} d:${(c.features.minimal_diff * 100).toFixed(0)}
+                </div>
+              </div>
+            `;
+              })
+              .join("");
+          }
+
+          document.getElementById("explain-content").innerHTML =
+            `<p class="text-slate-500">Select a candidate to see its "DNA" breakdown.</p>`;
+        }
+
+        function explain(id) {
+          const cand = (_state.choices || []).find((c) => c.id === id);
+          const content = document.getElementById("explain-content");
+          if (!cand) {
+            content.innerHTML = `<p class="text-slate-500">Candidate not found.</p>`;
+            return;
+          }
+
+          const p = cand.provenance || {};
+          const transforms = Array.isArray(p.transforms) ? p.transforms : [];
+
+          const details = `
+          <div class="mt-1 text-[10px] text-cyan-300">🧩 Template: ${escapeHTML(p.template || cand.templateId)}</div>
+          <div class="mt-1 text-[10px] text-emerald-300">🎯 Objective: ${escapeHTML(p.objective || _state.objective)}</div>
+          <div class="mt-2 grid grid-cols-3 gap-2 text-[10px]">
+            <div class="bg-black/40 p-2 rounded border border-slate-700">
+              <div class="text-slate-500 uppercase">Readability</div>
+              <div class="text-white font-mono">${(cand.features.readability * 100).toFixed(0)}%</div>
+            </div>
+            <div class="bg-black/40 p-2 rounded border border-slate-700">
+              <div class="text-slate-500 uppercase">Modularity</div>
+              <div class="text-white font-mono">${(cand.features.modularity * 100).toFixed(0)}%</div>
+            </div>
+            <div class="bg-black/40 p-2 rounded border border-slate-700">
+              <div class="text-slate-500 uppercase">Minimal Diff</div>
+              <div class="text-white font-mono">${(cand.features.minimal_diff * 100).toFixed(0)}%</div>
+            </div>
+          </div>
+          ${
+            transforms.length
+              ? `
+            <div class="mt-3 space-y-1">
+              ${transforms.map((t) => `<div class="text-[10px] text-yellow-500/80">⚡ ${escapeHTML(t)}</div>`).join("")}
+            </div>
+          `
+              : ""
+          }
+        `;
+
+          content.innerHTML = `
+          <div class="space-y-3 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Candidate ID</p>
+              <p class="text-indigo-300 font-mono text-xs">${escapeHTML(id)}</p>
+            </div>
+
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Synthesized Output</p>
+              <div class="bg-black/50 p-2 rounded border-l-2 border-green-500 font-mono text-xs text-slate-200 whitespace-pre-wrap">${escapeHTML(cand.value)}</div>
+            </div>
+
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">DNA / Logic</p>
+              ${details}
+            </div>
+
+            <div class="mt-4 pt-2 border-t border-slate-700">
+              <p class="text-[9px] text-slate-600 mb-1">RAW JSON</p>
+              <pre class="text-[9px] text-slate-500 bg-black p-2 rounded overflow-hidden">${escapeHTML(JSON.stringify(cand.provenance, null, 2))}</pre>
+            </div>
+          </div>
+        `;
+        }
+
+        return { runPipeline, explain, setExample };
+      })();
+
+      // Boot
+      window.onload = () => {
+        if (document.getElementById("input-source")) {
+          document.getElementById("input-source").value = "users.map(u => u.name).filter(isActive)";
+        }
+        Nexus.runPipeline();
+      };
+    </script>
+  </body>
+</html>

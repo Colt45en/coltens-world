@@ -1,0 +1,924 @@
+# TS-as-Source Twin Report
+
+- Total twin pairs: 131
+- Winner counts: ts=87, js=36, mixed=8
+
+## Ranked Pairs
+
+- **apps/nucleus/src/bus/busHub.ts <-> apps/nucleus/src/bus/busHub.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 8
+- **apps/nucleus/src/bus/publish.ts <-> apps/nucleus/src/bus/publish.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/ndjson.ts <-> apps/nucleus/src/ndjson.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/pty/ptySession.ts <-> apps/nucleus/src/pty/ptySession.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 1
+- **apps/nucleus/src/pty/venoManager.ts <-> apps/nucleus/src/pty/venoManager.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **apps/nucleus/src/router/handlers/ideCli.ts <-> apps/nucleus/src/router/handlers/ideCli.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/router/handlers/ideFs.ts <-> apps/nucleus/src/router/handlers/ideFs.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/routes/busReplay.ts <-> apps/nucleus/src/routes/busReplay.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **apps/nucleus/src/routes/health.ts <-> apps/nucleus/src/routes/health.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/routes/http/flowstate.ts <-> apps/nucleus/src/routes/http/flowstate.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/routes/http/leximorph.ts <-> apps/nucleus/src/routes/http/leximorph.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/routes/http/pipelineResults.ts <-> apps/nucleus/src/routes/http/pipelineResults.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/routes/operatorEvent.ts <-> apps/nucleus/src/routes/operatorEvent.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/routes/wsBus.ts <-> apps/nucleus/src/routes/wsBus.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **apps/nucleus/src/services/compilerEvidence.ts <-> apps/nucleus/src/services/compilerEvidence.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/services/simRunner.ts <-> apps/nucleus/src/services/simRunner.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **apps/nucleus/src/tool/types.ts <-> apps/nucleus/src/tool/types.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **apps/nucleus/src/wsHub.ts <-> apps/nucleus/src/wsHub.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/engine/src/collision.ts <-> packages/engine/src/collision.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/engine/src/contracts/multigpu/deps.ts <-> packages/engine/src/contracts/multigpu/deps.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/engine/src/contracts/multigpu/pacing.ts <-> packages/engine/src/contracts/multigpu/pacing.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/engine/src/contracts/multigpu/plan.ts <-> packages/engine/src/contracts/multigpu/plan.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/engine/src/contracts/multigpu/primitives.ts <-> packages/engine/src/contracts/multigpu/primitives.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 12
+- **packages/engine/src/contracts/multigpu/sync.ts <-> packages/engine/src/contracts/multigpu/sync.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/engine/src/contracts/multigpu/work.ts <-> packages/engine/src/contracts/multigpu/work.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 6
+- **packages/engine/src/contracts/protocol/envelope.ts <-> packages/engine/src/contracts/protocol/envelope.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 6
+- **packages/engine/src/contracts/protocol/ops.ts <-> packages/engine/src/contracts/protocol/ops.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/engine/src/contracts/protocol/sim.ts <-> packages/engine/src/contracts/protocol/sim.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/engine/src/contracts/representation/gates.ts <-> packages/engine/src/contracts/representation/gates.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/engine/src/learning/xor-trainer.ts <-> packages/engine/src/learning/xor-trainer.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/core/braceBalance.ts <-> packages/flowstate/src/core/braceBalance.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/flowstate/src/core/metrics.ts <-> packages/flowstate/src/core/metrics.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/core/seed.ts <-> packages/flowstate/src/core/seed.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/flowstate/src/core/tokenize.ts <-> packages/flowstate/src/core/tokenize.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/flowstate/src/evidence/canonicalJson.ts <-> packages/flowstate/src/evidence/canonicalJson.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/evidence/crypto.ts <-> packages/flowstate/src/evidence/crypto.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/evidence/download.ts <-> packages/flowstate/src/evidence/download.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/evidence/session.ts <-> packages/flowstate/src/evidence/session.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/render/canvasFit.ts <-> packages/flowstate/src/render/canvasFit.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/render/heatmapRenderer.ts <-> packages/flowstate/src/render/heatmapRenderer.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/render/histogramRenderer.ts <-> packages/flowstate/src/render/histogramRenderer.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/render/orbitRenderer.ts <-> packages/flowstate/src/render/orbitRenderer.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/render/ringRenderer.ts <-> packages/flowstate/src/render/ringRenderer.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/flowstate/src/render/types.ts <-> packages/flowstate/src/render/types.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 6
+- **packages/protocol/src/capabilities.ts <-> packages/protocol/src/capabilities.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/chat.ts <-> packages/protocol/src/chat.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/protocol/src/contracts/evidence.ts <-> packages/protocol/src/contracts/evidence.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 1
+- **packages/protocol/src/contracts/flowstate.ts <-> packages/protocol/src/contracts/flowstate.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/contracts/worldGraph.ts <-> packages/protocol/src/contracts/worldGraph.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/protocol/src/envelopes.ts <-> packages/protocol/src/envelopes.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/ide.ts <-> packages/protocol/src/ide.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/protocol/src/idle.ts <-> packages/protocol/src/idle.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/operator.ts <-> packages/protocol/src/operator.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/representation.ts <-> packages/protocol/src/representation.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/schemas.ts <-> packages/protocol/src/schemas.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/system/health.ts <-> packages/protocol/src/system/health.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/protocol/src/types.ts <-> packages/protocol/src/types.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 4
+- **packages/protocol/src/uee.ts <-> packages/protocol/src/uee.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/tooling/src/compilers/csCompiler.ts <-> packages/tooling/src/compilers/csCompiler.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/tooling/src/compilers/helpers.ts <-> packages/tooling/src/compilers/helpers.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 5
+- **packages/tooling/src/compilers/jsCompiler.ts <-> packages/tooling/src/compilers/jsCompiler.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/tooling/src/compilers/types.ts <-> packages/tooling/src/compilers/types.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 5
+- **packages/tooling/src/utils-node.ts <-> packages/tooling/src/utils-node.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 2
+- **packages/util/src/fileUtils.ts <-> packages/util/src/fileUtils.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 5
+- **packages/util/src/hash.ts <-> packages/util/src/hash.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/util/src/packageName.ts <-> packages/util/src/packageName.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **packages/util/src/time.ts <-> packages/util/src/time.js**
+  - winner: ts
+  - confidence: 0.95
+  - suggested_action: delete-candidate
+  - reasons: TS has importers and JS has none
+  - js importers: 0
+  - ts importers: 3
+- **apps/env-sandbox/src/audit.ts <-> apps/env-sandbox/src/audit.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 4
+  - ts importers: 0
+- **apps/env-sandbox/src/contracts.ts <-> apps/env-sandbox/src/contracts.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 6
+  - ts importers: 0
+- **apps/env-sandbox/src/policy.ts <-> apps/env-sandbox/src/policy.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/env-sandbox/src/sandbox-tools.ts <-> apps/env-sandbox/src/sandbox-tools.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/env-sandbox/src/sandbox.ts <-> apps/env-sandbox/src/sandbox.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/env-sandbox/src/storage.ts <-> apps/env-sandbox/src/storage.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 6
+  - ts importers: 0
+- **apps/env-sandbox/src/types.ts <-> apps/env-sandbox/src/types.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 7
+  - ts importers: 0
+- **apps/nucleus/src/chat-handler.ts <-> apps/nucleus/src/chat-handler.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/nucleus/src/health/adapter.ts <-> apps/nucleus/src/health/adapter.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/nucleus/src/health/poller.ts <-> apps/nucleus/src/health/poller.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 3
+  - ts importers: 0
+- **apps/nucleus/src/idle.ts <-> apps/nucleus/src/idle.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/nucleus/src/router/handlers/brainControl.ts <-> apps/nucleus/src/router/handlers/brainControl.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/nucleus/src/router/handlers/brainTrain.ts <-> apps/nucleus/src/router/handlers/brainTrain.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **apps/nucleus/src/router/uee.ts <-> apps/nucleus/src/router/uee.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 7
+  - ts importers: 0
+- **apps/nucleus/src/routes/chat.ts <-> apps/nucleus/src/routes/chat.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/brain/src/controller.ts <-> packages/brain/src/controller.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/brain/src/network.ts <-> packages/brain/src/network.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 5
+  - ts importers: 0
+- **packages/brain/src/population.ts <-> packages/brain/src/population.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/envelopeFactory.ts <-> packages/engine/src/contracts/envelopeFactory.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/index.ts <-> packages/engine/src/contracts/index.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/lexicon/index.ts <-> packages/engine/src/contracts/lexicon/index.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/lexicon/LexiconEntry.schema.ts <-> packages/engine/src/contracts/lexicon/LexiconEntry.schema.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 3
+  - ts importers: 0
+- **packages/engine/src/contracts/multigpu/index.ts <-> packages/engine/src/contracts/multigpu/index.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/protocol/index.ts <-> packages/engine/src/contracts/protocol/index.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/representation/index.ts <-> packages/engine/src/contracts/representation/index.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/util/exhaustive.ts <-> packages/engine/src/contracts/util/exhaustive.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/contracts/util/require-schema.ts <-> packages/engine/src/contracts/util/require-schema.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/learning/index.ts <-> packages/engine/src/learning/index.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: package entrypoint references JS file; JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/prediction.ts <-> packages/engine/src/prediction.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/engine/src/runtime/json.ts <-> packages/engine/src/runtime/json.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/protocol/src/bus/buildEvidenceBus.ts <-> packages/protocol/src/bus/buildEvidenceBus.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/protocol/src/envelopes/uee/guards.ts <-> packages/protocol/src/envelopes/uee/guards.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 2
+  - ts importers: 0
+- **packages/protocol/src/envelopes/uee/schema.ts <-> packages/protocol/src/envelopes/uee/schema.js**
+  - winner: js
+  - confidence: 0.85
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS has importers and TS has none
+  - js importers: 4
+  - ts importers: 0
+- **apps/nucleus/src/tool/executor.ts <-> apps/nucleus/src/tool/executor.js**
+  - winner: ts
+  - confidence: 0.8
+  - suggested_action: rewrite-js-imports-then-delete
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 1
+  - ts importers: 2
+- **packages/protocol/src/buildEvidence.ts <-> packages/protocol/src/buildEvidence.js**
+  - winner: ts
+  - confidence: 0.8
+  - suggested_action: rewrite-js-imports-then-delete
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 2
+  - ts importers: 4
+- **packages/brain/src/review/reviewStore.ts <-> packages/brain/src/review/reviewStore.js**
+  - winner: js
+  - confidence: 0.75
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS importer count is dominant
+  - js importers: 2
+  - ts importers: 1
+- **packages/engine/src/contracts/busEnvelope.ts <-> packages/engine/src/contracts/busEnvelope.js**
+  - winner: js
+  - confidence: 0.75
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS importer count is dominant
+  - js importers: 2
+  - ts importers: 1
+- **packages/engine/src/contracts/lexicon/promptOperatorRegistry.ts <-> packages/engine/src/contracts/lexicon/promptOperatorRegistry.js**
+  - winner: js
+  - confidence: 0.75
+  - suggested_action: verify-ts-stale-or-migrate-entrypoints
+  - reasons: JS importer count is dominant
+  - js importers: 2
+  - ts importers: 1
+- **apps/env-sandbox/src/demo.ts <-> apps/env-sandbox/src/demo.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/bus-ws-bridge.ts <-> apps/nucleus/src/bus-ws-bridge.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/bus/handlers/buildEvidence.ts <-> apps/nucleus/src/bus/handlers/buildEvidence.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/index.ts <-> apps/nucleus/src/index.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/router/handlers/base.ts <-> apps/nucleus/src/router/handlers/base.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/router/handlers/index.ts <-> apps/nucleus/src/router/handlers/index.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/routes/buildEvidence.ts <-> apps/nucleus/src/routes/buildEvidence.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/routes/lexicon-disabled.ts <-> apps/nucleus/src/routes/lexicon-disabled.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/routes/lexicon.ts <-> apps/nucleus/src/routes/lexicon.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/routes/routes.ts <-> apps/nucleus/src/routes/routes.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/sessionStore.ts <-> apps/nucleus/src/sessionStore.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/simulation.ts <-> apps/nucleus/src/simulation.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/unified-runner-integration.ts <-> apps/nucleus/src/unified-runner-integration.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/nucleus/src/wsHub_new.ts <-> apps/nucleus/src/wsHub_new.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **packages/brain/src/review/reviewTypes.ts <-> packages/brain/src/review/reviewTypes.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: rewrite-js-imports-then-delete
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 2
+  - ts importers: 2
+- **packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.ts <-> packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **packages/protocol/src/envelopes/index.ts <-> packages/protocol/src/envelopes/index.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: package entrypoint references TS file; TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **packages/protocol/src/index.ts <-> packages/protocol/src/index.js**
+  - winner: ts
+  - confidence: 0.7
+  - suggested_action: delete-candidate
+  - reasons: package entrypoint references TS file; TS importer count is dominant or equal with no JS entrypoint
+  - js importers: 0
+  - ts importers: 0
+- **apps/env-sandbox/src/index.ts <-> apps/env-sandbox/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 0
+- **packages/brain/src/index.ts <-> packages/brain/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 0
+- **packages/engine/src/index.ts <-> packages/engine/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 1
+- **packages/flowstate/src/index.ts <-> packages/flowstate/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 1
+- **packages/math/src/index.ts <-> packages/math/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 0
+- **packages/protocol/src/envelopes/uee/index.ts <-> packages/protocol/src/envelopes/uee/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references TS file
+  - js importers: 2
+  - ts importers: 0
+- **packages/tooling/src/index.ts <-> packages/tooling/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 0
+- **packages/util/src/index.ts <-> packages/util/src/index.js**
+  - winner: mixed
+  - confidence: 0.5
+  - suggested_action: manual-review
+  - reasons: package entrypoint references JS file
+  - js importers: 0
+  - ts importers: 0

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "lex_e3c08c66a595",
+  "canonicalTerm": "Review Queue",
+  "code_process_tag": "system.review.queue",
+  "type": "system",
+  "meaning": "A quarantined holding area for artifacts and entries that are not yet approved as canonical truth; nothing enters the stable corpus without an explicit review decision.",
+  "use": [
+    "Route unknown tags/operators into review instead of failing silently.",
+    "Support approve/reject + rationale + reviewer."
+  ],
+  "methodology": [
+    "Write candidate artifacts as NDJSON records with status=pending.",
+    "Promote to memory/lexicon only via an approval command with decision logging."
+  ],
+  "examples": [
+    "New lexicon entry suggestion goes to review.queue.ndjson first."
+  ],
+  "anti_patterns": [
+    "Auto-accepting unknown tags.",
+    "Overwriting canonical memory without a decision record."
+  ],
+  "tests_validation": [
+    "CI fails on unknown tags when --fail-on-unknown-tag is set."
+  ],
+  "createdAt": "2026-02-12T21:09:10.872Z",
+  "updatedAt": "2026-02-12T21:09:10.872Z"
+}

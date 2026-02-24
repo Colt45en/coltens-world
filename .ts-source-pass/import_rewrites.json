@@ -1,0 +1,164 @@
+[
+  {
+    "importer": "apps/env-sandbox/src/contracts.js",
+    "from": "apps/env-sandbox/src/types.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/index.js",
+    "from": "apps/env-sandbox/src/types.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/sandbox.js",
+    "from": "apps/env-sandbox/src/types.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "packages/protocol/src/system/health.js",
+    "from": "packages/protocol/src/buildEvidence.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "packages/protocol/src/system/health.ts",
+    "from": "packages/protocol/src/buildEvidence.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/wsHub.js",
+    "from": "apps/nucleus/src/health/poller.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/wsHub.js",
+    "from": "apps/nucleus/src/router/uee.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/wsHub_new.js",
+    "from": "apps/nucleus/src/router/uee.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/index.js",
+    "from": "apps/env-sandbox/src/contracts.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/policy.js",
+    "from": "apps/env-sandbox/src/contracts.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/sandbox.js",
+    "from": "apps/env-sandbox/src/contracts.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/bus-ws-bridge.js",
+    "from": "apps/nucleus/src/idle.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/router/uee.js",
+    "from": "apps/nucleus/src/router/handlers/brainControl.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/router/uee.js",
+    "from": "apps/nucleus/src/router/handlers/brainTrain.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/wsHub.js",
+    "from": "apps/nucleus/src/routes/chat.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "packages/brain/src/index.js",
+    "from": "packages/brain/src/review/reviewTypes.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "packages/brain/src/index.ts",
+    "from": "packages/brain/src/review/reviewTypes.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/index.js",
+    "from": "apps/env-sandbox/src/audit.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/sandbox.js",
+    "from": "apps/env-sandbox/src/audit.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/sandbox.js",
+    "from": "apps/env-sandbox/src/policy.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/index.js",
+    "from": "apps/env-sandbox/src/sandbox.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/demo.js",
+    "from": "apps/env-sandbox/src/sandbox-tools.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/audit.js",
+    "from": "apps/env-sandbox/src/storage.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/index.js",
+    "from": "apps/env-sandbox/src/storage.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/env-sandbox/src/sandbox.js",
+    "from": "apps/env-sandbox/src/storage.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/wsHub.js",
+    "from": "apps/nucleus/src/chat-handler.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  },
+  {
+    "importer": "apps/nucleus/src/wsHub.js",
+    "from": "apps/nucleus/src/health/adapter.js",
+    "toSpecifier": null,
+    "reason": "JS twin imported but TS is source-of-truth"
+  }
+]

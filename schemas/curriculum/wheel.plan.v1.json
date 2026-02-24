@@ -1,0 +1,170 @@
+{
+  "version": "wheel.plan.v1",
+  "wheel_id": "learning-wheel",
+  "title": "Ferris Wheel Learning Loop",
+  "total_rotations": 100,
+  "stop_order": [
+    "verbs",
+    "nouns",
+    "grammar",
+    "deduction",
+    "perception",
+    "focus",
+    "memory",
+    "symbols",
+    "perspective",
+    "imagination"
+  ],
+  "stops": {
+    "verbs": {
+      "label": "Learning All the Differences in Verbs",
+      "loop1_points": [
+        "Action Verbs: Run, jump, create—physical and mental movement.",
+        "Linking Verbs: Is, seem, become—connect subject and complement.",
+        "Helping Verbs: Can, will, must—modify tense or possibility.",
+        "Transitive vs. Intransitive: He writes a book (transitive) vs. He writes daily (intransitive).",
+        "Regular vs. Irregular: Walk → walked vs. Go → went."
+      ],
+      "lesson_pool": [
+        "Dynamic vs. Stative Verbs: Run, think, grow (dynamic) vs. believe, love, exist (stative).",
+        "Phrasal Verbs: Break down, carry on, look up—meanings shift with prepositions.",
+        "Causative Verbs: Let, make, have, get—influencing actions indirectly."
+      ]
+    },
+    "nouns": {
+      "label": "Learning All Nouns and Their Uses",
+      "loop1_points": [
+        "Common vs. Proper: City vs. Paris.",
+        "Concrete vs. Abstract: Desk vs. Love.",
+        "Countable vs. Uncountable: Apples vs. Water.",
+        "Possessive Nouns: Sara's book, the dog's leash.",
+        "Collective Nouns: Flock, team, audience."
+      ],
+      "lesson_pool": [
+        "Appositive Nouns: My friend, an artist, loves to paint.",
+        "Noun Functions: Subject (The book is interesting), Object (I read the book), Possession (The book's pages).",
+        "Verbal Nouns (Gerunds): Running is fun—acting like a noun but formed from a verb."
+      ]
+    },
+    "grammar": {
+      "label": "Grammar Perfection",
+      "loop1_points": [
+        "Subject-Verb Agreement: The cat runs. The cats run.",
+        "Tenses: Past, present, future—each with simple, continuous, perfect forms.",
+        "Punctuation Mastery: Commas, semicolons, and the mighty em dash!",
+        "Sentence Structure: Simple, compound, complex, compound-complex."
+      ],
+      "lesson_pool": [
+        "Parallel Structure: She likes running, jumping, and dancing (not: run, to jump, dancing).",
+        "Subjunctive Mood: If I were you, I would study more.",
+        "Elliptical Constructions: I like coffee; she, tea (implied verb: likes)."
+      ]
+    },
+    "deduction": {
+      "label": "Deductive Reasoning",
+      "loop1_points": [
+        "Premises → Conclusion: If all humans breathe air and I am human, I breathe air.",
+        "Logical Fallacies: Circular reasoning, straw man, false dichotomy.",
+        "Syllogisms: All birds have feathers; a robin is a bird; therefore, robins have feathers."
+      ],
+      "lesson_pool": [
+        "Abductive Reasoning: If it rained, the ground would be wet. The ground is wet. So, it may have rained.",
+        "Inductive vs. Deductive: Inductive = probable conclusions, Deductive = absolute conclusions.",
+        "Logical Paradoxes: This statement is false. If true, it's false; if false, it's true."
+      ]
+    },
+    "perception": {
+      "label": "Perception",
+      "loop1_points": [
+        "Literal vs. Inferential Reading: What is stated vs. what is implied.",
+        "Bias Awareness: How perspective alters what is perceived.",
+        "Multi-Sensory Thinking: Observing via sight, sound, touch, emotion."
+      ],
+      "lesson_pool": [
+        "Change Blindness: The brain ignores certain details when distracted.",
+        "Selective Attention: Focusing on one stimulus while ignoring others.",
+        "Cognitive Biases: Confirmation bias—seeking evidence to support beliefs."
+      ]
+    },
+    "focus": {
+      "label": "Focus",
+      "loop1_points": [
+        "Eliminating Distractions: The power of mindfulness and single-tasking.",
+        "Deep Work: Sustained concentration leads to breakthroughs.",
+        "Mental Endurance: Extending attention span through controlled effort."
+      ],
+      "lesson_pool": [
+        "The Pomodoro Technique: 25-minute bursts of work, 5-minute breaks.",
+        "Flow State: Total immersion in an activity, time distortion occurs.",
+        "Mental Stamina Building: Meditation, deep reading, distraction elimination."
+      ]
+    },
+    "memory": {
+      "label": "Memory",
+      "loop1_points": [
+        "Chunking Information: Grouping data for retention.",
+        "Mnemonic Devices: Acronyms, visualization, method of loci.",
+        "Spaced Repetition: Reinforcement over time solidifies learning."
+      ],
+      "lesson_pool": [
+        "The Forgetting Curve: Information decays without reinforcement.",
+        "The Method of Loci: Remembering items by associating them with locations.",
+        "Dual Coding Theory: Pairing visuals with words strengthens recall."
+      ]
+    },
+    "symbols": {
+      "label": "Symbols",
+      "loop1_points": [
+        "Semiotics: The study of symbols and their meanings.",
+        "Cultural vs. Universal Symbols: Dove = peace, clock = time, water = change.",
+        "Literary Symbolism: Light vs. darkness, journey = transformation."
+      ],
+      "lesson_pool": [
+        "Archetypal Symbols: The hero, the trickster, the wise old man.",
+        "Color Symbolism: Red = passion/danger, Blue = calm/intellect, Green = growth/envy.",
+        "Animal Symbolism: Owl = wisdom, Snake = transformation, Raven = mystery."
+      ]
+    },
+    "perspective": {
+      "label": "Perspective",
+      "loop1_points": [
+        "First-Person vs. Third-Person Views: How storytelling changes based on viewpoint.",
+        "Empathy Training: Seeing through another's eyes.",
+        "Reframing: How the same event can have different interpretations."
+      ],
+      "lesson_pool": [
+        "First-Person Limited vs. Omniscient: I saw… vs. He knew everything…",
+        "Perspective in Art: Foreground vs. background—what draws attention first?",
+        "Philosophical Perspective: Subjective vs. Objective Reality—what is truly real?"
+      ]
+    },
+    "imagination": {
+      "label": "Use Imagination and Design New Knowledge",
+      "loop1_points": [
+        "Innovative Thinking: Connecting unrelated concepts.",
+        "Creative Problem-Solving: Using logic + imagination.",
+        "Designing the Unknown: Predicting new ideas, inventing stories, shaping new worlds."
+      ],
+      "lesson_pool": [
+        "Creative Synthesis: Combining two unrelated ideas to make something new.",
+        "Future Predictions: What if AI could dream? What if gravity reversed?",
+        "Myth-Making: Inventing a lost civilization with its own language and legends."
+      ]
+    }
+  },
+  "agent_tool": {
+    "tool_name": "curriculum.stop.execute",
+    "expects": "curriculum.stop.execute.v1"
+  },
+  "mutation_policy": {
+    "seed": 1337,
+    "max_pool_items_per_stop_per_rotation": 2,
+    "no_repeat_within_last_rotations": 3
+  },
+  "guardian_invariants": [
+    "Stop order must follow stop_order list",
+    "Rotation must be within [1..total_rotations]",
+    "A stop cannot be completed twice in the same rotation",
+    "Tool results must match the active call_id to advance"
+  ]
+}

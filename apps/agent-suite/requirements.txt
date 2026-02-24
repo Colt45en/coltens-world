@@ -1,0 +1,15 @@
+playwright>=1.44.0
+pydantic>=2.7.0
+websockets>=12.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# AgentCPM-GUI Pipeline Dependencies
+pandas>=2.1.0
+pillow>=10.0.0
+tqdm>=4.66.0
+
+# Optional: HuggingFace integration (install with: pip install -r requirements.txt -r requirements-hf.txt)
+# transformers>=4.40.0
+# accelerate>=0.28.0
+# huggingface_hub>=0.21.0

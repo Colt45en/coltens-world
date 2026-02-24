@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolId": "codegen.check_contracts",
+  "timestamp": "2026-02-14T190250Z",
+  "exitCode": 0,
+  "durationMs": 558,
+  "cwd": ".",
+  "command": [
+    "node",
+    "tooling/codegen/check_contracts.js"
+  ],
+  "watchPaths": [
+    "packages",
+    "apps",
+    "tooling"
+  ],
+  "allowChanges": false,
+  "expectedOutputsMode": "warn",
+  "changes": {
+    "added": 0,
+    "modified": 0,
+    "deleted": 0
+  },
+  "artifactsDir": "tooling\\dist\\codegen.check_contracts\\2026-02-14T190250Z"
+}

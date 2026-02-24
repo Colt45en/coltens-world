@@ -1,0 +1,25 @@
+{
+  "default": true,
+  "MD003": { "style": "consistent" },
+  "MD004": { "style": "consistent" },
+  "MD013": false,
+  "MD033": false,
+  "MD040": {
+    "allowed_languages": [
+      "bash","shell","sh",
+      "ts","tsx","js","jsx",
+      "json","jsonc",
+      "yaml","yml",
+      "text","plain",
+      "xml","html","css",
+      "sql",
+      "python","py",
+      "java","cpp","c","go",
+      "ruby","rb",
+      "kql",
+      "diff"
+    ],
+    "language_only": true
+  },
+  "MD041": false
+}

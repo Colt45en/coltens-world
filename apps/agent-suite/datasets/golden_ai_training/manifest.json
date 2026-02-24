@@ -1,0 +1,29 @@
+{
+  "artifacts": {
+    "golden_ai_training.spec.json": {
+      "type": "source_spec"
+    },
+    "mastery_quiz_bank.json": {
+      "rows": 84,
+      "type": "quiz_bank"
+    },
+    "preference_pairs.jsonl": {
+      "rows": 96,
+      "type": "preference"
+    },
+    "quiz_eval.jsonl": {
+      "rows": 84,
+      "type": "eval"
+    },
+    "sft_train.jsonl": {
+      "rows": 158,
+      "type": "sft"
+    }
+  },
+  "generation": {
+    "deterministic": true,
+    "script": "tools/build_golden_ai_training_dataset.py"
+  },
+  "program_title": "Golden Standard AI Training Method (Crystal Knowledge Edition)",
+  "track": "llms_agents"
+}

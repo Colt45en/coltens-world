@@ -1,0 +1,4 @@
+{"pred": {"POINT": [480, 320]}, "gold": {"POINT": [480, 320]}}
+{"pred": {"PRESS": "BACK"}, "gold": {"PRESS": "BACK"}}
+{"pred": {"to": "down"}, "gold": {"POINT": [500, 200], "to": "down"}}
+{"pred": {"POINT": [500, 500]}, "gold": {"POINT": [500, 500]}, "screen": {"width": 1000, "height": 1000}, "bbox": {"xmin": 450, "ymin": 450, "xmax": 550, "ymax": 550}}

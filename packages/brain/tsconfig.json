@@ -1,0 +1,24 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "lib": [
+            "ES2022",
+            "DOM"
+        ],
+        "jsx": "react-jsx",
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "ignoreDeprecations": "5.0"
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "dist",
+        "node_modules",
+        "**/*.test.ts",
+        "src/cli/**",
+        "src/lexicon-tool.ts"
+    ]
+}

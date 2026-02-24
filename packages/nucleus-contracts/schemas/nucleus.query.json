@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NucleusQuery",
+  "type": "object",
+  "required": ["version", "query_id", "user_id", "timestamp_utc", "query_text"],
+  "properties": {
+    "version": { "const": "nucleus.query.v1" },
+    "query_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "timestamp_utc": { "type": "string" },
+    "query_text": { "type": "string" },
+    "context_refs": { "type": "array", "items": { "type": "string" } },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "max_latency_ms": { "type": "number" },
+        "allow_tools": { "type": "boolean" },
+        "allow_memory_write": { "type": "boolean" },
+        "require_citations": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

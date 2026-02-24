@@ -1,0 +1,85 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/ValidatedPlan.schema.json",
+    "title": "ValidatedPlan",
+    "description": "Gate validation results with status; output of Analyst role.",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "batch_id",
+        "gates",
+        "status",
+        "hashes",
+        "review_requirements"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "batch_id": {
+            "type": "string"
+        },
+        "gates": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "gate_name",
+                    "passed",
+                    "reason"
+                ],
+                "properties": {
+                    "gate_name": {
+                        "type": "string"
+                    },
+                    "passed": {
+                        "type": "boolean"
+                    },
+                    "reason": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "status": {
+            "enum": [
+                "red",
+                "yellow",
+                "green"
+            ]
+        },
+        "hashes": {
+            "type": "object",
+            "properties": {
+                "evidence_hash": {
+                    "type": "string"
+                },
+                "lex_hash": {
+                    "type": "string"
+                },
+                "runes_hash": {
+                    "type": "string"
+                }
+            }
+        },
+        "review_requirements": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "artifact_type": {
+                        "type": "string"
+                    },
+                    "artifact_id": {
+                        "type": "string"
+                    },
+                    "reason": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

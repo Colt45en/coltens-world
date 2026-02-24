@@ -1,0 +1,79 @@
+{
+    "world_state": {
+        "entities": [
+            {
+                "id": "ent_001",
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "velocity": {
+                    "x": 1.5,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": 0,
+                "mass": 1.0
+            },
+            {
+                "id": "ent_002",
+                "position": {
+                    "x": 3,
+                    "y": 0,
+                    "z": 0
+                },
+                "velocity": {
+                    "x": -0.5,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": 0,
+                "mass": 2.0
+            }
+        ],
+        "collisions": [
+            {
+                "entity_a": "ent_001",
+                "entity_b": "ent_002",
+                "contact_point": {
+                    "x": 1.5,
+                    "y": 0,
+                    "z": 0
+                },
+                "normal": {
+                    "x": 1,
+                    "y": 0,
+                    "z": 0
+                }
+            }
+        ],
+        "spatial_grid": {
+            "cell_size": 2.0,
+            "grid_bounds": {
+                "min": {
+                    "x": -10,
+                    "y": 0,
+                    "z": -10
+                },
+                "max": {
+                    "x": 10,
+                    "y": 10,
+                    "z": 10
+                }
+            }
+        }
+    },
+    "tick_number": 42,
+    "seed": 12345,
+    "instruction": "Apply collision response to both entities. Reduce velocities elastically (coefficient 0.8). Separate overlapping positions by 0.05 unit along collision normal.",
+    "delta_constraints": {
+        "max_velocity_per_tick": 3.0,
+        "max_rotation_radians": 0.5,
+        "collision_restitution_range": [
+            0.0,
+            1.0
+        ]
+    },
+    "model": "gpt-4-turbo"
+}

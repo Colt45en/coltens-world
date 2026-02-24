@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "lex_9cf0f310fa31",
+  "canonicalTerm": "Determinism",
+  "code_process_tag": "concept.determinism",
+  "type": "concept",
+  "meaning": "Given the same inputs, seeds, versions, and environment constraints, the system produces the same outputs in the same order.",
+  "use": [
+    "Seeded RNG everywhere randomness exists.",
+    "Stable ordering of maps/sets when serialized.",
+    "Hash provenance of inputs/config for replay."
+  ],
+  "methodology": [
+    "Use seeded RNG primitives.",
+    "Normalize ordering on write.",
+    "Add replay tests to confirm stable results."
+  ],
+  "examples": [
+    "Memory artifacts store lexiconIndexHash + pipelineVersion so replay is possible."
+  ],
+  "anti_patterns": [
+    "Using Math.random()",
+    "Depending on object iteration order for serialization."
+  ],
+  "tests_validation": [
+    "Replay run must match canonical NDJSON fixtures byte-for-byte (or diff-only expected fields)."
+  ],
+  "createdAt": "2026-02-12T21:09:10.872Z",
+  "updatedAt": "2026-02-12T21:09:10.872Z"
+}

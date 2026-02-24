@@ -1,0 +1,21 @@
+{
+  "name": "@world-engine/flowstate",
+  "version": "0.1.0",
+  "description": "Deterministic code flow visualization with evidence export",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

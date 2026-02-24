@@ -1,0 +1,27 @@
+{
+  "name": "@world-engine/lexicon",
+  "version": "0.1.0",
+  "description": "Code lexicon schema and query engine for AI brain grounding",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@world-engine/protocol": "workspace:*",
+    "better-sqlite3": "^9.2.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

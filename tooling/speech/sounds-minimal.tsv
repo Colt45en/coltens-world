@@ -1,0 +1,104 @@
+# Speech normalization rules (converted to minimal format)
+# grapheme <tab> in <tab> out <tab> pos <tab> before <tab> after
+# exception <tab> in <tab> out
+
+grapheme	tion	šon	end		
+grapheme	sion	žon	end		
+grapheme	cian	šan	end		
+grapheme	tial	šal	end		
+grapheme	ture	čur	end		
+grapheme	sure	šur	end		
+grapheme	able	ăbəl	end		
+grapheme	ing	ing	end		
+grapheme	ed	d	end	re:([bdgvzmnrl])	
+grapheme	ed	t	end	re:([ptkfθsʃ])	
+grapheme	ed	id	end	re:([td])	
+grapheme	ph	f	any		
+grapheme	gh	∅	any		
+grapheme	kn	n	start		
+grapheme	wr	r	start		
+grapheme	mb	m	end		
+grapheme	gn	n	end		
+grapheme	ps	s	start		
+grapheme	rh	r	start		
+grapheme	ch	č	any		
+grapheme	sh	š	any		
+grapheme	th	ð	any	vowel	
+grapheme	th	θ	any		
+grapheme	wh	w	any		
+grapheme	qu	kw	any		
+grapheme	ck	k	any		
+grapheme	tch	č	any		
+grapheme	dge	ǧ	end		
+grapheme	gn	ny	any	vowel	
+grapheme	x	ẋ	start	vowel	
+grapheme	x	ks	any		
+grapheme	c	ċ	any	set:eiy	
+grapheme	c	k	any		
+grapheme	g	ǧ	any	set:eiy	
+grapheme	g	g	any		
+grapheme	si	ži	any	vowel	
+grapheme	ti	ši	any	vowel	
+grapheme	ce	s	any		
+grapheme	ci	ċi	any		
+grapheme	ge	ǧ	end		
+grapheme	dj	ǧ	any		
+grapheme	tia	ša	any		
+grapheme	sci	ši	any		
+grapheme	igh	ī	end		
+grapheme	eigh	ā	any		
+grapheme	ai	ā	any		
+grapheme	ay	ā	any		
+grapheme	ea	ē	any		
+grapheme	ea	ĕ	any	re:([dt])	
+grapheme	ee	ē	any		
+grapheme	ie	ē	end		
+grapheme	ei	ā	any		
+grapheme	oa	ō	any		
+grapheme	oe	ō	any		
+grapheme	oo	ū	any		
+grapheme	oo	ŭ	any	re:(k)	
+grapheme	ou	ow	any		
+grapheme	ow	ow	any		
+grapheme	oi	oi	any		
+grapheme	oy	oy	any		
+grapheme	au	ɔ	any		
+grapheme	aw	ɔ	any		
+grapheme	er	ər	any		
+grapheme	ir	ər	any		
+grapheme	ur	ər	any		
+grapheme	or	ɔr	any		
+grapheme	ar	ɑr	any		
+grapheme	air	êr	any		
+grapheme	are	êr	end		
+grapheme	ear	îr	any		
+grapheme	ore	ōr	end		
+grapheme	ure	yûr	end		
+grapheme	ng	ŋ	any		
+grapheme	nk	ŋk	any		
+grapheme	y	y	start		
+grapheme	y	ī	end		
+grapheme	a	ā	any	re:[^aeiouy]e\b	
+grapheme	e	ē	any	re:[^aeiouy]e\b	
+grapheme	i	ī	any	re:[^aeiouy]e\b	
+grapheme	o	ō	any	re:[^aeiouy]e\b	
+grapheme	u	ū	any	re:[^aeiouy]e\b	
+grapheme	e	∅	end		
+grapheme	tt	t	any		
+grapheme	ll	l	any		
+grapheme	ss	s	any		
+grapheme	pp	p	any		
+grapheme	mm	m	any		
+grapheme	nn	n	any		
+grapheme	ey	ā	end		
+grapheme	ow	ō	end		
+grapheme	sch	sk	any		
+grapheme	ugh	ŭf	end		
+grapheme	augh	ɔ	any		
+grapheme	owel	owəl	end		
+grapheme	ion	yon	end		
+grapheme	que	k	end		
+grapheme	gue	g	end		
+grapheme	eau	ō	any		
+grapheme	ar	ɔr	any		
+grapheme	w	∅	start		

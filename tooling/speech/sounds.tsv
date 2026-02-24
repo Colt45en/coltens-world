@@ -1,0 +1,302 @@
+kind	id	priority	notes	pattern	flags	replace	exception_in	exception_out	grapheme	out	pos	before	after
+grapheme	G_001_TION_SHON	1000	-tion ending -> šon						tion	šon	end		
+grapheme	G_002_SION_ZHON	995	-sion ending -> žon (vision->vižon)						sion	žon	end		
+grapheme	G_003_CIAN_SHAN	992	-cian ending -> šan (musician->musišan)						cian	šan	end		
+grapheme	G_004_TIAL_SHAL	990	-tial ending -> šal (partial->paršal)						tial	šal	end		
+grapheme	G_005_TURE_CHUR	988	-ture ending -> čur (future->fučur) (dialect varies)						ture	čur	end		
+grapheme	G_006_SURE_SHUR	986	sure->šur family (pressure->prešur)						sure	šur	end		
+grapheme	G_007_ABLE_UHBUL	984	-able ending -> ăbəl (stable->stăbəl) (starter)						able	ăbəl	end		
+grapheme	G_008_ING_ING	982	-ing ending stays ing (explicit)						ing	ing	end		
+grapheme	G_009_ED_D	980	-ed after voiced -> d (played->plād) (starter)						ed	d	end	re:([bdgvzmnrl])	
+grapheme	G_010_ED_T	978	-ed after voiceless -> t (worked->wərkt) (starter)						ed	t	end	re:([ptkfθsʃ])	
+grapheme	G_011_ED_ID	976	-ed after t/d -> id (wanted->wăntid) (starter)						ed	id	end	re:([td])	
+grapheme	G_012_PH_F	970	ph -> f						ph	f	any		
+grapheme	G_013_GH_SILENT	968	gh -> ∅ (though->tho) (starter; exceptions exist)						gh	∅	any		
+grapheme	G_014_KN_N	966	kn start -> n (knight->night)						kn	n	start		
+grapheme	G_015_WR_R	964	wr start -> r (write->rite)						wr	r	start		
+grapheme	G_016_MB_M	962	mb end -> m (lamb->lam)						mb	m	end		
+grapheme	G_017_GN_N	960	gn end -> n (sign->sin)						gn	n	end		
+grapheme	G_018_PS_S	958	ps start -> s (psychology->sychology)						ps	s	start		
+grapheme	G_019_RH_R	956	rh start -> r (rhythm->r... )						rh	r	start		
+grapheme	G_020_CH_CH	950	ch -> č (church->čurč)						ch	č	any		
+grapheme	G_021_SH_SH	948	sh -> š						sh	š	any		
+grapheme	G_022_TH_VOICED	946	th -> ð (this/that/the) (starter heuristic: before vowel + common words later)						th	ð	any	vowel	
+grapheme	G_023_TH_VOICELESS	944	th -> θ (thin->θin) default						th	θ	any		
+grapheme	G_024_WH_W	942	wh -> w (what->wat)						wh	w	any		
+grapheme	G_025_QU_KW	940	qu -> kw						qu	kw	any		
+grapheme	G_026_CK_K	938	ck -> k						ck	k	any		
+grapheme	G_027_TCH_CH	936	tch -> č						tch	č	any		
+grapheme	G_028_DGJ_J	934	dge end -> ǧ (bridge->briǧ)						dge	ǧ	end		
+grapheme	G_029_GN_NY	932	gn before vowel -> ny (lasagna->lazanya) (starter)						gn	ny	any	vowel	
+grapheme	G_030_X_INITIAL_Ẋ	930	initial x before vowel -> ẋ						x	ẋ	start	vowel	
+grapheme	G_031_X_DEFAULT_KS	928	x -> ks default						x	ks	any		
+grapheme	G_032_C_SOFT_Ć	926	c before e/i/y -> ċ						c	ċ	any	set:eiy	
+grapheme	G_033_C_HARD_K	924	c -> k default						c	k	any		
+grapheme	G_034_G_SOFT_Ǧ	922	g before e/i/y -> ǧ						g	ǧ	any	set:eiy	
+grapheme	G_035_G_HARD_G	920	g hard default (explicit)						g	g	any		
+grapheme	G_036_SI_ZH	918	si before vowel -> ž (vision-ish) (starter)						si	ži	any	vowel	
+grapheme	G_037_TI_SH	916	ti before vowel -> ši (nation-ish) (starter)						ti	ši	any	vowel	
+grapheme	G_038_CE_S	914	ce -> s (cent->sent) (starter)						ce	s	any		
+grapheme	G_039_CI_S	912	ci -> s (city->sity) (if you prefer ċ, keep C_SOFT; this is fallback)						ci	ċi	any		
+grapheme	G_040_GE_J	910	ge end -> ǧ (age->āǧ) (starter)						ge	ǧ	end		
+grapheme	G_041_DJ_J	908	dj -> ǧ						dj	ǧ	any		
+grapheme	G_042_TI_A_SH	906	-tia/-tio start morph -> š (partial)						tia	ša	any		
+grapheme	G_043_SCI_SH	904	sci -> š (science->šience) (starter)						sci	ši	any		
+grapheme	G_044_IGH_AI	900	igh -> ī (high->hī)						igh	ī	end		
+grapheme	G_045_EIGH_AY	898	eigh -> ā (eight->āt)						eigh	ā	any		
+grapheme	G_046_AI_AY	896	ai -> ā (rain->rān)						ai	ā	any		
+grapheme	G_047_AY_AY	894	ay -> ā (day->dā)						ay	ā	any		
+grapheme	G_048_EA_LONGE	892	ea -> ē (team->tēm)						ea	ē	any		
+grapheme	G_049_EA_SHORTE	890	ea -> ĕ (head->hĕd) (starter context: before d/t)						ea	ĕ	any	re:([dt])	
+grapheme	G_050_EE_LONGE	888	ee -> ē (see->sē)						ee	ē	any		
+grapheme	G_051_IE_LONGE	886	ie -> ē at end (cookie-ish excluded)						ie	ē	end		
+grapheme	G_052_EI_LONGA	884	ei -> ā (vein->vān)						ei	ā	any		
+grapheme	G_053_OA_LONGO	882	oa -> ō (boat->bōt)						oa	ō	any		
+grapheme	G_054_OE_LONGO	880	oe -> ō (toe->tō)						oe	ō	any		
+grapheme	G_055_OO_U_LONG	878	oo -> ū (moon->mūn)						oo	ū	any		
+grapheme	G_056_OO_UH	876	oo -> ŭ (book->bŭk) (starter context: before k)						oo	ŭ	any	re:(k)	
+grapheme	G_057_OU_OW	874	ou -> ou/ow (out->owt) (starter)						ou	ow	any		
+grapheme	G_058_OW_OW	872	ow -> ow (now->now) (explicit)						ow	ow	any		
+grapheme	G_059_OI_OY	870	oi -> oi (coin->coin) (explicit)						oi	oi	any		
+grapheme	G_060_OY_OY	868	oy -> oy (boy->boy) (explicit)						oy	oy	any		
+grapheme	G_061_AU_AW	866	au -> ɔ (cause->cɔse)						au	ɔ	any		
+grapheme	G_062_AW_AW	864	aw -> ɔ (saw->sɔ)						aw	ɔ	any		
+grapheme	G_063_ER_UR	862	er -> ər (her->hər)						er	ər	any		
+grapheme	G_064_IR_UR	860	ir -> ər (bird->bərd)						ir	ər	any		
+grapheme	G_065_UR_UR	858	ur -> ər (turn->tərn)						ur	ər	any		
+grapheme	G_066_OR_OR	856	or -> ɔr (fork->fɔrk)						or	ɔr	any		
+grapheme	G_067_AR_AR	854	ar -> ɑr (car->cɑr)						ar	ɑr	any		
+grapheme	G_068_AIR_ARE	852	air -> ê (hair->hêr)						air	êr	any		
+grapheme	G_069_ARE_ARE	850	are -> êr (care->cêr)						are	êr	end		
+grapheme	G_070_EAR_EER	848	ear -> îr (hear->hîr) (starter)						ear	îr	any		
+grapheme	G_071_ORE_OR	846	ore -> ōr (more->mōr)						ore	ōr	end		
+grapheme	G_072_URE_YUR	844	ure -> yûr (pure->pyûr) (starter)						ure	yûr	end		
+grapheme	G_073_ING_NG	842	ng -> ŋ (sing->siŋ) (optional symbol)						ng	ŋ	any		
+grapheme	G_074_NK_NK	840	nk -> ŋk (think->θiŋk) (optional)						nk	ŋk	any		
+grapheme	G_075_Y_CONSONANT	838	y at start -> y (yes->yes)						y	y	start		
+grapheme	G_076_Y_END_LONGI	836	y at end -> ī (by->bī)						y	ī	end		
+grapheme	G_077_A_E_LONGA	834	a_e -> ā (make->māke) (starter)						a	ā	any	re:[^aeiouy]e\b	
+grapheme	G_078_E_E_LONGE	832	e_e -> ē (these->thēse) (starter)						e	ē	any	re:[^aeiouy]e\b	
+grapheme	G_079_I_E_LONGI	830	i_e -> ī (time->tīme) (starter)						i	ī	any	re:[^aeiouy]e\b	
+grapheme	G_080_O_E_LONGO	828	o_e -> ō (home->hōme) (starter)						o	ō	any	re:[^aeiouy]e\b	
+grapheme	G_081_U_E_LONGU	826	u_e -> ū (cube->cūbe) (starter)						u	ū	any	re:[^aeiouy]e\b	
+grapheme	G_082_SILENT_E_DROP	824	silent e at end -> ∅ (name->nam) (use carefully; often used with long vowel rules)						e	∅	end		
+grapheme	G_083_DOUBLE_CONS_REDUCE	820	double consonant -> single (tt->t) (starter; broad)						tt	t	any		
+grapheme	G_084_DOUBLE_LL_REDUCE	818	ll -> l						ll	l	any		
+grapheme	G_085_DOUBLE_SS_REDUCE	816	ss -> s						ss	s	any		
+grapheme	G_086_DOUBLE_PP_REDUCE	814	pp -> p						pp	p	any		
+grapheme	G_087_DOUBLE_MM_REDUCE	812	mm -> m						mm	m	any		
+grapheme	G_088_DOUBLE_NN_REDUCE	810	nn -> n						nn	n	any		
+grapheme	G_089_FINAL_EY_AY	808	ey at end -> ā (they->thā) (starter)						ey	ā	end		
+grapheme	G_090_FINAL_OW_O	806	ow at end -> ō (snow->snō) (starter)						ow	ō	end		
+grapheme	G_091_SCH_SK	804	sch -> sk (school->skool)						sch	sk	any		
+grapheme	G_092_UGH_UF	802	ugh -> ŭf (tough->tŭf) (starter)						ugh	ŭf	end		
+grapheme	G_093_AUGH_AW	800	augh -> ɔ (caught-ish) (starter)						augh	ɔ	any		
+grapheme	G_094_OWEL_OWEL	798	owel -> owəl (vowel->vowəl) (starter)						owel	owəl	end		
+grapheme	G_095_ION_YON	796	-ion -> yon (million->milyon) (starter)						ion	yon	end		
+grapheme	G_096_QUE_K	794	-que end -> k (unique->unīk) (starter)						que	k	end		
+grapheme	G_097_GUE_G	792	-gue end -> g (vague->vag) (starter)						gue	g	end		
+grapheme	G_098_EAU_O	790	eau -> ō (beauty->bōty) (starter)						eau	ō	any		
+grapheme	G_099_AWRE_AWR	788	aw before r -> ɔr (war->wɔr) (starter)						ar	ɔr	any		
+grapheme	G_100_SILENT_W	786	w before r at start -> ∅ (write handled; this is generic)						w	∅	start		
+exception	E_001_THE	0	common voiced th					the					
+exception	E_002_THIS	0	common voiced th					this					
+exception	E_003_THAT	0	common voiced th					that					
+exception	E_004_THESE	0	common voiced th					these					
+exception	E_005_THOSE	0	common voiced th					those					
+exception	E_006_THERE	0	there vowel				thêr						
+exception	E_007_THEIR	0	their vowel				thêr						
+exception	E_008_THEY	0	they vowel				ðā						
+exception	E_009_THEN	0	common voiced th					then					
+exception	E_010_THAN	0	common voiced th					than					
+exception	E_011_WAS	0	irregular vowel					was					
+exception	E_012_WERE	0	irregular vowel					were					
+exception	E_013_WHERE	0	irregular vowel					where					
+exception	E_014_HERE	0	irregular vowel					here					
+exception	E_015_HOUR	0	silent h					hour					
+exception	E_016_HONEST	0	silent h					honest					
+exception	E_017_HONOR	0	silent h					honor					
+exception	E_018_HEIR	0	silent h					heir					
+exception	E_019_HERB	0	silent h (US)					herb					
+exception	E_020_KNOW	0	kn->n + irregular vowel					know					
+exception	E_021_KNIFE	0	kn->n					knife					
+exception	E_022_KNEE	0	kn->n					knee					
+exception	E_023_KNOCK	0	kn->n					knock					
+exception	E_024_KNOT	0	kn->n					knot					
+exception	E_025_WRONG	0	wr->r					wrong					
+exception	E_026_WRITE	0	wr->r					write					
+exception	E_027_WRITEN	0	common misspelling mapping					writen					
+exception	E_028_WROTE	0	wr->r					wrote					
+exception	E_029_WHO	0	who vowel				hū						
+exception	E_030_WHOSE	0	who vowel				hūz						
+exception	E_031_TWO	0	irregular vowel					two					
+exception	E_032_ONE	0	irregular vowel					one					
+exception	E_033_ONCE	0	irregular vowel					once					
+exception	E_034_DO	0	irregular vowel					do					
+exception	E_035_DONE	0	irregular vowel					done					
+exception	E_036_DOES	0	irregular vowel					does					
+exception	E_037_GONE	0	irregular vowel					gone					
+exception	E_038_SOME	0	irregular vowel					some					
+exception	E_039_COME	0	irregular vowel					come					
+exception	E_040_BLOOD	0	oo -> ŭ					blood					
+exception	E_041_FLOOD	0	oo -> ŭ					flood					
+exception	E_042_GOOD	0	oo -> ŭ					good					
+exception	E_043_BOOK	0	oo -> ŭ					book					
+exception	E_044_LOOK	0	oo -> ŭ					look					
+exception	E_045_TOOK	0	oo -> ŭ					took					
+exception	E_046_WOOD	0	oo -> ŭ					wood					
+exception	E_047_FOOD	0	oo -> ū					food					
+exception	E_048_MOON	0	oo -> ū					moon					
+exception	E_049_SOON	0	oo -> ū					soon					
+exception	E_050_POOL	0	oo -> ū					pool					
+exception	E_051_COULD	0	silent l					could					
+exception	E_052_WOULD	0	silent l					would					
+exception	E_053_SHOULD	0	silent l					should					
+exception	E_054_SAID	0	irregular vowel					said					
+exception	E_055_SAYS	0	irregular vowel					says					
+exception	E_056_SAY	0	long a				sā						
+exception	E_057_AGAIN	0	irregular vowel					again					
+exception	E_058_ANY	0	irregular vowel					any					
+exception	E_059_MANY	0	irregular vowel					many					
+exception	E_060_WOMAN	0	irregular vowel					woman					
+exception	E_061_WOMEN	0	irregular vowel					women					
+exception	E_062_CHILD	0	irregular vowel					child					
+exception	E_063_CHILDREN	0	irregular plural					children					
+exception	E_064_PEOPLE	0	irregular					people					
+exception	E_065_FRIEND	0	irregular vowel					friend					
+exception	E_066_BUILD	0	irregular					build					
+exception	E_067_GUARD	0	silent u					guard					
+exception	E_068_GUESS	0	gu->g					guess					
+exception	E_069_GUEST	0	gu->g					guest					
+exception	E_070_BURY	0	irregular vowel					bury					
+exception	E_071_BUSY	0	irregular vowel					busy					
+exception	E_072_BUSINESS	0	irregular vowel					business					
+exception	E_073_ENOUGH	0	gh -> ∅ + vowel					enough					
+exception	E_074_TOUGH	0	gh -> ∅ + vowel					tough					
+exception	E_075_THOUGH	0	gh silent					though					
+exception	E_076_THOUGHT	0	gh silent					thought					
+exception	E_077_THROUGH	0	gh silent					through					
+exception	E_078_COUGH	0	gh -> f					cough					
+exception	E_079_LAUGH	0	gh -> f					laugh					
+exception	E_080_DAUGHTER	0	gh silent					daughter					
+exception	E_081_NIGHT	0	igh -> ī					night					
+exception	E_082_LIGHT	0	igh -> ī					light					
+exception	E_083_RIGHT	0	igh -> ī					right					
+exception	E_084_EIGHT	0	eigh -> ā					eight					
+exception	E_085_WEIGHT	0	eigh -> ā					weight					
+exception	E_086_HEIGHT	0	eigh -> ā					height					
+exception	E_087_GREAT	0	ea -> ā					great					
+exception	E_088_BREAK	0	ea -> ā					break					
+exception	E_089_STEAK	0	ea -> ā					steak					
+exception	E_090_BREAD	0	ea -> ĕ					bread					
+exception	E_091_HEAD	0	ea -> ĕ					head					
+exception	E_092_DEAD	0	ea -> ĕ					dead					
+exception	E_093_LEAD_NOUN	0	lead metal					lead					
+exception	E_094_LEAD_VERB	0	lead verb (you may split later)					lead					
+exception	E_095_READ_PAST	0	read past					read					
+exception	E_096_READ_PRESENT	0	read present					read					
+exception	E_097_WIND_NOUN	0	wind noun					wind					
+exception	E_098_WIND_VERB	0	wind verb					wind					
+exception	E_099_LIVE_VERB	0	live verb					live					
+exception	E_100_LIVE_ADJ	0	live adj					live					
+exception	E_101_SEW	0	irregular					sew					
+exception	E_102_DEW	0	irregular					dew					
+exception	E_103_FEW	0	irregular					few					
+exception	E_104_NEW	0	irregular					new					
+exception	E_105_YOU	0	irregular					you					
+exception	E_106_YOUR	0	irregular					your					
+exception	E_107_YOURSELF	0	compound					yourself					
+exception	E_108_EYE	0	irregular					eye					
+exception	E_109_HAVE	0	irregular silent e					have					
+exception	E_110_GIVE	0	irregular silent e					give					
+exception	E_111_LIVE	0	irregular silent e					live					
+exception	E_112_DONE_ALT	0	common alt spelling mapping					dun					
+exception	E_113_OF	0	irregular					of					
+exception	E_114_OFF	0	double f sound					off					
+exception	E_115_FROM	0	irregular					from					
+exception	E_116_WANT	0	a->ɔ					want					
+exception	E_117_WASNT	0	contraction mapping					wasn't					
+exception	E_118_DONT	0	contraction mapping					don't					
+exception	E_119_CANT	0	contraction mapping					can't					
+exception	E_120_WONT	0	contraction mapping					won't					
+exception	E_121_ISNT	0	contraction mapping					isn't					
+exception	E_122_ARENT	0	contraction mapping					aren't					
+exception	E_123_WERENT	0	contraction mapping					weren't					
+exception	E_124_COULDN'T	0	contraction mapping					couldn't					
+exception	E_125_WOULDN'T	0	contraction mapping					wouldn't					
+exception	E_126_SHOULDN'T	0	contraction mapping					shouldn't					
+exception	E_127_THERES	0	contraction mapping					there's					
+exception	E_128_THATS	0	contraction mapping					that's					
+exception	E_129_IM	0	contraction mapping					i'm					
+exception	E_130_ILL	0	contraction mapping					i'll					
+exception	E_131_IVE	0	contraction mapping					i've					
+exception	E_132_ID	0	contraction mapping					i'd					
+exception	E_133_WE'RE	0	contraction mapping					we're					
+exception	E_134_THEYRE	0	contraction mapping					they're					
+exception	E_135_YOURE	0	contraction mapping					you're					
+exception	E_136_HES	0	contraction mapping					he's					
+exception	E_137_SHES	0	contraction mapping					she's					
+exception	E_138_ITS	0	contraction mapping					it's					
+exception	E_139_LETS	0	contraction mapping					let's					
+exception	E_140_WHATS	0	contraction mapping					what's					
+exception	E_141_WHOS	0	contraction mapping					who's					
+exception	E_142_COLONEL	0	irregular					colonel					
+exception	E_143_YACHT	0	irregular					yacht					
+exception	E_144_ISLAND	0	silent s					island					
+exception	E_145_DEBT	0	silent b					debt					
+exception	E_146_DOUBT	0	silent b					doubt					
+exception	E_147_SUBTLE	0	silent b					subtle					
+exception	E_148_THUMB	0	silent b					thumb					
+exception	E_149_CLIMB	0	silent b					climb					
+exception	E_150_LIMB	0	silent b					limb					
+exception	E_151_BOMB	0	silent b					bomb					
+exception	E_152_COMB	0	silent b					comb					
+exception	E_153_TOMB	0	silent b					tomb					
+exception	E_154_WEDNESDAY	0	irregular					wednesday					
+exception	E_155_HANDSOME	0	silent d					handsome					
+exception	E_156_GRANDMA	0	common simplified					grandma					
+exception	E_157_GRANDFATHER	0	common simplified					grandfather					
+exception	E_158_LISTEN	0	silent t					listen					
+exception	E_159_CASTLE	0	silent t					castle					
+exception	E_160_WHISTLE	0	silent t					whistle					
+exception	E_161_FASTEN	0	silent t					fasten					
+exception	E_162_HUSTLE	0	silent t (dialect)					hustle					
+exception	E_163_SOFTEN	0	silent t					soften					
+exception	E_164_OFTEN	0	t often silent					often					
+exception	E_165_GNOME	0	gn start -> n					gnome					
+exception	E_166_SIGN	0	gn end -> n					sign					
+exception	E_167_FOREIGN	0	irregular					foreign					
+exception	E_168_SWORD	0	silent w					sword					
+exception	E_169_SWORE	0	silent w					swore					
+exception	E_170_WRESTLE	0	silent w					wrestle					
+exception	E_171_WRECK	0	wr->r					wreck					
+exception	E_172_WRAP	0	wr->r					wrap					
+exception	E_173_WREN	0	wr->r					wren					
+exception	E_174_PSYCH	0	ps->s					psych					
+exception	E_175_PNEUMONIA	0	p silent					pneumonia					
+exception	E_176_RECEIPT	0	silent p					receipt					
+exception	E_177_CORPS	0	silent p					corps					
+exception	E_178_CUPBOARD	0	irregular					cupboard					
+exception	E_179_CHOCOLATE	0	common reduction					chocolate					
+exception	E_180_DIFFERENT	0	common reduction					different					
+exception	E_181_FAVORITE	0	common reduction					favorite					
+exception	E_182_EVERY	0	common reduction					every					
+exception	E_183_EVEREST	0	proper noun kept (optional)					everest					
+exception	E_184_MEMORY	0	common reduction					memory					
+exception	E_185_CAMERA	0	common reduction					camera					
+exception	E_186_GENERAL	0	common reduction					general					
+exception	E_187_NATURAL	0	common reduction					natural					
+exception	E_188_LITERATURE	0	common reduction					literature					
+exception	E_189_TEMPERATURE	0	common reduction					temperature					
+exception	E_190_INTERESTING	0	common reduction					interesting					
+exception	E_191_SEPARATE	0	irregular vowel					separate					
+exception	E_192_CHOOSE	0	oo -> ū					choose					
+exception	E_193_LOSE	0	irregular					lose					
+exception	E_194_LOSS	0	irregular					loss					
+exception	E_195_MOVE	0	irregular					move					
+exception	E_196_PROVE	0	irregular					prove					
+exception	E_197_LOVE	0	irregular					love					
+exception	E_198_ABOVE	0	irregular					above					
+exception	E_199_GLOVE	0	irregular					glove					
+exception	E_200_DOVE	0	irregular (bird)					dove					
+													

@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preview Runtime</title>
+    <style>
+      body {
+        margin: 0;
+        background: #050507;
+        color: #e8e8ea;
+        font-family: ui-sans-serif, system-ui;
+      }
+      #root {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      canvas {
+        border: 1px solid #1d1d2a;
+        border-radius: 12px;
+      }
+      .hud {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        font-size: 13px;
+        color: #bdbdd1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hud" id="hud">preview connecting...</div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

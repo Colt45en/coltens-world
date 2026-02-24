@@ -1,0 +1,929 @@
+{
+  "questions": [
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "To make training faster",
+        "b": "To prevent data leakage and maintain comparable evaluations",
+        "c": "To reduce model size",
+        "d": "To improve GPU utilization"
+      },
+      "question_number": 1,
+      "question_text": "What is the single most important reason to lock train/val/test splits early?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Accuracy only",
+        "b": "F1 score only",
+        "c": "Log loss / cross-entropy",
+        "d": "Number of parameters"
+      },
+      "question_number": 2,
+      "question_text": "Which metric best captures probabilistic prediction quality when outputs are probabilities?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "The model is unbiased",
+        "b": "The pipeline + optimization are implemented correctly",
+        "c": "The dataset is perfectly clean",
+        "d": "The model will generalize"
+      },
+      "question_number": 3,
+      "question_text": "What does an 'overfit test' (tiny subset fit) primarily verify?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "They reduce compute cost",
+        "b": "They prove which change caused the gain (causality evidence)",
+        "c": "They make charts prettier",
+        "d": "They eliminate the need for test sets"
+      },
+      "question_number": 4,
+      "question_text": "Why are ablations mandatory for serious model improvement work?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "To increase token count",
+        "b": "To stabilize optimization and preserve information flow",
+        "c": "To remove attention",
+        "d": "To reduce dataset size"
+      },
+      "question_number": 5,
+      "question_text": "In a transformer block, what is the purpose of residual connections?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "A distance metric that is always symmetric",
+        "b": "A measure of how one distribution differs from another (asymmetric)",
+        "c": "A measure of GPU speed",
+        "d": "A measure of model size"
+      },
+      "question_number": 6,
+      "question_text": "What is the correct interpretation of KL divergence in training objectives?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Better generalization",
+        "b": "Test set becomes a training signal (leakage), inflating reported performance",
+        "c": "Lower variance",
+        "d": "Faster inference"
+      },
+      "question_number": 7,
+      "question_text": "What is the most common failure mode if you tune hyperparameters on the test set?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Changing model architecture every run",
+        "b": "Pinning seeds, recording configs, and versioning data/code",
+        "c": "Using more GPUs",
+        "d": "Using larger batch sizes only"
+      },
+      "question_number": 8,
+      "question_text": "Which practice most directly improves training reproducibility?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Whether the model uses GPUs",
+        "b": "Whether predicted probabilities match true outcome frequencies",
+        "c": "Whether the dataset is balanced",
+        "d": "Whether the model is small"
+      },
+      "question_number": 9,
+      "question_text": "What does 'calibration' refer to in classification models producing probabilities?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "A corrupted CSV file",
+        "b": "Information from validation/test influences training or model selection improperly",
+        "c": "Slow training speed",
+        "d": "Low GPU memory"
+      },
+      "question_number": 10,
+      "question_text": "What is the best definition of 'data leakage'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Baselines always win",
+        "b": "It gives a reference point and prevents wasting complexity on unsolved basics",
+        "c": "It eliminates evaluation",
+        "d": "It makes models smaller"
+      },
+      "question_number": 11,
+      "question_text": "Why is 'baseline first' a golden rule?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "To change the dataset",
+        "b": "To speed up training and reduce memory while keeping stability (with scaling)",
+        "c": "To remove gradients",
+        "d": "To make outputs discrete"
+      },
+      "question_number": 12,
+      "question_text": "What is the core reason mixed precision (AMP) is used?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Model",
+        "d": "Train"
+      },
+      "question_number": 13,
+      "question_text": "Which Golden Loop stage is described by: 'Define: task + metric + baseline'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Model",
+        "d": "Train"
+      },
+      "question_number": 14,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Define'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Define",
+        "b": "Model",
+        "c": "Data",
+        "d": "Train"
+      },
+      "question_number": 15,
+      "question_text": "Which Golden Loop stage is described by: 'Data: collect -> clean -> label -> split -> version'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Train",
+        "d": "Model"
+      },
+      "question_number": 16,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Data'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "Model",
+        "b": "Define",
+        "c": "Data",
+        "d": "Train"
+      },
+      "question_number": 17,
+      "question_text": "Which Golden Loop stage is described by: 'Model: simplest that can win first (baseline -> improved)'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Define",
+        "b": "Train",
+        "c": "Data",
+        "d": "Model"
+      },
+      "question_number": 18,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Model'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Train",
+        "d": "Model"
+      },
+      "question_number": 19,
+      "question_text": "Which Golden Loop stage is described by: 'Train: reproducible seeds + logging + checkpoints'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Model",
+        "d": "Eval"
+      },
+      "question_number": 20,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Train'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "Eval",
+        "b": "Define",
+        "c": "Data",
+        "d": "Model"
+      },
+      "question_number": 21,
+      "question_text": "Which Golden Loop stage is described by: 'Eval: holdout, stress tests, failure modes, calibration'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Define",
+        "b": "Improve",
+        "c": "Data",
+        "d": "Model"
+      },
+      "question_number": 22,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Eval'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Improve",
+        "d": "Model"
+      },
+      "question_number": 23,
+      "question_text": "Which Golden Loop stage is described by: 'Improve: ablations + error analysis + targeted data/model changes'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Model",
+        "d": "Ship"
+      },
+      "question_number": 24,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Improve'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "Ship",
+        "b": "Define",
+        "c": "Data",
+        "d": "Model"
+      },
+      "question_number": 25,
+      "question_text": "Which Golden Loop stage is described by: 'Ship: deployment + monitoring + rollback + drift detection'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Define",
+        "b": "Govern",
+        "c": "Data",
+        "d": "Model"
+      },
+      "question_number": 26,
+      "question_text": "In the Golden Loop order, what comes immediately after 'Ship'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Govern",
+        "d": "Model"
+      },
+      "question_number": 27,
+      "question_text": "Which Golden Loop stage is described by: 'Govern: safety, privacy, security, compliance'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "Define",
+        "b": "Data",
+        "c": "Model",
+        "d": "Govern"
+      },
+      "question_number": 28,
+      "question_text": "What is the final stage in the Golden Loop?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "b": "Baseline first, then complexity",
+        "c": "Data is a first-class artifact (versioned, audited, gated)",
+        "d": "Evaluation is a product (stress tests + failure catalogs)"
+      },
+      "question_number": 29,
+      "question_text": "Which core principle directly matches this statement: 'Reproducibility over vibes (seeds, logs, configs, deterministic splits)'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "b": "Baseline first, then complexity",
+        "c": "Data is a first-class artifact (versioned, audited, gated)",
+        "d": "Evaluation is a product (stress tests + failure catalogs)"
+      },
+      "question_number": 30,
+      "question_text": "Which core principle directly matches this statement: 'Baseline first, then complexity'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "b": "Baseline first, then complexity",
+        "c": "Data is a first-class artifact (versioned, audited, gated)",
+        "d": "Evaluation is a product (stress tests + failure catalogs)"
+      },
+      "question_number": 31,
+      "question_text": "Which core principle directly matches this statement: 'Data is a first-class artifact (versioned, audited, gated)'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "b": "Baseline first, then complexity",
+        "c": "Data is a first-class artifact (versioned, audited, gated)",
+        "d": "Evaluation is a product (stress tests + failure catalogs)"
+      },
+      "question_number": 32,
+      "question_text": "Which core principle directly matches this statement: 'Evaluation is a product (stress tests + failure catalogs)'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "Ablations are mandatory (prove causality of improvements)",
+        "b": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "c": "Baseline first, then complexity",
+        "d": "Data is a first-class artifact (versioned, audited, gated)"
+      },
+      "question_number": 33,
+      "question_text": "Which core principle directly matches this statement: 'Ablations are mandatory (prove causality of improvements)'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "b": "Ship with monitors + rollback (models drift)",
+        "c": "Baseline first, then complexity",
+        "d": "Data is a first-class artifact (versioned, audited, gated)"
+      },
+      "question_number": 34,
+      "question_text": "Which core principle directly matches this statement: 'Ship with monitors + rollback (models drift)'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+        "b": "Baseline first, then complexity",
+        "c": "Safety and privacy are design constraints, not afterthoughts",
+        "d": "Data is a first-class artifact (versioned, audited, gated)"
+      },
+      "question_number": 35,
+      "question_text": "Which core principle directly matches this statement: 'Safety and privacy are design constraints, not afterthoughts'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "gate 2 training quality",
+        "b": "gate 3 evaluation",
+        "c": "gate 4 shipping",
+        "d": "gate 1 baseline"
+      },
+      "question_number": 36,
+      "question_text": "Which gate includes this checkpoint: 'Metric chosen + baseline achieved'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 2 training quality",
+        "c": "gate 3 evaluation",
+        "d": "gate 4 shipping"
+      },
+      "question_number": 37,
+      "question_text": "Which gate includes this checkpoint: 'Train/val/test split locked and versioned'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "gate 2 training quality",
+        "b": "gate 1 baseline",
+        "c": "gate 3 evaluation",
+        "d": "gate 4 shipping"
+      },
+      "question_number": 38,
+      "question_text": "Which gate includes this checkpoint: 'Single-run reproducible with same seed'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 3 evaluation",
+        "c": "gate 2 training quality",
+        "d": "gate 4 shipping"
+      },
+      "question_number": 39,
+      "question_text": "Which gate includes this checkpoint: 'Loss curves logged'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 3 evaluation",
+        "c": "gate 4 shipping",
+        "d": "gate 2 training quality"
+      },
+      "question_number": 40,
+      "question_text": "Which gate includes this checkpoint: 'Overfit test passed (model can fit tiny subset)'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "gate 2 training quality",
+        "b": "gate 1 baseline",
+        "c": "gate 3 evaluation",
+        "d": "gate 4 shipping"
+      },
+      "question_number": 41,
+      "question_text": "Which gate includes this checkpoint: 'Ablation: remove one component and show expected drop'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 3 evaluation",
+        "c": "gate 2 training quality",
+        "d": "gate 4 shipping"
+      },
+      "question_number": 42,
+      "question_text": "Which gate includes this checkpoint: 'Confusion/failure buckets created'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 2 training quality",
+        "c": "gate 3 evaluation",
+        "d": "gate 4 shipping"
+      },
+      "question_number": 43,
+      "question_text": "Which gate includes this checkpoint: 'Stress tests defined and run'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 2 training quality",
+        "c": "gate 4 shipping",
+        "d": "gate 3 evaluation"
+      },
+      "question_number": 44,
+      "question_text": "Which gate includes this checkpoint: 'Calibration checked (if probabilistic outputs matter)'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "gate 4 shipping",
+        "b": "gate 1 baseline",
+        "c": "gate 2 training quality",
+        "d": "gate 3 evaluation"
+      },
+      "question_number": 45,
+      "question_text": "Which gate includes this checkpoint: 'Latency + cost budget measured'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 4 shipping",
+        "c": "gate 2 training quality",
+        "d": "gate 3 evaluation"
+      },
+      "question_number": 46,
+      "question_text": "Which gate includes this checkpoint: 'Monitoring signals defined'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 2 training quality",
+        "c": "gate 4 shipping",
+        "d": "gate 3 evaluation"
+      },
+      "question_number": 47,
+      "question_text": "Which gate includes this checkpoint: 'Rollback plan exists'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 2 training quality",
+        "c": "gate 3 evaluation",
+        "d": "gate 5 safety"
+      },
+      "question_number": 48,
+      "question_text": "Which gate includes this checkpoint: 'PII handling policy documented'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "gate 5 safety",
+        "b": "gate 1 baseline",
+        "c": "gate 2 training quality",
+        "d": "gate 3 evaluation"
+      },
+      "question_number": 49,
+      "question_text": "Which gate includes this checkpoint: 'Bias checks appropriate to domain'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "gate 1 baseline",
+        "b": "gate 5 safety",
+        "c": "gate 2 training quality",
+        "d": "gate 3 evaluation"
+      },
+      "question_number": 50,
+      "question_text": "Which gate includes this checkpoint: 'Abuse cases enumerated + mitigations tracked'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "ml core",
+        "b": "deep learning",
+        "c": "math spine",
+        "d": "llms"
+      },
+      "question_number": 51,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'linear algebra'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "ml core",
+        "b": "deep learning",
+        "c": "llms",
+        "d": "math spine"
+      },
+      "question_number": 52,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'calculus gradients'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "llms"
+      },
+      "question_number": 53,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'probability bayes'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "ml core",
+        "b": "math spine",
+        "c": "deep learning",
+        "d": "llms"
+      },
+      "question_number": 54,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'optimization sgd adam'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "ml core",
+        "b": "deep learning",
+        "c": "math spine",
+        "d": "llms"
+      },
+      "question_number": 55,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'information theory kl entropy'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "deep learning",
+        "c": "llms",
+        "d": "ml core"
+      },
+      "question_number": 56,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'bias variance'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "ml core",
+        "b": "math spine",
+        "c": "deep learning",
+        "d": "llms"
+      },
+      "question_number": 57,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'regularization'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "llms"
+      },
+      "question_number": 58,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'train val test leakage'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "deep learning",
+        "c": "ml core",
+        "d": "llms"
+      },
+      "question_number": 59,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'metrics and calibration'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "llms",
+        "d": "deep learning"
+      },
+      "question_number": 60,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'backprop'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "deep learning",
+        "b": "math spine",
+        "c": "ml core",
+        "d": "llms"
+      },
+      "question_number": 61,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'normalization'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "deep learning",
+        "c": "ml core",
+        "d": "llms"
+      },
+      "question_number": 62,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'cnn rnn attention'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "llms"
+      },
+      "question_number": 63,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'stability init clipping amp'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "llms"
+      },
+      "question_number": 64,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'tokenization bpe'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "llms",
+        "b": "math spine",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 65,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'transformers attention'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "llms",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 66,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'pretrain vs finetune'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "llms",
+        "d": "deep learning"
+      },
+      "question_number": 67,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'sft dpo rlhf concepts'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "data engineering"
+      },
+      "question_number": 68,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'labeling strategy'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "data engineering",
+        "b": "math spine",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 69,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'dedupe filtering'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "data engineering",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 70,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'dataset versioning'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "data engineering",
+        "d": "deep learning"
+      },
+      "question_number": 71,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'sampling'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "evaluation reliability"
+      },
+      "question_number": 72,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'stress tests'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "evaluation reliability",
+        "b": "math spine",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 73,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'ood thinking'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "evaluation reliability",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 74,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'human eval rubrics'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "evaluation reliability",
+        "d": "deep learning"
+      },
+      "question_number": 75,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'error analysis'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "mlops production"
+      },
+      "question_number": 76,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'experiment tracking'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "mlops production",
+        "b": "math spine",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 77,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'model registry'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "mlops production",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 78,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'deployment canary'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "mlops production",
+        "d": "deep learning"
+      },
+      "question_number": 79,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'monitoring drift cost latency'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "deep learning",
+        "d": "safety security"
+      },
+      "question_number": 80,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'privacy pii'?"
+    },
+    {
+      "correct_answer": "a",
+      "options": {
+        "a": "safety security",
+        "b": "math spine",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 81,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'prompt injection if agents'?"
+    },
+    {
+      "correct_answer": "b",
+      "options": {
+        "a": "math spine",
+        "b": "safety security",
+        "c": "ml core",
+        "d": "deep learning"
+      },
+      "question_number": 82,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'bias audits'?"
+    },
+    {
+      "correct_answer": "c",
+      "options": {
+        "a": "math spine",
+        "b": "ml core",
+        "c": "safety security",
+        "d": "deep learning"
+      },
+      "question_number": 83,
+      "question_text": "In the Crystal AI knowledge map, which section contains 'governance'?"
+    },
+    {
+      "correct_answer": "d",
+      "options": {
+        "a": "Mini-Transformer Language Model",
+        "b": "Preference Tuning Toy (DPO-style)",
+        "c": "None of the above",
+        "d": "From-Scratch ML (No Frameworks)"
+      },
+      "question_number": 84,
+      "question_text": "Which capstone project requires the deliverable 'gradient_check_report'?"
+    }
+  ],
+  "quiz_title": "Golden Standard AI Mastery Quiz Bank (Expanded)"
+}

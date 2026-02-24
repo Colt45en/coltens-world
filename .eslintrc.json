@@ -1,0 +1,97 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "dist",
+    "build",
+    ".next",
+    "coverage",
+    "node_modules",
+    ".turbo",
+    ".cache",
+    ".vite",
+    "_history",
+    "**/*.min.*",
+    "**/*.gen.*",
+    "**/*.generated.*"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.{ts,tsx,js,jsx}"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "ecmaFeatures": { "jsx": true }
+      },
+      "plugins": ["@typescript-eslint", "import"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+        "prettier"
+      ],
+      "settings": {
+        "import/resolver": {
+          "typescript": {
+            "alwaysTryTypes": true
+          }
+        }
+      },
+      "rules": {
+        "no-console": "off",
+        "no-debugger": "warn",
+
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+
+        "@typescript-eslint/consistent-type-imports": [
+          "warn",
+          { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
+        ],
+
+        "import/order": [
+          "warn",
+          {
+            "newlines-between": "always",
+            "alphabetize": { "order": "asc", "caseInsensitive": true },
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index",
+              "object",
+              "type"
+            ]
+          }
+        ],
+
+        "import/no-duplicates": "warn",
+
+        "import/no-unresolved": "off"
+      }
+    },
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.{ts,tsx,js,jsx}", "**/*.spec.{ts,tsx,js,jsx}"],
+      "env": { "jest": true },
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

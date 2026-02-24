@@ -1,0 +1,142 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/WeeklyOpsReport.schema.json",
+    "title": "WeeklyOpsReport",
+    "description": "Weekly operations report with narrative modes; output of PM role.",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "generated_at",
+        "metrics",
+        "state",
+        "conditions",
+        "status",
+        "narrative",
+        "actions"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "generated_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "metrics": {
+            "type": "object",
+            "properties": {
+                "total_batches": {
+                    "type": "integer"
+                },
+                "green_count": {
+                    "type": "integer"
+                },
+                "yellow_count": {
+                    "type": "integer"
+                },
+                "red_count": {
+                    "type": "integer"
+                },
+                "meaning_claims_total": {
+                    "type": "integer"
+                },
+                "high_confidence": {
+                    "type": "integer"
+                },
+                "review_queue_size": {
+                    "type": "integer"
+                }
+            }
+        },
+        "state": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "fact": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": [
+                            "string",
+                            "number",
+                            "boolean"
+                        ]
+                    }
+                }
+            }
+        },
+        "conditions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "gate": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "enum": [
+                            "pass",
+                            "fail"
+                        ]
+                    },
+                    "context": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "status": {
+            "enum": [
+                "red",
+                "yellow",
+                "green"
+            ]
+        },
+        "narrative": {
+            "type": "object",
+            "required": [
+                "mode",
+                "text"
+            ],
+            "properties": {
+                "mode": {
+                    "enum": [
+                        "operations",
+                        "rising_action",
+                        "conflict",
+                        "climax",
+                        "falling_action",
+                        "resolution"
+                    ]
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "actions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "type": "string"
+                    },
+                    "priority": {
+                        "enum": [
+                            "high",
+                            "medium",
+                            "low"
+                        ]
+                    },
+                    "rationale": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,147 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Release (Default)",
+            "description": "Default release build (Clang/LLVM, optimized, deterministic)",
+            "hidden": false,
+            "binaryDir": "${sourceDir}/build/release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true,
+                "CMAKE_CXX_COMPILER": "clang++"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug (Development)",
+            "description": "Debug build with symbols, fast iteration",
+            "hidden": false,
+            "binaryDir": "${sourceDir}/build/debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "clang-linux",
+            "displayName": "Clang Linux (Engine-Grade)",
+            "description": "Linux with Clang: deterministic, reproducible, container-friendly",
+            "hidden": false,
+            "binaryDir": "${sourceDir}/build/clang-linux",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
+            }
+        },
+        {
+            "name": "clang-windows",
+            "displayName": "Clang-cl Windows (Engine-Grade)",
+            "description": "Windows with Clang-cl: deterministic, MSVC-compatible",
+            "hidden": false,
+            "binaryDir": "${sourceDir}/build/clang-windows",
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CXX_COMPILER": "clang-cl",
+                "CMAKE_C_COMPILER": "clang-cl"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "msvc-windows",
+            "displayName": "MSVC Windows (Production)",
+            "description": "Windows with MSVC: best IDE integration, full Windows optimization",
+            "hidden": false,
+            "binaryDir": "${sourceDir}/build/msvc-windows",
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "wasm",
+            "displayName": "WebAssembly (Emscripten)",
+            "description": "Compile to WASM for browser (optional, future layer)",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/wasm",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "$ENV{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+            }
+        },
+        {
+            "name": "Custom configure preset",
+            "displayName": "Custom configure preset",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default-release",
+            "configurePreset": "default",
+            "inheritConfigureEnvironment": true,
+            "jobs": 0
+        },
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "inheritConfigureEnvironment": true,
+            "jobs": 0
+        },
+        {
+            "name": "clang-linux",
+            "configurePreset": "clang-linux",
+            "inheritConfigureEnvironment": true,
+            "jobs": 0
+        },
+        {
+            "name": "clang-windows",
+            "configurePreset": "clang-windows",
+            "inheritConfigureEnvironment": true,
+            "jobs": 0
+        },
+        {
+            "name": "msvc-windows",
+            "configurePreset": "msvc-windows",
+            "inheritConfigureEnvironment": true,
+            "jobs": 0
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "stopOnFailure": true
+            }
+        }
+    ]
+}

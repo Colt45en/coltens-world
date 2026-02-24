@@ -1,0 +1,68 @@
+{
+  "name": "@world-engine/env-sandbox",
+  "version": "1.0.0",
+  "description": "Sandboxed execution environment with policy enforcement and audit logging for the World Engine",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./contracts": {
+      "import": "./dist/contracts.js",
+      "types": "./dist/contracts.d.ts"
+    },
+    "./audit": {
+      "import": "./dist/audit.js",
+      "types": "./dist/audit.d.ts"
+    },
+    "./policy": {
+      "import": "./dist/policy.js",
+      "types": "./dist/policy.d.ts"
+    },
+    "./sandbox": {
+      "import": "./dist/sandbox.js",
+      "types": "./dist/sandbox.d.ts"
+    },
+    "./sandbox-tools": {
+      "import": "./dist/sandbox-tools.js",
+      "types": "./dist/sandbox-tools.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "test": "node --test dist/**/*.test.js",
+    "lint": "eslint src",
+    "cli": "node dist/index.js"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "sandbox",
+    "policy",
+    "audit",
+    "governance",
+    "isolation",
+    "security",
+    "world-engine"
+  ],
+  "author": "World Engine",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/worldenginedev/world-engine"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "./dist",
+    "types": [
+      "node"
+    ]
+  },
+  "include": ["src"]
+}

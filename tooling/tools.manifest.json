@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "manifestId": "tooling.tools",
+  "tools": [
+    {
+      "id": "codegen.check_contracts",
+      "name": "Check contracts",
+      "cwd": ".",
+      "command": ["node", "tooling/codegen/check_contracts.js"],
+      "watchPaths": ["packages", "apps", "tooling"],
+      "allowChanges": false,
+      "expectedOutputsMode": "warn"
+    },
+    {
+      "id": "codegen.gen_ts_types",
+      "name": "Generate TS types",
+      "cwd": ".",
+      "command": ["node", "tooling/codegen/gen_ts_types_stub.js"],
+      "watchPaths": ["packages", "apps", "tooling"],
+      "allowChanges": true,
+      "expectedOutputsMode": "warn",
+      "expectedOutputs": []
+    },
+    {
+      "id": "codegen.export_openapi",
+      "name": "Export OpenAPI",
+      "cwd": ".",
+      "command": ["python", "tooling/codegen/export_openapi.py"],
+      "watchPaths": ["packages", "apps", "tooling"],
+      "allowChanges": true,
+      "expectedOutputsMode": "warn",
+      "expectedOutputs": []
+    },
+    {
+      "id": "htmlts.compile",
+      "name": "Compile HTML+TS (single-file)",
+      "cwd": "tooling/htmlts",
+      "command": ["node", "compile.mjs"],
+      "watchPaths": ["tooling/htmlts"],
+      "allowChanges": true,
+      "expectedOutputsMode": "warn",
+      "expectedOutputs": []
+    },
+    {
+      "id": "speech.compile_config",
+      "name": "Speech: compile config (sounds-final)",
+      "cwd": "tooling/speech",
+      "command": ["node", "tsv-to-rewriter-config-final.mjs"],
+      "watchPaths": ["tooling/speech"],
+      "allowChanges": true,
+      "expectedOutputsMode": "warn",
+      "expectedOutputs": ["tooling/speech/rewriter.config.json"]
+    },
+    {
+      "id": "speech.test",
+      "name": "Speech: Test rewriter (golden + determinism)",
+      "cwd": "tooling/speech",
+      "command": ["node", "test-rewriter.mjs", "--verbose"],
+      "watchPaths": ["tooling/speech"],
+      "allowChanges": false,
+      "expectedOutputsMode": "strict",
+      "expectedOutputs": []
+    },
+    {
+      "id": "speech.pipeline",
+      "name": "Speech pipeline (compile + test)",
+      "cwd": "tooling/speech",
+      "command": ["node", "pipeline.mjs"],
+      "watchPaths": ["tooling/speech"],
+      "allowChanges": true,
+      "expectedOutputsMode": "warn",
+      "expectedOutputs": ["tooling/speech/rewriter.config.json"]
+    },
+    {
+      "id": "cpp.build",
+      "name": "Build C++ tooling",
+      "cwd": "tooling/cpp",
+      "command": ["node", "build.js"],
+      "watchPaths": ["tooling/cpp"],
+      "allowChanges": true,
+      "expectedOutputsMode": "warn",
+      "expectedOutputs": []
+    },
+    {
+      "id": "__DefaultExpectedOutputsMode",
+      "comment": "Default enforcement mode when tool does not specify expectedOutputsMode",
+      "value": "warn"
+    }
+  ]
+}

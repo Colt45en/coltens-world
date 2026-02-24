@@ -1,0 +1,103 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/RuneDecoderRow.schema.json",
+    "title": "RuneDecoderRow",
+    "description": "Code symbol with process tag classification and methodology; output of Alchemist role.",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "rune_id",
+        "code_language",
+        "symbol",
+        "symbol_type",
+        "process_tag",
+        "meaning",
+        "use",
+        "methodology",
+        "trace"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "rune_id": {
+            "type": "string",
+            "pattern": "^rune_[a-f0-9]{24}$"
+        },
+        "code_language": {
+            "type": "string"
+        },
+        "symbol": {
+            "type": "string"
+        },
+        "symbol_type": {
+            "enum": [
+                "identifier",
+                "operator",
+                "delimiter",
+                "keyword"
+            ]
+        },
+        "process_tag": {
+            "type": "string",
+            "enum": [
+                "tokenize",
+                "parse",
+                "validate",
+                "compile",
+                "render",
+                "transport",
+                "storage",
+                "dedupe",
+                "governance",
+                "test",
+                "deploy",
+                "observe",
+                "unknown_tag"
+            ]
+        },
+        "meaning": {
+            "type": "string"
+        },
+        "use": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "methodology": {
+            "type": "object",
+            "required": [
+                "inference_method",
+                "confidence"
+            ],
+            "properties": {
+                "inference_method": {
+                    "type": "string"
+                },
+                "confidence": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0
+                }
+            }
+        },
+        "trace": {
+            "type": "object",
+            "required": [
+                "batch_id",
+                "source_id"
+            ],
+            "properties": {
+                "batch_id": {
+                    "type": "string"
+                },
+                "source_id": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

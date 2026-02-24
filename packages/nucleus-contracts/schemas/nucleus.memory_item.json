@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MemoryItem",
+  "type": "object",
+  "required": [
+    "version",
+    "memory_id",
+    "kind",
+    "statement",
+    "evidence_refs",
+    "confidence",
+    "created_at_utc",
+    "approved_by_user"
+  ],
+  "properties": {
+    "version": { "const": "nucleus.memory_item.v1" },
+    "memory_id": { "type": "string" },
+    "kind": { "enum": ["fact", "decision", "preference", "pattern", "todo"] },
+    "statement": { "type": "string" },
+    "evidence_refs": { "type": "array", "items": { "type": "object" } },
+    "confidence": { "type": "number" },
+    "created_at_utc": { "type": "string" },
+    "approved_by_user": { "type": "boolean" },
+    "approved_at_utc": { "type": "string" },
+    "supersedes_memory_id": { "type": "string" }
+  },
+  "additionalProperties": false
+}

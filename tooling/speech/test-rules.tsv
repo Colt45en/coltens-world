@@ -1,0 +1,24 @@
+# Speech normalization rules - minimal format
+# grapheme <tab> input <tab> output <tab> position <tab> context_before <tab> context_after
+# exception <tab> input <tab> output
+
+# Grapheme rules (common patterns)
+grapheme	tion	šon	end
+grapheme	sion	žon	end
+grapheme	th	θ	any
+grapheme	th	ð	any	vowel
+grapheme	ch	č	any
+grapheme	sh	š	any
+grapheme	ph	f	any
+grapheme	gh	 	any
+grapheme	kn	n	start
+grapheme	wr	r	start
+grapheme	mb	m	end
+
+# Exceptions (high-priority overrides)
+exception	the	ðə
+exception	this	ðɪs
+exception	that	ðăt
+exception	have	hăv
+exception	hour	our
+exception	said	sĕd

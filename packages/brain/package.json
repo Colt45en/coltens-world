@@ -1,0 +1,53 @@
+{
+    "name": "@world-engine/brain",
+    "version": "1.0.0",
+    "description": "Neural network brain system for World Engine. Evolves agent behavior through genetic algorithms.",
+    "type": "module",
+    "main": "./dist/brain/src/index.js",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/brain/src/index.js",
+            "types": "./src/index.ts"
+        },
+        "./ui": {
+            "import": "./dist/brain/src/ui/index.js",
+            "types": "./src/ui/index.ts"
+        },
+        "./memory": {
+            "import": "./dist/brain/src/memory/index.js",
+            "types": "./src/memory/index.ts"
+        },
+        "./review": {
+            "import": "./dist/brain/src/review/index.js",
+            "types": "./src/review/index.ts"
+        },
+        "./lexicon": {
+            "import": "./dist/brain/src/lexicon/index.js",
+            "types": "./src/lexicon/index.ts"
+        }
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "typecheck": "tsc --noEmit",
+        "clean": "rm -rf dist"
+    },
+    "dependencies": {
+        "@world-engine/engine": "workspace:*",
+        "@world-engine/lego-prefab": "workspace:*",
+        "@world-engine/math": "workspace:*",
+        "@world-engine/physics-contract": "workspace:*",
+        "@world-engine/protocol": "workspace:*",
+        "@world-engine/tooling": "workspace:*",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "@types/react": "^18.3.0",
+        "typescript": "^5.6.3"
+    }
+}

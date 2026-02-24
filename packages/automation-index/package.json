@@ -1,0 +1,38 @@
+{
+  "name": "@world-engine/automation-index",
+  "version": "1.0.0",
+  "description": "Centralized automation code index library - unified runtime for all World Engine applications and packages",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./packages": {
+      "import": "./dist/packages/index.js",
+      "types": "./dist/packages/index.d.ts"
+    },
+    "./apps": {
+      "import": "./dist/apps/index.js",
+      "types": "./dist/apps/index.d.ts"
+    },
+    "./registry": {
+      "import": "./dist/registry.js",
+      "types": "./dist/registry.d.ts"
+    },
+    "./automation": {
+      "import": "./dist/automation.js",
+      "types": "./dist/automation.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

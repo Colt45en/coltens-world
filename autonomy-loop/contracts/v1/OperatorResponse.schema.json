@@ -1,0 +1,97 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/OperatorResponse.schema.json",
+    "title": "OperatorResponse",
+    "description": "Response envelope from operator execution with status, result, and audit trail.",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "operator_id",
+        "operator_name",
+        "trace_id",
+        "status",
+        "result",
+        "execution_time_ms"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "default": "1.0.0"
+        },
+        "operator_id": {
+            "type": "string",
+            "pattern": "^op_[a-f0-9]{24}$",
+            "description": "Matches request operator_id"
+        },
+        "operator_name": {
+            "type": "string",
+            "enum": [
+                "prompt.operator.patch",
+                "prompt.operator.simulate_world_tick"
+            ],
+            "description": "Registered operator name"
+        },
+        "trace_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9\\-]{36}$",
+            "description": "Matches request trace_id"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "success",
+                "validation_error",
+                "timeout",
+                "execution_error"
+            ],
+            "description": "Execution status"
+        },
+        "result": {
+            "type": "object",
+            "description": "Operator-specific output (patch diff, world deltas, etc)"
+        },
+        "error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "object"
+                }
+            },
+            "description": "Error details if status != success"
+        },
+        "memory_writes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "ttl_seconds": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "description": "Memory facts to persist after execution"
+        },
+        "execution_time_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Wall-clock execution time in milliseconds"
+        },
+        "deterministic_hash": {
+            "type": "string",
+            "description": "SHA-256 hash of output (for replay verification)"
+        }
+    }
+}

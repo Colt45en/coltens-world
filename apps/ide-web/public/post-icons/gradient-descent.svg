@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Gradient Descent">
+  <title>Gradient Descent</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(138 35% 19.14956408040598%)"/>
+      <stop offset="1" stop-color="hsl(156 40% 25.04767511971295%)"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="0.58"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="96" height="96" rx="21" fill="url(#bg)"/>
+
+  <!-- grain -->
+  <g><circle cx="43.61" cy="4.54" r="1.09" fill="white" opacity="0.122"/><circle cx="63.21" cy="78.86" r="1.36" fill="white" opacity="0.259"/><circle cx="55.51" cy="17.41" r="0.84" fill="white" opacity="0.191"/><circle cx="8.29" cy="36.76" r="1.39" fill="white" opacity="0.203"/><circle cx="12.79" cy="80.36" r="1.34" fill="white" opacity="0.236"/><circle cx="88.94" cy="34.99" r="0.86" fill="white" opacity="0.153"/><circle cx="84.31" cy="0.08" r="1.33" fill="white" opacity="0.217"/><circle cx="21.27" cy="78.55" r="1.24" fill="white" opacity="0.248"/><circle cx="31.09" cy="11.49" r="1.33" fill="white" opacity="0.228"/><circle cx="92.48" cy="36.32" r="0.78" fill="white" opacity="0.255"/><circle cx="10.76" cy="31.01" r="1.27" fill="white" opacity="0.160"/><circle cx="6.78" cy="26.49" r="0.85" fill="white" opacity="0.100"/><circle cx="69.54" cy="24.79" r="0.98" fill="white" opacity="0.201"/><circle cx="51.72" cy="92.87" r="0.65" fill="white" opacity="0.133"/><circle cx="92.90" cy="78.01" r="1.16" fill="white" opacity="0.174"/><circle cx="9.33" cy="57.80" r="0.85" fill="white" opacity="0.140"/><circle cx="30.15" cy="68.37" r="1.48" fill="white" opacity="0.156"/><circle cx="56.28" cy="47.44" r="1.36" fill="white" opacity="0.168"/><circle cx="29.64" cy="71.40" r="1.08" fill="white" opacity="0.199"/><circle cx="81.30" cy="47.83" r="1.08" fill="white" opacity="0.255"/><circle cx="31.37" cy="81.79" r="0.66" fill="white" opacity="0.151"/><circle cx="28.56" cy="30.99" r="1.36" fill="white" opacity="0.197"/><circle cx="31.89" cy="35.92" r="1.38" fill="white" opacity="0.260"/><circle cx="47.35" cy="18.80" r="0.63" fill="white" opacity="0.125"/><circle cx="81.77" cy="13.98" r="0.94" fill="white" opacity="0.248"/><circle cx="51.15" cy="33.61" r="0.81" fill="white" opacity="0.102"/><circle cx="87.01" cy="8.30" r="1.13" fill="white" opacity="0.215"/><circle cx="8.77" cy="63.82" r="0.82" fill="white" opacity="0.231"/><circle cx="1.54" cy="48.89" r="1.40" fill="white" opacity="0.238"/><circle cx="74.14" cy="65.99" r="0.81" fill="white" opacity="0.210"/><circle cx="55.60" cy="31.71" r="0.70" fill="white" opacity="0.215"/><circle cx="54.89" cy="22.48" r="1.50" fill="white" opacity="0.105"/><circle cx="54.64" cy="29.80" r="1.30" fill="white" opacity="0.158"/><circle cx="26.52" cy="44.21" r="1.45" fill="white" opacity="0.137"/><circle cx="92.70" cy="79.32" r="0.82" fill="white" opacity="0.226"/><circle cx="26.52" cy="22.54" r="1.13" fill="white" opacity="0.135"/><circle cx="95.87" cy="90.49" r="1.37" fill="white" opacity="0.179"/><circle cx="29.36" cy="66.31" r="1.25" fill="white" opacity="0.230"/><circle cx="34.17" cy="59.88" r="1.21" fill="white" opacity="0.164"/><circle cx="81.25" cy="12.13" r="1.00" fill="white" opacity="0.250"/><circle cx="18.73" cy="60.11" r="0.71" fill="white" opacity="0.205"/><circle cx="43.25" cy="35.72" r="1.49" fill="white" opacity="0.235"/><circle cx="66.26" cy="58.45" r="0.92" fill="white" opacity="0.136"/><circle cx="87.26" cy="58.40" r="0.85" fill="white" opacity="0.253"/><circle cx="42.41" cy="26.48" r="0.71" fill="white" opacity="0.227"/><circle cx="55.75" cy="75.62" r="1.41" fill="white" opacity="0.109"/><circle cx="72.95" cy="75.77" r="0.84" fill="white" opacity="0.105"/><circle cx="92.76" cy="84.58" r="1.23" fill="white" opacity="0.220"/><circle cx="4.63" cy="3.22" r="0.65" fill="white" opacity="0.156"/><circle cx="91.94" cy="48.27" r="1.16" fill="white" opacity="0.171"/><circle cx="3.71" cy="12.27" r="1.02" fill="white" opacity="0.187"/><circle cx="57.56" cy="84.71" r="1.19" fill="white" opacity="0.167"/></g>
+
+  <!-- glyph -->
+  <g>
+    <rect x="28.70" y="14.30" width="9.79" height="9.79" rx="3.17" fill="hsl(254 70% 60%)" opacity="0.92"/>
+    <rect x="57.50" y="14.30" width="9.79" height="9.79" rx="31.97" fill="hsl(254 70% 60%)" opacity="0.92"/>
+    <path d="M 48.00 14.02 L 53.18 19.20 L 48.00 24.38 L 42.82 19.20 Z" fill="hsl(254 70% 60%)" opacity="0.92"/>
+    <circle cx="19.20" cy="33.60" r="4.03" fill="hsl(254 70% 60%)" opacity="0.92"/>
+    <circle cx="134.40" cy="33.60" r="4.03" fill="hsl(254 70% 60%)" opacity="0.92"/>
+    <path d="M 33.60 28.42 L 38.78 33.60 L 33.60 38.78 L 28.42 33.60 Z" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <path d="M 62.40 28.42 L 67.58 33.60 L 62.40 38.78 L 57.22 33.60 Z" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <path d="M 48.00 28.42 L 53.18 33.60 L 48.00 38.78 L 42.82 33.60 Z" fill="hsl(104 60% 62%)" opacity="0.92"/>
+    <circle cx="33.60" cy="48.00" r="4.03" fill="hsl(104 60% 62%)" opacity="0.92"/>
+    <circle cx="91.20" cy="48.00" r="4.03" fill="hsl(104 60% 62%)" opacity="0.92"/>
+    <rect x="43.10" y="43.10" width="9.79" height="9.79" rx="3.17" fill="hsl(104 60% 62%)" opacity="0.92"/>
+    <path d="M 19.20 57.22 L 24.38 62.40 L 19.20 67.58 L 14.02 62.40 Z" fill="hsl(104 60% 62%)" opacity="0.92"/>
+    <path d="M 76.80 57.22 L 81.98 62.40 L 76.80 67.58 L 71.62 62.40 Z" fill="hsl(104 60% 62%)" opacity="0.92"/>
+    <path d="M 33.60 57.22 L 38.78 62.40 L 33.60 67.58 L 28.42 62.40 Z" fill="hsl(279 70% 55%)" opacity="0.92"/>
+    <path d="M 62.40 57.22 L 67.58 62.40 L 62.40 67.58 L 57.22 62.40 Z" fill="hsl(279 70% 55%)" opacity="0.92"/>
+    <path d="M 48.00 57.22 L 53.18 62.40 L 48.00 67.58 L 42.82 62.40 Z" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <circle cx="19.20" cy="76.80" r="4.03" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <circle cx="134.40" cy="76.80" r="4.03" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <circle cx="33.60" cy="76.80" r="4.03" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <circle cx="91.20" cy="76.80" r="4.03" fill="hsl(318 30% 92%)" opacity="0.92"/>
+    <rect x="43.10" y="71.90" width="9.79" height="9.79" rx="3.17" fill="hsl(104 60% 62%)" opacity="0.92"/>
+  </g>
+
+  <!-- overlay ring -->
+  <circle cx="50.85" cy="55.46" r="27.20" fill="none" stroke="hsl(254 70% 60%)" stroke-width="4.08" opacity="0.70"/>
+
+  <!-- overlay triangle -->
+  <path d="M 67.48 34.40
+           L 86.36 37.79
+           L 70.88 53.27
+           Z"
+        fill="hsl(318 30% 92%)" opacity="0.78" filter="url(#soft)"/>
+
+  <!-- rounded mask edge polish -->
+  <rect x="1.92" y="1.92"
+        width="92.16" height="92.16"
+        rx="18.06" fill="none"
+        stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+</svg>

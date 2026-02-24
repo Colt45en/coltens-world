@@ -1,0 +1,55 @@
+.we-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: color-mix(in srgb, #0b1220 70%, transparent);
+  border: 1px solid color-mix(in srgb, #5aa7ff 22%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+
+.we-dock__btn {
+  appearance: none;
+  border: 0;
+  background: color-mix(in srgb, #101a2c 85%, transparent);
+  color: #e8eef6;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  outline: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #5aa7ff 18%, transparent);
+}
+
+.we-dock__btn:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #5aa7ff 40%, transparent),
+    0 0 0 3px color-mix(in srgb, #5aa7ff 30%, transparent);
+}
+
+.we-dock__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.we-dock__label {
+  font-size: 11px;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+.we-dock__stack {
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+}

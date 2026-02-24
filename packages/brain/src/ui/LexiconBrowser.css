@@ -1,0 +1,135 @@
+/* LexiconBrowser.css */
+.lexicon-browser {
+  padding: 16px;
+  font-family: system-ui, -apple-system, sans-serif;
+  height: 100%;
+}
+
+.lexicon-browser__title {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.lexicon-browser__loading {
+  color: #666;
+}
+
+.lexicon-browser__error {
+  color: red;
+}
+
+.lexicon-browser__stats {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+
+.lexicon-browser__filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.lexicon-browser__filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.lexicon-browser__label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.lexicon-browser__input,
+.lexicon-browser__select {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.lexicon-browser__table-container {
+  overflow-x: auto;
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.lexicon-browser__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.lexicon-browser__table-header {
+  background: #f0f0f0;
+  position: sticky;
+  top: 0;
+}
+
+.lexicon-browser__table-header-cell {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.lexicon-browser__table-row {
+  border-bottom: 1px solid #eee;
+}
+
+.lexicon-browser__table-row--even {
+  background: #fff;
+}
+
+.lexicon-browser__table-row--odd {
+  background: #fafafa;
+}
+
+.lexicon-browser__table-cell {
+  padding: 8px;
+}
+
+.lexicon-browser__term-canonical {
+  font-size: 10px;
+  color: #666;
+}
+
+.lexicon-browser__process-tag {
+  font-family: monospace;
+  font-size: 10px;
+}
+
+.lexicon-browser__process-tag-code {
+  background: #fff3cd;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.lexicon-browser__type-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  background: #d4edda;
+  border-radius: 2px;
+  font-size: 10px;
+}
+
+.lexicon-browser__operator-class {
+  font-size: 10px;
+  color: #0066cc;
+}
+
+.lexicon-browser__file {
+  font-size: 10px;
+  font-family: monospace;
+  color: #666;
+}
+
+.lexicon-browser__no-results {
+  color: #999;
+}

@@ -1,0 +1,83 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.local/schemas/lexicon.index.schema.json",
+    "title": "AI Prompt Lexicon Index",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema",
+        "generatedAt",
+        "rootDir",
+        "entries"
+    ],
+    "properties": {
+        "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "name",
+                "version"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "const": "ai_prompt_lexicon.index"
+                },
+                "version": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                }
+            }
+        },
+        "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "rootDir": {
+            "type": "string",
+            "minLength": 1
+        },
+        "entries": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "process_tag",
+                    "term",
+                    "canonical_term",
+                    "type",
+                    "operator_class",
+                    "file"
+                ],
+                "properties": {
+                    "process_tag": {
+                        "type": "string",
+                        "minLength": 3
+                    },
+                    "term": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "canonical_term": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "type": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "operator_class": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "file": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            }
+        }
+    }
+}

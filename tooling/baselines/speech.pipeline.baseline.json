@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolId": "speech.pipeline",
+  "timestamp": "2026-02-14T190253Z",
+  "exitCode": 0,
+  "durationMs": 323,
+  "cwd": "tooling/speech",
+  "command": [
+    "node",
+    "pipeline.mjs"
+  ],
+  "watchPaths": [
+    "tooling/speech"
+  ],
+  "allowChanges": true,
+  "expectedOutputsMode": "warn",
+  "changes": {
+    "added": 0,
+    "modified": 1,
+    "deleted": 0
+  },
+  "artifactsDir": "tooling\\dist\\speech.pipeline\\2026-02-14T190253Z"
+}

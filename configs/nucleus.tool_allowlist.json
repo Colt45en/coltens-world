@@ -1,0 +1,35 @@
+{
+  "version": "nucleus.tool_allowlist.v1",
+  "tools": [
+    {
+      "tool_id": "repo.typecheck",
+      "title": "Typecheck Monorepo",
+      "description": "Runs TypeScript typecheck across workspace.",
+      "command": "pnpm",
+      "args_template": ["-r", "typecheck"],
+      "allowed_vars": {},
+      "timeout_ms": 600000,
+      "env_allowlist": ["CI"]
+    },
+    {
+      "tool_id": "repo.test",
+      "title": "Run Tests",
+      "description": "Runs workspace tests (allowlisted).",
+      "command": "pnpm",
+      "args_template": ["-r", "test"],
+      "allowed_vars": {},
+      "timeout_ms": 900000,
+      "env_allowlist": ["CI"]
+    },
+    {
+      "tool_id": "repo.build",
+      "title": "Build Workspace",
+      "description": "Builds all packages/apps.",
+      "command": "pnpm",
+      "args_template": ["-r", "build"],
+      "allowed_vars": {},
+      "timeout_ms": 900000,
+      "env_allowlist": ["CI"]
+    }
+  ]
+}

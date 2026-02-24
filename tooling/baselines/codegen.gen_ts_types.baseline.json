@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolId": "codegen.gen_ts_types",
+  "timestamp": "2026-02-14T190251Z",
+  "exitCode": 0,
+  "durationMs": 611,
+  "cwd": ".",
+  "command": [
+    "node",
+    "tooling/codegen/gen_ts_types_stub.js"
+  ],
+  "watchPaths": [
+    "packages",
+    "apps",
+    "tooling"
+  ],
+  "allowChanges": true,
+  "expectedOutputsMode": "warn",
+  "changes": {
+    "added": 0,
+    "modified": 0,
+    "deleted": 0
+  },
+  "artifactsDir": "tooling\\dist\\codegen.gen_ts_types\\2026-02-14T190251Z"
+}

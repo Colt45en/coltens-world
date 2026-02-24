@@ -1,0 +1,59 @@
+{
+  "tick_count": 180,
+  "dt_seconds": 0.05,
+  "snapshot_every_ticks": 10,
+  "base_capacity": 4,
+  "seed": 42,
+  "axis_codex": {
+    "x": "emergence",
+    "y": "decision",
+    "z": "time_memory"
+  },
+  "heart": {
+    "base_resonance": 0.2,
+    "pulse_amplitude": 0.75,
+    "pulse_frequency_hz": 0.33,
+    "damping": 0.45,
+    "min_capacity_scale": 0.25,
+    "max_capacity_scale": 2.0,
+    "resonance_to_capacity_gain": 0.8
+  },
+  "initial_objects": [
+    {
+      "id": "node_01",
+      "position": [ -1.0, -0.2, 0.0 ],
+      "velocity": [ 0.05, 0.02, -0.01 ],
+      "axis_bias": [ 1.0, 0.5, 0.25 ],
+      "energy": 1.0,
+      "active": true,
+      "tags": ["seed", "cluster:a"]
+    },
+    {
+      "id": "node_02",
+      "position": [ -0.5, 0.1, 0.2 ],
+      "velocity": [ 0.04, 0.03, -0.02 ],
+      "axis_bias": [ -0.8, 1.0, 0.15 ],
+      "energy": 0.92,
+      "active": true,
+      "tags": ["seed", "cluster:b"]
+    },
+    {
+      "id": "node_03",
+      "position": [ 0.0, 0.25, -0.15 ],
+      "velocity": [ 0.03, 0.02, 0.01 ],
+      "axis_bias": [ 0.6, -0.7, 1.0 ],
+      "energy": 0.88,
+      "active": true,
+      "tags": ["seed", "cluster:a"]
+    },
+    {
+      "id": "node_04",
+      "position": [ 0.65, -0.35, 0.3 ],
+      "velocity": [ 0.02, 0.01, -0.01 ],
+      "axis_bias": [ -1.0, 0.4, -0.2 ],
+      "energy": 0.85,
+      "active": true,
+      "tags": ["seed", "cluster:b"]
+    }
+  ]
+}

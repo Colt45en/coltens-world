@@ -1,0 +1,26 @@
+{
+  "name": "@world-engine/graphics",
+  "version": "0.1.0",
+  "description": "Renderer bridge for WebGL/Three.js integration",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "three": "^0.157.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.157.0",
+    "typescript": "^5.3.3"
+  }
+}

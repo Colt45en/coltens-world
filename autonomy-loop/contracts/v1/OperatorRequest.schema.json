@@ -1,0 +1,79 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/OperatorRequest.schema.json",
+    "title": "OperatorRequest",
+    "description": "Request envelope for operator execution (patch, simulate_world_tick, etc).",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "operator_id",
+        "operator_name",
+        "trace_id",
+        "payload",
+        "memory_context"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "default": "1.0.0"
+        },
+        "operator_id": {
+            "type": "string",
+            "pattern": "^op_[a-f0-9]{24}$",
+            "description": "Unique operator invocation ID"
+        },
+        "operator_name": {
+            "type": "string",
+            "enum": [
+                "prompt.operator.patch",
+                "prompt.operator.simulate_world_tick"
+            ],
+            "description": "Registered operator name"
+        },
+        "trace_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9\\-]{36}$",
+            "description": "BusEnvelopeV1 trace ID for correlation"
+        },
+        "payload": {
+            "type": "object",
+            "description": "Operator-specific request data (patch params, tick state, etc)"
+        },
+        "memory_context": {
+            "type": "object",
+            "properties": {
+                "facts": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    },
+                    "description": "Current working facts from memory"
+                },
+                "vectors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    },
+                    "description": "Vector embeddings for semantic search"
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "Working summary of conversation/session"
+                }
+            }
+        },
+        "timeout_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 60000,
+            "default": 30000,
+            "description": "Execution timeout in milliseconds"
+        },
+        "deterministic": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether operator must produce deterministic output"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "version": "wheel.state.v1",
+  "wheel_id": "learning-wheel",
+  "trace_id": "trace_learning-wheel",
+  "seq": 0,
+  "rotation": 1,
+  "stop_index": 0,
+  "completed": {},
+  "recent_pool_picks": {},
+  "active_call": null,
+  "history": []
+}

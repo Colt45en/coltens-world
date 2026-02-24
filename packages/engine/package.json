@@ -1,0 +1,30 @@
+{
+  "name": "@world-engine/engine",
+  "version": "0.1.0",
+  "description": "Deterministic ECS runtime and simulation core",
+  "type": "module",
+  "main": "./dist/engine/src/index.js",
+  "types": "./dist/engine/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/engine/src/index.js",
+      "types": "./dist/engine/src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@world-engine/protocol": "workspace:*",
+    "@world-engine/bus": "workspace:*",
+    "@world-engine/physics-contract": "workspace:*",
+    "@world-engine/math": "workspace:*",
+    "@world-engine/assets": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

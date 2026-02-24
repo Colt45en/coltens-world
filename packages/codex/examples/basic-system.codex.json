@@ -1,0 +1,837 @@
+{
+    "schema_version": "1.0.0",
+    "id": "example_multi_agent_system",
+    "name": "Example Multi-Agent System",
+    "created_at_utc": "2026-02-10T10:00:00Z",
+    "updated_at_utc": "2026-02-10T10:00:00Z",
+    "north_star": "Deliver accurate, timely insights with minimal latency while maintaining deterministic replay capability",
+    "objectives": [
+        "Ingest real-time market signals with <100ms latency",
+        "Synthesize multi-source perspectives using voting orchestration",
+        "Detect data drift and adapt weights automatically",
+        "Maintain audit trail for regulatory compliance"
+    ],
+    "constraints": [
+        "No external API calls without timeout",
+        "All randomness seeded for replay",
+        "Tools marked 'critical' require human override",
+        "Max 5 retries per failed operation"
+    ],
+    "truth_policy": {
+        "observed": [
+            "Real-time price feeds",
+            "Volume metrics",
+            "News sentiment"
+        ],
+        "interpreted": [
+            "Trend strength",
+            "Anomaly scores",
+            "Risk indicators"
+        ],
+        "assumed": [
+            "Market microstructure stable",
+            "Signal definitions static",
+            "Drift detectors catch 95% of shifts"
+        ]
+    },
+    "semantic_states": {
+        "solid_state": [
+            "Confirmed trades",
+            "Historical reference data",
+            "Audited agent logs"
+        ],
+        "liquid_state": [
+            "Current positions",
+            "Active signals",
+            "Running aggregations"
+        ],
+        "gas_state": [
+            "Cache",
+            "Ephemeral metrics",
+            "Temporary buffers"
+        ],
+        "unseen_infrastructure": [
+            "Internal message routing",
+            "Database query optimizer",
+            "Python symbolic solver"
+        ],
+        "reverse_reflection": [
+            "Reward signal hacking risks",
+            "Data leakage in outputs",
+            "Circular orchestration loops"
+        ]
+    },
+    "visualization": {
+        "background_color": "#0a0a0a",
+        "ambient_light_intensity": 0.6,
+        "fog_density": 0.002,
+        "grid_visible": true,
+        "orbit_controls": true,
+        "camera_start": [
+            15,
+            15,
+            15
+        ]
+    },
+    "data_sources": [
+        {
+            "id": "market_feed",
+            "kind": "markets",
+            "description": "Real-time OHLCV data from Binance",
+            "update_cadence": "realtime",
+            "reliability": "high",
+            "constraints": [
+                "Reconnect on disconnect",
+                "Order book snapshot every 100ms"
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "shape": "sphere",
+                "color": "#00ff00"
+            }
+        },
+        {
+            "id": "news_feed",
+            "kind": "news",
+            "description": "Aggregated news from Reuters, Bloomberg",
+            "update_cadence": "hourly",
+            "reliability": "medium",
+            "constraints": [
+                "Deduplicate by content hash",
+                "Filter spam with classifier"
+            ],
+            "spatial": {
+                "position": [
+                    5,
+                    0,
+                    0
+                ],
+                "shape": "box",
+                "color": "#ffff00"
+            }
+        },
+        {
+            "id": "sentiment_api",
+            "kind": "social",
+            "description": "Twitter/X sentiment via third-party API",
+            "update_cadence": "hourly",
+            "reliability": "low",
+            "constraints": [
+                "Rate limit: 300 req/hr",
+                "Cache responses 10 minutes"
+            ],
+            "spatial": {
+                "position": [
+                    -5,
+                    0,
+                    0
+                ],
+                "shape": "tetrahedron",
+                "color": "#ff00ff"
+            }
+        }
+    ],
+    "signals": [
+        {
+            "id": "price_momentum",
+            "name": "Price Momentum (14 period)",
+            "definition": "ROC of EMA(close, 20) over 14 periods",
+            "kind": "topic",
+            "compute": {
+                "method": "rolling_roc_ema",
+                "parameters": {
+                    "ema_period": "20",
+                    "roc_period": "14",
+                    "source": "close"
+                }
+            },
+            "thresholds": [
+                {
+                    "name": "strong_up",
+                    "severity": "high",
+                    "condition": "value > 0.05"
+                },
+                {
+                    "name": "strong_down",
+                    "severity": "high",
+                    "condition": "value < -0.05"
+                }
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    5,
+                    0
+                ],
+                "shape": "cloud",
+                "color": "#00ffff",
+                "connections": [
+                    "price_volatility"
+                ]
+            }
+        },
+        {
+            "id": "price_volatility",
+            "name": "Price Volatility (ATR 14)",
+            "definition": "Average True Range normalized by EMA(close)",
+            "kind": "topic",
+            "compute": {
+                "method": "atr_normalized",
+                "parameters": {
+                    "atr_period": "14",
+                    "ema_period": "20"
+                }
+            },
+            "thresholds": [
+                {
+                    "name": "low_vol",
+                    "severity": "low",
+                    "condition": "value < 0.01"
+                },
+                {
+                    "name": "high_vol",
+                    "severity": "medium",
+                    "condition": "value > 0.04"
+                }
+            ],
+            "spatial": {
+                "position": [
+                    2,
+                    5,
+                    2
+                ],
+                "shape": "sphere",
+                "color": "#ffaa00"
+            }
+        },
+        {
+            "id": "sentiment_aggregate",
+            "name": "Combined Sentiment Score",
+            "definition": "Weighted blend: 40% news + 60% social",
+            "kind": "sentiment",
+            "compute": {
+                "method": "weighted_blend",
+                "parameters": {
+                    "news_weight": "0.4",
+                    "social_weight": "0.6"
+                }
+            },
+            "thresholds": [
+                {
+                    "name": "bullish",
+                    "severity": "medium",
+                    "condition": "value > 0.6"
+                },
+                {
+                    "name": "bearish",
+                    "severity": "medium",
+                    "condition": "value < 0.4"
+                }
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    5,
+                    -5
+                ],
+                "shape": "octahedron",
+                "color": "#ff6600"
+            }
+        }
+    ],
+    "tools": [
+        {
+            "id": "web_search",
+            "name": "Web Search",
+            "description": "Query news and public web for latest events",
+            "safety_level": "medium",
+            "constraints": [
+                "No sensitive keywords",
+                "Rate limit 10 req/min",
+                "Timeout 5s"
+            ],
+            "spatial": {
+                "position": [
+                    -5,
+                    5,
+                    0
+                ],
+                "shape": "box"
+            }
+        },
+        {
+            "id": "math_eval",
+            "name": "Mathematical Evaluation",
+            "description": "SymPy + NumPy symbolic and numeric computation",
+            "safety_level": "low",
+            "constraints": [
+                "Max expression length 10KB",
+                "Timeout 2s"
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    10,
+                    0
+                ],
+                "shape": "sphere",
+                "color": "#ff0000"
+            }
+        },
+        {
+            "id": "position_setter",
+            "name": "Position Setter",
+            "description": "Execute trade positions (BUY/SELL/CLOSE)",
+            "safety_level": "critical",
+            "constraints": [
+                "Requires human approval",
+                "Max position size 5% account",
+                "Daily loss limit -2%"
+            ],
+            "spatial": {
+                "position": [
+                    10,
+                    8,
+                    0
+                ],
+                "shape": "torus",
+                "color": "#ff0000"
+            }
+        }
+    ],
+    "agents": [
+        {
+            "id": "analyst_agent",
+            "name": "Technical Analyst Agent",
+            "specialization": [
+                "price_action",
+                "momentum_analysis",
+                "volatility_detection"
+            ],
+            "responsibilities": [
+                "Compute technical signals",
+                "Detect trend reversals",
+                "Alert on anomalies"
+            ],
+            "inputs": [
+                "price_momentum",
+                "price_volatility"
+            ],
+            "outputs": [
+                "technical_score",
+                "trend_direction"
+            ],
+            "tools_allowed": [
+                "math_eval",
+                "web_search"
+            ],
+            "guardrails": [
+                "Do not recommend position without 70% confidence",
+                "Always include risk/reward ratio",
+                "Flag if signal divergence detected"
+            ],
+            "failure_modes": [
+                "Whipsaw in choppy markets",
+                "Late signal recognition if volatility spike",
+                "False breakout if overnight gap"
+            ],
+            "success_criteria": [
+                "Win rate >55%",
+                "Sharpe ratio >1.5",
+                "Max drawdown <10%"
+            ],
+            "spatial": {
+                "position": [
+                    5,
+                    5,
+                    5
+                ],
+                "shape": "sphere",
+                "color": "#00ff00",
+                "connections": [
+                    "sentiment_agent",
+                    "position_setter"
+                ]
+            }
+        },
+        {
+            "id": "sentiment_agent",
+            "name": "Sentiment Agent",
+            "specialization": [
+                "nlp",
+                "social_listening",
+                "news_parsing"
+            ],
+            "responsibilities": [
+                "Aggregate sentiment from multiple sources",
+                "Detect regime shifts",
+                "Identify black swan risks"
+            ],
+            "inputs": [
+                "sentiment_aggregate"
+            ],
+            "outputs": [
+                "sentiment_score",
+                "confidence",
+                "risk_flags"
+            ],
+            "tools_allowed": [
+                "web_search",
+                "math_eval"
+            ],
+            "guardrails": [
+                "Never trade on sentiment alone",
+                "Cross-validate with on-chain data",
+                "Check data freshness <1hr"
+            ],
+            "failure_modes": [
+                "Sentiment lag 30+ minutes",
+                "Bias toward recent mega-trends",
+                "Noise from bot activity"
+            ],
+            "success_criteria": [
+                "Sentiment-to-price correlation >0.3",
+                "False alarm rate <20%"
+            ],
+            "spatial": {
+                "position": [
+                    -5,
+                    5,
+                    5
+                ],
+                "shape": "box",
+                "color": "#ffff00",
+                "connections": [
+                    "analyst_agent"
+                ]
+            }
+        },
+        {
+            "id": "supervisor_agent",
+            "name": "Supervisor (Orchestrator)",
+            "specialization": [
+                "decision_routing",
+                "risk_management",
+                "consensus"
+            ],
+            "responsibilities": [
+                "Aggregate recommendations from analysts",
+                "Manage voting when disagreement detected",
+                "Execute final positions with safeguards"
+            ],
+            "inputs": [
+                "technical_score",
+                "sentiment_score",
+                "position_state",
+                "account_risk_metrics"
+            ],
+            "outputs": [
+                "final_action",
+                "confidence",
+                "rationale"
+            ],
+            "tools_allowed": [
+                "math_eval",
+                "position_setter"
+            ],
+            "guardrails": [
+                "Position size decreases when accuracy drops",
+                "Fail-safe: close all if risk exceeds 3%",
+                "Never override human inputs"
+            ],
+            "failure_modes": [
+                "Decision paralysis if agents disagree",
+                "Cascading losses if safeguard malfunction"
+            ],
+            "success_criteria": [
+                "Execution latency <500ms",
+                "Risk limit never exceeded"
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    10,
+                    0
+                ],
+                "shape": "sphere",
+                "color": "#ff0000",
+                "connections": [
+                    "analyst_agent",
+                    "sentiment_agent",
+                    "position_setter"
+                ]
+            }
+        }
+    ],
+    "orchestration": {
+        "mode": "hybrid",
+        "routing": {
+            "strategy": "supervisor",
+            "description": "Supervisor orchestrates analyst + sentiment agents, aggregates votes, executes positions with risk gates"
+        },
+        "voting": {
+            "enabled": true,
+            "method": "weighted_majority",
+            "weights": {
+                "analyst_agent": 0.6,
+                "sentiment_agent": 0.4
+            },
+            "tie_breaker": "supervisor"
+        },
+        "resilience": {
+            "retries": 2,
+            "fallback_agents": [
+                "sentiment_agent"
+            ],
+            "circuit_breaker": true,
+            "notes": [
+                "If analyst_agent fails 3x, skip its input",
+                "If sentiment_agent fails, use 30-min cached value",
+                "If supervisor fails, escalate to human"
+            ]
+        }
+    },
+    "models": [
+        {
+            "id": "lstm_forecast",
+            "kind": "forecast",
+            "name": "LSTM Price Forecast",
+            "implementation": "PyTorch (torch.nn.LSTM)",
+            "version": "2.1.0",
+            "inputs": [
+                "price_momentum",
+                "price_volatility",
+                "sentiment_aggregate"
+            ],
+            "outputs": [
+                "price_prediction_1h",
+                "confidence_interval"
+            ],
+            "constraints": [
+                "Retrain weekly on fresh data",
+                "Max prediction horizon 4 hours"
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    -5,
+                    0
+                ],
+                "shape": "cloud",
+                "color": "#0066ff"
+            }
+        },
+        {
+            "id": "rl_position_optimizer",
+            "kind": "rl",
+            "name": "Position Size RL Optimizer",
+            "implementation": "TensorFlow A3C",
+            "version": "1.0.0",
+            "inputs": [
+                "win_rate",
+                "sharpe_ratio",
+                "max_drawdown",
+                "market_regime"
+            ],
+            "outputs": [
+                "optimal_position_size",
+                "confidence"
+            ],
+            "constraints": [
+                "Reward signal: Sharpe ratio",
+                "Max position size remains capped at tool constraint"
+            ],
+            "spatial": {
+                "position": [
+                    5,
+                    -5,
+                    0
+                ],
+                "shape": "torus"
+            }
+        }
+    ],
+    "loops": [
+        {
+            "id": "daily_optimization_loop",
+            "name": "Daily Weight Optimization Loop",
+            "description": "Recompute agent weights based on yesterday's performance metrics",
+            "steps": [
+                "Compute agent accuracy on holdout set",
+                "Compute Sharpe ratio for each agent's signals",
+                "Optimize weights via quadratic programming",
+                "Update orchestration.voting.weights",
+                "Log changes to audit trail"
+            ],
+            "reward_signals": [
+                {
+                    "id": "sharpe_ratio_reward",
+                    "name": "Sharpe Ratio",
+                    "description": "Daily Sharpe = (daily_return - risk_free_rate) / daily_volatility",
+                    "source": "behavior",
+                    "compute": {
+                        "method": "daily_sharpe",
+                        "parameters": {
+                            "lookback_days": "30",
+                            "risk_free_rate": "0.02"
+                        }
+                    },
+                    "risks": [
+                        "Can peak on low-volume days",
+                        "Biased toward recent performance"
+                    ]
+                },
+                {
+                    "id": "win_rate_reward",
+                    "name": "Win Rate",
+                    "description": "% of trades closed at profit",
+                    "source": "ground_truth",
+                    "compute": {
+                        "method": "win_loss_count",
+                        "parameters": {}
+                    },
+                    "risks": [
+                        "Doesn't account for risk/reward asymmetry"
+                    ]
+                }
+            ],
+            "rules": {
+                "optimize_weights": true,
+                "weight_update_cadence": "daily",
+                "constraints": [
+                    "avoid reward hacking",
+                    "prevent catastrophic forgetting",
+                    "keep diversity of strategies",
+                    "decay old analyst's weight if accuracy drops >5% YoY"
+                ],
+                "safety": {
+                    "human_override": true,
+                    "high_stakes_gate": true,
+                    "audit_log_required": true
+                }
+            },
+            "evaluation": {
+                "cadence": "weekly",
+                "metrics": [
+                    {
+                        "id": "sharpe_ratio",
+                        "name": "Sharpe Ratio",
+                        "kind": "roi",
+                        "definition": "(Return - RiskFree) / StdDev(Return)",
+                        "target": 1.5,
+                        "direction": "higher_is_better"
+                    },
+                    {
+                        "id": "max_drawdown",
+                        "name": "Maximum Drawdown",
+                        "kind": "mae",
+                        "definition": "Peak-to-trough decline in portfolio value",
+                        "target": -0.1,
+                        "direction": "lower_is_better"
+                    },
+                    {
+                        "id": "win_rate",
+                        "name": "Win Rate",
+                        "kind": "accuracy",
+                        "definition": "% of trades profitable",
+                        "target": 0.55,
+                        "direction": "higher_is_better"
+                    }
+                ],
+                "baselines": [
+                    "Buy-and-hold baseline",
+                    "Previous week's weights",
+                    "Equal-weight baseline"
+                ],
+                "datasets": [
+                    "validation_set_v2"
+                ],
+                "notes": [
+                    "Use walk-forward validation",
+                    "No lookahead bias",
+                    "Account for transaction costs"
+                ]
+            },
+            "drift_detectors": [
+                {
+                    "id": "drift_detector_data",
+                    "kind": "data_drift",
+                    "description": "Monitor for shifts in input distributions (OHLCV, sentiment)",
+                    "method": "kolmogorov_smirnov_test",
+                    "cadence": "daily",
+                    "alert_on": [
+                        {
+                            "severity": "high",
+                            "condition": "ks_statistic > 0.3",
+                            "action": "Retrain LSTM forecast"
+                        },
+                        {
+                            "severity": "medium",
+                            "condition": "ks_statistic > 0.15",
+                            "action": "Flag in daily report"
+                        }
+                    ],
+                    "spatial": {
+                        "position": [
+                            0,
+                            -10,
+                            0
+                        ],
+                        "shape": "box",
+                        "color": "#ffff00"
+                    }
+                },
+                {
+                    "id": "drift_detector_concept",
+                    "kind": "concept_drift",
+                    "description": "Monitor model accuracy degradation (LSTM forecast)",
+                    "method": "sliding_window_mae",
+                    "cadence": "daily",
+                    "alert_on": [
+                        {
+                            "severity": "critical",
+                            "condition": "mae_current > 1.5 * mae_baseline",
+                            "action": "Pause forecast model, use ensemble fallback"
+                        },
+                        {
+                            "severity": "high",
+                            "condition": "mae_current > 1.2 * mae_baseline",
+                            "action": "Reduce LSTM weight in ensemble"
+                        }
+                    ],
+                    "spatial": {
+                        "position": [
+                            0,
+                            -10,
+                            5
+                        ],
+                        "shape": "cloud"
+                    }
+                }
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    0,
+                    10
+                ],
+                "shape": "octahedron",
+                "color": "#00ff00",
+                "connections": [
+                    "rl_position_optimizer",
+                    "daily_optimization_loop"
+                ]
+            }
+        }
+    ],
+    "determinism": {
+        "deterministic_core": true,
+        "fences": [
+            "seeded_rng",
+            "stable_ordering",
+            "fixed_timestep",
+            "canonical_serialization",
+            "replay_log"
+        ],
+        "snapshot_hash": true,
+        "replay_log": true,
+        "notes": [
+            "All random operations use PCG64 seeded from session_id",
+            "Array ordering determined by stable_sort on id",
+            "Events timestamped at 1ms tick boundaries",
+            "JSON serialization via canonicalJSONStringify()",
+            "Full trade + signal log replayed for debugging"
+        ]
+    },
+    "exports": [
+        {
+            "id": "weekly_summary",
+            "kind": "weekly_summary",
+            "description": "Weekly performance report: P&L, Sharpe, accuracy metrics, agent performance",
+            "format": "md",
+            "schedule": "weekly",
+            "consumers": [
+                "stakeholders",
+                "slack_channel"
+            ]
+        },
+        {
+            "id": "heatmap_export",
+            "kind": "forecast_heatmap",
+            "description": "Visual heatmap of forecast confidence by asset × horizon",
+            "format": "png",
+            "schedule": "daily",
+            "consumers": [
+                "internal_dashboard"
+            ]
+        },
+        {
+            "id": "insight_capsule",
+            "kind": "insight_capsule",
+            "description": "AI-generated insights: key themes, risks, opportunities",
+            "format": "json",
+            "schedule": "daily",
+            "consumers": [
+                "research_team",
+                "external_report"
+            ]
+        }
+    ],
+    "failure_modes": [
+        "Analyst + Sentiment agents disagree on direction → supervisor timeout",
+        "News feed lags real price moves → sentiment lag 30+ minutes",
+        "Feedback loop: LSTM forecast used as signal input → overfitting on training data",
+        "Position setter tool failure → supervisor stuck in decision loop",
+        "Data drift in sentiment API → accuracy drops 15% but not detected"
+    ],
+    "guardrails": [
+        "All position size decisions must include risk/reward analysis",
+        "No trades during US market holidays (auto-skip supervisor)",
+        "Critical tools require manual approval every 4 hours",
+        "If Sharpe < 0.5 for 3 consecutive days, escalate to human",
+        "Daily loss limit: stop all trading if account down 2%",
+        "Weekly drift detection: if 2+ signals drift, retrain models",
+        "Position concentration: max 10% per asset, max 5% new positions"
+    ],
+    "evolution_chains": [
+        {
+            "id": "analyst_evolution",
+            "name": "Analyst Agent Evolution",
+            "chain": [
+                "analyst_v1_simple_ma_cross",
+                "analyst_v2_lstm_add_sentiment",
+                "analyst_v3_rl_optimized_params"
+            ],
+            "spatial": {
+                "position": [
+                    5,
+                    10,
+                    0
+                ],
+                "shape": "cloud",
+                "color": "#00ff00"
+            }
+        },
+        {
+            "id": "forecast_evolution",
+            "name": "LSTM Forecast Model Evolution",
+            "chain": [
+                "lstm_v1_basic_gru",
+                "lstm_v2_bidirectional_attention",
+                "lstm_v3_ensemble_3models"
+            ],
+            "spatial": {
+                "position": [
+                    0,
+                    -10,
+                    5
+                ],
+                "shape": "cloud"
+            }
+        }
+    ]
+}

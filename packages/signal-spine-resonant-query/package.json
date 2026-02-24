@@ -1,0 +1,27 @@
+{
+  "name": "@world-engine/signal-spine-resonant-query",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+  },
+  "bin": {
+    "we-rg": "dist/cli/we-rg.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:node": "node dist/examples/query-demo.js"
+  },
+  "dependencies": {
+    "@world-engine/signal-spine-contract": "workspace:*",
+    "@world-engine/signal-spine-resonant-graph": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^24.3.0"
+  }
+}

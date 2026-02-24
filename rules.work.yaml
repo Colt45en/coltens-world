@@ -1,0 +1,66 @@
+description: Organize work projects with standard folder structure
+name: Work Project Structure
+post_actions:
+- content: Standardized {project_count} project structures. Archived {archived_count}
+    completed projects.
+  title: Work projects organized
+  type: create_note
+- content: "# Work Projects Index\n\nLast organized: {timestamp}\n\n## Active Projects\n\
+    {active_projects}\n\n## Archived Projects\n{archived_projects}\n\n## Project Structure\n\
+    Each project should have:\n- docs/ - Documentation\n- src/ - Source code\n- \t\
+    ests/ - Test files\n- \assets/ - Images and media\n- \build/ - Build outputs\n\
+    \n## Summary\n- Total projects: {total_projects}\n- Active: {active_count}\n-\
+    \ Archived: {archived_count}"
+  path: C:\\Users\\colte\\Documents\\Work\\PROJECTS.md
+  type: create_index
+rules:
+- action: ensure_structure
+  condition:
+    is_folder: true
+    name_pattern: '*project*'
+  pattern: '*'
+  structure:
+  - docs/
+  - src/
+  - tests/
+  - assets/
+  - build/
+- action: move
+  condition:
+    parent_not:
+    - docs
+    - README
+    - CHANGELOG
+  destination: '{parent}/docs/'
+  pattern: '*.{md,txt}'
+- action: move
+  condition:
+    parent_not:
+    - src
+    - lib
+    - scripts
+  destination: '{parent}/src/'
+  pattern: '*.{py,js,ts,html,css}'
+- action: move
+  destination: '{parent}/tests/'
+  pattern: '*test*.{py,js,ts}'
+- action: move
+  condition:
+    parent_not:
+    - assets
+    - images
+    - img
+  destination: '{parent}/assets/'
+  pattern: '*.{png,jpg,jpeg,gif,svg,ico}'
+- action: move
+  condition:
+    has_file: COMPLETE.md
+    is_folder: true
+    min_age_days: 30
+  destination: C:\\Users\\colte\\Documents\\Work\\Archive\\{name}
+  pattern: '*'
+- action: delete
+  condition:
+    min_age_days: 7
+  pattern: '*.{tmp,log,bak}'
+target_folder: C:\\Users\\colte\\Documents\\Work

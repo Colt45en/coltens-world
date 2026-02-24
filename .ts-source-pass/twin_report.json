@@ -1,0 +1,2693 @@
+{
+  "root": "",
+  "stats": {
+    "code_files": 465,
+    "twin_pairs": 134,
+    "rewrite_suggestions": 27,
+    "delete_candidates": 76,
+    "unresolved_imports": 0
+  },
+  "twins": [
+    {
+      "base": "apps/env-sandbox/src/types",
+      "ts": "apps/env-sandbox/src/types.ts",
+      "js": "apps/env-sandbox/src/types.js",
+      "ts_importers": 4,
+      "js_importers": 3,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7551020408163265
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 3)",
+        "High textual similarity (76%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/ndjson",
+      "ts": "apps/nucleus/src/ndjson.ts",
+      "js": "apps/nucleus/src/ndjson.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7941176470588235
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (79%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/handlers/ideCli",
+      "ts": "apps/nucleus/src/router/handlers/ideCli.ts",
+      "js": "apps/nucleus/src/router/handlers/ideCli.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8405797101449275
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (84%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/handlers/ideFs",
+      "ts": "apps/nucleus/src/router/handlers/ideFs.ts",
+      "js": "apps/nucleus/src/router/handlers/ideFs.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7777777777777778
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (78%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/busReplay",
+      "ts": "apps/nucleus/src/routes/busReplay.ts",
+      "js": "apps/nucleus/src/routes/busReplay.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9629629629629629
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "High textual similarity (96%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/http/flowstate",
+      "ts": "apps/nucleus/src/routes/http/flowstate.ts",
+      "js": "apps/nucleus/src/routes/http/flowstate.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8543689320388349
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (85%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/http/leximorph",
+      "ts": "apps/nucleus/src/routes/http/leximorph.ts",
+      "js": "apps/nucleus/src/routes/http/leximorph.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8645833333333334
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (86%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/http/pipelineResults",
+      "ts": "apps/nucleus/src/routes/http/pipelineResults.ts",
+      "js": "apps/nucleus/src/routes/http/pipelineResults.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7777777777777778
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (78%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/operatorEvent",
+      "ts": "apps/nucleus/src/routes/operatorEvent.ts",
+      "js": "apps/nucleus/src/routes/operatorEvent.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8018867924528302
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (80%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/tool/executor",
+      "ts": "apps/nucleus/src/tool/executor.ts",
+      "js": "apps/nucleus/src/tool/executor.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7083333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (71%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema",
+      "ts": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.ts",
+      "js": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9166666666666666
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (92%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/deps",
+      "ts": "packages/engine/src/contracts/multigpu/deps.ts",
+      "js": "packages/engine/src/contracts/multigpu/deps.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7962962962962963
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "High textual similarity (80%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/pacing",
+      "ts": "packages/engine/src/contracts/multigpu/pacing.ts",
+      "js": "packages/engine/src/contracts/multigpu/pacing.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8787878787878788
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "High textual similarity (88%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/plan",
+      "ts": "packages/engine/src/contracts/multigpu/plan.ts",
+      "js": "packages/engine/src/contracts/multigpu/plan.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9473684210526315
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (95%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/sync",
+      "ts": "packages/engine/src/contracts/multigpu/sync.ts",
+      "js": "packages/engine/src/contracts/multigpu/sync.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7027027027027027
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "High textual similarity (70%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/work",
+      "ts": "packages/engine/src/contracts/multigpu/work.ts",
+      "js": "packages/engine/src/contracts/multigpu/work.js",
+      "ts_importers": 6,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7659574468085106
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (6 vs 0)",
+        "High textual similarity (77%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/protocol/envelope",
+      "ts": "packages/engine/src/contracts/protocol/envelope.ts",
+      "js": "packages/engine/src/contracts/protocol/envelope.js",
+      "ts_importers": 6,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.88
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (6 vs 0)",
+        "High textual similarity (88%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/protocol/sim",
+      "ts": "packages/engine/src/contracts/protocol/sim.ts",
+      "js": "packages/engine/src/contracts/protocol/sim.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8095238095238095
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (81%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/representation/gates",
+      "ts": "packages/engine/src/contracts/representation/gates.ts",
+      "js": "packages/engine/src/contracts/representation/gates.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7766497461928934
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (78%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/core/metrics",
+      "ts": "packages/flowstate/src/core/metrics.ts",
+      "js": "packages/flowstate/src/core/metrics.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7702702702702703
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (77%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/core/seed",
+      "ts": "packages/flowstate/src/core/seed.ts",
+      "js": "packages/flowstate/src/core/seed.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9047619047619048
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "High textual similarity (90%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/evidence/canonicalJson",
+      "ts": "packages/flowstate/src/evidence/canonicalJson.ts",
+      "js": "packages/flowstate/src/evidence/canonicalJson.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (80%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/evidence/crypto",
+      "ts": "packages/flowstate/src/evidence/crypto.ts",
+      "js": "packages/flowstate/src/evidence/crypto.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7307692307692307
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (73%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/evidence/download",
+      "ts": "packages/flowstate/src/evidence/download.ts",
+      "js": "packages/flowstate/src/evidence/download.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8421052631578947
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (84%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/evidence/session",
+      "ts": "packages/flowstate/src/evidence/session.ts",
+      "js": "packages/flowstate/src/evidence/session.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.85
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (85%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/render/heatmapRenderer",
+      "ts": "packages/flowstate/src/render/heatmapRenderer.ts",
+      "js": "packages/flowstate/src/render/heatmapRenderer.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7682926829268293
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (77%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/render/histogramRenderer",
+      "ts": "packages/flowstate/src/render/histogramRenderer.ts",
+      "js": "packages/flowstate/src/render/histogramRenderer.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8133333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (81%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/render/orbitRenderer",
+      "ts": "packages/flowstate/src/render/orbitRenderer.ts",
+      "js": "packages/flowstate/src/render/orbitRenderer.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8045977011494253
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (80%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/render/ringRenderer",
+      "ts": "packages/flowstate/src/render/ringRenderer.ts",
+      "js": "packages/flowstate/src/render/ringRenderer.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8133333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (81%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/buildEvidence",
+      "ts": "packages/protocol/src/buildEvidence.ts",
+      "js": "packages/protocol/src/buildEvidence.js",
+      "ts_importers": 4,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9696969696969697
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (4 vs 2)",
+        "High textual similarity (97%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/capabilities",
+      "ts": "packages/protocol/src/capabilities.ts",
+      "js": "packages/protocol/src/capabilities.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.704225352112676
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (70%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/chat",
+      "ts": "packages/protocol/src/chat.ts",
+      "js": "packages/protocol/src/chat.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7724867724867724
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (77%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/contracts/evidence",
+      "ts": "packages/protocol/src/contracts/evidence.ts",
+      "js": "packages/protocol/src/contracts/evidence.js",
+      "ts_importers": 1,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8225806451612904
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (1 vs 0)",
+        "High textual similarity (82%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/contracts/flowstate",
+      "ts": "packages/protocol/src/contracts/flowstate.ts",
+      "js": "packages/protocol/src/contracts/flowstate.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8421052631578947
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (84%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/contracts/worldGraph",
+      "ts": "packages/protocol/src/contracts/worldGraph.ts",
+      "js": "packages/protocol/src/contracts/worldGraph.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.72
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (72%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/ide",
+      "ts": "packages/protocol/src/ide.ts",
+      "js": "packages/protocol/src/ide.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8918918918918919
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (89%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/operator",
+      "ts": "packages/protocol/src/operator.ts",
+      "js": "packages/protocol/src/operator.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8888888888888888
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (89%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/representation",
+      "ts": "packages/protocol/src/representation.ts",
+      "js": "packages/protocol/src/representation.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9196428571428571
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (92%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/schemas",
+      "ts": "packages/protocol/src/schemas.ts",
+      "js": "packages/protocol/src/schemas.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9736842105263158
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (97%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/system/health",
+      "ts": "packages/protocol/src/system/health.ts",
+      "js": "packages/protocol/src/system/health.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.828125
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "High textual similarity (83%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/tooling/src/compilers/csCompiler",
+      "ts": "packages/tooling/src/compilers/csCompiler.ts",
+      "js": "packages/tooling/src/compilers/csCompiler.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7818181818181819
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (78%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/tooling/src/compilers/jsCompiler",
+      "ts": "packages/tooling/src/compilers/jsCompiler.ts",
+      "js": "packages/tooling/src/compilers/jsCompiler.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7323943661971831
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (73%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/util/src/time",
+      "ts": "packages/util/src/time.ts",
+      "js": "packages/util/src/time.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8666666666666667
+      },
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "High textual similarity (87%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/bus/busHub",
+      "ts": "apps/nucleus/src/bus/busHub.ts",
+      "js": "apps/nucleus/src/bus/busHub.js",
+      "ts_importers": 8,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6698113207547169
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (8 vs 0)",
+        "Low similarity (67%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/bus/publish",
+      "ts": "apps/nucleus/src/bus/publish.ts",
+      "js": "apps/nucleus/src/bus/publish.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.48484848484848486
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (48%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/health/poller",
+      "ts": "apps/nucleus/src/health/poller.ts",
+      "js": "apps/nucleus/src/health/poller.js",
+      "ts_importers": 2,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5546875
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 1)",
+        "Low similarity (55%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/pty/ptySession",
+      "ts": "apps/nucleus/src/pty/ptySession.ts",
+      "js": "apps/nucleus/src/pty/ptySession.js",
+      "ts_importers": 1,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (1 vs 0)",
+        "Low similarity (0%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/pty/venoManager",
+      "ts": "apps/nucleus/src/pty/venoManager.ts",
+      "js": "apps/nucleus/src/pty/venoManager.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6867469879518072
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/uee",
+      "ts": "apps/nucleus/src/router/uee.ts",
+      "js": "apps/nucleus/src/router/uee.js",
+      "ts_importers": 5,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.639269406392694
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (5 vs 2)",
+        "Low similarity (64%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/health",
+      "ts": "apps/nucleus/src/routes/health.ts",
+      "js": "apps/nucleus/src/routes/health.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5833333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (58%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/wsBus",
+      "ts": "apps/nucleus/src/routes/wsBus.ts",
+      "js": "apps/nucleus/src/routes/wsBus.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5967741935483871
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "Low similarity (60%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/services/compilerEvidence",
+      "ts": "apps/nucleus/src/services/compilerEvidence.ts",
+      "js": "apps/nucleus/src/services/compilerEvidence.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6448275862068965
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (64%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/services/simRunner",
+      "ts": "apps/nucleus/src/services/simRunner.ts",
+      "js": "apps/nucleus/src/services/simRunner.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6933333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/sessionStore",
+      "ts": "apps/nucleus/src/sessionStore.ts",
+      "js": "apps/nucleus/src/sessionStore.js",
+      "ts_importers": 1,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6792452830188679
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (1 vs 0)",
+        "Low similarity (68%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/tool/types",
+      "ts": "apps/nucleus/src/tool/types.ts",
+      "js": "apps/nucleus/src/tool/types.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.16666666666666666
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (17%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/wsHub",
+      "ts": "apps/nucleus/src/wsHub.ts",
+      "js": "apps/nucleus/src/wsHub.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6932203389830508
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/collision",
+      "ts": "packages/engine/src/collision.ts",
+      "js": "packages/engine/src/collision.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6260869565217392
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (63%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/primitives",
+      "ts": "packages/engine/src/contracts/multigpu/primitives.ts",
+      "js": "packages/engine/src/contracts/multigpu/primitives.js",
+      "ts_importers": 12,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6938775510204082
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (12 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/protocol/ops",
+      "ts": "packages/engine/src/contracts/protocol/ops.ts",
+      "js": "packages/engine/src/contracts/protocol/ops.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5925925925925926
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (59%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/index",
+      "ts": "packages/engine/src/index.ts",
+      "js": "packages/engine/src/index.js",
+      "ts_importers": 1,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6458333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (1 vs 0)",
+        "Low similarity (65%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/learning/xor-trainer",
+      "ts": "packages/engine/src/learning/xor-trainer.ts",
+      "js": "packages/engine/src/learning/xor-trainer.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6143667296786389
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (61%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/core/braceBalance",
+      "ts": "packages/flowstate/src/core/braceBalance.ts",
+      "js": "packages/flowstate/src/core/braceBalance.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6363636363636364
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "Low similarity (64%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/core/tokenize",
+      "ts": "packages/flowstate/src/core/tokenize.ts",
+      "js": "packages/flowstate/src/core/tokenize.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.4
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "Low similarity (40%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/index",
+      "ts": "packages/flowstate/src/index.ts",
+      "js": "packages/flowstate/src/index.js",
+      "ts_importers": 1,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (1 vs 0)",
+        "Low similarity (50%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/render/canvasFit",
+      "ts": "packages/flowstate/src/render/canvasFit.ts",
+      "js": "packages/flowstate/src/render/canvasFit.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6818181818181818
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (68%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/flowstate/src/render/types",
+      "ts": "packages/flowstate/src/render/types.ts",
+      "js": "packages/flowstate/src/render/types.js",
+      "ts_importers": 6,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.13043478260869565
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (6 vs 0)",
+        "Low similarity (13%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/envelopes",
+      "ts": "packages/protocol/src/envelopes.ts",
+      "js": "packages/protocol/src/envelopes.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.1
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (10%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/idle",
+      "ts": "packages/protocol/src/idle.ts",
+      "js": "packages/protocol/src/idle.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6964285714285714
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (70%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/types",
+      "ts": "packages/protocol/src/types.ts",
+      "js": "packages/protocol/src/types.js",
+      "ts_importers": 4,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.02564102564102564
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (4 vs 0)",
+        "Low similarity (3%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/uee",
+      "ts": "packages/protocol/src/uee.ts",
+      "js": "packages/protocol/src/uee.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5833333333333334
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (58%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/tooling/src/compilers/helpers",
+      "ts": "packages/tooling/src/compilers/helpers.ts",
+      "js": "packages/tooling/src/compilers/helpers.js",
+      "ts_importers": 5,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.45454545454545453
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (5 vs 0)",
+        "Low similarity (45%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/tooling/src/compilers/types",
+      "ts": "packages/tooling/src/compilers/types.ts",
+      "js": "packages/tooling/src/compilers/types.js",
+      "ts_importers": 5,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (5 vs 0)",
+        "Low similarity (0%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/tooling/src/utils-node",
+      "ts": "packages/tooling/src/utils-node.ts",
+      "js": "packages/tooling/src/utils-node.js",
+      "ts_importers": 2,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5942028985507246
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (2 vs 0)",
+        "Low similarity (59%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/util/src/fileUtils",
+      "ts": "packages/util/src/fileUtils.ts",
+      "js": "packages/util/src/fileUtils.js",
+      "ts_importers": 5,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6666666666666666
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (5 vs 0)",
+        "Low similarity (67%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/util/src/hash",
+      "ts": "packages/util/src/hash.ts",
+      "js": "packages/util/src/hash.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6896551724137931
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/util/src/packageName",
+      "ts": "packages/util/src/packageName.ts",
+      "js": "packages/util/src/packageName.js",
+      "ts_importers": 3,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6666666666666666
+      },
+      "winner": "ts",
+      "confidence": 0.75,
+      "reasons": [
+        "TS has more importers (3 vs 0)",
+        "Low similarity (67%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/contracts",
+      "ts": "apps/env-sandbox/src/contracts.ts",
+      "js": "apps/env-sandbox/src/contracts.js",
+      "ts_importers": 3,
+      "js_importers": 3,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7741935483870968
+      },
+      "winner": "ts",
+      "confidence": 0.6,
+      "reasons": [
+        "Equal importers (3)",
+        "High textual similarity (77%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/idle",
+      "ts": "apps/nucleus/src/idle.ts",
+      "js": "apps/nucleus/src/idle.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7101449275362319
+      },
+      "winner": "ts",
+      "confidence": 0.6,
+      "reasons": [
+        "Equal importers (1)",
+        "High textual similarity (71%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/handlers/brainControl",
+      "ts": "apps/nucleus/src/router/handlers/brainControl.ts",
+      "js": "apps/nucleus/src/router/handlers/brainControl.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.759493670886076
+      },
+      "winner": "ts",
+      "confidence": 0.6,
+      "reasons": [
+        "Equal importers (1)",
+        "High textual similarity (76%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/handlers/brainTrain",
+      "ts": "apps/nucleus/src/router/handlers/brainTrain.ts",
+      "js": "apps/nucleus/src/router/handlers/brainTrain.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8481012658227848
+      },
+      "winner": "ts",
+      "confidence": 0.6,
+      "reasons": [
+        "Equal importers (1)",
+        "High textual similarity (85%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/chat",
+      "ts": "apps/nucleus/src/routes/chat.ts",
+      "js": "apps/nucleus/src/routes/chat.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.792
+      },
+      "winner": "ts",
+      "confidence": 0.6,
+      "reasons": [
+        "Equal importers (1)",
+        "High textual similarity (79%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/brain/src/review/reviewTypes",
+      "ts": "packages/brain/src/review/reviewTypes.ts",
+      "js": "packages/brain/src/review/reviewTypes.js",
+      "ts_importers": 2,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8923076923076924
+      },
+      "winner": "ts",
+      "confidence": 0.6,
+      "reasons": [
+        "Equal importers (2)",
+        "High textual similarity (89%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/audit",
+      "ts": "apps/env-sandbox/src/audit.ts",
+      "js": "apps/env-sandbox/src/audit.js",
+      "ts_importers": 2,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.3617021276595745
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (2)",
+        "Low similarity (36%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/policy",
+      "ts": "apps/env-sandbox/src/policy.ts",
+      "js": "apps/env-sandbox/src/policy.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (1)",
+        "Low similarity (60%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/sandbox",
+      "ts": "apps/env-sandbox/src/sandbox.ts",
+      "js": "apps/env-sandbox/src/sandbox.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6538461538461539
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (1)",
+        "Low similarity (65%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/sandbox-tools",
+      "ts": "apps/env-sandbox/src/sandbox-tools.ts",
+      "js": "apps/env-sandbox/src/sandbox-tools.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5088408644400786
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (1)",
+        "Low similarity (51%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/storage",
+      "ts": "apps/env-sandbox/src/storage.ts",
+      "js": "apps/env-sandbox/src/storage.js",
+      "ts_importers": 3,
+      "js_importers": 3,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.65
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (3)",
+        "Low similarity (65%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/chat-handler",
+      "ts": "apps/nucleus/src/chat-handler.ts",
+      "js": "apps/nucleus/src/chat-handler.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6633165829145728
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (1)",
+        "Low similarity (66%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/health/adapter",
+      "ts": "apps/nucleus/src/health/adapter.ts",
+      "js": "apps/nucleus/src/health/adapter.js",
+      "ts_importers": 1,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.627906976744186
+      },
+      "winner": "ts",
+      "confidence": 0.55,
+      "reasons": [
+        "Equal importers (1)",
+        "Low similarity (63%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/demo",
+      "ts": "apps/env-sandbox/src/demo.ts",
+      "js": "apps/env-sandbox/src/demo.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8581560283687943
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (86%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/env-sandbox/src/index",
+      "ts": "apps/env-sandbox/src/index.ts",
+      "js": "apps/env-sandbox/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7913385826771654
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (79%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/ide-web/tailwind.config",
+      "ts": "apps/ide-web/tailwind.config.ts",
+      "js": "apps/ide-web/tailwind.config.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.3333333333333333
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Low similarity (33%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/bus-ws-bridge",
+      "ts": "apps/nucleus/src/bus-ws-bridge.ts",
+      "js": "apps/nucleus/src/bus-ws-bridge.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6863636363636364
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/bus/handlers/buildEvidence",
+      "ts": "apps/nucleus/src/bus/handlers/buildEvidence.ts",
+      "js": "apps/nucleus/src/bus/handlers/buildEvidence.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6666666666666666
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Low similarity (67%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/index",
+      "ts": "apps/nucleus/src/index.ts",
+      "js": "apps/nucleus/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8135593220338984
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (81%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/handlers/base",
+      "ts": "apps/nucleus/src/router/handlers/base.ts",
+      "js": "apps/nucleus/src/router/handlers/base.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5544041450777202
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Low similarity (55%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/router/handlers/index",
+      "ts": "apps/nucleus/src/router/handlers/index.ts",
+      "js": "apps/nucleus/src/router/handlers/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/buildEvidence",
+      "ts": "apps/nucleus/src/routes/buildEvidence.ts",
+      "js": "apps/nucleus/src/routes/buildEvidence.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9736842105263158
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (97%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/lexicon",
+      "ts": "apps/nucleus/src/routes/lexicon.ts",
+      "js": "apps/nucleus/src/routes/lexicon.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8823529411764706
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (88%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/lexicon-disabled",
+      "ts": "apps/nucleus/src/routes/lexicon-disabled.ts",
+      "js": "apps/nucleus/src/routes/lexicon-disabled.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (90%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/routes/routes",
+      "ts": "apps/nucleus/src/routes/routes.ts",
+      "js": "apps/nucleus/src/routes/routes.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 1
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (100%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/simulation",
+      "ts": "apps/nucleus/src/simulation.ts",
+      "js": "apps/nucleus/src/simulation.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (90%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/unified-runner-integration",
+      "ts": "apps/nucleus/src/unified-runner-integration.ts",
+      "js": "apps/nucleus/src/unified-runner-integration.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8918918918918919
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (89%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "apps/nucleus/src/wsHub_new",
+      "ts": "apps/nucleus/src/wsHub_new.ts",
+      "js": "apps/nucleus/src/wsHub_new.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6324324324324324
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Low similarity (63%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/brain/src/index",
+      "ts": "packages/brain/src/index.ts",
+      "js": "packages/brain/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.75
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (75%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/math/src/index",
+      "ts": "packages/math/src/index.ts",
+      "js": "packages/math/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6373626373626373
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Low similarity (64%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/envelopes/index",
+      "ts": "packages/protocol/src/envelopes/index.ts",
+      "js": "packages/protocol/src/envelopes/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 1
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (100%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/protocol/src/index",
+      "ts": "packages/protocol/src/index.ts",
+      "js": "packages/protocol/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (80%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/tooling/src/index",
+      "ts": "packages/tooling/src/index.ts",
+      "js": "packages/tooling/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/util/src/index",
+      "ts": "packages/util/src/index.ts",
+      "js": "packages/util/src/index.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "world-engine-chat/nucleus/src/server",
+      "ts": "world-engine-chat/nucleus/src/server.ts",
+      "js": "world-engine-chat/nucleus/src/server.js",
+      "ts_importers": 0,
+      "js_importers": 0,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7560975609756098
+      },
+      "winner": "ts",
+      "confidence": 0.35,
+      "reasons": [
+        "No importers detected (dead/entry-only/or dynamic)",
+        "High textual similarity (76%)"
+      ],
+      "suggested_action": "rewrite-imports-to-ts-and-mark-js-delete-candidate"
+    },
+    {
+      "base": "packages/engine/src/contracts/multigpu/index",
+      "ts": "packages/engine/src/contracts/multigpu/index.ts",
+      "js": "packages/engine/src/contracts/multigpu/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "js",
+      "confidence": 0.9,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/protocol/index",
+      "ts": "packages/engine/src/contracts/protocol/index.ts",
+      "js": "packages/engine/src/contracts/protocol/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "js",
+      "confidence": 0.9,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/representation/index",
+      "ts": "packages/engine/src/contracts/representation/index.ts",
+      "js": "packages/engine/src/contracts/representation/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "js",
+      "confidence": 0.9,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/learning/index",
+      "ts": "packages/engine/src/learning/index.ts",
+      "js": "packages/engine/src/learning/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": true,
+        "ratio": 1
+      },
+      "winner": "js",
+      "confidence": 0.9,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Exact content hash match"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/brain/src/controller",
+      "ts": "packages/brain/src/controller.ts",
+      "js": "packages/brain/src/controller.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6536312849162011
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (65%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/brain/src/population",
+      "ts": "packages/brain/src/population.ts",
+      "js": "packages/brain/src/population.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.672566371681416
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (67%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/brain/src/review/reviewStore",
+      "ts": "packages/brain/src/review/reviewStore.ts",
+      "js": "packages/brain/src/review/reviewStore.js",
+      "ts_importers": 1,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6714285714285714
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 1)",
+        "Low similarity (67%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/envelopeFactory",
+      "ts": "packages/engine/src/contracts/envelopeFactory.ts",
+      "js": "packages/engine/src/contracts/envelopeFactory.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6896551724137931
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/index",
+      "ts": "packages/engine/src/contracts/index.ts",
+      "js": "packages/engine/src/contracts/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.35294117647058826
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (35%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/lexicon/index",
+      "ts": "packages/engine/src/contracts/lexicon/index.ts",
+      "js": "packages/engine/src/contracts/lexicon/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.3333333333333333
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (33%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/lexicon/promptOperatorRegistry",
+      "ts": "packages/engine/src/contracts/lexicon/promptOperatorRegistry.ts",
+      "js": "packages/engine/src/contracts/lexicon/promptOperatorRegistry.js",
+      "ts_importers": 1,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 1)",
+        "Low similarity (50%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/util/require-schema",
+      "ts": "packages/engine/src/contracts/util/require-schema.ts",
+      "js": "packages/engine/src/contracts/util/require-schema.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.696969696969697
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (70%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/prediction",
+      "ts": "packages/engine/src/prediction.ts",
+      "js": "packages/engine/src/prediction.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6620689655172414
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (66%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/runtime/json",
+      "ts": "packages/engine/src/runtime/json.ts",
+      "js": "packages/engine/src/runtime/json.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.6851851851851852
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (69%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/protocol/src/envelopes/uee/guards",
+      "ts": "packages/protocol/src/envelopes/uee/guards.ts",
+      "js": "packages/protocol/src/envelopes/uee/guards.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5988372093023255
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "Low similarity (60%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "world-engine-chat/nucleus/src/contracts",
+      "ts": "world-engine-chat/nucleus/src/contracts.ts",
+      "js": "world-engine-chat/nucleus/src/contracts.js",
+      "ts_importers": 0,
+      "js_importers": 1,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.5413533834586466
+      },
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS has more importers (1 vs 0)",
+        "Low similarity (54%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/brain/src/network",
+      "ts": "packages/brain/src/network.ts",
+      "js": "packages/brain/src/network.js",
+      "ts_importers": 0,
+      "js_importers": 5,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8533333333333334
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (5 vs 0)",
+        "High textual similarity (85%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/busEnvelope",
+      "ts": "packages/engine/src/contracts/busEnvelope.ts",
+      "js": "packages/engine/src/contracts/busEnvelope.js",
+      "ts_importers": 1,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.8850574712643678
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (2 vs 1)",
+        "High textual similarity (89%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/lexicon/LexiconEntry.schema",
+      "ts": "packages/engine/src/contracts/lexicon/LexiconEntry.schema.ts",
+      "js": "packages/engine/src/contracts/lexicon/LexiconEntry.schema.js",
+      "ts_importers": 0,
+      "js_importers": 3,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9420289855072463
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (3 vs 0)",
+        "High textual similarity (94%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/engine/src/contracts/util/exhaustive",
+      "ts": "packages/engine/src/contracts/util/exhaustive.ts",
+      "js": "packages/engine/src/contracts/util/exhaustive.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7878787878787878
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "High textual similarity (79%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/protocol/src/bus/buildEvidenceBus",
+      "ts": "packages/protocol/src/bus/buildEvidenceBus.ts",
+      "js": "packages/protocol/src/bus/buildEvidenceBus.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.7222222222222222
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "High textual similarity (72%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/protocol/src/envelopes/uee/index",
+      "ts": "packages/protocol/src/envelopes/uee/index.ts",
+      "js": "packages/protocol/src/envelopes/uee/index.js",
+      "ts_importers": 0,
+      "js_importers": 2,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 1
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (2 vs 0)",
+        "High textual similarity (100%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    },
+    {
+      "base": "packages/protocol/src/envelopes/uee/schema",
+      "ts": "packages/protocol/src/envelopes/uee/schema.ts",
+      "js": "packages/protocol/src/envelopes/uee/schema.js",
+      "ts_importers": 0,
+      "js_importers": 4,
+      "ts_entry_refs": [],
+      "js_entry_refs": [],
+      "similarity": {
+        "sameHash": false,
+        "ratio": 0.9056603773584906
+      },
+      "winner": "js",
+      "confidence": 0.7,
+      "reasons": [
+        "JS has more importers (4 vs 0)",
+        "High textual similarity (91%)"
+      ],
+      "suggested_action": "keep-js-source-ts-stale-or-types-only"
+    }
+  ],
+  "unresolved_imports": []
+}

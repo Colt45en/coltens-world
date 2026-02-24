@@ -1,0 +1,11 @@
+digraph NexusEvents {
+  rankdir=LR;
+  "cognition.status" -> "nucleus.tick" [label="22"];
+  "cognition.tool_result" -> "cognition.tool_result" [label="3"];
+  "cognition.tool_result" -> "nucleus.tool_call" [label="2"];
+  "cognition.world_denied" -> "nucleus.brain_run" [label="4"];
+  "nucleus.brain_run" -> "cognition.world_denied" [label="5"];
+  "nucleus.tick" -> "cognition.status" [label="23"];
+  "nucleus.tool_call" -> "cognition.tool_result" [label="3"];
+  "nucleus.tool_call" -> "nucleus.tool_call" [label="3"];
+}

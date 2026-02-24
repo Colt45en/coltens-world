@@ -1,0 +1,29 @@
+{
+    "name": "apps-env-sandbox",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Contract-first, typed, governed environment sandbox with audit trail and deterministic scheduler",
+    "main": "dist/index.js",
+    "exports": {
+        ".": "./dist/index.js",
+        "./sandbox": "./dist/sandbox.js",
+        "./sandbox-tools": "./dist/sandbox-tools.js",
+        "./contracts": "./dist/contracts.js",
+        "./audit": "./dist/audit.js",
+        "./types": "./dist/types.js"
+    },
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "typecheck": "tsc --noEmit",
+        "type-check": "tsc --noEmit",
+        "demo": "tsx src/demo.ts"
+    },
+    "dependencies": {
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "tsx": "^4.19.2",
+        "typescript": "^5.6.3"
+    }
+}

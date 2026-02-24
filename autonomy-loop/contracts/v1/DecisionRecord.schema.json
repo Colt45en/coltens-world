@@ -1,0 +1,64 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/DecisionRecord.schema.json",
+    "title": "DecisionRecord",
+    "description": "Decision snapshot with accepted risks and policy versions; output of Specialist role.",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "decision_id",
+        "batch_id",
+        "created_at",
+        "status",
+        "policy_versions",
+        "notes"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "decision_id": {
+            "type": "string",
+            "pattern": "^dec_[a-f0-9]{24}$"
+        },
+        "batch_id": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "status": {
+            "enum": [
+                "red",
+                "yellow",
+                "green"
+            ]
+        },
+        "accepted_risks": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "policy_versions": {
+            "type": "object",
+            "properties": {
+                "merge_policy": {
+                    "type": "string"
+                },
+                "contracts": {
+                    "type": "string"
+                }
+            }
+        },
+        "notes": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "additionalProperties": false
+}

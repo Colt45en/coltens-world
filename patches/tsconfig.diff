@@ -1,0 +1,12 @@
+# TSConfig suggestions (manual patch list)
+
+## tsconfig.json
+- set compilerOptions.allowJs = false
+- set compilerOptions.outDir per package/app for TS->dist build clarity
+- enable compilerOptions.declaration for publishable packages
+
+## tsconfig.base.json
+- set compilerOptions.allowJs = false
+- set compilerOptions.outDir per package/app for TS->dist build clarity
+- enable compilerOptions.declaration for publishable packages
+

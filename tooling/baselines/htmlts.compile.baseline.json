@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "toolId": "htmlts.compile",
+  "timestamp": "2026-02-14T190252Z",
+  "exitCode": 0,
+  "durationMs": 118,
+  "cwd": "tooling/htmlts",
+  "command": [
+    "node",
+    "compile.mjs"
+  ],
+  "watchPaths": [
+    "tooling/htmlts"
+  ],
+  "allowChanges": true,
+  "expectedOutputsMode": "warn",
+  "changes": {
+    "added": 0,
+    "modified": 0,
+    "deleted": 0
+  },
+  "artifactsDir": "tooling\\dist\\htmlts.compile\\2026-02-14T190252Z"
+}

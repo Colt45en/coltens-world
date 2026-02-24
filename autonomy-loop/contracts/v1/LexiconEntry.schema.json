@@ -1,0 +1,113 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/LexiconEntry.schema.json",
+    "title": "LexiconEntry",
+    "description": "Language term with morphology, semantics, and trace; output of Alchemist role.",
+    "type": "object",
+    "required": [
+        "schema_version",
+        "lexicon_id",
+        "language",
+        "term",
+        "morphology",
+        "semantics",
+        "trace"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lexicon_id": {
+            "type": "string",
+            "pattern": "^lex_[a-f0-9]{24}$"
+        },
+        "language": {
+            "type": "string"
+        },
+        "term": {
+            "type": "string"
+        },
+        "morphology": {
+            "type": "object",
+            "required": [
+                "root",
+                "affixes",
+                "pos"
+            ],
+            "properties": {
+                "root": {
+                    "type": "string"
+                },
+                "affixes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "pos": {
+                    "type": "string"
+                }
+            }
+        },
+        "semantics": {
+            "type": "object",
+            "required": [
+                "meaning_claims",
+                "synonyms",
+                "antonyms",
+                "semantic_lenses"
+            ],
+            "properties": {
+                "meaning_claims": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "synonyms": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "antonyms": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "semantic_lenses": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "lens": {
+                                "type": "string"
+                            },
+                            "interpretation": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "trace": {
+            "type": "object",
+            "required": [
+                "batch_id",
+                "source_id"
+            ],
+            "properties": {
+                "batch_id": {
+                    "type": "string"
+                },
+                "source_id": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

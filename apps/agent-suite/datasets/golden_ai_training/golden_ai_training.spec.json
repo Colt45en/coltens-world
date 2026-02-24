@@ -1,0 +1,270 @@
+{
+  "capstone_projects": [
+    {
+      "deliverables": [
+        "gradient_check_report",
+        "training_curves",
+        "ablation_notes",
+        "reproducible_run_script"
+      ],
+      "goal": "Implement logistic regression + MLP with backprop, train on a small dataset, and prove correctness with gradient checks.",
+      "name": "From-Scratch ML (No Frameworks)"
+    },
+    {
+      "deliverables": [
+        "tokenizer_spec",
+        "model_config",
+        "perplexity_eval",
+        "generation_failure_catalog"
+      ],
+      "goal": "Train a small decoder-only transformer on a tiny corpus; evaluate perplexity; run failure analysis on generations.",
+      "name": "Mini-Transformer Language Model"
+    },
+    {
+      "deliverables": [
+        "pair_generation_script",
+        "training_logs",
+        "win_rate_eval",
+        "safety_constraints_notes"
+      ],
+      "goal": "Create synthetic preference pairs; train a small model to prefer better outputs; evaluate win-rate vs baseline.",
+      "name": "Preference Tuning Toy (DPO-style)"
+    }
+  ],
+  "core_principles": [
+    "Reproducibility over vibes (seeds, logs, configs, deterministic splits)",
+    "Baseline first, then complexity",
+    "Data is a first-class artifact (versioned, audited, gated)",
+    "Evaluation is a product (stress tests + failure catalogs)",
+    "Ablations are mandatory (prove causality of improvements)",
+    "Ship with monitors + rollback (models drift)",
+    "Safety and privacy are design constraints, not afterthoughts"
+  ],
+  "gating_checklist": {
+    "gate_1_baseline": [
+      "Metric chosen + baseline achieved",
+      "Train/val/test split locked and versioned",
+      "Single-run reproducible with same seed"
+    ],
+    "gate_2_training_quality": [
+      "Loss curves logged",
+      "Overfit test passed (model can fit tiny subset)",
+      "Ablation: remove one component and show expected drop"
+    ],
+    "gate_3_evaluation": [
+      "Confusion/failure buckets created",
+      "Stress tests defined and run",
+      "Calibration checked (if probabilistic outputs matter)"
+    ],
+    "gate_4_shipping": [
+      "Latency + cost budget measured",
+      "Monitoring signals defined",
+      "Rollback plan exists"
+    ],
+    "gate_5_safety": [
+      "PII handling policy documented",
+      "Bias checks appropriate to domain",
+      "Abuse cases enumerated + mitigations tracked"
+    ]
+  },
+  "golden_loop": [
+    "Define: task + metric + baseline",
+    "Data: collect -> clean -> label -> split -> version",
+    "Model: simplest that can win first (baseline -> improved)",
+    "Train: reproducible seeds + logging + checkpoints",
+    "Eval: holdout, stress tests, failure modes, calibration",
+    "Improve: ablations + error analysis + targeted data/model changes",
+    "Ship: deployment + monitoring + rollback + drift detection",
+    "Govern: safety, privacy, security, compliance"
+  ],
+  "knowledge_map": {
+    "data_engineering": [
+      "labeling_strategy",
+      "dedupe_filtering",
+      "dataset_versioning",
+      "sampling"
+    ],
+    "deep_learning": [
+      "backprop",
+      "normalization",
+      "cnn_rnn_attention",
+      "stability_init_clipping_amp"
+    ],
+    "evaluation_reliability": [
+      "stress_tests",
+      "ood_thinking",
+      "human_eval_rubrics",
+      "error_analysis"
+    ],
+    "llms": [
+      "tokenization_bpe",
+      "transformers_attention",
+      "pretrain_vs_finetune",
+      "sft_dpo_rlhf_concepts"
+    ],
+    "math_spine": [
+      "linear_algebra",
+      "calculus_gradients",
+      "probability_bayes",
+      "optimization_sgd_adam",
+      "information_theory_kl_entropy"
+    ],
+    "ml_core": [
+      "bias_variance",
+      "regularization",
+      "train_val_test_leakage",
+      "metrics_and_calibration"
+    ],
+    "mlops_production": [
+      "experiment_tracking",
+      "model_registry",
+      "deployment_canary",
+      "monitoring_drift_cost_latency"
+    ],
+    "safety_security": [
+      "privacy_pii",
+      "prompt_injection_if_agents",
+      "bias_audits",
+      "governance"
+    ]
+  },
+  "mastery_quiz": {
+    "questions": [
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "To make training faster",
+          "b": "To prevent data leakage and maintain comparable evaluations",
+          "c": "To reduce model size",
+          "d": "To improve GPU utilization"
+        },
+        "question_number": 1,
+        "question_text": "What is the single most important reason to lock train/val/test splits early?"
+      },
+      {
+        "correct_answer": "c",
+        "options": {
+          "a": "Accuracy only",
+          "b": "F1 score only",
+          "c": "Log loss / cross-entropy",
+          "d": "Number of parameters"
+        },
+        "question_number": 2,
+        "question_text": "Which metric best captures probabilistic prediction quality when outputs are probabilities?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "The model is unbiased",
+          "b": "The pipeline + optimization are implemented correctly",
+          "c": "The dataset is perfectly clean",
+          "d": "The model will generalize"
+        },
+        "question_number": 3,
+        "question_text": "What does an 'overfit test' (tiny subset fit) primarily verify?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "They reduce compute cost",
+          "b": "They prove which change caused the gain (causality evidence)",
+          "c": "They make charts prettier",
+          "d": "They eliminate the need for test sets"
+        },
+        "question_number": 4,
+        "question_text": "Why are ablations mandatory for serious model improvement work?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "To increase token count",
+          "b": "To stabilize optimization and preserve information flow",
+          "c": "To remove attention",
+          "d": "To reduce dataset size"
+        },
+        "question_number": 5,
+        "question_text": "In a transformer block, what is the purpose of residual connections?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "A distance metric that is always symmetric",
+          "b": "A measure of how one distribution differs from another (asymmetric)",
+          "c": "A measure of GPU speed",
+          "d": "A measure of model size"
+        },
+        "question_number": 6,
+        "question_text": "What is the correct interpretation of KL divergence in training objectives?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "Better generalization",
+          "b": "Test set becomes a training signal (leakage), inflating reported performance",
+          "c": "Lower variance",
+          "d": "Faster inference"
+        },
+        "question_number": 7,
+        "question_text": "What is the most common failure mode if you tune hyperparameters on the test set?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "Changing model architecture every run",
+          "b": "Pinning seeds, recording configs, and versioning data/code",
+          "c": "Using more GPUs",
+          "d": "Using larger batch sizes only"
+        },
+        "question_number": 8,
+        "question_text": "Which practice most directly improves training reproducibility?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "Whether the model uses GPUs",
+          "b": "Whether predicted probabilities match true outcome frequencies",
+          "c": "Whether the dataset is balanced",
+          "d": "Whether the model is small"
+        },
+        "question_number": 9,
+        "question_text": "What does 'calibration' refer to in classification models producing probabilities?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "A corrupted CSV file",
+          "b": "Information from validation/test influences training or model selection improperly",
+          "c": "Slow training speed",
+          "d": "Low GPU memory"
+        },
+        "question_number": 10,
+        "question_text": "What is the best definition of 'data leakage'?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "Baselines always win",
+          "b": "It gives a reference point and prevents wasting complexity on unsolved basics",
+          "c": "It eliminates evaluation",
+          "d": "It makes models smaller"
+        },
+        "question_number": 11,
+        "question_text": "Why is 'baseline first' a golden rule?"
+      },
+      {
+        "correct_answer": "b",
+        "options": {
+          "a": "To change the dataset",
+          "b": "To speed up training and reduce memory while keeping stability (with scaling)",
+          "c": "To remove gradients",
+          "d": "To make outputs discrete"
+        },
+        "question_number": 12,
+        "question_text": "What is the core reason mixed precision (AMP) is used?"
+      }
+    ],
+    "quiz_title": "Golden Standard AI Mastery Quiz (Crystal Core)"
+  },
+  "program_title": "Golden Standard AI Training Method (Crystal Knowledge Edition)",
+  "track": "llms_agents"
+}

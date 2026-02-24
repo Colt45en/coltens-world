@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "lex_968edc4c49dc",
+  "canonicalTerm": "Optimize",
+  "code_process_tag": "prompt.operator.optimize",
+  "type": "operator",
+  "meaning": "Improve a thing by adjusting variables to maximize a goal while respecting constraints; the result must be measurably or demonstrably better under the stated objective.",
+  "use": [
+    "Use when you can name objectives (latency, clarity, stability) and constraints (compat, determinism).",
+    "Use with acceptance tests so improvement is provable, not subjective."
+  ],
+  "methodology": [
+    "State objective(s) explicitly.",
+    "List constraints that must not break.",
+    "Name allowable tradeoffs.",
+    "Run validation tests before/after.",
+    "Record a decision note explaining why the change is better."
+  ],
+  "examples": [
+    "Optimize memory:query for large NDJSON by adding an index build step and verifying identical results on fixtures.",
+    "Optimize a rendering loop by reducing allocations while keeping deterministic ordering."
+  ],
+  "anti_patterns": [
+    "Saying 'optimize' with no objective or tests.",
+    "Changing behavior without a replay or golden fixture.",
+    "Hidden tradeoffs (faster but now nondeterministic)."
+  ],
+  "tests_validation": [
+    "Before/after snapshot test must pass.",
+    "Replay harness reproduces identical output given same inputs + lexicon hash.",
+    "No new unknown tags/operators introduced."
+  ],
+  "createdAt": "2026-02-12T21:09:10.872Z",
+  "updatedAt": "2026-02-12T21:09:10.872Z"
+}

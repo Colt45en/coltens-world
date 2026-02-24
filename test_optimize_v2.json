@@ -1,0 +1,12 @@
+{
+  "code_process_tag": "prompt.operator.optimize@v2",
+  "target": "improve code performance",
+  "objective": "Reduce execution time by 50%",
+  "axis": "performance",
+  "suboperator": "STREAMLINE",
+  "constraints": ["maintain functionality", "no external dependencies"],
+  "metrics": ["execution_time", "memory_usage"],
+  "budget": "standard",
+  "risk_tolerance": "medium",
+  "notes": "Focus on algorithmic improvements"
+}

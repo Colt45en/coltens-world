@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-02-12T21:09:10.876Z",
+  "entries": [
+    {
+      "id": "lex_968edc4c49dc",
+      "canonicalTerm": "Optimize",
+      "code_process_tag": "prompt.operator.optimize",
+      "type": "operator",
+      "file": "docs/lexicon/entries/lex_968edc4c49dc.lexicon.json"
+    },
+    {
+      "id": "lex_9cf0f310fa31",
+      "canonicalTerm": "Determinism",
+      "code_process_tag": "concept.determinism",
+      "type": "concept",
+      "file": "docs/lexicon/entries/lex_9cf0f310fa31.lexicon.json"
+    },
+    {
+      "id": "lex_e3c08c66a595",
+      "canonicalTerm": "Review Queue",
+      "code_process_tag": "system.review.queue",
+      "type": "system",
+      "file": "docs/lexicon/entries/lex_e3c08c66a595.lexicon.json"
+    }
+  ],
+  "contentHash": "d54e4936511bc4263ceae0f2f171ceaa1471260a97eeb793405af138f298bcda"
+}

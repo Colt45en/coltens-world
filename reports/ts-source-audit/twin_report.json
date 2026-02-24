@@ -1,0 +1,2554 @@
+{
+  "generatedAt": "2026-02-16T06:38:33.474Z",
+  "totalPairs": 131,
+  "winnerCounts": {
+    "ts": 87,
+    "js": 36,
+    "mixed": 8
+  },
+  "pairs": [
+    {
+      "pair": "apps/nucleus/src/bus/busHub.ts <-> apps/nucleus/src/bus/busHub.js",
+      "tsPath": "apps/nucleus/src/bus/busHub.ts",
+      "jsPath": "apps/nucleus/src/bus/busHub.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/routes/busReplay.js",
+          "apps/nucleus/src/routes/busReplay.ts",
+          "apps/nucleus/src/routes/operatorEvent.js",
+          "apps/nucleus/src/routes/operatorEvent.ts",
+          "apps/nucleus/src/routes/wsBus.js",
+          "apps/nucleus/src/routes/wsBus.ts",
+          "apps/nucleus/src/unified-runner-integration.js",
+          "apps/nucleus/src/unified-runner-integration.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/bus/publish.ts <-> apps/nucleus/src/bus/publish.js",
+      "tsPath": "apps/nucleus/src/bus/publish.ts",
+      "jsPath": "apps/nucleus/src/bus/publish.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/bus/handlers/buildEvidence.js",
+          "apps/nucleus/src/bus/handlers/buildEvidence.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/ndjson.ts <-> apps/nucleus/src/ndjson.js",
+      "tsPath": "apps/nucleus/src/ndjson.ts",
+      "jsPath": "apps/nucleus/src/ndjson.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/routes/chat.js",
+          "apps/nucleus/src/routes/chat.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/pty/ptySession.ts <-> apps/nucleus/src/pty/ptySession.js",
+      "tsPath": "apps/nucleus/src/pty/ptySession.ts",
+      "jsPath": "apps/nucleus/src/pty/ptySession.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/pty/venoManager.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/pty/venoManager.ts <-> apps/nucleus/src/pty/venoManager.js",
+      "tsPath": "apps/nucleus/src/pty/venoManager.ts",
+      "jsPath": "apps/nucleus/src/pty/venoManager.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts",
+          "apps/nucleus/src/wsHub_new.js",
+          "apps/nucleus/src/wsHub_new.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/router/handlers/ideCli.ts <-> apps/nucleus/src/router/handlers/ideCli.js",
+      "tsPath": "apps/nucleus/src/router/handlers/ideCli.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/ideCli.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/router/handlers/index.js",
+          "apps/nucleus/src/router/handlers/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/router/handlers/ideFs.ts <-> apps/nucleus/src/router/handlers/ideFs.js",
+      "tsPath": "apps/nucleus/src/router/handlers/ideFs.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/ideFs.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/router/handlers/index.js",
+          "apps/nucleus/src/router/handlers/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/busReplay.ts <-> apps/nucleus/src/routes/busReplay.js",
+      "tsPath": "apps/nucleus/src/routes/busReplay.ts",
+      "jsPath": "apps/nucleus/src/routes/busReplay.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts",
+          "apps/nucleus/src/routes/routes.js",
+          "apps/nucleus/src/routes/routes.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/health.ts <-> apps/nucleus/src/routes/health.js",
+      "tsPath": "apps/nucleus/src/routes/health.ts",
+      "jsPath": "apps/nucleus/src/routes/health.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/http/flowstate.ts <-> apps/nucleus/src/routes/http/flowstate.js",
+      "tsPath": "apps/nucleus/src/routes/http/flowstate.ts",
+      "jsPath": "apps/nucleus/src/routes/http/flowstate.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/http/leximorph.ts <-> apps/nucleus/src/routes/http/leximorph.js",
+      "tsPath": "apps/nucleus/src/routes/http/leximorph.ts",
+      "jsPath": "apps/nucleus/src/routes/http/leximorph.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/http/pipelineResults.ts <-> apps/nucleus/src/routes/http/pipelineResults.js",
+      "tsPath": "apps/nucleus/src/routes/http/pipelineResults.ts",
+      "jsPath": "apps/nucleus/src/routes/http/pipelineResults.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/operatorEvent.ts <-> apps/nucleus/src/routes/operatorEvent.js",
+      "tsPath": "apps/nucleus/src/routes/operatorEvent.ts",
+      "jsPath": "apps/nucleus/src/routes/operatorEvent.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/wsBus.ts <-> apps/nucleus/src/routes/wsBus.js",
+      "tsPath": "apps/nucleus/src/routes/wsBus.ts",
+      "jsPath": "apps/nucleus/src/routes/wsBus.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts",
+          "apps/nucleus/src/routes/routes.js",
+          "apps/nucleus/src/routes/routes.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/services/compilerEvidence.ts <-> apps/nucleus/src/services/compilerEvidence.js",
+      "tsPath": "apps/nucleus/src/services/compilerEvidence.ts",
+      "jsPath": "apps/nucleus/src/services/compilerEvidence.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/bus/handlers/buildEvidence.js",
+          "apps/nucleus/src/bus/handlers/buildEvidence.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/services/simRunner.ts <-> apps/nucleus/src/services/simRunner.js",
+      "tsPath": "apps/nucleus/src/services/simRunner.ts",
+      "jsPath": "apps/nucleus/src/services/simRunner.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts",
+          "apps/nucleus/src/wsHub_new.js",
+          "apps/nucleus/src/wsHub_new.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/tool/types.ts <-> apps/nucleus/src/tool/types.js",
+      "tsPath": "apps/nucleus/src/tool/types.ts",
+      "jsPath": "apps/nucleus/src/tool/types.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/routes/chat.ts",
+          "apps/nucleus/src/tool/executor.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/wsHub.ts <-> apps/nucleus/src/wsHub.js",
+      "tsPath": "apps/nucleus/src/wsHub.ts",
+      "jsPath": "apps/nucleus/src/wsHub.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/index.js",
+          "apps/nucleus/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/collision.ts <-> packages/engine/src/collision.js",
+      "tsPath": "packages/engine/src/collision.ts",
+      "jsPath": "packages/engine/src/collision.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/prediction.js",
+          "packages/engine/src/prediction.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/deps.ts <-> packages/engine/src/contracts/multigpu/deps.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/deps.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/deps.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/multigpu/index.js",
+          "packages/engine/src/contracts/multigpu/index.ts",
+          "packages/engine/src/contracts/multigpu/plan.js",
+          "packages/engine/src/contracts/multigpu/plan.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/pacing.ts <-> packages/engine/src/contracts/multigpu/pacing.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/pacing.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/pacing.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/multigpu/index.js",
+          "packages/engine/src/contracts/multigpu/index.ts",
+          "packages/engine/src/contracts/multigpu/plan.js",
+          "packages/engine/src/contracts/multigpu/plan.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/plan.ts <-> packages/engine/src/contracts/multigpu/plan.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/plan.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/plan.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/multigpu/index.js",
+          "packages/engine/src/contracts/multigpu/index.ts",
+          "packages/engine/src/contracts/multigpu/validate-multigpu.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/primitives.ts <-> packages/engine/src/contracts/multigpu/primitives.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/primitives.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/primitives.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/multigpu/deps.js",
+          "packages/engine/src/contracts/multigpu/deps.ts",
+          "packages/engine/src/contracts/multigpu/index.js",
+          "packages/engine/src/contracts/multigpu/index.ts",
+          "packages/engine/src/contracts/multigpu/pacing.js",
+          "packages/engine/src/contracts/multigpu/pacing.ts",
+          "packages/engine/src/contracts/multigpu/plan.js",
+          "packages/engine/src/contracts/multigpu/plan.ts",
+          "packages/engine/src/contracts/multigpu/sync.js",
+          "packages/engine/src/contracts/multigpu/sync.ts",
+          "packages/engine/src/contracts/multigpu/work.js",
+          "packages/engine/src/contracts/multigpu/work.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/sync.ts <-> packages/engine/src/contracts/multigpu/sync.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/sync.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/sync.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/multigpu/index.js",
+          "packages/engine/src/contracts/multigpu/index.ts",
+          "packages/engine/src/contracts/multigpu/plan.js",
+          "packages/engine/src/contracts/multigpu/plan.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/work.ts <-> packages/engine/src/contracts/multigpu/work.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/work.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/work.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/multigpu/index.js",
+          "packages/engine/src/contracts/multigpu/index.ts",
+          "packages/engine/src/contracts/multigpu/plan.js",
+          "packages/engine/src/contracts/multigpu/plan.ts",
+          "packages/engine/src/contracts/multigpu/sync.js",
+          "packages/engine/src/contracts/multigpu/sync.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/protocol/envelope.ts <-> packages/engine/src/contracts/protocol/envelope.js",
+      "tsPath": "packages/engine/src/contracts/protocol/envelope.ts",
+      "jsPath": "packages/engine/src/contracts/protocol/envelope.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/protocol/index.js",
+          "packages/engine/src/contracts/protocol/index.ts",
+          "packages/engine/src/contracts/protocol/ops.js",
+          "packages/engine/src/contracts/protocol/ops.ts",
+          "packages/engine/src/contracts/protocol/sim.js",
+          "packages/engine/src/contracts/protocol/sim.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/protocol/ops.ts <-> packages/engine/src/contracts/protocol/ops.js",
+      "tsPath": "packages/engine/src/contracts/protocol/ops.ts",
+      "jsPath": "packages/engine/src/contracts/protocol/ops.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/protocol/index.js",
+          "packages/engine/src/contracts/protocol/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/protocol/sim.ts <-> packages/engine/src/contracts/protocol/sim.js",
+      "tsPath": "packages/engine/src/contracts/protocol/sim.ts",
+      "jsPath": "packages/engine/src/contracts/protocol/sim.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/protocol/index.js",
+          "packages/engine/src/contracts/protocol/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/contracts/representation/gates.ts <-> packages/engine/src/contracts/representation/gates.js",
+      "tsPath": "packages/engine/src/contracts/representation/gates.ts",
+      "jsPath": "packages/engine/src/contracts/representation/gates.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/representation/index.js",
+          "packages/engine/src/contracts/representation/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/engine/src/learning/xor-trainer.ts <-> packages/engine/src/learning/xor-trainer.js",
+      "tsPath": "packages/engine/src/learning/xor-trainer.ts",
+      "jsPath": "packages/engine/src/learning/xor-trainer.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/learning/index.js",
+          "packages/engine/src/learning/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/core/braceBalance.ts <-> packages/flowstate/src/core/braceBalance.js",
+      "tsPath": "packages/flowstate/src/core/braceBalance.ts",
+      "jsPath": "packages/flowstate/src/core/braceBalance.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/core/metrics.js",
+          "packages/flowstate/src/core/metrics.ts",
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/core/metrics.ts <-> packages/flowstate/src/core/metrics.js",
+      "tsPath": "packages/flowstate/src/core/metrics.ts",
+      "jsPath": "packages/flowstate/src/core/metrics.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/core/seed.ts <-> packages/flowstate/src/core/seed.js",
+      "tsPath": "packages/flowstate/src/core/seed.ts",
+      "jsPath": "packages/flowstate/src/core/seed.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts",
+          "packages/flowstate/src/render/orbitRenderer.js",
+          "packages/flowstate/src/render/orbitRenderer.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/core/tokenize.ts <-> packages/flowstate/src/core/tokenize.js",
+      "tsPath": "packages/flowstate/src/core/tokenize.ts",
+      "jsPath": "packages/flowstate/src/core/tokenize.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/core/metrics.js",
+          "packages/flowstate/src/core/metrics.ts",
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/evidence/canonicalJson.ts <-> packages/flowstate/src/evidence/canonicalJson.js",
+      "tsPath": "packages/flowstate/src/evidence/canonicalJson.ts",
+      "jsPath": "packages/flowstate/src/evidence/canonicalJson.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/evidence/crypto.ts <-> packages/flowstate/src/evidence/crypto.js",
+      "tsPath": "packages/flowstate/src/evidence/crypto.ts",
+      "jsPath": "packages/flowstate/src/evidence/crypto.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/evidence/download.ts <-> packages/flowstate/src/evidence/download.js",
+      "tsPath": "packages/flowstate/src/evidence/download.ts",
+      "jsPath": "packages/flowstate/src/evidence/download.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/evidence/session.ts <-> packages/flowstate/src/evidence/session.js",
+      "tsPath": "packages/flowstate/src/evidence/session.ts",
+      "jsPath": "packages/flowstate/src/evidence/session.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/render/canvasFit.ts <-> packages/flowstate/src/render/canvasFit.js",
+      "tsPath": "packages/flowstate/src/render/canvasFit.ts",
+      "jsPath": "packages/flowstate/src/render/canvasFit.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/render/heatmapRenderer.ts <-> packages/flowstate/src/render/heatmapRenderer.js",
+      "tsPath": "packages/flowstate/src/render/heatmapRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/heatmapRenderer.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/render/histogramRenderer.ts <-> packages/flowstate/src/render/histogramRenderer.js",
+      "tsPath": "packages/flowstate/src/render/histogramRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/histogramRenderer.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/render/orbitRenderer.ts <-> packages/flowstate/src/render/orbitRenderer.js",
+      "tsPath": "packages/flowstate/src/render/orbitRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/orbitRenderer.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/render/ringRenderer.ts <-> packages/flowstate/src/render/ringRenderer.js",
+      "tsPath": "packages/flowstate/src/render/ringRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/ringRenderer.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.js",
+          "packages/flowstate/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/flowstate/src/render/types.ts <-> packages/flowstate/src/render/types.js",
+      "tsPath": "packages/flowstate/src/render/types.ts",
+      "jsPath": "packages/flowstate/src/render/types.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/flowstate/src/index.ts",
+          "packages/flowstate/src/render/canvasFit.ts",
+          "packages/flowstate/src/render/heatmapRenderer.ts",
+          "packages/flowstate/src/render/histogramRenderer.ts",
+          "packages/flowstate/src/render/orbitRenderer.ts",
+          "packages/flowstate/src/render/ringRenderer.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/capabilities.ts <-> packages/protocol/src/capabilities.js",
+      "tsPath": "packages/protocol/src/capabilities.ts",
+      "jsPath": "packages/protocol/src/capabilities.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/chat.ts <-> packages/protocol/src/chat.js",
+      "tsPath": "packages/protocol/src/chat.ts",
+      "jsPath": "packages/protocol/src/chat.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts",
+          "packages/protocol/src/types.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/contracts/evidence.ts <-> packages/protocol/src/contracts/evidence.js",
+      "tsPath": "packages/protocol/src/contracts/evidence.ts",
+      "jsPath": "packages/protocol/src/contracts/evidence.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/brain/src/ui/MemoryPanel.tsx"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/contracts/flowstate.ts <-> packages/protocol/src/contracts/flowstate.js",
+      "tsPath": "packages/protocol/src/contracts/flowstate.ts",
+      "jsPath": "packages/protocol/src/contracts/flowstate.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/contracts/worldGraph.ts <-> packages/protocol/src/contracts/worldGraph.js",
+      "tsPath": "packages/protocol/src/contracts/worldGraph.ts",
+      "jsPath": "packages/protocol/src/contracts/worldGraph.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts",
+          "packages/protocol/src/types.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/envelopes.ts <-> packages/protocol/src/envelopes.js",
+      "tsPath": "packages/protocol/src/envelopes.ts",
+      "jsPath": "packages/protocol/src/envelopes.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/ide.ts <-> packages/protocol/src/ide.js",
+      "tsPath": "packages/protocol/src/ide.ts",
+      "jsPath": "packages/protocol/src/ide.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts",
+          "packages/protocol/src/types.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/idle.ts <-> packages/protocol/src/idle.js",
+      "tsPath": "packages/protocol/src/idle.ts",
+      "jsPath": "packages/protocol/src/idle.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/operator.ts <-> packages/protocol/src/operator.js",
+      "tsPath": "packages/protocol/src/operator.ts",
+      "jsPath": "packages/protocol/src/operator.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/representation.ts <-> packages/protocol/src/representation.js",
+      "tsPath": "packages/protocol/src/representation.ts",
+      "jsPath": "packages/protocol/src/representation.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/schemas.ts <-> packages/protocol/src/schemas.js",
+      "tsPath": "packages/protocol/src/schemas.ts",
+      "jsPath": "packages/protocol/src/schemas.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/system/health.ts <-> packages/protocol/src/system/health.js",
+      "tsPath": "packages/protocol/src/system/health.ts",
+      "jsPath": "packages/protocol/src/system/health.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/types.ts <-> packages/protocol/src/types.js",
+      "tsPath": "packages/protocol/src/types.ts",
+      "jsPath": "packages/protocol/src/types.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/ide.js",
+          "packages/protocol/src/ide.ts",
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/uee.ts <-> packages/protocol/src/uee.js",
+      "tsPath": "packages/protocol/src/uee.ts",
+      "jsPath": "packages/protocol/src/uee.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/tooling/src/compilers/csCompiler.ts <-> packages/tooling/src/compilers/csCompiler.js",
+      "tsPath": "packages/tooling/src/compilers/csCompiler.ts",
+      "jsPath": "packages/tooling/src/compilers/csCompiler.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/tooling/src/compile.ts",
+          "packages/tooling/src/index.js",
+          "packages/tooling/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/tooling",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/tooling/src/compilers/helpers.ts <-> packages/tooling/src/compilers/helpers.js",
+      "tsPath": "packages/tooling/src/compilers/helpers.ts",
+      "jsPath": "packages/tooling/src/compilers/helpers.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/tooling/src/compile.ts",
+          "packages/tooling/src/compilers/csCompiler.js",
+          "packages/tooling/src/compilers/csCompiler.ts",
+          "packages/tooling/src/compilers/jsCompiler.js",
+          "packages/tooling/src/compilers/jsCompiler.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/tooling",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/tooling/src/compilers/jsCompiler.ts <-> packages/tooling/src/compilers/jsCompiler.js",
+      "tsPath": "packages/tooling/src/compilers/jsCompiler.ts",
+      "jsPath": "packages/tooling/src/compilers/jsCompiler.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/tooling/src/compile.ts",
+          "packages/tooling/src/index.js",
+          "packages/tooling/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/tooling",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/tooling/src/compilers/types.ts <-> packages/tooling/src/compilers/types.js",
+      "tsPath": "packages/tooling/src/compilers/types.ts",
+      "jsPath": "packages/tooling/src/compilers/types.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/tooling/src/compile.ts",
+          "packages/tooling/src/compilers/csCompiler.ts",
+          "packages/tooling/src/compilers/jsCompiler.ts",
+          "packages/tooling/src/index.js",
+          "packages/tooling/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/tooling",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/tooling/src/utils-node.ts <-> packages/tooling/src/utils-node.js",
+      "tsPath": "packages/tooling/src/utils-node.ts",
+      "jsPath": "packages/tooling/src/utils-node.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/tooling/src/index.js",
+          "packages/tooling/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/tooling",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/util/src/fileUtils.ts <-> packages/util/src/fileUtils.js",
+      "tsPath": "packages/util/src/fileUtils.ts",
+      "jsPath": "packages/util/src/fileUtils.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/util/src/index.d.ts",
+          "packages/util/src/index.js",
+          "packages/util/src/index.ts",
+          "packages/util/src/packageName.js",
+          "packages/util/src/packageName.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/util",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/util/src/hash.ts <-> packages/util/src/hash.js",
+      "tsPath": "packages/util/src/hash.ts",
+      "jsPath": "packages/util/src/hash.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/util/src/index.d.ts",
+          "packages/util/src/index.js",
+          "packages/util/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/util",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/util/src/packageName.ts <-> packages/util/src/packageName.js",
+      "tsPath": "packages/util/src/packageName.ts",
+      "jsPath": "packages/util/src/packageName.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/util/src/index.d.ts",
+          "packages/util/src/index.js",
+          "packages/util/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/util",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/util/src/time.ts <-> packages/util/src/time.js",
+      "tsPath": "packages/util/src/time.ts",
+      "jsPath": "packages/util/src/time.js",
+      "winner": "ts",
+      "confidence": 0.95,
+      "reasons": [
+        "TS has importers and JS has none"
+      ],
+      "importers": {
+        "ts": [
+          "packages/util/src/index.d.ts",
+          "packages/util/src/index.js",
+          "packages/util/src/index.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/util",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/env-sandbox/src/audit.ts <-> apps/env-sandbox/src/audit.js",
+      "tsPath": "apps/env-sandbox/src/audit.ts",
+      "jsPath": "apps/env-sandbox/src/audit.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/index.js",
+          "apps/env-sandbox/src/index.ts",
+          "apps/env-sandbox/src/sandbox.js",
+          "apps/env-sandbox/src/sandbox.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/contracts.ts <-> apps/env-sandbox/src/contracts.js",
+      "tsPath": "apps/env-sandbox/src/contracts.ts",
+      "jsPath": "apps/env-sandbox/src/contracts.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/index.js",
+          "apps/env-sandbox/src/index.ts",
+          "apps/env-sandbox/src/policy.js",
+          "apps/env-sandbox/src/policy.ts",
+          "apps/env-sandbox/src/sandbox.js",
+          "apps/env-sandbox/src/sandbox.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/policy.ts <-> apps/env-sandbox/src/policy.js",
+      "tsPath": "apps/env-sandbox/src/policy.ts",
+      "jsPath": "apps/env-sandbox/src/policy.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/sandbox.js",
+          "apps/env-sandbox/src/sandbox.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/sandbox-tools.ts <-> apps/env-sandbox/src/sandbox-tools.js",
+      "tsPath": "apps/env-sandbox/src/sandbox-tools.ts",
+      "jsPath": "apps/env-sandbox/src/sandbox-tools.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/demo.js",
+          "apps/env-sandbox/src/demo.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/sandbox.ts <-> apps/env-sandbox/src/sandbox.js",
+      "tsPath": "apps/env-sandbox/src/sandbox.ts",
+      "jsPath": "apps/env-sandbox/src/sandbox.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/index.js",
+          "apps/env-sandbox/src/index.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/storage.ts <-> apps/env-sandbox/src/storage.js",
+      "tsPath": "apps/env-sandbox/src/storage.ts",
+      "jsPath": "apps/env-sandbox/src/storage.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/audit.js",
+          "apps/env-sandbox/src/audit.ts",
+          "apps/env-sandbox/src/index.js",
+          "apps/env-sandbox/src/index.ts",
+          "apps/env-sandbox/src/sandbox.js",
+          "apps/env-sandbox/src/sandbox.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/types.ts <-> apps/env-sandbox/src/types.js",
+      "tsPath": "apps/env-sandbox/src/types.ts",
+      "jsPath": "apps/env-sandbox/src/types.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/env-sandbox/src/contracts.js",
+          "apps/env-sandbox/src/contracts.ts",
+          "apps/env-sandbox/src/index.js",
+          "apps/env-sandbox/src/index.ts",
+          "apps/env-sandbox/src/policy.ts",
+          "apps/env-sandbox/src/sandbox.js",
+          "apps/env-sandbox/src/sandbox.ts"
+        ]
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/chat-handler.ts <-> apps/nucleus/src/chat-handler.js",
+      "tsPath": "apps/nucleus/src/chat-handler.ts",
+      "jsPath": "apps/nucleus/src/chat-handler.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/health/adapter.ts <-> apps/nucleus/src/health/adapter.js",
+      "tsPath": "apps/nucleus/src/health/adapter.ts",
+      "jsPath": "apps/nucleus/src/health/adapter.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/health/poller.ts <-> apps/nucleus/src/health/poller.js",
+      "tsPath": "apps/nucleus/src/health/poller.ts",
+      "jsPath": "apps/nucleus/src/health/poller.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/health/adapter.ts",
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/idle.ts <-> apps/nucleus/src/idle.js",
+      "tsPath": "apps/nucleus/src/idle.ts",
+      "jsPath": "apps/nucleus/src/idle.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/bus-ws-bridge.js",
+          "apps/nucleus/src/bus-ws-bridge.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/router/handlers/brainControl.ts <-> apps/nucleus/src/router/handlers/brainControl.js",
+      "tsPath": "apps/nucleus/src/router/handlers/brainControl.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/brainControl.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/router/uee.js",
+          "apps/nucleus/src/router/uee.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/router/handlers/brainTrain.ts <-> apps/nucleus/src/router/handlers/brainTrain.js",
+      "tsPath": "apps/nucleus/src/router/handlers/brainTrain.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/brainTrain.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/router/uee.js",
+          "apps/nucleus/src/router/uee.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/router/uee.ts <-> apps/nucleus/src/router/uee.js",
+      "tsPath": "apps/nucleus/src/router/uee.ts",
+      "jsPath": "apps/nucleus/src/router/uee.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/router/handlers/base.ts",
+          "apps/nucleus/src/router/handlers/brainControl.ts",
+          "apps/nucleus/src/router/handlers/brainTrain.ts",
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts",
+          "apps/nucleus/src/wsHub_new.js",
+          "apps/nucleus/src/wsHub_new.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/chat.ts <-> apps/nucleus/src/routes/chat.js",
+      "tsPath": "apps/nucleus/src/routes/chat.ts",
+      "jsPath": "apps/nucleus/src/routes/chat.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "apps/nucleus/src/wsHub.js",
+          "apps/nucleus/src/wsHub.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/brain/src/controller.ts <-> packages/brain/src/controller.js",
+      "tsPath": "packages/brain/src/controller.ts",
+      "jsPath": "packages/brain/src/controller.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/brain/src/index.js",
+          "packages/brain/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/brain",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/brain/src/network.ts <-> packages/brain/src/network.js",
+      "tsPath": "packages/brain/src/network.ts",
+      "jsPath": "packages/brain/src/network.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/brain/src/controller.ts",
+          "packages/brain/src/index.js",
+          "packages/brain/src/index.ts",
+          "packages/brain/src/population.js",
+          "packages/brain/src/population.ts"
+        ]
+      },
+      "package": "@world-engine/brain",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/brain/src/population.ts <-> packages/brain/src/population.js",
+      "tsPath": "packages/brain/src/population.ts",
+      "jsPath": "packages/brain/src/population.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/brain/src/index.js",
+          "packages/brain/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/brain",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/envelopeFactory.ts <-> packages/engine/src/contracts/envelopeFactory.js",
+      "tsPath": "packages/engine/src/contracts/envelopeFactory.ts",
+      "jsPath": "packages/engine/src/contracts/envelopeFactory.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/contracts/index.js",
+          "packages/engine/src/contracts/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/index.ts <-> packages/engine/src/contracts/index.js",
+      "tsPath": "packages/engine/src/contracts/index.ts",
+      "jsPath": "packages/engine/src/contracts/index.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/lexicon/index.ts <-> packages/engine/src/contracts/lexicon/index.js",
+      "tsPath": "packages/engine/src/contracts/lexicon/index.ts",
+      "jsPath": "packages/engine/src/contracts/lexicon/index.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/contracts/index.js",
+          "packages/engine/src/contracts/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/lexicon/LexiconEntry.schema.ts <-> packages/engine/src/contracts/lexicon/LexiconEntry.schema.js",
+      "tsPath": "packages/engine/src/contracts/lexicon/LexiconEntry.schema.ts",
+      "jsPath": "packages/engine/src/contracts/lexicon/LexiconEntry.schema.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/contracts/lexicon/index.js",
+          "packages/engine/src/contracts/lexicon/index.ts",
+          "packages/engine/src/contracts/lexicon/validate-lexicon.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/multigpu/index.ts <-> packages/engine/src/contracts/multigpu/index.js",
+      "tsPath": "packages/engine/src/contracts/multigpu/index.ts",
+      "jsPath": "packages/engine/src/contracts/multigpu/index.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/contracts/index.js",
+          "packages/engine/src/contracts/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/protocol/index.ts <-> packages/engine/src/contracts/protocol/index.js",
+      "tsPath": "packages/engine/src/contracts/protocol/index.ts",
+      "jsPath": "packages/engine/src/contracts/protocol/index.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/representation/index.ts <-> packages/engine/src/contracts/representation/index.js",
+      "tsPath": "packages/engine/src/contracts/representation/index.ts",
+      "jsPath": "packages/engine/src/contracts/representation/index.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/util/exhaustive.ts <-> packages/engine/src/contracts/util/exhaustive.js",
+      "tsPath": "packages/engine/src/contracts/util/exhaustive.ts",
+      "jsPath": "packages/engine/src/contracts/util/exhaustive.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/util/require-schema.ts <-> packages/engine/src/contracts/util/require-schema.js",
+      "tsPath": "packages/engine/src/contracts/util/require-schema.ts",
+      "jsPath": "packages/engine/src/contracts/util/require-schema.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/learning/index.ts <-> packages/engine/src/learning/index.js",
+      "tsPath": "packages/engine/src/learning/index.ts",
+      "jsPath": "packages/engine/src/learning/index.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "package entrypoint references JS file",
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/prediction.ts <-> packages/engine/src/prediction.js",
+      "tsPath": "packages/engine/src/prediction.ts",
+      "jsPath": "packages/engine/src/prediction.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/runtime/json.ts <-> packages/engine/src/runtime/json.js",
+      "tsPath": "packages/engine/src/runtime/json.ts",
+      "jsPath": "packages/engine/src/runtime/json.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/engine/src/index.js",
+          "packages/engine/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/protocol/src/bus/buildEvidenceBus.ts <-> packages/protocol/src/bus/buildEvidenceBus.js",
+      "tsPath": "packages/protocol/src/bus/buildEvidenceBus.ts",
+      "jsPath": "packages/protocol/src/bus/buildEvidenceBus.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/protocol/src/envelopes/uee/guards.ts <-> packages/protocol/src/envelopes/uee/guards.js",
+      "tsPath": "packages/protocol/src/envelopes/uee/guards.ts",
+      "jsPath": "packages/protocol/src/envelopes/uee/guards.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/protocol/src/envelopes/uee/index.js",
+          "packages/protocol/src/envelopes/uee/index.ts"
+        ]
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/protocol/src/envelopes/uee/schema.ts <-> packages/protocol/src/envelopes/uee/schema.js",
+      "tsPath": "packages/protocol/src/envelopes/uee/schema.ts",
+      "jsPath": "packages/protocol/src/envelopes/uee/schema.js",
+      "winner": "js",
+      "confidence": 0.85,
+      "reasons": [
+        "JS has importers and TS has none"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/protocol/src/envelopes/uee/guards.js",
+          "packages/protocol/src/envelopes/uee/guards.ts",
+          "packages/protocol/src/envelopes/uee/index.js",
+          "packages/protocol/src/envelopes/uee/index.ts"
+        ]
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/nucleus/src/tool/executor.ts <-> apps/nucleus/src/tool/executor.js",
+      "tsPath": "apps/nucleus/src/tool/executor.ts",
+      "jsPath": "apps/nucleus/src/tool/executor.js",
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [
+          "apps/nucleus/src/routes/chat.js",
+          "apps/nucleus/src/routes/chat.ts"
+        ],
+        "js": [
+          "apps/nucleus/src/wsHub.ts"
+        ]
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "rewrite-js-imports-then-delete"
+    },
+    {
+      "pair": "packages/protocol/src/buildEvidence.ts <-> packages/protocol/src/buildEvidence.js",
+      "tsPath": "packages/protocol/src/buildEvidence.ts",
+      "jsPath": "packages/protocol/src/buildEvidence.js",
+      "winner": "ts",
+      "confidence": 0.8,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [
+          "packages/protocol/src/bus/buildEvidenceBus.js",
+          "packages/protocol/src/bus/buildEvidenceBus.ts",
+          "packages/protocol/src/index.js",
+          "packages/protocol/src/index.ts"
+        ],
+        "js": [
+          "packages/protocol/src/system/health.js",
+          "packages/protocol/src/system/health.ts"
+        ]
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "rewrite-js-imports-then-delete"
+    },
+    {
+      "pair": "packages/brain/src/review/reviewStore.ts <-> packages/brain/src/review/reviewStore.js",
+      "tsPath": "packages/brain/src/review/reviewStore.ts",
+      "jsPath": "packages/brain/src/review/reviewStore.js",
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS importer count is dominant"
+      ],
+      "importers": {
+        "ts": [
+          "packages/brain/src/cli/review-promote.ts"
+        ],
+        "js": [
+          "packages/brain/src/index.js",
+          "packages/brain/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/brain",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/busEnvelope.ts <-> packages/engine/src/contracts/busEnvelope.js",
+      "tsPath": "packages/engine/src/contracts/busEnvelope.ts",
+      "jsPath": "packages/engine/src/contracts/busEnvelope.js",
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS importer count is dominant"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/envelopeFactory.ts"
+        ],
+        "js": [
+          "packages/engine/src/contracts/index.js",
+          "packages/engine/src/contracts/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "packages/engine/src/contracts/lexicon/promptOperatorRegistry.ts <-> packages/engine/src/contracts/lexicon/promptOperatorRegistry.js",
+      "tsPath": "packages/engine/src/contracts/lexicon/promptOperatorRegistry.ts",
+      "jsPath": "packages/engine/src/contracts/lexicon/promptOperatorRegistry.js",
+      "winner": "js",
+      "confidence": 0.75,
+      "reasons": [
+        "JS importer count is dominant"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/contracts/lexicon/validate-prompts.ts"
+        ],
+        "js": [
+          "packages/engine/src/contracts/lexicon/index.js",
+          "packages/engine/src/contracts/lexicon/index.ts"
+        ]
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "verify-ts-stale-or-migrate-entrypoints"
+    },
+    {
+      "pair": "apps/env-sandbox/src/demo.ts <-> apps/env-sandbox/src/demo.js",
+      "tsPath": "apps/env-sandbox/src/demo.ts",
+      "jsPath": "apps/env-sandbox/src/demo.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/bus-ws-bridge.ts <-> apps/nucleus/src/bus-ws-bridge.js",
+      "tsPath": "apps/nucleus/src/bus-ws-bridge.ts",
+      "jsPath": "apps/nucleus/src/bus-ws-bridge.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/bus/handlers/buildEvidence.ts <-> apps/nucleus/src/bus/handlers/buildEvidence.js",
+      "tsPath": "apps/nucleus/src/bus/handlers/buildEvidence.ts",
+      "jsPath": "apps/nucleus/src/bus/handlers/buildEvidence.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/index.ts <-> apps/nucleus/src/index.js",
+      "tsPath": "apps/nucleus/src/index.ts",
+      "jsPath": "apps/nucleus/src/index.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/router/handlers/base.ts <-> apps/nucleus/src/router/handlers/base.js",
+      "tsPath": "apps/nucleus/src/router/handlers/base.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/base.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/router/handlers/index.ts <-> apps/nucleus/src/router/handlers/index.js",
+      "tsPath": "apps/nucleus/src/router/handlers/index.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/index.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/buildEvidence.ts <-> apps/nucleus/src/routes/buildEvidence.js",
+      "tsPath": "apps/nucleus/src/routes/buildEvidence.ts",
+      "jsPath": "apps/nucleus/src/routes/buildEvidence.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/lexicon-disabled.ts <-> apps/nucleus/src/routes/lexicon-disabled.js",
+      "tsPath": "apps/nucleus/src/routes/lexicon-disabled.ts",
+      "jsPath": "apps/nucleus/src/routes/lexicon-disabled.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/lexicon.ts <-> apps/nucleus/src/routes/lexicon.js",
+      "tsPath": "apps/nucleus/src/routes/lexicon.ts",
+      "jsPath": "apps/nucleus/src/routes/lexicon.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/routes/routes.ts <-> apps/nucleus/src/routes/routes.js",
+      "tsPath": "apps/nucleus/src/routes/routes.ts",
+      "jsPath": "apps/nucleus/src/routes/routes.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/sessionStore.ts <-> apps/nucleus/src/sessionStore.js",
+      "tsPath": "apps/nucleus/src/sessionStore.ts",
+      "jsPath": "apps/nucleus/src/sessionStore.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/simulation.ts <-> apps/nucleus/src/simulation.js",
+      "tsPath": "apps/nucleus/src/simulation.ts",
+      "jsPath": "apps/nucleus/src/simulation.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/unified-runner-integration.ts <-> apps/nucleus/src/unified-runner-integration.js",
+      "tsPath": "apps/nucleus/src/unified-runner-integration.ts",
+      "jsPath": "apps/nucleus/src/unified-runner-integration.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/nucleus/src/wsHub_new.ts <-> apps/nucleus/src/wsHub_new.js",
+      "tsPath": "apps/nucleus/src/wsHub_new.ts",
+      "jsPath": "apps/nucleus/src/wsHub_new.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-nucleus",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/brain/src/review/reviewTypes.ts <-> packages/brain/src/review/reviewTypes.js",
+      "tsPath": "packages/brain/src/review/reviewTypes.ts",
+      "jsPath": "packages/brain/src/review/reviewTypes.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [
+          "packages/brain/src/review/reviewStore.js",
+          "packages/brain/src/review/reviewStore.ts"
+        ],
+        "js": [
+          "packages/brain/src/index.js",
+          "packages/brain/src/index.ts"
+        ]
+      },
+      "package": "@world-engine/brain",
+      "suggested_action": "rewrite-js-imports-then-delete"
+    },
+    {
+      "pair": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.ts <-> packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js",
+      "tsPath": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.ts",
+      "jsPath": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/envelopes/index.ts <-> packages/protocol/src/envelopes/index.js",
+      "tsPath": "packages/protocol/src/envelopes/index.ts",
+      "jsPath": "packages/protocol/src/envelopes/index.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "package entrypoint references TS file",
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "packages/protocol/src/index.ts <-> packages/protocol/src/index.js",
+      "tsPath": "packages/protocol/src/index.ts",
+      "jsPath": "packages/protocol/src/index.js",
+      "winner": "ts",
+      "confidence": 0.7,
+      "reasons": [
+        "package entrypoint references TS file",
+        "TS importer count is dominant or equal with no JS entrypoint"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "delete-candidate"
+    },
+    {
+      "pair": "apps/env-sandbox/src/index.ts <-> apps/env-sandbox/src/index.js",
+      "tsPath": "apps/env-sandbox/src/index.ts",
+      "jsPath": "apps/env-sandbox/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "apps-env-sandbox",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/brain/src/index.ts <-> packages/brain/src/index.js",
+      "tsPath": "packages/brain/src/index.ts",
+      "jsPath": "packages/brain/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/brain",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/engine/src/index.ts <-> packages/engine/src/index.js",
+      "tsPath": "packages/engine/src/index.ts",
+      "jsPath": "packages/engine/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [
+          "packages/engine/src/optimizations.ts"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/engine",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/flowstate/src/index.ts <-> packages/flowstate/src/index.js",
+      "tsPath": "packages/flowstate/src/index.ts",
+      "jsPath": "packages/flowstate/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [
+          "packages/brain/src/ui/MemoryPanel.tsx"
+        ],
+        "js": []
+      },
+      "package": "@world-engine/flowstate",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/math/src/index.ts <-> packages/math/src/index.js",
+      "tsPath": "packages/math/src/index.ts",
+      "jsPath": "packages/math/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/math",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/protocol/src/envelopes/uee/index.ts <-> packages/protocol/src/envelopes/uee/index.js",
+      "tsPath": "packages/protocol/src/envelopes/uee/index.ts",
+      "jsPath": "packages/protocol/src/envelopes/uee/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references TS file"
+      ],
+      "importers": {
+        "ts": [],
+        "js": [
+          "packages/protocol/src/envelopes/index.js",
+          "packages/protocol/src/envelopes/index.ts"
+        ]
+      },
+      "package": "@world-engine/protocol",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/tooling/src/index.ts <-> packages/tooling/src/index.js",
+      "tsPath": "packages/tooling/src/index.ts",
+      "jsPath": "packages/tooling/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/tooling",
+      "suggested_action": "manual-review"
+    },
+    {
+      "pair": "packages/util/src/index.ts <-> packages/util/src/index.js",
+      "tsPath": "packages/util/src/index.ts",
+      "jsPath": "packages/util/src/index.js",
+      "winner": "mixed",
+      "confidence": 0.5,
+      "reasons": [
+        "package entrypoint references JS file"
+      ],
+      "importers": {
+        "ts": [],
+        "js": []
+      },
+      "package": "@world-engine/util",
+      "suggested_action": "manual-review"
+    }
+  ]
+}

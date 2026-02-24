@@ -1,0 +1,178 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: 100%;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  background: #0a0e27;
+  color: #e0e6ed;
+}
+
+.loading,
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  text-align: center;
+  color: #8896b0;
+}
+
+.empty h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  color: #b8c5d6;
+}
+
+.empty p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #2a3d5c;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #e0e6ed;
+}
+
+.clearButton {
+  padding: 0.5rem 1rem;
+  background: #c41e3a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.clearButton:hover {
+  background: #a01730;
+}
+
+.sessionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #0f1428;
+  border-radius: 6px;
+  border-left: 3px solid #4f6bb8;
+}
+
+.sessionTitle {
+  font-weight: 600;
+  color: #7fa3d1;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.packet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #151d3a;
+  border-radius: 4px;
+  border: 1px solid #2a3d5c;
+}
+
+.packetHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.packetHeader > div {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.packetHeader strong {
+  color: #e0e6ed;
+  font-family: "Monaco", "Courier New", monospace;
+  font-size: 0.85rem;
+}
+
+.mode,
+.boost {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #1a2749;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #88b4d8;
+  font-weight: 500;
+}
+
+.boost {
+  background: #2a1f2e;
+  color: #d17da0;
+}
+
+.deleteButton {
+  padding: 0.4rem 0.75rem;
+  background: #4f6bb8;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.deleteButton:hover {
+  background: #3d5499;
+}
+
+.packetDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-top: 1px solid #2a3d5c;
+  padding-top: 0.5rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+}
+
+.detailRow > span:first-child {
+  color: #8896b0;
+  min-width: 100px;
+  font-weight: 500;
+}
+
+.detailRow code {
+  font-family: "Monaco", "Courier New", monospace;
+  color: #88b4d8;
+  background: #0a0e27;
+  padding: 0.2rem 0.4rem;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  word-break: break-all;
+  flex: 1;
+}

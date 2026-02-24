@@ -1,0 +1,636 @@
+--- a/apps/env-sandbox/src/index.js
++++ b/apps/env-sandbox/src/index.js
+@@
+-import { readAuditSince } from "./audit.js";
++import { readAuditSince } from "./audit";
+
+--- a/apps/env-sandbox/src/index.ts
++++ b/apps/env-sandbox/src/index.ts
+@@
+-import { readAuditSince } from "./audit.js";
++import { readAuditSince } from "./audit";
+
+--- a/apps/env-sandbox/src/sandbox.js
++++ b/apps/env-sandbox/src/sandbox.js
+@@
+-import { appendAudit } from "./audit.js";
++import { appendAudit } from "./audit";
+
+--- a/apps/env-sandbox/src/sandbox.ts
++++ b/apps/env-sandbox/src/sandbox.ts
+@@
+-import { appendAudit } from "./audit.js";
++import { appendAudit } from "./audit";
+
+--- a/apps/env-sandbox/src/index.js
++++ b/apps/env-sandbox/src/index.js
+@@
+-import { EnvCodexSchema } from "./contracts.js";
++import { EnvCodexSchema } from "./contracts";
+
+--- a/apps/env-sandbox/src/index.ts
++++ b/apps/env-sandbox/src/index.ts
+@@
+-import { EnvCodexSchema } from "./contracts.js";
++import { EnvCodexSchema } from "./contracts";
+
+--- a/apps/env-sandbox/src/policy.js
++++ b/apps/env-sandbox/src/policy.js
+@@
+-import { codexToMap } from "./contracts.js";
++import { codexToMap } from "./contracts";
+
+--- a/apps/env-sandbox/src/policy.ts
++++ b/apps/env-sandbox/src/policy.ts
+@@
+-import { EnvCodex, EnvKeySpec, codexToMap } from "./contracts.js";
++import { EnvCodex, EnvKeySpec, codexToMap } from "./contracts";
+
+--- a/apps/env-sandbox/src/sandbox.js
++++ b/apps/env-sandbox/src/sandbox.js
+@@
+-import { EnvCodexSchema, parseTypedValue } from "./contracts.js";
++import { EnvCodexSchema, parseTypedValue } from "./contracts";
+
+--- a/apps/env-sandbox/src/sandbox.ts
++++ b/apps/env-sandbox/src/sandbox.ts
+@@
+-import { type EnvCodex, EnvCodexSchema, parseTypedValue } from "./contracts.js";
++import { type EnvCodex, EnvCodexSchema, parseTypedValue } from "./contracts";
+
+--- a/apps/env-sandbox/src/sandbox.js
++++ b/apps/env-sandbox/src/sandbox.js
+@@
+-import { enforceKeyPolicy } from "./policy.js";
++import { enforceKeyPolicy } from "./policy";
+
+--- a/apps/env-sandbox/src/sandbox.ts
++++ b/apps/env-sandbox/src/sandbox.ts
+@@
+-import { enforceKeyPolicy } from "./policy.js";
++import { enforceKeyPolicy } from "./policy";
+
+--- a/apps/env-sandbox/src/demo.js
++++ b/apps/env-sandbox/src/demo.js
+@@
+-import { getByPath, Sandbox, tools } from "./sandbox-tools.js";
++import { getByPath, Sandbox, tools } from "./sandbox-tools";
+
+--- a/apps/env-sandbox/src/demo.ts
++++ b/apps/env-sandbox/src/demo.ts
+@@
+-} from "./sandbox-tools.js";
++} from "./sandbox-tools";
+
+--- a/apps/env-sandbox/src/index.js
++++ b/apps/env-sandbox/src/index.js
+@@
+-import { EnvSandbox } from "./sandbox.js";
++import { EnvSandbox } from "./sandbox";
+
+--- a/apps/env-sandbox/src/index.ts
++++ b/apps/env-sandbox/src/index.ts
+@@
+-import { EnvSandbox } from "./sandbox.js";
++import { EnvSandbox } from "./sandbox";
+
+--- a/apps/env-sandbox/src/audit.js
++++ b/apps/env-sandbox/src/audit.js
+@@
+-import { ensureDir } from "./storage.js";
++import { ensureDir } from "./storage";
+
+--- a/apps/env-sandbox/src/audit.ts
++++ b/apps/env-sandbox/src/audit.ts
+@@
+-import { ensureDir } from "./storage.js";
++import { ensureDir } from "./storage";
+
+--- a/apps/env-sandbox/src/index.js
++++ b/apps/env-sandbox/src/index.js
+@@
+-import { resolveStoragePaths } from "./storage.js";
++import { resolveStoragePaths } from "./storage";
+
+--- a/apps/env-sandbox/src/index.ts
++++ b/apps/env-sandbox/src/index.ts
+@@
+-import { resolveStoragePaths } from "./storage.js";
++import { resolveStoragePaths } from "./storage";
+
+--- a/apps/env-sandbox/src/sandbox.js
++++ b/apps/env-sandbox/src/sandbox.js
+@@
+-import { readJsonFile, writeJsonFile } from "./storage.js";
++import { readJsonFile, writeJsonFile } from "./storage";
+
+--- a/apps/env-sandbox/src/sandbox.ts
++++ b/apps/env-sandbox/src/sandbox.ts
+@@
+-import { readJsonFile, writeJsonFile } from "./storage.js";
++import { readJsonFile, writeJsonFile } from "./storage";
+
+--- a/apps/env-sandbox/src/contracts.js
++++ b/apps/env-sandbox/src/contracts.js
+@@
+-import { KeySchema, LayerNameSchema } from "./types.js";
++import { KeySchema, LayerNameSchema } from "./types";
+
+--- a/apps/env-sandbox/src/contracts.ts
++++ b/apps/env-sandbox/src/contracts.ts
+@@
+-import { KeySchema, LayerNameSchema } from "./types.js";
++import { KeySchema, LayerNameSchema } from "./types";
+
+--- a/apps/env-sandbox/src/index.js
++++ b/apps/env-sandbox/src/index.js
+@@
+-import { LayerNameSchema } from "./types.js";
++import { LayerNameSchema } from "./types";
+
+--- a/apps/env-sandbox/src/index.ts
++++ b/apps/env-sandbox/src/index.ts
+@@
+-import { LayerNameSchema } from "./types.js";
++import { LayerNameSchema } from "./types";
+
+--- a/apps/env-sandbox/src/policy.ts
++++ b/apps/env-sandbox/src/policy.ts
+@@
+-import { LayerName } from "./types.js";
++import { LayerName } from "./types";
+
+--- a/apps/env-sandbox/src/sandbox.js
++++ b/apps/env-sandbox/src/sandbox.js
+@@
+-import { EnvMapSchema, KeySchema, LayerNameSchema, RecursiveCreationCodexSchema, SandboxStateSchema } from "./types.js";
++import { EnvMapSchema, KeySchema, LayerNameSchema, RecursiveCreationCodexSchema, SandboxStateSchema } from "./types";
+
+--- a/apps/env-sandbox/src/sandbox.ts
++++ b/apps/env-sandbox/src/sandbox.ts
+@@
+-} from "./types.js";
++} from "./types";
+
+--- a/apps/nucleus/src/wsHub.js
++++ b/apps/nucleus/src/wsHub.js
+@@
+-import { chatHandler } from "./chat-handler.js";
++import { chatHandler } from "./chat-handler";
+
+--- a/apps/nucleus/src/wsHub.ts
++++ b/apps/nucleus/src/wsHub.ts
+@@
+-import { chatHandler } from "./chat-handler.js";
++import { chatHandler } from "./chat-handler";
+
+--- a/apps/nucleus/src/wsHub.js
++++ b/apps/nucleus/src/wsHub.js
+@@
+-import { createBusLikeAdapter, createHubPresenceAdapter } from "./health/adapter.js";
++import { createBusLikeAdapter, createHubPresenceAdapter } from "./health/adapter";
+
+--- a/apps/nucleus/src/wsHub.ts
++++ b/apps/nucleus/src/wsHub.ts
+@@
+-import { createBusLikeAdapter, createHubPresenceAdapter } from "./health/adapter.js";
++import { createBusLikeAdapter, createHubPresenceAdapter } from "./health/adapter";
+
+--- a/apps/nucleus/src/health/adapter.ts
++++ b/apps/nucleus/src/health/adapter.ts
+@@
+-import type { BusLike, HubPresence } from "./poller.js";
++import type { BusLike, HubPresence } from "./poller";
+
+--- a/apps/nucleus/src/wsHub.js
++++ b/apps/nucleus/src/wsHub.js
+@@
+-import { startHealthPoller } from "./health/poller.js";
++import { startHealthPoller } from "./health/poller";
+
+--- a/apps/nucleus/src/wsHub.ts
++++ b/apps/nucleus/src/wsHub.ts
+@@
+-import { startHealthPoller } from "./health/poller.js";
++import { startHealthPoller } from "./health/poller";
+
+--- a/apps/nucleus/src/bus-ws-bridge.js
++++ b/apps/nucleus/src/bus-ws-bridge.js
+@@
+-import { IdleStateManager } from "./idle.js";
++import { IdleStateManager } from "./idle";
+
+--- a/apps/nucleus/src/bus-ws-bridge.ts
++++ b/apps/nucleus/src/bus-ws-bridge.ts
+@@
+-import { IdleStateManager } from "./idle.js";
++import { IdleStateManager } from "./idle";
+
+--- a/apps/nucleus/src/router/uee.js
++++ b/apps/nucleus/src/router/uee.js
+@@
+-import handleBrainControl from "./handlers/brainControl.js";
++import handleBrainControl from "./handlers/brainControl";
+
+--- a/apps/nucleus/src/router/uee.ts
++++ b/apps/nucleus/src/router/uee.ts
+@@
+-import handleBrainControl from "./handlers/brainControl.js";
++import handleBrainControl from "./handlers/brainControl";
+
+--- a/apps/nucleus/src/router/uee.js
++++ b/apps/nucleus/src/router/uee.js
+@@
+-import handleBrainTrain from "./handlers/brainTrain.js";
++import handleBrainTrain from "./handlers/brainTrain";
+
+--- a/apps/nucleus/src/router/uee.ts
++++ b/apps/nucleus/src/router/uee.ts
+@@
+-import handleBrainTrain from "./handlers/brainTrain.js";
++import handleBrainTrain from "./handlers/brainTrain";
+
+--- a/apps/nucleus/src/router/handlers/base.ts
++++ b/apps/nucleus/src/router/handlers/base.ts
+@@
+-import type { UEEHandlerContext, UEEHandlerResponse } from "../uee.js";
++import type { UEEHandlerContext, UEEHandlerResponse } from "../uee";
+
+--- a/apps/nucleus/src/router/handlers/brainControl.ts
++++ b/apps/nucleus/src/router/handlers/brainControl.ts
+@@
+-import type { UEEHandlerContext, UEEHandlerResponse } from "../uee.js";
++import type { UEEHandlerContext, UEEHandlerResponse } from "../uee";
+
+--- a/apps/nucleus/src/router/handlers/brainTrain.ts
++++ b/apps/nucleus/src/router/handlers/brainTrain.ts
+@@
+-import type { UEEHandlerContext, UEEHandlerResponse } from "../uee.js";
++import type { UEEHandlerContext, UEEHandlerResponse } from "../uee";
+
+--- a/apps/nucleus/src/wsHub.js
++++ b/apps/nucleus/src/wsHub.js
+@@
+-import { getUEERouter } from "./router/uee.js";
++import { getUEERouter } from "./router/uee";
+
+--- a/apps/nucleus/src/wsHub.ts
++++ b/apps/nucleus/src/wsHub.ts
+@@
+-import { getUEERouter } from "./router/uee.js";
++import { getUEERouter } from "./router/uee";
+
+--- a/apps/nucleus/src/wsHub_new.js
++++ b/apps/nucleus/src/wsHub_new.js
+@@
+-import { getUEERouter } from "./router/uee.js";
++import { getUEERouter } from "./router/uee";
+
+--- a/apps/nucleus/src/wsHub_new.ts
++++ b/apps/nucleus/src/wsHub_new.ts
+@@
+-import { getUEERouter } from "./router/uee.js";
++import { getUEERouter } from "./router/uee";
+
+--- a/apps/nucleus/src/wsHub.js
++++ b/apps/nucleus/src/wsHub.js
+@@
+-import { handleChatRequestStreaming } from "./routes/chat.js";
++import { handleChatRequestStreaming } from "./routes/chat";
+
+--- a/apps/nucleus/src/wsHub.ts
++++ b/apps/nucleus/src/wsHub.ts
+@@
+-import { handleChatRequestStreaming } from "./routes/chat.js";
++import { handleChatRequestStreaming } from "./routes/chat";
+
+--- a/apps/nucleus/src/wsHub.ts
++++ b/apps/nucleus/src/wsHub.ts
+@@
+-import { ToolExecutor } from "./tool/executor.js";
++import { ToolExecutor } from "./tool/executor";
+
+--- a/packages/brain/src/index.js
++++ b/packages/brain/src/index.js
+@@
+-export { AgentBrain } from "./controller.js";
++export { AgentBrain } from "./controller";
+
+--- a/packages/brain/src/index.ts
++++ b/packages/brain/src/index.ts
+@@
+-} from "./controller.js";
++} from "./controller";
+
+--- a/packages/brain/src/controller.ts
++++ b/packages/brain/src/controller.ts
+@@
+-import type { NeuralNetwork } from "./network.js";
++import type { NeuralNetwork } from "./network";
+
+--- a/packages/brain/src/index.js
++++ b/packages/brain/src/index.js
+@@
+-export { NeuralNetwork, sigmoid } from "./network.js";
++export { NeuralNetwork, sigmoid } from "./network";
+
+--- a/packages/brain/src/index.ts
++++ b/packages/brain/src/index.ts
+@@
+-export { NeuralNetwork, sigmoid } from "./network.js";
++export { NeuralNetwork, sigmoid } from "./network";
+
+--- a/packages/brain/src/population.js
++++ b/packages/brain/src/population.js
+@@
+-import { NeuralNetwork } from "./network.js";
++import { NeuralNetwork } from "./network";
+
+--- a/packages/brain/src/population.ts
++++ b/packages/brain/src/population.ts
+@@
+-import { NeuralNetwork } from "./network.js";
++import { NeuralNetwork } from "./network";
+
+--- a/packages/brain/src/index.js
++++ b/packages/brain/src/index.js
+@@
+-export { Population } from "./population.js";
++export { Population } from "./population";
+
+--- a/packages/brain/src/index.ts
++++ b/packages/brain/src/index.ts
+@@
+-export { Population } from "./population.js";
++export { Population } from "./population";
+
+--- a/packages/brain/src/index.js
++++ b/packages/brain/src/index.js
+@@
+-export * from "./review/reviewStore.js";
++export * from "./review/reviewStore";
+
+--- a/packages/brain/src/index.ts
++++ b/packages/brain/src/index.ts
+@@
+-export * from "./review/reviewStore.js";
++export * from "./review/reviewStore";
+
+--- a/packages/brain/src/index.js
++++ b/packages/brain/src/index.js
+@@
+-export * from "./review/reviewTypes.js";
++export * from "./review/reviewTypes";
+
+--- a/packages/brain/src/index.ts
++++ b/packages/brain/src/index.ts
+@@
+-export * from "./review/reviewTypes.js";
++export * from "./review/reviewTypes";
+
+--- a/packages/engine/src/contracts/index.js
++++ b/packages/engine/src/contracts/index.js
+@@
+-export * from "./busEnvelope.js";
++export * from "./busEnvelope";
+
+--- a/packages/engine/src/contracts/index.ts
++++ b/packages/engine/src/contracts/index.ts
+@@
+-export * from "./busEnvelope.js";
++export * from "./busEnvelope";
+
+--- a/packages/engine/src/contracts/index.js
++++ b/packages/engine/src/contracts/index.js
+@@
+-export * from "./envelopeFactory.js";
++export * from "./envelopeFactory";
+
+--- a/packages/engine/src/contracts/index.ts
++++ b/packages/engine/src/contracts/index.ts
+@@
+-export * from "./envelopeFactory.js";
++export * from "./envelopeFactory";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./contracts/index.js";
++export * from "./contracts/index";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./contracts/index.js";
++export * from "./contracts/index";
+
+--- a/packages/engine/src/contracts/index.js
++++ b/packages/engine/src/contracts/index.js
+@@
+-export { LexiconEntryFileSchema, LexiconEntrySchema, LexiconFileHeaderSchema, parseLexiconEntryFile, SemVerSchema, StableIdSchema as LexiconStableIdSchema, PromptOperatorRegistry, } from "./lexicon/index.js";
++export { LexiconEntryFileSchema, LexiconEntrySchema, LexiconFileHeaderSchema, parseLexiconEntryFile, SemVerSchema, StableIdSchema as LexiconStableIdSchema, PromptOperatorRegistry, } from "./lexicon/index";
+
+--- a/packages/engine/src/contracts/index.ts
++++ b/packages/engine/src/contracts/index.ts
+@@
+-} from "./lexicon/index.js";
++} from "./lexicon/index";
+
+--- a/packages/engine/src/contracts/lexicon/index.js
++++ b/packages/engine/src/contracts/lexicon/index.js
+@@
+-export { LexiconEntryFileSchema, LexiconEntrySchema, LexiconFileHeaderSchema, parseLexiconEntryFile, SemVerSchema, StableIdSchema, } from "./LexiconEntry.schema.js";
++export { LexiconEntryFileSchema, LexiconEntrySchema, LexiconFileHeaderSchema, parseLexiconEntryFile, SemVerSchema, StableIdSchema, } from "./LexiconEntry.schema";
+
+--- a/packages/engine/src/contracts/lexicon/index.ts
++++ b/packages/engine/src/contracts/lexicon/index.ts
+@@
+-} from "./LexiconEntry.schema.js";
++} from "./LexiconEntry.schema";
+
+--- a/packages/engine/src/contracts/lexicon/validate-lexicon.ts
++++ b/packages/engine/src/contracts/lexicon/validate-lexicon.ts
+@@
+-import { parseLexiconEntryFile } from "./LexiconEntry.schema.js";
++import { parseLexiconEntryFile } from "./LexiconEntry.schema";
+
+--- a/packages/engine/src/contracts/lexicon/index.js
++++ b/packages/engine/src/contracts/lexicon/index.js
+@@
+-export { PromptOperatorRegistry } from "./promptOperatorRegistry.js";
++export { PromptOperatorRegistry } from "./promptOperatorRegistry";
+
+--- a/packages/engine/src/contracts/lexicon/index.ts
++++ b/packages/engine/src/contracts/lexicon/index.ts
+@@
+-export { PromptOperatorRegistry } from "./promptOperatorRegistry.js";
++export { PromptOperatorRegistry } from "./promptOperatorRegistry";
+
+--- a/packages/engine/src/contracts/index.js
++++ b/packages/engine/src/contracts/index.js
+@@
+-export * from "./multigpu/index.js";
++export * from "./multigpu/index";
+
+--- a/packages/engine/src/contracts/index.ts
++++ b/packages/engine/src/contracts/index.ts
+@@
+-export * from "./multigpu/index.js";
++export * from "./multigpu/index";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./contracts/protocol/index.js";
++export * from "./contracts/protocol/index";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./contracts/protocol/index.js";
++export * from "./contracts/protocol/index";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./contracts/representation/index.js";
++export * from "./contracts/representation/index";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./contracts/representation/index.js";
++export * from "./contracts/representation/index";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./contracts/util/exhaustive.js";
++export * from "./contracts/util/exhaustive";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./contracts/util/exhaustive.js";
++export * from "./contracts/util/exhaustive";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./contracts/util/require-schema.js";
++export * from "./contracts/util/require-schema";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./contracts/util/require-schema.js";
++export * from "./contracts/util/require-schema";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./learning/index.js";
++export * from "./learning/index";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./learning/index.js";
++export * from "./learning/index";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export * from "./prediction.js";
++export * from "./prediction";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export * from "./prediction.js";
++export * from "./prediction";
+
+--- a/packages/engine/src/index.js
++++ b/packages/engine/src/index.js
+@@
+-export { coerceJsonValue, requireJsonObject, requireJsonValue } from "./runtime/json.js";
++export { coerceJsonValue, requireJsonObject, requireJsonValue } from "./runtime/json";
+
+--- a/packages/engine/src/index.ts
++++ b/packages/engine/src/index.ts
+@@
+-export { coerceJsonValue, requireJsonObject, requireJsonValue } from "./runtime/json.js";
++export { coerceJsonValue, requireJsonObject, requireJsonValue } from "./runtime/json";
+
+--- a/packages/protocol/src/system/health.js
++++ b/packages/protocol/src/system/health.js
+@@
+-import { StableIdSchema } from "../buildEvidence.js";
++import { StableIdSchema } from "../buildEvidence";
+
+--- a/packages/protocol/src/system/health.ts
++++ b/packages/protocol/src/system/health.ts
+@@
+-import { StableIdSchema } from "../buildEvidence.js";
++import { StableIdSchema } from "../buildEvidence";
+
+--- a/packages/protocol/src/index.js
++++ b/packages/protocol/src/index.js
+@@
+-export { AnyBuildEvidenceBusMsgSchema, BusEnvelopeSchema as BuildEvidenceBusEnvelopeSchema, BuildEvidenceGeneratedMsgSchema, BuildEvidenceRequestMsgSchema, EVT_BUILD_EVIDENCE_GENERATED, EVT_BUILD_EVIDENCE_REQUEST } from "./bus/buildEvidenceBus.js";
++export { AnyBuildEvidenceBusMsgSchema, BusEnvelopeSchema as BuildEvidenceBusEnvelopeSchema, BuildEvidenceGeneratedMsgSchema, BuildEvidenceRequestMsgSchema, EVT_BUILD_EVIDENCE_GENERATED, EVT_BUILD_EVIDENCE_REQUEST } from "./bus/buildEvidenceBus";
+
+--- a/packages/protocol/src/index.ts
++++ b/packages/protocol/src/index.ts
+@@
+-} from "./bus/buildEvidenceBus.js";
++} from "./bus/buildEvidenceBus";
+
+--- a/packages/protocol/src/envelopes/uee/index.js
++++ b/packages/protocol/src/envelopes/uee/index.js
+@@
+-export * from "./guards.js";
++export * from "./guards";
+
+--- a/packages/protocol/src/envelopes/uee/index.ts
++++ b/packages/protocol/src/envelopes/uee/index.ts
+@@
+-export * from "./guards.js";
++export * from "./guards";
+
+--- a/packages/protocol/src/envelopes/index.js
++++ b/packages/protocol/src/envelopes/index.js
+@@
+-export * from "./uee/index.js";
++export * from "./uee/index";
+
+--- a/packages/protocol/src/envelopes/index.ts
++++ b/packages/protocol/src/envelopes/index.ts
+@@
+-export * from "./uee/index.js";
++export * from "./uee/index";
+
+--- a/packages/protocol/src/envelopes/uee/guards.js
++++ b/packages/protocol/src/envelopes/uee/guards.js
+@@
+-import { TaskTypeSchema, UnifiedEngineEnvelopeSchema, } from "./schema.js";
++import { TaskTypeSchema, UnifiedEngineEnvelopeSchema, } from "./schema";
+
+--- a/packages/protocol/src/envelopes/uee/guards.ts
++++ b/packages/protocol/src/envelopes/uee/guards.ts
+@@
+-} from "./schema.js";
++} from "./schema";
+
+--- a/packages/protocol/src/envelopes/uee/index.js
++++ b/packages/protocol/src/envelopes/uee/index.js
+@@
+-export * from "./schema.js";
++export * from "./schema";
+
+--- a/packages/protocol/src/envelopes/uee/index.ts
++++ b/packages/protocol/src/envelopes/uee/index.ts
+@@
+-export * from "./schema.js";
++export * from "./schema";
+

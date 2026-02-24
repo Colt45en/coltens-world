@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Lexicon Engine • Bookfold</title>
+  <style>
+    html,body{margin:0;height:100%;background:#0b0e14;color:#d8e5ff;font:12px/1.25 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    *{box-sizing:border-box}
+    :root{--gut:8px;--rail:420px;--dock:32px;--top:36px;--sm:11px;--xs:10px}
+    .top{height:var(--top);display:flex;gap:6px;align-items:center;padding:6px 8px;border-bottom:1px solid #1a2740;background:#0e1726}
+    .brand{font-weight:700;color:#7cfccb}
+    .i{opacity:.7;font-size:var(--xs)}
+    .btn{border:1px solid #27324a;background:#111927;color:#e6f2ff;border-radius:8px;padding:4px 8px;height:26px;cursor:pointer;font-size:var(--xs)}
+    .wrap{position:absolute;inset:var(--top) 0 var(--dock) 0;padding:var(--gut)}
+    .book{height:100%;display:grid;grid-template-columns:minmax(260px,var(--rail)) var(--gut) 1fr;grid-template-rows:1fr;grid-template-areas:"left gap right"}
+    .left{grid-area:left;border:1px solid #22314a;border-radius:10px;background:#0f1523;overflow:auto}
+    .right{grid-area:right;border:1px solid #22314a;border-radius:10px;background:#07080a;overflow:auto}
+    .gap{grid-area:gap}
+    .dock{position:absolute;left:0;right:0;bottom:0;height:var(--dock);display:flex;gap:6px;align-items:center;padding:4px 8px;border-top:1px solid #1a2740;background:#0e1726}
+    .small{font-size:var(--sm)}
+    .mono{font:11px/1.2 ui-monospace,SFMono-Regular,Consolas,Menlo,monospace}
+    .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .pill{flex:1;display:flex;gap:6px;align-items:center;border:1px solid #22314a;border-radius:10px;padding:4px 8px;background:#0f1523}
+    .pill input{flex:1;background:transparent;border:0;outline:0;color:#d8e5ff;font-size:var(--xs)}
+    .anchor{display:block;padding:6px 8px;border-top:1px dashed #1a2740;color:#8fb6ff;font-size:var(--xs)}
+    .panel{padding:8px}
+    .field{display:flex;flex-direction:column;gap:4px;margin:8px}
+    textarea,input,select{
+      background:#0b1220;border:1px solid #22314a;color:#d8e5ff;border-radius:10px;
+      padding:8px;font-size:12px;outline:none
+    }
+    textarea{min-height:120px;resize:vertical}
+    label{font-size:var(--xs);opacity:.85}
+    .kpi{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px}
+    .card{border:1px solid #22314a;border-radius:10px;background:#0b1220;padding:8px}
+    .card b{color:#e6f2ff}
+    .hint{opacity:.75;font-size:var(--xs)}
+    .sep{height:1px;background:#16233a;margin:8px}
+    .tag{display:inline-block;border:1px solid #22314a;border-radius:999px;padding:2px 8px;font-size:var(--xs);opacity:.9}
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <span class="brand">NEXUS·LEX</span>
+    <div class="pill"><span class="i">⌘K</span><input id="cmd" placeholder="Command… (try: analyze, query foo, init, health, backend http://127.0.0.1:8011)"/></div>
+    <button class="btn" id="btnSave">Save</button>
+    <button class="btn" id="btnLoad">Load</button>
+    <button class="btn" id="btnFold">Fold</button>
+  </div>
+
+  <div class="wrap">
+    <div class="book">
+      <aside class="left" id="left"></aside>
+      <div class="gap"></div>
+      <main class="right" id="right"></main>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn" id="btnInfo">ℹ︎</button>
+    <div class="i">anchors: a1…a5 • no overlap; sowing appends below • Leximorph: local store + optional FastAPI backend</div>
+  </div>
+
+<script>
+/**
+ * Leximorph • Browser-integrated
+ * - Provides: word morphology, identifier tokenization/style, HTML tag/attrs tokenization
+ * - Storage: local deterministic JSON log (localStorage) + optional remote SQLite via FastAPI
+ *
+ * Remote API (optional):
+ *  - POST   {base}/leximorph/init
+ *  - GET    {base}/leximorph/health
+ *  - POST   {base}/leximorph/analyze     {text, language, kind, store}
+ *  - GET    {base}/leximorph/query?contains=...&limit=...
+ *
+ * If remote fetch fails, we fall back to local analysis + local storage.
+ */
+(()=> {
+  const $ = (s)=>document.querySelector(s);
+
+  // --- Bookfold Shell Persistence ---
+  const SHELL_KEY = 'lex-bookfold-v1';
+
+  function safeAppend(host, title, block) {
+    const a = document.createElement('a');
+    a.className = 'anchor';
+    a.textContent = title;
+    host.appendChild(a);
+    const pre = document.createElement('pre');
+    pre.className = 'mono small';
+    pre.textContent = String(block ?? '');
+    host.appendChild(pre);
+  }
+
+  window.lexAppend = (side, title, block) => {
+    const host = (side === 'L') ? $('#left') : $('#right');
+    safeAppend(host, title, String(block ?? ''));
+  };
+
+  btnSave.onclick = () => {
+    const snap = {
+      L: $('#left').innerHTML,
+      R: $('#right').innerHTML,
+      rail: getComputedStyle(document.documentElement).getPropertyValue('--rail').trim(),
+      leximorph_base: Leximorph.baseUrl(),
+    };
+    localStorage.setItem(SHELL_KEY, JSON.stringify(snap));
+    console.log('[saved]', SHELL_KEY);
+    Leximorph.log('Saved UI snapshot.');
+  };
+
+  btnLoad.onclick = () => {
+    try {
+      const d = JSON.parse(localStorage.getItem(SHELL_KEY) || '{}');
+      if (d.L !== undefined) $('#left').innerHTML = d.L;
+      if (d.R !== undefined) $('#right').innerHTML = d.R;
+      if (d.rail) document.documentElement.style.setProperty('--rail', d.rail);
+      if (d.leximorph_base) Leximorph.setBaseUrl(d.leximorph_base);
+      console.log('[loaded]', SHELL_KEY);
+      Leximorph.log('Loaded UI snapshot.');
+      Leximorph.refreshKpis();
+    } catch (e) {
+      console.warn('load failed', e);
+      Leximorph.log('Load failed: ' + (e?.message || String(e)));
+    }
+  };
+
+  btnFold.onclick = () => {
+    const cur = getComputedStyle(document.documentElement).getPropertyValue('--rail').trim();
+    document.documentElement.style.setProperty('--rail', cur === '320px' ? '420px' : '320px');
+  };
+
+  btnInfo.onclick = () => {
+    alert(
+      [
+        'Leximorph is built into this file.',
+        '',
+        '✅ Local mode:',
+        '- analyze(text, language, kind) via heuristics',
+        '- store/query via localStorage JSON log',
+        '',
+        '✅ Remote mode (optional):',
+        '- set backend base URL (default http://127.0.0.1:8011)',
+        '- calls /leximorph/* endpoints (SQLite-backed)',
+        '',
+        'Commands:',
+        '- analyze',
+        '- query <contains>',
+        '- init',
+        '- health',
+        '- backend <url>',
+      ].join('\n')
+    );
+  };
+
+  // --- Leximorph Core ---
+  const Leximorph = (() => {
+    const BASE_KEY = 'leximorph_backend_base_v1';
+    const STORE_KEY = 'leximorph_local_entries_v1';
+
+    const defaultBase = (() => {
+      try {
+        const url = new URL(window.location.href);
+        const fromQuery = url.searchParams.get('backend');
+        if (fromQuery && String(fromQuery).trim()) {
+          return String(fromQuery).trim();
+        }
+      } catch {
+        // ignore
+      }
+      return 'http://127.0.0.1:8011';
+    })();
+    let base = localStorage.getItem(BASE_KEY) || defaultBase;
+
+    function utcNowIso() {
+      // Always Zulu, deterministic format.
+      return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    }
+
+    function normalizeText(s) {
+      return String(s ?? '').trim();
+    }
+
+    function baseUrl() { return base; }
+    function setBaseUrl(u) {
+      base = normalizeText(u) || defaultBase;
+      localStorage.setItem(BASE_KEY, base);
+      log(`Backend set: ${base}`);
+    }
+
+    function loadLocal() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveLocal(entries) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(entries));
+    }
+
+    function insertLocal(entryObj) {
+      const entries = loadLocal();
+      // Deterministic-ish numeric id: monotonic integer based on length+timestamp bucket.
+      // (Local-only; remote SQLite should be primary for stable ids.)
+      const id = entries.length + 1;
+      entries.push({ id, ...entryObj });
+      saveLocal(entries);
+      return id;
+    }
+
+    function queryLocalContains(contains, limit=50) {
+      const q = String(contains ?? '').toLowerCase();
+      const entries = loadLocal();
+      const out = [];
+      for (let i = entries.length - 1; i >= 0; i--) {
+        const e = entries[i];
+        if (!q || String(e.entry ?? '').toLowerCase().includes(q)) out.push(e);
+        if (out.length >= limit) break;
+      }
+      return out;
+    }
+
+    // --- Heuristic English Morphology ---
+    const EN_PREFIXES = [
+      'anti','auto','de','dis','en','em','fore','hyper','il','im','in','inter','ir','mis','non','over','pre','pro','re','sub','super','trans','tri','un','under'
+    ];
+    const EN_SUFFIXES = [
+      'able','ably','al','ally','ance','ation','ed','en','ence','er','ers','est','ful','hood','ible','ically','ic','ify','ing','ion','ions','ism','ist','ity','ive','ization','ize','less','ly','ment','ness','or','ous','s','ship','tion','tions','ward','wards','y'
+    ];
+
+    function scoreMorphSplit(prefix, root, suffix) {
+      // Base 0.25 + factors (each +0.15) up to 1.0
+      let score = 0.25;
+      const factors = [];
+      if (prefix) { score += 0.15; factors.push('known_prefix'); }
+      if (suffix) { score += 0.15; factors.push('known_suffix'); }
+      if (root && root.length >= 3) { score += 0.15; factors.push('root_len>=3'); }
+      if (root && /^[a-z]+$/i.test(root)) { score += 0.15; factors.push('alpha_root'); }
+      if (root && root.length <= 12) { score += 0.15; factors.push('root_len<=12'); }
+
+      if (score > 1.0) score = 1.0;
+      return { score, factors };
+    }
+
+    function analyzeWordEn(text) {
+      const entry = normalizeText(text);
+      const lower = entry.toLowerCase();
+      let best = { prefix: '', root: lower, suffix: '', score: 0, factors: [] };
+
+      // try prefix+suffix combos
+      const prefixes = [''].concat(EN_PREFIXES);
+      const suffixes = [''].concat(EN_SUFFIXES);
+
+      for (const p of prefixes) {
+        if (p && !lower.startsWith(p)) continue;
+        const afterP = p ? lower.slice(p.length) : lower;
+
+        for (const s of suffixes) {
+          if (s && !afterP.endsWith(s)) continue;
+          const core = s ? afterP.slice(0, afterP.length - s.length) : afterP;
+          if (!core) continue;
+
+          const { score, factors } = scoreMorphSplit(p, core, s);
+          // light penalty if core is tiny
+          const adj = score - (core.length < 3 ? 0.15 : 0);
+          if (adj > best.score) {
+            best = { prefix: p, root: core, suffix: s, score: Math.max(0.0, adj), factors };
+          }
+        }
+      }
+
+      const notes = ['heuristic_split'];
+      if (!best.prefix && !best.suffix) notes.push('no_affix_match');
+
+      return {
+        entry,
+        kind: 'word',
+        language: 'en',
+        parts: {
+          prefix: best.prefix ? (best.prefix + '-') : '',
+          root: best.root,
+          suffix: best.suffix ? ('-' + best.suffix) : '',
+        },
+        meta: {
+          normalized: lower,
+          confidence: Number(best.score.toFixed(2)),
+          notes: notes.concat(best.factors),
+        },
+        created_at_utc: utcNowIso(),
+      };
+    }
+
+    // --- Identifier Tokenization (JS/TS) ---
+    function detectIdentifierStyle(s) {
+      if (/^[A-Z0-9_]+$/.test(s) && s.includes('_')) return 'SCREAMING_SNAKE';
+      if (/^[a-z0-9_]+$/.test(s) && s.includes('_')) return 'snake_case';
+      if (/^[a-z0-9-]+$/.test(s) && s.includes('-')) return 'kebab-case';
+      if (/^[A-Z][A-Za-z0-9]*$/.test(s) && /[a-z]/.test(s)) return 'PascalCase';
+      if (/^[a-z][A-Za-z0-9]*$/.test(s) && /[A-Z]/.test(s)) return 'camelCase';
+      if (/^[a-z]+$/.test(s)) return 'lower';
+      if (/^[A-Z]+$/.test(s)) return 'upper';
+      return 'mixed';
+    }
+
+    function splitIdentifierTokens(s) {
+      const raw = normalizeText(s);
+      if (!raw) return [];
+      // split on _ and - first
+      const pieces = raw.split(/[_-]+/).filter(Boolean);
+      const tokens = [];
+      for (const piece of pieces) {
+        // split camel/pascal boundaries and digit runs
+        const parts = piece
+          .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+          .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+          .replace(/(\d+)([A-Za-z]+)/g, '$1 $2')
+          .replace(/([A-Za-z]+)(\d+)/g, '$1 $2')
+          .split(/\s+/)
+          .filter(Boolean);
+        for (const p of parts) tokens.push(p);
+      }
+      return tokens;
+    }
+
+    function analyzeIdentifier(text, language='js') {
+      const entry = normalizeText(text);
+      const style = detectIdentifierStyle(entry);
+      const tokens = splitIdentifierTokens(entry);
+      const normTokens = tokens.map(t=>t.toLowerCase());
+      const notes = ['heuristic_tokenize', `style:${style}`];
+
+      // confidence: based on token count and clean parsing
+      let confidence = 0.25;
+      if (tokens.length >= 2) confidence += 0.25;
+      if (tokens.length >= 3) confidence += 0.10;
+      if (/^[A-Za-z0-9_-]+$/.test(entry)) confidence += 0.25;
+      if (confidence > 1.0) confidence = 1.0;
+
+      return {
+        entry,
+        kind: 'identifier',
+        language,
+        parts: {
+          tokens,
+          style,
+        },
+        meta: {
+          normalized: entry,
+          confidence: Number(confidence.toFixed(2)),
+          notes,
+          normalized_tokens: normTokens,
+        },
+        created_at_utc: utcNowIso(),
+      };
+    }
+
+    // --- HTML Markup Tokenization ---
+    function analyzeHtml(text) {
+      const entry = normalizeText(text);
+      let tags = [];
+      let attrs = [];
+      let classTokens = [];
+      let idTokens = [];
+
+      try {
+        const parser = new DOMParser();
+        // parse as text/html; the browser will sanitize broken markup
+        const doc = parser.parseFromString(entry, 'text/html');
+        const els = Array.from(doc.body.querySelectorAll('*'));
+        const first = els[0];
+        if (first) {
+          tags.push(first.tagName.toLowerCase());
+          for (const attr of Array.from(first.attributes)) {
+            attrs.push({ name: attr.name, value: attr.value });
+          }
+          const cls = (first.getAttribute('class') || '').trim();
+          if (cls) classTokens = cls.split(/\s+/).filter(Boolean);
+          const id = (first.getAttribute('id') || '').trim();
+          if (id) idTokens = splitIdentifierTokens(id);
+        } else {
+          // If it's just text with no tags, record that.
+          tags = [];
+        }
+      } catch (e) {
+        // fallback minimal parse with regex
+        const m = entry.match(/<\s*([a-zA-Z0-9-]+)/);
+        if (m) tags = [m[1].toLowerCase()];
+      }
+
+      let confidence = 0.25;
+      if (tags.length) confidence += 0.35;
+      if (attrs.length) confidence += 0.15;
+      if (classTokens.length || idTokens.length) confidence += 0.15;
+      if (confidence > 1.0) confidence = 1.0;
+
+      return {
+        entry,
+        kind: 'html',
+        language: 'html',
+        parts: {
+          tag: tags[0] || '',
+          attributes: attrs,
+          class_tokens: classTokens,
+          id_tokens: idTokens,
+        },
+        meta: {
+          normalized: entry,
+          confidence: Number(confidence.toFixed(2)),
+          notes: ['domparser_extract'],
+        },
+        created_at_utc: utcNowIso(),
+      };
+    }
+
+    // --- Unified Analyzer (local) ---
+    function analyzeLocal(text, language, kind) {
+      const t = normalizeText(text);
+      const k = String(kind || '').toLowerCase();
+
+      if (k === 'word') {
+        const lang = String(language || 'en').toLowerCase();
+        if (lang === 'en') return analyzeWordEn(t);
+        // minimal fallback for non-en: just normalized token
+        return {
+          entry: t,
+          kind: 'word',
+          language: lang,
+          parts: { prefix:'', root: t, suffix:'' },
+          meta: { normalized: t.toLowerCase(), confidence: 0.25, notes:['fallback_non_en'] },
+          created_at_utc: utcNowIso(),
+        };
+      }
+
+      if (k === 'identifier') {
+        const lang = String(language || 'js').toLowerCase();
+        return analyzeIdentifier(t, lang);
+      }
+
+      if (k === 'html') {
+        return analyzeHtml(t);
+      }
+
+      // Attempt auto-detect if kind is missing/unknown
+      if (/<[a-zA-Z]/.test(t)) return analyzeHtml(t);
+      if (/[_-]/.test(t) || /[A-Z]/.test(t)) return analyzeIdentifier(t, String(language||'js').toLowerCase());
+      return analyzeWordEn(t);
+    }
+
+    // --- Remote Calls (optional) ---
+    async function remoteHealth() {
+      const url = baseUrl().replace(/\/+$/,'') + '/leximorph/health';
+      const res = await fetch(url, { method: 'GET' });
+      if (!res.ok) throw new Error(`health ${res.status}`);
+      return await res.json();
+    }
+
+    async function remoteInit() {
+      const url = baseUrl().replace(/\/+$/,'') + '/leximorph/init';
+      const res = await fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
+      if (!res.ok) throw new Error(`init ${res.status}`);
+      return await res.json();
+    }
+
+    async function remoteAnalyze(text, language, kind, store=true) {
+      const url = baseUrl().replace(/\/+$/,'') + '/leximorph/analyze';
+      const body = { text, language, kind, store: !!store };
+      const res = await fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error(`analyze ${res.status}`);
+      return await res.json();
+    }
+
+    async function remoteQueryContains(contains, limit=50) {
+      const u = new URL(baseUrl().replace(/\/+$/,'') + '/leximorph/query');
+      u.searchParams.set('contains', String(contains ?? ''));
+      u.searchParams.set('limit', String(limit));
+      const res = await fetch(u.toString(), { method: 'GET' });
+      if (!res.ok) throw new Error(`query ${res.status}`);
+      return await res.json();
+    }
+
+    // --- UI Logging / Render ---
+    function log(msg) {
+      window.lexAppend('R', 'A1 · Log', String(msg));
+    }
+
+    function pretty(obj) {
+      return JSON.stringify(obj, null, 2);
+    }
+
+    function summarizeEntry(e) {
+      const kind = e.kind;
+      if (kind === 'word') {
+        const p = e.parts || {};
+        return `${e.entry}  →  ${p.prefix || ''}${p.root || ''}${p.suffix || ''}`.trim();
+      }
+      if (kind === 'identifier') {
+        const p = e.parts || {};
+        const tokens = Array.isArray(p.tokens) ? p.tokens.join(', ') : '';
+        return `${e.entry}  →  tokens:[${tokens}]  style:${p.style || ''}`.trim();
+      }
+      if (kind === 'html') {
+        const p = e.parts || {};
+        const tag = p.tag || '';
+        const cls = (p.class_tokens || []).join(' ');
+        const idt = (p.id_tokens || []).join(' ');
+        return `<${tag}>  →  class:[${cls}] id:[${idt}]`.trim();
+      }
+      return e.entry;
+    }
+
+    function refreshKpis() {
+      const local = loadLocal();
+      const total = local.length;
+
+      const byKind = {};
+      const byLang = {};
+      const uniqPrefix = new Set();
+      const uniqSuffix = new Set();
+
+      for (const e of local) {
+        byKind[e.kind] = (byKind[e.kind] || 0) + 1;
+        byLang[e.language] = (byLang[e.language] || 0) + 1;
+        if (e.kind === 'word' && e.parts) {
+          if (e.parts.prefix) uniqPrefix.add(e.parts.prefix);
+          if (e.parts.suffix) uniqSuffix.add(e.parts.suffix);
+        }
+      }
+
+      const lines = [];
+      lines.push(`local_entries:${total}`);
+      lines.push(`kinds:${Object.keys(byKind).sort().map(k=>`${k}:${byKind[k]}`).join(' ') || '(none)'}`);
+      lines.push(`langs:${Object.keys(byLang).sort().map(k=>`${k}:${byLang[k]}`).join(' ') || '(none)'}`);
+      lines.push(`unique_prefix:${uniqPrefix.size} unique_suffix:${uniqSuffix.size}`);
+      lines.push(`backend:${baseUrl()}`);
+
+      window.lexAppend('R','A2 · Summary', lines.join('\n'));
+    }
+
+    // --- Public actions used by UI ---
+    async function analyze(text, language, kind, store=true) {
+      const payload = { text: normalizeText(text), language: String(language||''), kind: String(kind||''), store: !!store };
+      if (!payload.text) throw new Error('No text provided.');
+
+      // attempt remote first (if reachable)
+      try {
+        const h = await remoteHealth();
+        if (!h) throw new Error('health empty');
+        const analyzed = await remoteAnalyze(payload.text, payload.language, payload.kind, payload.store);
+        // Even if remote stores, we also keep a local cache log for this file.
+        insertLocal(analyzed);
+        log(`✅ Remote analyze OK (${payload.kind}/${payload.language})`);
+        window.lexAppend('R','A4 · Details', pretty(analyzed));
+        refreshKpis();
+        return analyzed;
+      } catch (e) {
+        const analyzed = analyzeLocal(payload.text, payload.language, payload.kind);
+        if (payload.store) insertLocal(analyzed);
+        log(`⚠️ Remote unavailable; used local analyzer. (${e?.message || String(e)})`);
+        window.lexAppend('R','A4 · Details', pretty(analyzed));
+        refreshKpis();
+        return analyzed;
+      }
+    }
+
+    async function queryContains(contains, limit=50) {
+      const q = normalizeText(contains);
+      const lim = Math.max(1, Math.min(500, Number(limit||50)));
+
+      // try remote query first
+      try {
+        const h = await remoteHealth();
+        if (!h) throw new Error('health empty');
+        const results = await remoteQueryContains(q, lim);
+        log(`✅ Remote query OK contains="${q}" limit=${lim}`);
+        window.lexAppend('R','A3 · Table', (Array.isArray(results) ? results : []).map(r=>summarizeEntry(r)).join('\n') || '(no results)');
+        return results;
+      } catch (e) {
+        const results = queryLocalContains(q, lim);
+        log(`⚠️ Remote unavailable; used local query. (${e?.message || String(e)})`);
+        window.lexAppend('R','A3 · Table', results.map(r=>summarizeEntry(r)).join('\n') || '(no results)');
+        return results;
+      }
+    }
+
+    async function initDb() {
+      try {
+        const out = await remoteInit();
+        log('✅ Remote init OK');
+        window.lexAppend('R','A4 · Details', pretty(out));
+        return out;
+      } catch (e) {
+        log(`⚠️ Remote init failed; local mode has no SQLite. (${e?.message || String(e)})`);
+        return null;
+      }
+    }
+
+    async function health() {
+      try {
+        const out = await remoteHealth();
+        log('✅ Remote health OK');
+        window.lexAppend('R','A4 · Details', pretty(out));
+        return out;
+      } catch (e) {
+        log(`⚠️ Remote health failed (local mode only). (${e?.message || String(e)})`);
+        return null;
+      }
+    }
+
+    return {
+      utcNowIso,
+      analyzeLocal,
+      insertLocal,
+      queryLocalContains,
+      analyze,
+      queryContains,
+      initDb,
+      health,
+      log,
+      refreshKpis,
+      baseUrl,
+      setBaseUrl,
+    };
+  })();
+
+  // --- Left Panel UI (Leximorph Controls) ---
+  function mountLeftControls() {
+    const host = $('#left');
+
+    const wrap = document.createElement('div');
+    wrap.className = 'panel';
+
+    const title = document.createElement('div');
+    title.innerHTML = `<b>Leximorph</b> <span class="hint">pluggable analysis • local+remote</span>`;
+    wrap.appendChild(title);
+
+    const kpi = document.createElement('div');
+    kpi.className = 'kpi';
+    kpi.innerHTML = `
+      <div class="card"><b>Backend</b><div class="hint mono" id="kpiBackend"></div></div>
+      <div class="card"><b>Local entries</b><div class="hint mono" id="kpiLocal"></div></div>
+    `;
+    wrap.appendChild(kpi);
+
+    const f1 = document.createElement('div');
+    f1.className = 'field';
+    f1.innerHTML = `
+      <label>Text to analyze</label>
+      <textarea id="lxText" class="mono" placeholder="unbelievable&#10;getUserName&#10;&lt;div class=&quot;foo bar&quot; id=&quot;mainPanel&quot;&gt;"></textarea>
+    `;
+    wrap.appendChild(f1);
+
+    const f2 = document.createElement('div');
+    f2.className = 'field';
+    f2.innerHTML = `
+      <div class="row">
+        <div style="flex:1;min-width:140px">
+          <label>Kind</label>
+          <select id="lxKind">
+            <option value="word">word</option>
+            <option value="identifier">identifier</option>
+            <option value="html">html</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:140px">
+          <label>Language</label>
+          <select id="lxLang">
+            <option value="en">en</option>
+            <option value="js">js</option>
+            <option value="ts">ts</option>
+            <option value="html">html</option>
+          </select>
+        </div>
+        <div style="min-width:160px">
+          <label>Store</label>
+          <div class="row" style="padding-top:6px">
+            <input type="checkbox" id="lxStore" checked />
+            <span class="hint">write to store</span>
+          </div>
+        </div>
+      </div>
+    `;
+    wrap.appendChild(f2);
+
+    const f3 = document.createElement('div');
+    f3.className = 'field';
+    f3.innerHTML = `
+      <div class="row">
+        <button class="btn" id="lxAnalyze">Analyze</button>
+        <button class="btn" id="lxQuery">Query contains</button>
+        <input id="lxQueryText" placeholder="e.g. believe, User, div" style="flex:1;min-width:180px" />
+        <button class="btn" id="lxInit">Init DB</button>
+        <button class="btn" id="lxHealth">Health</button>
+      </div>
+      <div class="hint">
+        Remote tries <span class="tag mono" id="lxBaseTag"></span> first; falls back to local analyzer if unreachable.
+      </div>
+    `;
+    wrap.appendChild(f3);
+
+    const sep = document.createElement('div');
+    sep.className = 'sep';
+    wrap.appendChild(sep);
+
+    const f4 = document.createElement('div');
+    f4.className = 'field';
+    f4.innerHTML = `
+      <label>Backend base URL</label>
+      <div class="row">
+        <input id="lxBase" class="mono" style="flex:1" placeholder="http://127.0.0.1:8011" />
+        <button class="btn" id="lxSetBase">Set</button>
+      </div>
+      <div class="hint mono">FastAPI endpoints: /leximorph/analyze • /leximorph/query • /leximorph/init • /leximorph/health</div>
+    `;
+    wrap.appendChild(f4);
+
+    host.appendChild(wrap);
+
+    // wire
+    const updateKpis = () => {
+      const local = (()=> {
+        try { return JSON.parse(localStorage.getItem('leximorph_local_entries_v1')||'[]').length; } catch { return 0; }
+      })();
+      $('#kpiBackend').textContent = Leximorph.baseUrl();
+      $('#kpiLocal').textContent = String(local);
+      $('#lxBaseTag').textContent = Leximorph.baseUrl();
+      $('#lxBase').value = Leximorph.baseUrl();
+    };
+
+    const readInputs = () => {
+      const text = $('#lxText').value;
+      const kind = $('#lxKind').value;
+      const lang = $('#lxLang').value;
+      const store = $('#lxStore').checked;
+      return { text, kind, lang, store };
+    };
+
+    $('#lxAnalyze').onclick = async () => {
+      try {
+        const { text, kind, lang, store } = readInputs();
+        const analyzed = await Leximorph.analyze(text, lang, kind, store);
+        window.lexAppend('R','A5 · Export', JSON.stringify(analyzed));
+        updateKpis();
+      } catch (e) {
+        Leximorph.log('Analyze error: ' + (e?.message || String(e)));
+      }
+    };
+
+    $('#lxQuery').onclick = async () => {
+      try {
+        const q = $('#lxQueryText').value;
+        const results = await Leximorph.queryContains(q, 50);
+        window.lexAppend('R','A5 · Export', JSON.stringify(results));
+        updateKpis();
+      } catch (e) {
+        Leximorph.log('Query error: ' + (e?.message || String(e)));
+      }
+    };
+
+    $('#lxInit').onclick = async () => {
+      await Leximorph.initDb();
+      updateKpis();
+    };
+
+    $('#lxHealth').onclick = async () => {
+      await Leximorph.health();
+      updateKpis();
+    };
+
+    $('#lxSetBase').onclick = () => {
+      Leximorph.setBaseUrl($('#lxBase').value);
+      updateKpis();
+    };
+
+    updateKpis();
+  }
+
+  // --- Command Palette ---
+  function mountCmd() {
+    const cmd = $('#cmd');
+
+    function help() {
+      Leximorph.log(
+        [
+          'Commands:',
+          '  analyze              (uses left panel inputs)',
+          '  query <contains>     (limit 50)',
+          '  init                 (remote sqlite init)',
+          '  health               (remote health)',
+          '  backend <url>        (set remote base)',
+          '  localstats           (prints local store summary)',
+          'Examples:',
+          '  query believe',
+          '  backend http://127.0.0.1:8011',
+        ].join('\n')
+      );
+    }
+
+    function localStats() {
+      const entries = (()=> {
+        try { return JSON.parse(localStorage.getItem('leximorph_local_entries_v1')||'[]'); } catch { return []; }
+      })();
+      const byKind = {};
+      const byLang = {};
+      for (const e of entries) {
+        byKind[e.kind] = (byKind[e.kind]||0) + 1;
+        byLang[e.language] = (byLang[e.language]||0) + 1;
+      }
+      Leximorph.log(
+        [
+          `local_entries=${entries.length}`,
+          `kinds=${Object.keys(byKind).sort().map(k=>`${k}:${byKind[k]}`).join(' ') || '(none)'}`,
+          `langs=${Object.keys(byLang).sort().map(k=>`${k}:${byLang[k]}`).join(' ') || '(none)'}`,
+        ].join('\n')
+      );
+    }
+
+    cmd.addEventListener('keydown', async (e) => {
+      if (e.key !== 'Enter') return;
+      const raw = (cmd.value || '').trim();
+      if (!raw) return;
+
+      const parts = raw.split(/\s+/);
+      const head = (parts.shift() || '').toLowerCase();
+      const rest = parts.join(' ');
+
+      cmd.value = '';
+
+      if (head === 'help' || head === '?') return help();
+      if (head === 'backend') {
+        if (!rest) return Leximorph.log('backend <url> missing.');
+        Leximorph.setBaseUrl(rest);
+        return;
+      }
+      if (head === 'health') return void await Leximorph.health();
+      if (head === 'init') return void await Leximorph.initDb();
+      if (head === 'query') return void await Leximorph.queryContains(rest, 50);
+      if (head === 'analyze') {
+        // Trigger the left button for single source of truth
+        const btn = document.querySelector('#lxAnalyze');
+        if (btn) btn.click();
+        return;
+      }
+      if (head === 'localstats') return localStats();
+
+      Leximorph.log(`Unknown command: "${raw}". Type "help".`);
+    });
+  }
+
+  // --- Initial Seeds (preserve your anchor concept, but we now seed Leximorph content too) ---
+  function seedAnchors() {
+    // LEFT seeds: keep your structure but evolve it into Leximorph controls + docs.
+    window.lexAppend('L','A1 · Session',`save,load,fold,info\ncmd: help | analyze | query <contains> | init | health | backend <url>`);
+    window.lexAppend('L','A2 · Leximorph Input',`Kinds:\n  - word (English morphology)\n  - identifier (JS/TS tokenization + style)\n  - html (tag + attrs + class/id tokenization)\nStorage:\n  - Remote: SQLite via FastAPI (/leximorph/*)\n  - Local: JSON log in localStorage`);
+    window.lexAppend('L','A3 · Morphology (EN)',`prefixes: ${EN_PREFIXES_PRETTY()}\nsuffixes: ${EN_SUFFIXES_PRETTY()}\nconfidence: base 0.25 + factors (known_prefix, known_suffix, root_len, alpha_root, etc)`);
+    window.lexAppend('L','A4 · Identifier',`styles: camelCase | PascalCase | snake_case | kebab-case | SCREAMING_SNAKE\nsplit rules: _/- separators, camel boundaries, digit runs`);
+    window.lexAppend('L','A5 · HTML',`extracts: first tag, all attributes, class tokens, id tokens\nparser: DOMParser (fallback regex tag)`);
+
+    // RIGHT seeds:
+    window.lexAppend('R','A1 · Log',`ready.\nTip: set backend to your FastAPI (default http://127.0.0.1:8011).`);
+    window.lexAppend('R','A2 · Summary',`tokens:0 roots:0 unique-prefix:0 unique-suffix:0\n(local KPIs will append after actions)`);
+    window.lexAppend('R','A3 · Table',`(query results)`);
+    window.lexAppend('R','A4 · Details',`(analyze output)`);
+    window.lexAppend('R','A5 · Export',`(raw json snapshots)`);
+  }
+
+  // helper to print lists without leaking internals into global
+  function EN_PREFIXES_PRETTY(){ return ['anti','auto','de','dis','en','em','fore','hyper','il','im','in','inter','ir','mis','non','over','pre','pro','re','sub','super','trans','tri','un','under'].join(', '); }
+  function EN_SUFFIXES_PRETTY(){ return ['able','ably','al','ally','ance','ation','ed','en','ence','er','ers','est','ful','hood','ible','ically','ic','ify','ing','ion','ions','ism','ist','ity','ive','ization','ize','less','ly','ment','ness','or','ous','s','ship','tion','tions','ward','wards','y'].join(', '); }
+
+  // --- Boot ---
+  window.addEventListener('error', e => console.warn(e.message));
+  seedAnchors();
+  mountLeftControls();
+  mountCmd();
+  Leximorph.refreshKpis();
+})();
+</script>
+
+</body>
+</html>
+
+<!--
+How to use foundation:
+  lexAppend('L','Section·Title',"…content…")
+  lexAppend('R','Section·Title',"…content…")
+
+Rule: sow new info by appending to the lowest applicable anchor.
+Never rewrite prior blocks. Each block is a self-contained snapshot.
+
+Leximorph notes:
+- This file gives you a working UI + analyzer NOW.
+- For SQLite-backed storage, run your FastAPI at http://127.0.0.1:8011 (per your docs) and use "Init DB".
+- If backend is down, everything still works locally (analysis + localStorage log + queries).
+-->

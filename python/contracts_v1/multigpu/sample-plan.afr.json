@@ -1,0 +1,78 @@
+{
+    "schema": {
+        "name": "engine.multigpu.frame_plan",
+        "version": "1.0.0"
+    },
+    "id": "plan.frame.12",
+    "frameIndex": 12,
+    "gpuCount": 2,
+    "partitionStrategy": "afr",
+    "work": {
+        "frameIndex": 12,
+        "submissions": [
+            {
+                "id": "sub.frame12.gpu0.graphics",
+                "frameIndex": 12,
+                "nodeId": 0,
+                "nodeMask": "1",
+                "kind": "graphics",
+                "label": "frame.12.graphics.main",
+                "dependsOn": []
+            },
+            {
+                "id": "sub.frame12.gpu0.present",
+                "frameIndex": 12,
+                "nodeId": 0,
+                "nodeMask": "1",
+                "kind": "present",
+                "label": "frame.12.present",
+                "dependsOn": [
+                    "sub.frame12.gpu0.graphics"
+                ]
+            }
+        ]
+    },
+    "deps": {
+        "id": "deps.afr.temporal",
+        "description": "Minimal temporal history required across GPUs",
+        "dependencies": [
+            {
+                "id": "dep.taa.history",
+                "resourceId": "res.taa.history.color",
+                "resourceClass": "texture",
+                "producerFrameIndex": 11,
+                "consumerFrameIndex": 12,
+                "producerNodeId": 1,
+                "consumerNodeId": 0,
+                "reason": "TAA history required for temporal resolve",
+                "timing": "end_of_frame_producer",
+                "producerPassId": "pass.temporal.resolve",
+                "consumerPassId": "pass.temporal.resolve"
+            }
+        ]
+    },
+    "sync": {
+        "frameIndex": 12,
+        "edges": [
+            {
+                "id": "sync.dep.taa.history",
+                "fromSubmissionId": "sub.frame11.gpu1.graphics",
+                "toSubmissionId": "sub.frame12.gpu0.graphics",
+                "fromNodeId": 1,
+                "toNodeId": 0,
+                "frameIndex": 12,
+                "primitive": "fence",
+                "label": "sync.taa.history.frame12"
+            }
+        ]
+    },
+    "pacing": {
+        "id": "pacing.default",
+        "mode": "balanced",
+        "maxFramesInFlight": 2,
+        "presentOrder": "frame_index_order",
+        "latencyBudgetMs": 50,
+        "label": "afr.pacing.default"
+    },
+    "note": "AFR plan: frame 12 routed to GPU0, with TAA history copied from frame 11 on GPU1."
+}

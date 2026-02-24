@@ -1,0 +1,22 @@
+{
+  "name": "@we/htmlts-compiler",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "node ./compile.mjs ./index.single.html ./dist/index.html",
+    "dev": "node ./compile.mjs ./index.single.html ./dist/index.html --watch",
+    "watch": "pnpm run dev"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "files": [
+    "dist",
+    "compile.mjs",
+    "index.single.html"
+  ]
+}

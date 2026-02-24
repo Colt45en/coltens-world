@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Avatar Pipeline: Silhouette → Mesh → Customize</title>
+<style>
+  :root{color-scheme:dark;font-family:ui-sans-serif,system-ui}
+  html,body{height:100%;margin:0;background:#0b0e13;color:#e8f0ff}
+  #landing,#app,#editor,#studio{height:100%;display:grid;place-items:center}
+  #app,#editor,#studio{display:none; position:relative; z-index:1}
+
+  .card{padding:18px 20px;border-radius:14px;background:#121722;border:1px solid #2a2f3a}
+  .row{display:flex;gap:8px;align-items:center;margin:6px 0}
+  .cta{cursor:pointer;padding:10px 14px;border-radius:10px;border:1px solid #3a82ff;background:#2563eb;color:#fff;font-weight:600;transition:all 0.2s}
+  .cta:hover:not(:disabled){background:#1d4ed8;border-color:#1e40af}
+  .cta:disabled{opacity:0.5;cursor:not-allowed;filter:grayscale(1)}
+  input[type="range"]{width:160px}
+  input[type="file"]{padding:4px 8px}
+  label{font-size:12px;opacity:.85;width:90px}
+  .sml{font-size:12px;opacity:.75}
+
+  /* Progress Steps */
+  .steps{display:flex;gap:12px;margin:15px 0;padding:12px 0;border:1px solid #2a2f3a;border-radius:8px;padding:12px;background:#0f1218}
+  .step{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;background:#1a1f28;color:#7a7f8a;transition:all 0.2s}
+  .step.active{background:#2563eb;color:#fff;box-shadow:0 0 12px rgba(37,99,235,0.3)}
+  .step.done{background:#10b981;color:#fff}
+
+  /* Canvas for 3D */
+  canvas#three{display:block; position:fixed; inset:0; z-index:0}
+
+  /* Mask Preview */
+  #masks{display:none; gap:10px; margin-top:15px; justify-content:center; padding-top:10px; border-top:1px solid #2a2f3a}
+  .mask-box{display:flex; flex-direction:column; align-items:center}
+  .mask-box canvas{background:#000; border:1px solid #3a4150; border-radius:4px; width:120px; height:auto}
+
+  /* Editor Panels */
+  .editor-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px; padding:20px; overflow-y:auto; max-height:80vh; width:100%; max-width:1200px}
+  .editor-panel{border:1px solid #2a2f3a; border-radius:10px; padding:15px; background:#121722}
+  .editor-panel h3{margin:0 0 12px 0; font-size:14px; text-transform:uppercase; letter-spacing:.5px; color:#60a5fa}
+  .morph-slider{display:flex; align-items:center; gap:8px; margin:8px 0}
+  .morph-slider label{width:120px; font-size:11px}
+  .morph-slider input{flex:1}
+  .morph-slider .val{width:40px; text-align:right; font-size:11px; font-mono:mono}
+
+  /* Navigation */
+  .nav-buttons{display:flex; gap:10px; margin-top:15px; justify-content:center}
+  .nav-buttons button{padding:12px 20px; border-radius:8px; border:1px solid #3a82ff; background:#2563eb; color:#fff; font-weight:600; cursor:pointer}
+  .nav-buttons button:hover{background:#1d4ed8}
+  .nav-buttons button:disabled{opacity:0.5;cursor:not-allowed}
+
+  /* Studio (final avatar viewer) */
+  #studioContainer{position:relative; width:100%; height:100%; display:flex; flex-direction:column}
+  .studio-controls{padding:15px; background:#0a0d12; border-bottom:1px solid #2a2f3a; display:flex; gap:12px; align-items:center; z-index:2}
+  .studio-viewport{flex:1; position:relative; z-index:0}
+</style>
+
+<!-- Three.js Import Map -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+  <!-- STEP 1: Landing -->
+  <div id="landing">
+    <div class="card" style="text-align:center">
+      <h2>Avatar Pipeline</h2>
+      <p class="sml">Silhouette → 3D Mesh → Customize → Export</p>
+      <button id="enter" class="cta">Begin</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Silhouette to Mesh -->
+  <div id="app">
+    <div class="card">
+      <!-- Progress Steps -->
+      <div class="steps">
+        <div class="step active" data-step="silhouette">Silhouette</div>
+        <div class="step" data-step="mesh">Mesh</div>
+        <div class="step" data-step="customize">Customize</div>
+        <div class="step" data-step="export">Export</div>
+      </div>
+
+      <!-- Silhouette Section -->
+      <div>
+        <h3 style="margin-top:0; color:#60a5fa; font-size:13px; text-transform:uppercase">Step 1: Import Silhouettes</h3>
+        <div class="row"><label>Front image</label><input id="frontFile" type="file" accept="image/*" aria-label="Front silhouette image"></div>
+        <div class="row"><label>Side image</label><input id="sideFile" type="file" accept="image/*" aria-label="Side silhouette image"></div>
+      </div>
+
+      <!-- Mesh Generation Parameters -->
+      <div style="margin-top:20px">
+        <h3 style="margin:0 0 12px 0; color:#60a5fa; font-size:13px; text-transform:uppercase">Step 2: Mesh Generation</h3>
+
+        <div class="row">
+          <label>Threshold</label>
+          <input id="thr" type="range" min="0" max="255" step="1" value="190" aria-label="Threshold for silhouette detection">
+          <span id="thrV" class="sml">190</span>
+        </div>
+
+        <div class="row">
+          <label>Resolution</label>
+          <input id="res" type="range" min="32" max="160" step="1" value="96" aria-label="Mesh resolution">
+          <span id="resV" class="sml">96</span>
+        </div>
+
+        <div class="row">
+          <label>Iso level</label>
+          <input id="iso" type="range" min="0.1" max="0.9" step="0.01" value="0.5" aria-label="Isosurface level for marching cubes">
+          <span id="isoV" class="sml">0.50</span>
+        </div>
+
+        <div class="row">
+          <label>Height (m)</label>
+          <input id="hgt" type="range" min="0.9" max="2.4" step="0.01" value="1.7" aria-label="Avatar height in meters">
+          <span id="hgtV" class="sml">1.70</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="row" style="margin-top:15px">
+        <button id="build" class="cta">Build Mesh</button>
+        <button id="nextToCustomize" class="cta" disabled style="margin-left:10px">Next: Customize →</button>
+        <label style="width:auto; margin-left:10px; cursor:pointer">
+          <input id="showMasks" type="checkbox" aria-label="Toggle mask preview"> <span class="sml">Preview Masks</span>
+        </label>
+      </div>
+      <div style="text-align:center; margin-top:5px;"><span id="status" class="sml">Ready</span></div>
+
+      <!-- Preview Area -->
+      <div id="masks">
+        <div class="mask-box"><span class="sml">Front Mask</span><canvas id="cvsFront" aria-label="Front silhouette mask preview"></canvas></div>
+        <div class="mask-box"><span class="sml">Side Mask</span><canvas id="cvsSide" aria-label="Side silhouette mask preview"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Avatar Customization Editor -->
+  <div id="editor">
+    <div style="display:flex; flex-direction:column; width:100%; height:100%; align-items:center">
+      <h2 style="margin:20px 0 10px 0">Avatar Customization</h2>
+
+      <div class="steps">
+        <div class="step done" data-step="silhouette">Silhouette</div>
+        <div class="step done" data-step="mesh">Mesh</div>
+        <div class="step active" data-step="customize">Customize</div>
+        <div class="step" data-step="export">Export</div>
+      </div>
+
+      <div class="editor-grid">
+        <!-- Morphs Panel -->
+        <div class="editor-panel">
+          <h3>Morphs</h3>
+          <div id="morphList" style="max-height:500px; overflow-y:auto"></div>
+        </div>
+
+        <!-- Materials Panel -->
+        <div class="editor-panel">
+          <h3>Materials</h3>
+          <div class="row">
+            <label>Skin Color</label>
+            <input id="skinColor" type="color" value="#d8b59a" aria-label="Skin color">
+          </div>
+          <div class="row">
+            <label>Hair Color</label>
+            <input id="hairColor" type="color" value="#2b1d14" aria-label="Hair color">
+          </div>
+          <div class="row">
+            <label>Roughness</label>
+            <input id="roughness" type="range" min="0" max="1" step="0.01" value="0.85" aria-label="Material roughness">
+            <span id="roughnessV" class="sml">0.85</span>
+          </div>
+          <div class="row">
+            <label>Metalness</label>
+            <input id="metalness" type="range" min="0" max="1" step="0.01" value="0" aria-label="Material metalness">
+            <span id="metalnessV" class="sml">0.00</span>
+          </div>
+
+          <h3 style="margin-top:20px">Post Effects</h3>
+          <div class="row">
+            <label>Bloom</label>
+            <input id="bloom" type="range" min="0" max="2" step="0.01" value="0.25" aria-label="Bloom intensity">
+            <span id="bloomV" class="sml">0.25</span>
+          </div>
+          <div class="row">
+            <label>AO</label>
+            <input id="ao" type="range" min="0" max="2" step="0.01" value="0.45" aria-label="Ambient occlusion">
+            <span id="aoV" class="sml">0.45</span>
+          </div>
+          <div class="row">
+            <label>SMAA</label>
+            <input id="smaa" type="checkbox" checked aria-label="Enable SMAA antialiasing">
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button id="backToMesh" class="cta">← Back: Mesh</button>
+        <button id="nextToExport" class="cta">Next: Export →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Studio / Final Viewer -->
+  <div id="studio">
+    <div id="studioContainer">
+      <div class="studio-controls">
+        <h3 style="margin:0; flex-shrink:0">Final Avatar Studio</h3>
+        <div style="margin-left:auto; display:flex; gap:10px">
+          <button id="exportGLB" class="cta">Export GLB</button>
+          <button id="backToCustomize" class="cta">← Back</button>
+        </div>
+      </div>
+      <div class="studio-viewport" id="studioViewport"></div>
+    </div>
+  </div>
+
+  <!-- 3D Canvas (shared across scenes) -->
+  <canvas id="three"></canvas>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { MarchingCubes } from 'three/addons/objects/MarchingCubes.js';
+import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+// ============================================
+// STATE & SCENE MANAGEMENT
+// ============================================
+
+const landing = document.getElementById('landing');
+const app = document.getElementById('app');
+const editor = document.getElementById('editor');
+const studio = document.getElementById('studio');
+
+let renderer, scene, camera, controls, mesh = null;
+let rawFrontCtx = null, rawSideCtx = null;
+
+// Avatar DNA state (shared across pipeline)
+const avatarDNA = {
+  generated_mesh: null,
+  morphs: {},
+  materials: {
+    skinColor: '#d8b59a',
+    hairColor: '#2b1d14',
+    roughness: 0.85,
+    metalness: 0,
+  },
+  postfx: {
+    bloom: 0.25,
+    ao: 0.45,
+    smaa: true,
+  },
+};
+
+// ============================================
+// 3D SCENE INITIALIZATION
+// ============================================
+
+function initScene(){
+  const canvas = document.getElementById('three');
+  renderer = new THREE.WebGLRenderer({ antialias:true, canvas, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color('#0c0f14');
+
+  camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
+  camera.position.set(3.5, 1.8, 5.5);
+
+  // Lights
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 0.65));
+  const dir = new THREE.DirectionalLight(0xffffff, 1.6);
+  dir.position.set(5,8,5);
+  dir.castShadow = true;
+  dir.shadow.mapSize.set(1024,1024);
+  scene.add(dir);
+
+  // Floor
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(30,30),
+    new THREE.MeshStandardMaterial({ color:'#1a2030', roughness:1 })
+  );
+  floor.rotation.x = -Math.PI/2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // Controls
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0,0.9,0);
+  controls.update();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  requestAnimationFrame(function loop(){
+    if (mesh) mesh.rotation.y += 0.003;
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  });
+}
+
+// ============================================
+// NAVIGATION & STEP MANAGEMENT
+// ============================================
+
+function setActiveStep(stepName) {
+  document.querySelectorAll('.step').forEach(el=>{
+    const which = el.getAttribute('data-step');
+    el.classList.remove('active', 'done');
+    if(which === stepName) el.classList.add('active');
+    else if(['silhouette','mesh','customize'].includes(which)) el.classList.add('done');
+  });
+}
+
+function showSection(sectionId) {
+  landing.style.display = 'none';
+  app.style.display = 'none';
+  editor.style.display = 'none';
+  studio.style.display = 'none';
+  document.getElementById(sectionId).style.display = 'grid';
+  if(sectionId === 'studio') document.getElementById('studioContainer').style.display = 'flex';
+}
+
+document.getElementById('enter').addEventListener('click', () => {
+  initScene();
+  showSection('app');
+  setActiveStep('silhouette');
+}, { once:true });
+
+document.getElementById('nextToCustomize').addEventListener('click', () => {
+  if(!mesh) { alert('Please build mesh first'); return; }
+  avatarDNA.generated_mesh = mesh;
+  showSection('editor');
+  setActiveStep('customize');
+  populateMorphList();
+});
+
+document.getElementById('backToMesh').addEventListener('click', () => {
+  showSection('app');
+  setActiveStep('silhouette');
+});
+
+document.getElementById('nextToExport').addEventListener('click', () => {
+  showSection('studio');
+  setActiveStep('export');
+  console.log('Avatar DNA at export:', avatarDNA);
+});
+
+document.getElementById('backToCustomize').addEventListener('click', () => {
+  showSection('editor');
+  setActiveStep('customize');
+});
+
+// ============================================
+// IMAGE PROCESSING (Silhouette to Mesh)
+// ============================================
+
+function fileToCanvas(file){
+  return new Promise((res,rej)=>{
+    if(!file){ res(null); return; }
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      c.getContext('2d').drawImage(img,0,0);
+      res(c);
+    };
+    img.onerror = rej;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function getMaskData(srcCanvas, threshold){
+  if(!srcCanvas) return null;
+  const w = srcCanvas.width, h = srcCanvas.height;
+  const ctx = srcCanvas.getContext('2d');
+  const imgData = ctx.getImageData(0,0,w,h);
+  const d = imgData.data;
+
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = w; maskCanvas.height = h;
+  const maskCtx = maskCanvas.getContext('2d');
+  const maskImgData = maskCtx.createImageData(w, h);
+  const md = maskImgData.data;
+
+  for(let i=0; i<d.length; i+=4){
+    const lum = 0.2126*d[i] + 0.7152*d[i+1] + 0.0722*d[i+2];
+    const isObject = lum < threshold;
+    const val = isObject ? 255 : 0;
+    md[i] = md[i+1] = md[i+2] = val;
+    md[i+3] = 255;
+  }
+  maskCtx.putImageData(maskImgData, 0, 0);
+  return maskCanvas;
+}
+
+async function updatePreviews() {
+  const fFile = document.getElementById('frontFile').files[0];
+  const sFile = document.getElementById('sideFile').files[0];
+
+  if ((!rawFrontCtx && fFile) || (!rawSideCtx && sFile)) {
+    const [f, s] = await Promise.all([fileToCanvas(fFile), fileToCanvas(sFile)]);
+    if(f) rawFrontCtx = f;
+    if(s) rawSideCtx = s;
+  }
+
+  const thr = (+document.getElementById('thr').value);
+
+  const drawToMini = (src, destId) => {
+    if(!src) return;
+    const dest = document.getElementById(destId);
+    const m = getMaskData(src, thr);
+    dest.width = 120;
+    dest.height = (120/m.width) * m.height;
+    dest.getContext('2d').drawImage(m, 0, 0, dest.width, dest.height);
+  };
+
+  drawToMini(rawFrontCtx, 'cvsFront');
+  drawToMini(rawSideCtx, 'cvsSide');
+}
+
+// ============================================
+// MESH GENERATION (Marching Cubes)
+// ============================================
+
+function buildField(frontMask, sideMask, N){
+  const fctx = frontMask.getContext('2d');
+  const sctx = sideMask.getContext('2d');
+  const fw = frontMask.width, fh = frontMask.height;
+  const sw = sideMask.width, sh = sideMask.height;
+
+  const f = fctx.getImageData(0,0,fw,fh).data;
+  const s = sctx.getImageData(0,0,sw,sh).data;
+
+  const field = new Float32Array(N*N*N);
+  let i = 0;
+
+  for(let z=0; z<N; z++){
+    const uz = z/(N-1);
+    for(let y=0; y<N; y++){
+      const v = 1 - y/(N-1);
+      for(let x=0; x<N; x++, i++){
+        const u = x/(N-1);
+
+        const fx = Math.floor(u * (fw-1));
+        const fy = Math.floor(v * (fh-1));
+        const fVal = f[(fy * fw + fx) * 4] / 255;
+
+        const sx = Math.floor(uz * (sw-1));
+        const sy = Math.floor(v * (sh-1));
+        const sVal = s[(sy * sw + sx) * 4] / 255;
+
+        field[i] = Math.min(fVal, sVal);
+      }
+    }
+  }
+  return field;
+}
+
+function meshFromField(field, N, iso, height){
+  const mat = new THREE.MeshStandardMaterial({
+    color:'#9ad0ff',
+    roughness:0.4,
+    metalness:0.2,
+    side: THREE.DoubleSide
+  });
+
+  const mc = new MarchingCubes(N, mat, false, false);
+  mc.isolation = iso;
+  mc.field.set(field);
+  mc.update();
+
+  mc.scale.set(0.5 * height, 0.5 * height, 0.5 * height);
+  mc.position.set(0, 0.5 * height, 0);
+
+  mc.castShadow = true;
+  mc.receiveShadow = true;
+  return mc;
+}
+
+async function onBuild(){
+  const status = document.getElementById('status');
+  status.textContent = 'Processing...';
+
+  const fFile = document.getElementById('frontFile').files[0];
+  const sFile = document.getElementById('sideFile').files[0];
+  if(!fFile || !sFile) { status.textContent = 'Please select both images.'; return; }
+
+  if (!rawFrontCtx || !rawSideCtx) {
+    const [f, s] = await Promise.all([fileToCanvas(fFile), fileToCanvas(sFile)]);
+    rawFrontCtx = f;
+    rawSideCtx = s;
+  }
+
+  const thr = (+document.getElementById('thr').value);
+  const frontMask = getMaskData(rawFrontCtx, thr);
+  const sideMask = getMaskData(rawSideCtx, thr);
+
+  const N = (+document.getElementById('res').value) | 0;
+  const field = buildField(frontMask, sideMask, N);
+
+  const iso = parseFloat(document.getElementById('iso').value);
+  const H = parseFloat(document.getElementById('hgt').value);
+
+  const newMesh = meshFromField(field, N, iso, H);
+
+  if(mesh){
+    scene.remove(mesh);
+    mesh.geometry.dispose();
+    mesh.material.dispose();
+  }
+  mesh = newMesh;
+  scene.add(mesh);
+
+  status.textContent = 'Done!';
+  setActiveStep('mesh');
+  document.getElementById('nextToCustomize').disabled = false;
+}
+
+// ============================================
+// AVATAR CUSTOMIZATION (Editor)
+// ============================================
+
+function populateMorphList() {
+  const demoMorphs = ['Smile', 'Brow_Up', 'Brow_Down', 'Eye_Open', 'Mouth_Open', 'Cheek_Raise'];
+  const list = document.getElementById('morphList');
+  list.innerHTML = '';
+
+  demoMorphs.forEach(name => {
+    const val = avatarDNA.morphs[name] || 0;
+    const slider = document.createElement('div');
+    slider.className = 'morph-slider';
+    slider.innerHTML = `
+      <label>${name}</label>
+      <input type="range" min="0" max="1" step="0.01" value="${val}" data-morph="${name}" aria-label="Morph control for ${name}">
+      <span class="val">${(val).toFixed(2)}</span>
+    `;
+    const input = slider.querySelector('input');
+    const span = slider.querySelector('.val');
+    input.addEventListener('input', (e) => {
+      avatarDNA.morphs[name] = parseFloat(e.target.value);
+      span.textContent = (parseFloat(e.target.value)).toFixed(2);
+    });
+    list.appendChild(slider);
+  });
+}
+
+// Wire material sliders
+['roughness','metalness','bloom','ao'].forEach(id=>{
+  const el = document.getElementById(id);
+  const v = document.getElementById(id+'V');
+  if(!el) return;
+  el.addEventListener('input', () => {
+    const val = parseFloat(el.value);
+    v.textContent = val.toFixed(2);
+    const [category, key] = {
+      'roughness':['materials','roughness'],
+      'metalness':['materials','metalness'],
+      'bloom':['postfx','bloom'],
+      'ao':['postfx','ao']
+    }[id] || [];
+    if(avatarDNA[category]) avatarDNA[category][key] = val;
+  });
+});
+
+// Wire color inputs
+document.getElementById('skinColor').addEventListener('input', (e) => {
+  avatarDNA.materials.skinColor = e.target.value;
+});
+document.getElementById('hairColor').addEventListener('input', (e) => {
+  avatarDNA.materials.hairColor = e.target.value;
+});
+document.getElementById('smaa').addEventListener('change', (e) => {
+  avatarDNA.postfx.smaa = e.target.checked;
+});
+
+// ============================================
+// EXPORT & FINAL STAGE
+// ============================================
+
+document.getElementById('exportGLB').addEventListener('click', () => {
+  if(!mesh) return;
+  const status = document.createElement('div');
+  status.textContent = 'Exporting...';
+  status.style.cssText = 'position:fixed;top:10px;right:10px;background:#2563eb;padding:10px 15px;border-radius:6px;z-index:999;font-size:12px';
+  document.body.appendChild(status);
+
+  const exporter = new GLTFExporter();
+  const exportGroup = new THREE.Group();
+  exportGroup.add(mesh.clone());
+
+  exporter.parse(
+    exportGroup,
+    (glb) => {
+      const blob = new Blob([glb], { type: 'model/gltf-binary' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'avatar_generated.glb';
+      a.click();
+      URL.revokeObjectURL(url);
+      status.textContent = 'Exported! ✓';
+      setTimeout(() => status.remove(), 2000);
+    },
+    (err) => {
+      status.textContent = 'Export failed!';
+      console.error(err);
+      setTimeout(() => status.remove(), 3000);
+    },
+    { binary: true }
+  );
+});
+
+// ============================================
+// WIRING UP ALL CONTROLS
+// ============================================
+
+// Slider updates
+['thr','res','iso','hgt'].forEach(id=>{
+  const el = document.getElementById(id);
+  const v = document.getElementById(id+'V');
+  const fmt = (id==='iso'||id==='hgt') ? n=>(+n).toFixed(2) : n=>n;
+  el.addEventListener('input', () => {
+    v.textContent = fmt(el.value);
+    if(id==='thr' && document.getElementById('showMasks').checked) updatePreviews();
+  });
+  v.textContent = fmt(el.value);
+});
+
+document.getElementById('build').addEventListener('click', onBuild);
+document.getElementById('showMasks').addEventListener('change', (e) => {
+  document.getElementById('masks').style.display = e.target.checked ? 'flex' : 'none';
+  if(e.target.checked) updatePreviews();
+});
+
+</script>
+</body>
+</html>

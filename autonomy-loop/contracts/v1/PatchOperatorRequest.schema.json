@@ -1,0 +1,64 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/PatchOperatorRequest.schema.json",
+    "title": "PatchOperatorRequest",
+    "description": "Code generation request for prompt.operator.patch (uses OpenAI Chat).",
+    "type": "object",
+    "required": [
+        "file_path",
+        "instruction",
+        "current_content"
+    ],
+    "properties": {
+        "file_path": {
+            "type": "string",
+            "description": "Target file path (relative to workspace root)"
+        },
+        "instruction": {
+            "type": "string",
+            "description": "Natural language instruction for code modification"
+        },
+        "current_content": {
+            "type": "string",
+            "description": "Full current file content (for context)"
+        },
+        "context": {
+            "type": "object",
+            "properties": {
+                "language": {
+                    "type": "string",
+                    "enum": [
+                        "typescript",
+                        "python",
+                        "javascript",
+                        "json"
+                    ],
+                    "description": "Code language for syntax hints"
+                },
+                "related_files": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Paths to related files for context"
+                },
+                "constraint": {
+                    "type": "string",
+                    "description": "Hard constraint (determinism, no external calls, etc)"
+                }
+            }
+        },
+        "model": {
+            "type": "string",
+            "default": "gpt-4-turbo",
+            "description": "OpenAI model to use"
+        },
+        "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.3,
+            "description": "Temperature for code generation (lower = more deterministic)"
+        }
+    }
+}

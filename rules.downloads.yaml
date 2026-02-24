@@ -1,0 +1,58 @@
+# Example: Downloads Folder Organizer
+name: "Downloads Cleanup"
+description: "Organize downloads by type and age"
+target_folder: "C:\\Users\\colte\\Downloads"
+
+rules:
+  # Move old PDFs to Documents/Archive
+  - pattern: "*.pdf"
+    condition:
+      min_age_days: 30
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Archive\\PDFs"
+
+  # Move images to Pictures
+  - pattern: "*.{jpg,jpeg,png,gif,bmp}"
+    action: "move"
+    destination: "C:\\Users\\colte\\Pictures\\Downloads"
+
+  # Move videos to Videos
+  - pattern: "*.{mp4,avi,mkv,mov}"
+    action: "move"
+    destination: "C:\\Users\\colte\\Videos\\Downloads"
+
+  # Move archives to temp folder for review
+  - pattern: "*.{zip,rar,7z,tar,gz}"
+    condition:
+      min_age_days: 7
+    action: "move"
+    destination: "C:\\Users\\colte\\Downloads\\_Review\\Archives"
+
+  # Delete old temp files
+  - pattern: "*.tmp"
+    condition:
+      min_age_days: 1
+    action: "delete"
+
+post_actions:
+  - type: "create_note"
+    title: "Downloads cleanup completed"
+    content: "Moved {moved_count} files, deleted {deleted_count} temp files. See audit log for details."
+
+  - type: "create_index"
+    path: "C:\\Users\\colte\\Downloads\\INDEX.md"
+    content: |
+      # Downloads Index
+
+      Last organized: {timestamp}
+
+      ## Summary
+      - Total files: {total_files}
+      - Moved: {moved_count}
+      - Deleted: {deleted_count}
+
+      ## Folders
+      {folder_tree}
+
+      ## Recent Files
+      {recent_files}

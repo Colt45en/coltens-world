@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "generated_at_unix_ms": 1771886719963,
+  "by_content_hash": {
+    "125f53a0233498ab0d7d16ce7dcb6ccead4a99acf4357f45f801335b2b4487f1": {
+      "avatar_id": "alice_2024",
+      "content_hash": "125f53a0233498ab0d7d16ce7dcb6ccead4a99acf4357f45f801335b2b4487f1",
+      "dna_hash": "d595547a01ff675e3faad85fe680f38cbf79398e1e1f1217eb622684619a4824",
+      "file_size": 92086,
+      "poly_count": 12,
+      "bounds": {
+        "min": [
+          -0.3499999940395355,
+          0,
+          -0.3499999940395355
+        ],
+        "max": [
+          0.3499999940395355,
+          1.7000000476837158,
+          0.3499999940395355
+        ]
+      }
+    },
+    "8d8aa3de28a5fccff8355fcd221d3e01eccbc024702ef93b8970de33978e5c4b": {
+      "avatar_id": "bob_2024",
+      "content_hash": "8d8aa3de28a5fccff8355fcd221d3e01eccbc024702ef93b8970de33978e5c4b",
+      "dna_hash": "523c02731b6af6ec95a929d6ab08130fc2157f15d1088b4a7af0fdd7e5d87f55",
+      "file_size": 91957,
+      "poly_count": 12,
+      "bounds": {
+        "min": [
+          -0.34333333373069763,
+          0,
+          -0.34333333373069763
+        ],
+        "max": [
+          0.34333333373069763,
+          1.6799999475479126,
+          0.34333333373069763
+        ]
+      }
+    },
+    "6dff2ab691959f9c08be4d73680dec812d92a1a989b76a871c482e502d32cf2b": {
+      "avatar_id": "charlie_2024",
+      "content_hash": "6dff2ab691959f9c08be4d73680dec812d92a1a989b76a871c482e502d32cf2b",
+      "dna_hash": "eab76f83e2b3a5f09478ffd887363f3b4f3c069d4621718c58e5ac0806a4616d",
+      "file_size": 90205,
+      "poly_count": 12,
+      "bounds": {
+        "min": [
+          -0.3400000035762787,
+          0,
+          -0.3400000035762787
+        ],
+        "max": [
+          0.3400000035762787,
+          1.6699999570846558,
+          0.3400000035762787
+        ]
+      }
+    }
+  }
+}

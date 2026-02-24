@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+/**
+ * Husky pre-commit hook
+ * Runs tooling determinism gate before allowing commit
+ */
+
+const { spawn } = require('child_process');
+const { execSync } = require('child_process');
+const path = require('path');
+
+const repoRoot = process.cwd();
+const runner = path.join(repoRoot, 'tooling', 'test-compilers.mjs');
+
+function fail(message) {
+  console.error(`\n[pre-commit] ❌ ${message}\n`);
+  process.exit(1);
+}
+
+function listTrackedFiles() {
+  const output = execSync('git ls-files -z', {
+    cwd: repoRoot,
+    encoding: 'utf8'
+  });
+
+  return output
+    .split('\u0000')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function printSample(files) {
+  const sample = files.slice(0, 25).join('\n');
+  return files.length > 25 ? `${sample}\n...` : sample;
+}
+
+console.log('[pre-commit] Running tooling determinism gate...\n');
+
+const trackedFiles = listTrackedFiles();
+const trackedDist = trackedFiles.filter((file) => /(^|\/)dist\//.test(file));
+if (trackedDist.length > 0) {
+  fail(`Tracked dist/ files detected:\n${printSample(trackedDist)}`);
+}
+
+const trackedNodeModules = trackedFiles.filter((file) => /(^|\/)node_modules\//.test(file));
+if (trackedNodeModules.length > 0) {
+  fail(`Tracked node_modules files detected:\n${printSample(trackedNodeModules)}`);
+}
+
+const hasPnpmLock = trackedFiles.includes('pnpm-lock.yaml');
+if (!hasPnpmLock) {
+  fail('pnpm-lock.yaml must be committed (reproducible installs).');
+}
+
+const proc = spawn('node', [runner, 'all'], {
+  cwd: repoRoot,
+  stdio: 'inherit'
+});
+
+proc.on('close', (code) => {
+  if (code !== 0) {
+    console.error('\n[pre-commit] ❌ Determinism gate failed!');
+    console.error('Tools produced non-deterministic changes.');
+    console.error('Run: node tooling/run.mjs <toolId> --verbose');
+    process.exit(1);
+  } else {
+    console.log('\n[pre-commit] ✅ All tools deterministic. Commit allowed.\n');
+    process.exit(0);
+  }
+});

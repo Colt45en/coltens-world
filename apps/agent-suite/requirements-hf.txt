@@ -1,0 +1,10 @@
+# Optional HuggingFace dependencies for AgentCPM-GUI training pipeline
+# Install with: pip install -r requirements-hf.txt
+
+transformers>=4.40.0
+accelerate>=0.28.0
+huggingface_hub>=0.21.0
+datasets>=2.14.0
+
+# Optional: pandas-image-methods for embedding images in Parquet
+# pandas-image-methods>=0.1.0

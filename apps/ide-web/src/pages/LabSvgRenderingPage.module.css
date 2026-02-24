@@ -1,0 +1,172 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #0a0e27;
+  color: #e0e6ed;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e0e6ed;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #a0a8b8;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.svgViewer {
+  flex: 1;
+  border: 1px solid #1e2847;
+  border-radius: 0.375rem;
+  overflow: auto;
+  background-color: #0f1429;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.svg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.svgContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: #0f1429;
+  border: 1px solid #1e2847;
+  border-radius: 0.375rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background-color: #4a9eff;
+  color: #000;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #3b8bd4;
+}
+
+.button:active {
+  background-color: #2d6ca8;
+}
+
+.button.secondary {
+  background-color: #1e2847;
+  color: #e0e6ed;
+}
+
+.button.secondary:hover {
+  background-color: #28325c;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: #1e2847;
+}
+
+.controlGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: #a0a8b8;
+  font-weight: 500;
+}
+
+.select {
+  padding: 0.5rem;
+  background-color: #0f1429;
+  color: #e0e6ed;
+  border: 1px solid #1e2847;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.select:hover {
+  border-color: #4a9eff;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1);
+}
+
+.infoPanel {
+  padding: 0.75rem 1rem;
+  background-color: #0f1429;
+  border: 1px solid #1e2847;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.infoBox {
+  padding: 0.75rem 1rem;
+  background-color: #0f1429;
+  border-left: 3px solid #4a9eff;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: #a0a8b8;
+  margin-top: 0.5rem;
+}
+
+.codeBlock {
+  background-color: #0f1429;
+  border: 1px solid #1e2847;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #80ff80;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-top: 0.5rem;
+}
+
+.zoom {
+  font-size: 0.875rem;
+  color: #a0a8b8;
+  margin-left: auto;
+}
+
+.zoomValue {
+  color: #4a9eff;
+  font-weight: 500;
+  margin: 0 0.5rem;
+}

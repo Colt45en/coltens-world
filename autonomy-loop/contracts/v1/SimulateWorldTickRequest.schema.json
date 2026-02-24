@@ -1,0 +1,80 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://autonomy-loop/schema/v1/SimulateWorldTickRequest.schema.json",
+    "title": "SimulateWorldTickRequest",
+    "description": "World state + operator request for prompt.operator.simulate_world_tick.",
+    "type": "object",
+    "required": [
+        "world_state",
+        "tick_number",
+        "seed",
+        "instruction"
+    ],
+    "properties": {
+        "world_state": {
+            "type": "object",
+            "properties": {
+                "entities": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    },
+                    "description": "Current entities in world"
+                },
+                "collisions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    },
+                    "description": "Active collision pairs"
+                },
+                "spatial_grid": {
+                    "type": "object",
+                    "description": "Current spatial partitioning state"
+                }
+            },
+            "description": "Full world state for tick"
+        },
+        "tick_number": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Sequential tick number (for determinism)"
+        },
+        "seed": {
+            "type": "integer",
+            "description": "PRNG seed (XORShift or MT19937) for deterministic randomness"
+        },
+        "instruction": {
+            "type": "string",
+            "description": "Operator instruction (collision resolution, physics update, etc)"
+        },
+        "delta_constraints": {
+            "type": "object",
+            "properties": {
+                "max_velocity_per_tick": {
+                    "type": "number",
+                    "description": "Max distance entity can move in single tick"
+                },
+                "max_rotation_radians": {
+                    "type": "number",
+                    "description": "Max rotation per tick"
+                },
+                "collision_restitution_range": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max] restitution coefficient range"
+                }
+            },
+            "description": "Physical constraints for delta validation"
+        },
+        "model": {
+            "type": "string",
+            "default": "gpt-4-turbo",
+            "description": "OpenAI model for delta reasoning"
+        }
+    }
+}

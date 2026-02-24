@@ -1,0 +1,340 @@
+{
+    "schema": {
+        "name": "ai_prompt_lexicon.entry",
+        "version": "1.0.0"
+    },
+    "entry": {
+        "term": "Optimize",
+        "canonical_term": "Optimize",
+        "process_tag": "prompt.operator.optimize",
+        "type": "action_operator",
+        "operator_class": "instruction_operator",
+        "scope": {
+            "applies_to": [
+                "code",
+                "writing",
+                "workflow",
+                "product_ux",
+                "strategy",
+                "creative_narrative"
+            ],
+            "mode": "multi_objective_constrained_improvement"
+        },
+        "root_meaning": {
+            "language": "Latin",
+            "root": "optimus",
+            "gloss": "best",
+            "truth_from_root": "Optimize = improve a thing by adjusting choices/variables to maximize a goal while respecting constraints."
+        },
+        "core_definition": "Improve a system by adjusting variables to maximize a stated objective under constraints.",
+        "math_formalization": {
+            "kind": "constrained_optimization",
+            "objective_form": "maximize f(x)",
+            "constraints_form": "subject to g_i(x) ≤ 0 for i = 1..m",
+            "mapping": {
+                "f(x)": "objective (speed, clarity, reliability, etc.)",
+                "g_i(x)": "constraints (API stability, budget, safety, compatibility, etc.)",
+                "x": "decision variables (structure, algorithms, wording, design choices)"
+            }
+        },
+        "what_it_does_in_prompting": {
+            "intent": "goal_directed_refinement",
+            "actions": [
+                "Define the target (what \"best\" means)",
+                "Measure progress (metrics/criteria)",
+                "Change variables (structure, algorithm, wording, design)",
+                "Respect constraints (time, tone, budget, safety, compatibility)"
+            ],
+            "hidden_contract": {
+                "why_it_matters": "Without explicit objectives, constraints, tradeoffs, and tests, \"Optimize\" collapses into vague improvement with unverifiable success.",
+                "required_fields": [
+                    "objective",
+                    "constraints",
+                    "tradeoff_priority",
+                    "acceptance_tests_or_metrics"
+                ]
+            }
+        },
+        "dimensions": {
+            "principle": "Everything is a subtype of constrained improvement.",
+            "subtypes": [
+                {
+                    "id": "performance_efficiency",
+                    "label": "Performance / Efficiency",
+                    "goal": "faster, lower memory, fewer steps",
+                    "signals": [
+                        "latency",
+                        "throughput",
+                        "complexity",
+                        "hot path"
+                    ],
+                    "expected_output": [
+                        "bottleneck analysis",
+                        "revised implementation",
+                        "benchmark plan",
+                        "edge-case tests"
+                    ]
+                },
+                {
+                    "id": "reliability_robustness",
+                    "label": "Reliability / Robustness",
+                    "goal": "fewer failures, stronger edge-case handling",
+                    "signals": [
+                        "stability",
+                        "fault tolerant",
+                        "retry",
+                        "timeouts"
+                    ],
+                    "expected_output": [
+                        "validation rules",
+                        "failure modes",
+                        "tests",
+                        "safety checks"
+                    ]
+                },
+                {
+                    "id": "clarity_readability",
+                    "label": "Clarity / Readability",
+                    "goal": "easier to understand and maintain",
+                    "signals": [
+                        "refactor",
+                        "rename",
+                        "simplify"
+                    ],
+                    "expected_output": [
+                        "structure changes",
+                        "naming improvements",
+                        "docs",
+                        "examples"
+                    ]
+                },
+                {
+                    "id": "product_ux_conversion",
+                    "label": "Product / UX Optimization",
+                    "goal": "higher conversion, fewer clicks, less confusion",
+                    "signals": [
+                        "friction",
+                        "drop-off",
+                        "CTA",
+                        "information scent"
+                    ],
+                    "expected_output": [
+                        "ux changes",
+                        "rationale",
+                        "measurement plan",
+                        "risk notes"
+                    ]
+                },
+                {
+                    "id": "narrative_creative",
+                    "label": "Narrative / Creative Optimization",
+                    "goal": "stronger emotion, pacing, coherence, character arc",
+                    "signals": [
+                        "stakes",
+                        "tone",
+                        "voice",
+                        "theme"
+                    ],
+                    "expected_output": [
+                        "rewritten passages",
+                        "scene beats",
+                        "consistency rules"
+                    ]
+                }
+            ]
+        },
+        "methodology": {
+            "best_practice_pipeline": [
+                {
+                    "step": 0,
+                    "name": "Context ingestion",
+                    "purpose": "Ensure the system is fully understood before changing it.",
+                    "actions": [
+                        "Identify the object to optimize",
+                        "Identify constraints, invariants, and interfaces",
+                        "Capture baseline behavior and metrics"
+                    ]
+                },
+                {
+                    "step": 1,
+                    "name": "Define objective (one sentence)",
+                    "pattern": "Optimize X for Y under constraints Z.",
+                    "examples": [
+                        "Optimize this renderer for lower frame time under identical visuals.",
+                        "Optimize this paragraph for clarity under 120 words."
+                    ]
+                },
+                {
+                    "step": 2,
+                    "name": "Identify bottlenecks / weak points",
+                    "targets": [
+                        "redundancy",
+                        "unclear structure",
+                        "slow algorithm",
+                        "missing constraints",
+                        "conflicting goals"
+                    ]
+                },
+                {
+                    "step": 3,
+                    "name": "Apply improvements in priority order",
+                    "rules": [
+                        "Fix the biggest bottleneck first",
+                        "Preserve correctness first",
+                        "Then polish readability/usability"
+                    ]
+                },
+                {
+                    "step": 4,
+                    "name": "Validate with acceptance tests",
+                    "methods": [
+                        "unit tests",
+                        "examples",
+                        "benchmarks",
+                        "rubric scoring",
+                        "checklists"
+                    ]
+                },
+                {
+                    "step": 5,
+                    "name": "Document tradeoffs",
+                    "document": [
+                        "what improved",
+                        "what stayed the same",
+                        "what might degrade and why",
+                        "assumptions made"
+                    ]
+                }
+            ]
+        },
+        "synonym_map": {
+            "rule": "Use one primary operator (\"Optimize\") + one or two dimensions (\"for speed + readability\"). Avoid stacking synonyms.",
+            "by_intent": {
+                "mechanical_efficiency": [
+                    "streamline",
+                    "minimize steps",
+                    "reduce friction"
+                ],
+                "precision_tightening": [
+                    "refine",
+                    "clarify",
+                    "distill"
+                ],
+                "measurement": [
+                    "benchmark",
+                    "quantify"
+                ],
+                "scaling": [
+                    "scale",
+                    "maintain performance under load"
+                ],
+                "single_metric_push": [
+                    "maximize",
+                    "minimize"
+                ],
+                "psychological_impact": [
+                    "amplify",
+                    "elevate",
+                    "humanize",
+                    "captivate"
+                ]
+            },
+            "not_equivalents_note": "These are not identical words; they represent different optimization targets."
+        },
+        "anti_patterns": [
+            {
+                "id": "vague_objective",
+                "example": "Optimize this.",
+                "why_fails": "No objective = no direction."
+            },
+            {
+                "id": "conflicting_goals_no_priority",
+                "example": "Optimize for speed, security, readability, and features.",
+                "why_fails": "Multi-objective without priority creates arbitrary tradeoffs."
+            },
+            {
+                "id": "no_constraints",
+                "example": "Optimize this code.",
+                "why_fails": "Without invariants, the optimizer may break API/behavior or add dependencies."
+            },
+            {
+                "id": "no_measurement",
+                "example": "Optimize performance.",
+                "why_fails": "No metric/test = cannot prove improvement."
+            }
+        ],
+        "prompt_templates": [
+            {
+                "id": "code_performance",
+                "title": "Code performance optimization",
+                "template": "Optimize this {language} code for {metric: speed|memory|latency|throughput}.\n\nConstraints: keep identical outputs, keep public API unchanged, no new dependencies.\n\nProvide: (1) bottleneck analysis, (2) revised code, (3) benchmark plan, (4) edge-case tests."
+            },
+            {
+                "id": "workflow",
+                "title": "Workflow optimization",
+                "template": "Optimize my workflow for {goal} under {constraints: time|energy|tools}.\n\nOutput: a 7-day plan, daily checklist, and if-then fallback rules for bad days."
+            },
+            {
+                "id": "writing_clarity_impact",
+                "title": "Writing tone + clarity optimization",
+                "template": "Optimize this text for clarity + persuasive impact.\n\nConstraints: keep meaning, keep under {N} words, tone = {tone}.\n\nProvide: revised version + 5 bullet reasons for changes."
+            },
+            {
+                "id": "campaign_strategy",
+                "title": "Strategy / marketing optimization",
+                "template": "Optimize this campaign for CTR + conversion.\n\nConstraints: budget = {X}, audience = {Y}, platform = {Z}.\n\nProvide: 3 variants, measurement plan, and risk notes."
+            },
+            {
+                "id": "narrative_pacing",
+                "title": "Narrative pacing optimization",
+                "template": "Optimize this scene for {objective: pacing|stakes|voice|coherence}.\n\nConstraints: keep dialogue under {N} words.\nPriority: sacrifice {tradeoff} for {objective}.\nSuccess metric: {reader effect / rubric}."
+            }
+        ],
+        "analysis_extensions": {
+            "optional_advanced_pipeline": {
+                "name": "5_stage_thought_pipeline",
+                "stages": [
+                    "Perception & Ingestion",
+                    "Core Processing & Meaning-Making",
+                    "Connection & Contextualization",
+                    "Decision & Action",
+                    "Memory & Learning"
+                ],
+                "note": "This is an optional meta-processing framework; it must not replace the required prompt fields (objective, constraints, tradeoffs, tests)."
+            },
+            "optional_quantum_thought_processing": {
+                "concepts": [
+                    "superposition of multiple interpretations",
+                    "entanglement between related concepts",
+                    "coherence measurement",
+                    "state collapse to most probable interpretation"
+                ],
+                "note": "Use as a metaphorical reasoning aid only; optimization must still be validated by concrete acceptance metrics."
+            },
+            "optional_meaning_analysis_suite": {
+                "count": 13,
+                "types": [
+                    "lexical_analysis",
+                    "etymological_analysis",
+                    "syntactical_analysis",
+                    "propositional_analysis",
+                    "veracity_analysis",
+                    "subtext_implication",
+                    "symbolic_analysis",
+                    "imagery_analysis",
+                    "holistic_synthesis",
+                    "intent_tone_analysis",
+                    "grammatical_role_analysis",
+                    "component_analysis",
+                    "adjective_analysis"
+                ],
+                "note": "Use when optimizing text/narrative; do not force on simple code perf tasks."
+            }
+        },
+        "quality_gates": {
+            "definition_gate": "Must include objective + constraints + tradeoff_priority + acceptance_tests_or_metrics.",
+            "behavior_gate": "If public API must remain unchanged, verify signatures and outputs remain identical.",
+            "measurement_gate": "Must provide a baseline and an evaluation plan whenever performance or conversion is claimed to improve."
+        }
+    }
+}

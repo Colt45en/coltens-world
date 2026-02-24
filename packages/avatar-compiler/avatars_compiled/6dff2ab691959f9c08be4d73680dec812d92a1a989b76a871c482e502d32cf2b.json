@@ -1,0 +1,53 @@
+{
+  "poly_count": 12,
+  "bounds": {
+    "min": [
+      -0.3400000035762787,
+      0,
+      -0.3400000035762787
+    ],
+    "max": [
+      0.3400000035762787,
+      1.6699999570846558,
+      0.3400000035762787
+    ]
+  },
+  "atlas": {
+    "width": 256,
+    "height": 256,
+    "entries": [
+      {
+        "name": "hair.png",
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      },
+      {
+        "name": "skin.png",
+        "x": 128,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    ]
+  },
+  "lod": [
+    {
+      "level": 0,
+      "poly_percent": 1,
+      "poly_count": 12
+    },
+    {
+      "level": 1,
+      "poly_percent": 0.75,
+      "poly_count": 9
+    },
+    {
+      "level": 2,
+      "poly_percent": 0.5,
+      "poly_count": 6
+    }
+  ],
+  "file_size": 90205
+}

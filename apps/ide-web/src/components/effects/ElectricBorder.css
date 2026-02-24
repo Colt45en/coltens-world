@@ -1,0 +1,46 @@
+.we-electric {
+  position: relative;
+  display: block;
+  border-radius: var(--we-electric-radius, 16px);
+}
+
+.we-electric__content {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.we-electric__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.we-electric__stroke {
+  fill: none;
+  stroke: var(--we-electric-color, #00d9ff);
+  stroke-width: var(--we-electric-thickness, 2px);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--we-electric-color, #00d9ff) 75%, transparent));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 18 14;
+  animation: we-electric-dash var(--we-electric-dash-speed, 1.2s) linear infinite;
+}
+
+@keyframes we-electric-dash {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+
+.we-electric__defs {
+  position: fixed;
+  left: -99999px;
+  top: -99999px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}

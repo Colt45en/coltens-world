@@ -1,0 +1,29 @@
+{
+    "name": "@we/contracts",
+    "version": "0.1.0",
+    "description": "Type-safe API contracts for Autonomy Loop (OpenAPI-generated)",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "type-check": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "typescript": "^5.6.3"
+    },
+    "keywords": [
+        "autonomy-loop",
+        "contracts",
+        "openapi",
+        "generated-types"
+    ]
+}

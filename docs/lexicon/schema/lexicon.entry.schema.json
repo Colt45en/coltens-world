@@ -1,0 +1,576 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.local/schemas/lexicon.entry.schema.json",
+    "title": "AI Prompt Lexicon Entry",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema",
+        "entry"
+    ],
+    "properties": {
+        "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "name",
+                "version"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "const": "ai_prompt_lexicon.entry"
+                },
+                "version": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                }
+            }
+        },
+        "entry": {
+            "$ref": "#/$defs/LexiconEntry"
+        }
+    },
+    "$defs": {
+        "StableId": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "NonEmptyString": {
+            "type": "string",
+            "minLength": 1
+        },
+        "SemVer": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "StringArrayNonEmpty": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "Etymology": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "language",
+                "root",
+                "gloss",
+                "truth_from_root"
+            ],
+            "properties": {
+                "language": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "root": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "gloss": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "truth_from_root": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "MathFormalization": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "kind",
+                "objective_form",
+                "constraints_form",
+                "mapping"
+            ],
+            "properties": {
+                "kind": {
+                    "type": "string",
+                    "const": "constrained_optimization"
+                },
+                "objective_form": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "constraints_form": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "mapping": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "f(x)",
+                        "g_i(x)",
+                        "x"
+                    ],
+                    "properties": {
+                        "f(x)": {
+                            "$ref": "#/$defs/NonEmptyString"
+                        },
+                        "g_i(x)": {
+                            "$ref": "#/$defs/NonEmptyString"
+                        },
+                        "x": {
+                            "$ref": "#/$defs/NonEmptyString"
+                        }
+                    }
+                }
+            }
+        },
+        "HiddenContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "why_it_matters",
+                "required_fields"
+            ],
+            "properties": {
+                "why_it_matters": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "required_fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "objective",
+                            "constraints",
+                            "tradeoff_priority",
+                            "acceptance_tests_or_metrics"
+                        ]
+                    },
+                    "minItems": 4,
+                    "uniqueItems": true
+                }
+            }
+        },
+        "WhatItDoes": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "intent",
+                "actions",
+                "hidden_contract"
+            ],
+            "properties": {
+                "intent": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "actions": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                },
+                "hidden_contract": {
+                    "$ref": "#/$defs/HiddenContract"
+                }
+            }
+        },
+        "Subtype": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "label",
+                "goal",
+                "signals",
+                "expected_output"
+            ],
+            "properties": {
+                "id": {
+                    "$ref": "#/$defs/StableId"
+                },
+                "label": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "goal": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "signals": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                },
+                "expected_output": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                }
+            }
+        },
+        "Dimensions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "principle",
+                "subtypes"
+            ],
+            "properties": {
+                "principle": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "subtypes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/Subtype"
+                    }
+                }
+            }
+        },
+        "PipelineStep": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "step",
+                "name",
+                "actions"
+            ],
+            "properties": {
+                "step": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "name": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "purpose": {
+                    "type": "string"
+                },
+                "pattern": {
+                    "type": "string"
+                },
+                "examples": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "document": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "actions": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                }
+            }
+        },
+        "Methodology": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "best_practice_pipeline"
+            ],
+            "properties": {
+                "best_practice_pipeline": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/PipelineStep"
+                    }
+                }
+            }
+        },
+        "SynonymMap": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "rule",
+                "by_intent",
+                "not_equivalents_note"
+            ],
+            "properties": {
+                "rule": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "not_equivalents_note": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "by_intent": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "mechanical_efficiency",
+                        "precision_tightening",
+                        "measurement",
+                        "scaling",
+                        "single_metric_push",
+                        "psychological_impact"
+                    ],
+                    "properties": {
+                        "mechanical_efficiency": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        },
+                        "precision_tightening": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        },
+                        "measurement": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        },
+                        "scaling": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        },
+                        "single_metric_push": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        },
+                        "psychological_impact": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        }
+                    }
+                }
+            }
+        },
+        "AntiPattern": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "example",
+                "why_fails"
+            ],
+            "properties": {
+                "id": {
+                    "$ref": "#/$defs/StableId"
+                },
+                "example": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "why_fails": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "PromptTemplate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "title",
+                "template"
+            ],
+            "properties": {
+                "id": {
+                    "$ref": "#/$defs/StableId"
+                },
+                "title": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "template": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "QualityGates": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "definition_gate",
+                "behavior_gate",
+                "measurement_gate"
+            ],
+            "properties": {
+                "definition_gate": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "behavior_gate": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "measurement_gate": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "OptionalAdvancedPipeline": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "name",
+                "stages",
+                "note"
+            ],
+            "properties": {
+                "name": {
+                    "$ref": "#/$defs/StableId"
+                },
+                "stages": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                },
+                "note": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "OptionalQuantum": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "concepts",
+                "note"
+            ],
+            "properties": {
+                "concepts": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                },
+                "note": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "OptionalMeaningSuite": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "count",
+                "types",
+                "note"
+            ],
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "types": {
+                    "$ref": "#/$defs/StringArrayNonEmpty"
+                },
+                "note": {
+                    "$ref": "#/$defs/NonEmptyString"
+                }
+            }
+        },
+        "AnalysisExtensions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "optional_advanced_pipeline",
+                "optional_quantum_thought_processing",
+                "optional_meaning_analysis_suite"
+            ],
+            "properties": {
+                "optional_advanced_pipeline": {
+                    "$ref": "#/$defs/OptionalAdvancedPipeline"
+                },
+                "optional_quantum_thought_processing": {
+                    "$ref": "#/$defs/OptionalQuantum"
+                },
+                "optional_meaning_analysis_suite": {
+                    "$ref": "#/$defs/OptionalMeaningSuite"
+                }
+            }
+        },
+        "LexiconEntry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "term",
+                "canonical_term",
+                "process_tag",
+                "type",
+                "operator_class",
+                "scope",
+                "root_meaning",
+                "core_definition",
+                "math_formalization",
+                "what_it_does_in_prompting",
+                "dimensions",
+                "methodology",
+                "synonym_map",
+                "anti_patterns",
+                "prompt_templates",
+                "analysis_extensions",
+                "quality_gates"
+            ],
+            "properties": {
+                "term": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "canonical_term": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "process_tag": {
+                    "$ref": "#/$defs/StableId"
+                },
+                "type": {
+                    "type": "string",
+                    "const": "action_operator"
+                },
+                "operator_class": {
+                    "$ref": "#/$defs/StableId"
+                },
+                "scope": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "applies_to",
+                        "mode"
+                    ],
+                    "properties": {
+                        "applies_to": {
+                            "$ref": "#/$defs/StringArrayNonEmpty"
+                        },
+                        "mode": {
+                            "$ref": "#/$defs/StableId"
+                        }
+                    }
+                },
+                "root_meaning": {
+                    "$ref": "#/$defs/Etymology"
+                },
+                "core_definition": {
+                    "$ref": "#/$defs/NonEmptyString"
+                },
+                "math_formalization": {
+                    "$ref": "#/$defs/MathFormalization"
+                },
+                "what_it_does_in_prompting": {
+                    "$ref": "#/$defs/WhatItDoes"
+                },
+                "dimensions": {
+                    "$ref": "#/$defs/Dimensions"
+                },
+                "methodology": {
+                    "$ref": "#/$defs/Methodology"
+                },
+                "synonym_map": {
+                    "$ref": "#/$defs/SynonymMap"
+                },
+                "anti_patterns": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/AntiPattern"
+                    }
+                },
+                "prompt_templates": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/PromptTemplate"
+                    }
+                },
+                "analysis_extensions": {
+                    "$ref": "#/$defs/AnalysisExtensions"
+                },
+                "quality_gates": {
+                    "$ref": "#/$defs/QualityGates"
+                }
+            }
+        }
+    }
+}

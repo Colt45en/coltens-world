@@ -1,0 +1,90 @@
+{
+  "version": "1.0.0",
+  "description": "Package boundary enforcement rules (DAG: dependencies flow downward only)",
+  "rules": {
+    "@world-engine/protocol": {
+      "allow": [],
+      "comment": "Foundation: no dependencies"
+    },
+    "@world-engine/contracts": {
+      "allow": ["@world-engine/protocol"],
+      "comment": "Contracts layer: only protocol"
+    },
+    "@world-engine/bus": {
+      "allow": ["@world-engine/protocol", "@world-engine/contracts"],
+      "comment": "Bus: protocol + contracts"
+    },
+    "@world-engine/math": {
+      "allow": ["@world-engine/protocol", "@world-engine/contracts"],
+      "comment": "Math utilities: protocol + contracts"
+    },
+    "@world-engine/engine": {
+      "allow": [
+        "@world-engine/protocol",
+        "@world-engine/contracts",
+        "@world-engine/bus",
+        "@world-engine/math"
+      ],
+      "comment": "Engine runtime: core layers only"
+    },
+    "@world-engine/assets": {
+      "allow": ["@world-engine/protocol", "@world-engine/contracts", "@world-engine/math"],
+      "comment": "Assets: base layers"
+    },
+    "@world-engine/graphics": {
+      "allow": [
+        "@world-engine/protocol",
+        "@world-engine/contracts",
+        "@world-engine/math",
+        "@world-engine/assets"
+      ],
+      "comment": "Graphics: base + assets"
+    },
+    "@world-engine/codex": {
+      "allow": ["@world-engine/protocol", "@world-engine/contracts", "@world-engine/math"],
+      "comment": "Codex: base layers"
+    },
+    "@world-engine/lexicon": {
+      "allow": [
+        "@world-engine/protocol",
+        "@world-engine/contracts",
+        "@world-engine/math",
+        "@world-engine/bus",
+        "@world-engine/engine",
+        "@world-engine/codex"
+      ],
+      "comment": "Lexicon: can use engine + codex"
+    },
+    "@world-engine/brain": {
+      "allow": [
+        "@world-engine/protocol",
+        "@world-engine/contracts",
+        "@world-engine/bus",
+        "@world-engine/math",
+        "@world-engine/engine",
+        "@world-engine/lexicon",
+        "@world-engine/codex"
+      ],
+      "comment": "Brain: top-level orchestration"
+    },
+    "@world-engine/nexus-pipeline": {
+      "allow": [
+        "@world-engine/protocol",
+        "@world-engine/contracts",
+        "@world-engine/bus",
+        "@world-engine/math",
+        "@world-engine/engine",
+        "@world-engine/assets",
+        "@world-engine/graphics",
+        "@world-engine/lexicon",
+        "@world-engine/brain",
+        "@world-engine/codex"
+      ],
+      "comment": "Pipeline: can use all"
+    },
+    "@world-engine/tooling": {
+      "allow": ["*"],
+      "comment": "Tooling: unrestricted"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autonomy-loop"
+version = "0.1.0"
+description = "Multi-agent autonomy loop: Evidence → Lexicon/Rune → Gates → Decisions → Weekly Reports"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "World Engine Authors"}]
+license = {text = "MIT"}
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "pydantic>=2.6",
+  "jsonschema>=4.21",
+  "typer>=0.12",
+]
+
+[project.scripts]
+autonomy-loop = "autonomy_loop.cli:app"
+
+[tool.setuptools]
+packages = ["autonomy_loop"]

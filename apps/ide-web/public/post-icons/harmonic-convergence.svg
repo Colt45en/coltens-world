@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Harmonic Convergence">
+  <title>Harmonic Convergence</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(124 35% 25.92077645426616%)"/>
+      <stop offset="1" stop-color="hsl(142 40% 17.424939392134547%)"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="0.58"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="96" height="96" rx="21" fill="url(#bg)"/>
+
+  <!-- grain -->
+  <g><circle cx="73.48" cy="85.63" r="0.79" fill="white" opacity="0.246"/><circle cx="37.07" cy="25.54" r="0.63" fill="white" opacity="0.258"/><circle cx="0.32" cy="38.60" r="0.91" fill="white" opacity="0.234"/><circle cx="21.27" cy="89.24" r="1.11" fill="white" opacity="0.172"/><circle cx="62.02" cy="41.06" r="1.43" fill="white" opacity="0.189"/><circle cx="65.44" cy="33.56" r="1.18" fill="white" opacity="0.237"/><circle cx="21.65" cy="63.09" r="1.46" fill="white" opacity="0.232"/><circle cx="8.79" cy="13.52" r="1.46" fill="white" opacity="0.190"/><circle cx="39.18" cy="90.55" r="1.11" fill="white" opacity="0.166"/><circle cx="66.72" cy="64.81" r="0.62" fill="white" opacity="0.241"/><circle cx="71.99" cy="29.51" r="0.84" fill="white" opacity="0.214"/><circle cx="12.55" cy="40.14" r="1.27" fill="white" opacity="0.226"/><circle cx="57.07" cy="2.12" r="0.65" fill="white" opacity="0.179"/><circle cx="1.86" cy="80.25" r="1.47" fill="white" opacity="0.111"/><circle cx="56.41" cy="74.26" r="0.81" fill="white" opacity="0.136"/><circle cx="29.71" cy="18.32" r="0.65" fill="white" opacity="0.200"/><circle cx="15.34" cy="32.70" r="1.38" fill="white" opacity="0.179"/><circle cx="12.79" cy="11.86" r="0.95" fill="white" opacity="0.140"/><circle cx="84.77" cy="36.94" r="0.71" fill="white" opacity="0.211"/><circle cx="57.68" cy="42.70" r="1.23" fill="white" opacity="0.172"/><circle cx="38.37" cy="74.77" r="0.99" fill="white" opacity="0.231"/><circle cx="95.88" cy="10.00" r="1.35" fill="white" opacity="0.159"/><circle cx="14.15" cy="6.69" r="1.01" fill="white" opacity="0.245"/><circle cx="39.32" cy="2.55" r="0.77" fill="white" opacity="0.135"/><circle cx="66.83" cy="20.97" r="1.09" fill="white" opacity="0.143"/><circle cx="44.11" cy="27.73" r="0.61" fill="white" opacity="0.237"/><circle cx="41.84" cy="10.23" r="0.90" fill="white" opacity="0.122"/><circle cx="42.44" cy="89.24" r="1.39" fill="white" opacity="0.214"/><circle cx="36.11" cy="81.22" r="1.26" fill="white" opacity="0.243"/><circle cx="46.51" cy="16.68" r="1.37" fill="white" opacity="0.146"/><circle cx="64.88" cy="92.70" r="0.99" fill="white" opacity="0.248"/><circle cx="54.47" cy="60.86" r="1.40" fill="white" opacity="0.131"/><circle cx="84.26" cy="74.82" r="1.24" fill="white" opacity="0.190"/><circle cx="66.56" cy="2.62" r="1.03" fill="white" opacity="0.167"/><circle cx="92.87" cy="88.98" r="1.18" fill="white" opacity="0.121"/><circle cx="74.63" cy="92.34" r="0.76" fill="white" opacity="0.251"/></g>
+
+  <!-- glyph -->
+  <g>
+    <path d="M 48.00 14.02 L 53.18 19.20 L 48.00 24.38 L 42.82 19.20 Z" fill="hsl(212 70% 55%)" opacity="0.92"/>
+    <path d="M 19.20 28.42 L 24.38 33.60 L 19.20 38.78 L 14.02 33.60 Z" fill="hsl(187 70% 60%)" opacity="0.92"/>
+    <path d="M 76.80 28.42 L 81.98 33.60 L 76.80 38.78 L 71.62 33.60 Z" fill="hsl(187 70% 60%)" opacity="0.92"/>
+    <circle cx="19.20" cy="48.00" r="4.03" fill="hsl(212 70% 55%)" opacity="0.92"/>
+    <circle cx="134.40" cy="48.00" r="4.03" fill="hsl(212 70% 55%)" opacity="0.92"/>
+    <path d="M 33.60 42.82 L 38.78 48.00 L 33.60 53.18 L 28.42 48.00 Z" fill="hsl(187 70% 60%)" opacity="0.92"/>
+    <path d="M 62.40 42.82 L 67.58 48.00 L 62.40 53.18 L 57.22 48.00 Z" fill="hsl(187 70% 60%)" opacity="0.92"/>
+    <rect x="28.70" y="71.90" width="9.79" height="9.79" rx="3.17" fill="hsl(304 30% 92%)" opacity="0.92"/>
+    <rect x="57.50" y="71.90" width="9.79" height="9.79" rx="31.97" fill="hsl(304 30% 92%)" opacity="0.92"/>
+  </g>
+
+  <!-- overlay ring -->
+  <circle cx="50.53" cy="53.93" r="26.42" fill="none" stroke="hsl(187 70% 60%)" stroke-width="4.67" opacity="0.70"/>
+
+  <!-- overlay triangle -->
+  <path d="M 69.03 20.58
+           L 89.78 24.31
+           L 72.77 41.32
+           Z"
+        fill="hsl(304 30% 92%)" opacity="0.78" filter="url(#soft)"/>
+
+  <!-- rounded mask edge polish -->
+  <rect x="1.92" y="1.92"
+        width="92.16" height="92.16"
+        rx="18.06" fill="none"
+        stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+</svg>

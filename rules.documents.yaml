@@ -1,0 +1,67 @@
+# Example: Documents Organizer
+name: "Documents Organization"
+description: "Organize documents by type and project"
+target_folder: "C:\\Users\\colte\\Documents"
+
+rules:
+  # Move project files to Projects folder
+  - pattern: "*{project,Project}*"
+    condition:
+      file_type: "document"
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Projects"
+
+  # Organize by file type
+  - pattern: "*.{doc,docx}"
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Word"
+
+  - pattern: "*.{xls,xlsx,csv}"
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Spreadsheets"
+
+  - pattern: "*.{ppt,pptx}"
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Presentations"
+
+  - pattern: "*.{pdf}"
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\PDFs"
+
+  # Archive old documents
+  - pattern: "*.{doc,docx,pdf}"
+    condition:
+      min_age_days: 365
+      max_age_days: 730
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Archive\\Old"
+
+  # Move very old documents to deep archive
+  - pattern: "*.{doc,docx,pdf}"
+    condition:
+      min_age_days: 730
+    action: "move"
+    destination: "C:\\Users\\colte\\Documents\\Archive\\Deep"
+
+post_actions:
+  - type: "create_note"
+    title: "Documents organized"
+    content: "Organized {total_files} documents. Created {new_folders} new folders."
+
+  - type: "create_index"
+    path: "C:\\Users\\colte\\Documents\\INDEX.md"
+    content: |
+      # Documents Index
+
+      Last organized: {timestamp}
+
+      ## Summary
+      - Total documents: {total_files}
+      - New folders: {new_folders}
+      - Moved files: {moved_count}
+
+      ## Structure
+      [FOLDER_TREE]
+
+      ## Recent Files
+      { recent_files }

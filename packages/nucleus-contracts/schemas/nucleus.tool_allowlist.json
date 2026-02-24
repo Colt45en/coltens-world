@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ToolAllowlist",
+  "type": "object",
+  "required": ["version", "tools"],
+  "properties": {
+    "version": { "const": "nucleus.tool_allowlist.v1.1" },
+
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["tool_id", "title", "description", "command", "args_template", "allowed_vars"],
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 80,
+            "pattern": "^[a-z][a-z0-9_.-]+$"
+          },
+          "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+
+          "command": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^(?!.*\\b(bash|sh|zsh|cmd|powershell|pwsh)\\b)[A-Za-z0-9._/\\\\-]+$"
+          },
+
+          "args_template": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 400,
+              "pattern": "^(?!.*[;&|><`\\n\\r]).*$"
+            }
+          },
+
+          "allowed_vars": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "additionalProperties": {
+              "enum": ["string", "number", "boolean", "string[]"]
+            }
+          },
+
+          "cwd": {
+            "type": "string",
+            "maxLength": 300,
+            "pattern": "^(?!.*\\.{2}).*$"
+          },
+
+          "timeout_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 120000
+          },
+
+          "env_allowlist": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "pattern": "^[A-Z_][A-Z0-9_]*$"
+            }
+          },
+
+          "requires_approval": {
+            "type": "string",
+            "enum": ["never", "always", "high_risk_only"],
+            "default": "high_risk_only"
+          },
+
+          "risk_level": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low"
+          },
+
+          "output_capture": {
+            "type": "string",
+            "enum": ["stdout", "stdout+stderr", "none"],
+            "default": "stdout+stderr"
+          },
+
+          "max_output_kb": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1024,
+            "default": 256
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://world-engine.local/schemas/file_ruleset.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "target_folder", "rules"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable name for this rule set"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this rule set does"
+    },
+    "target_folder": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Root folder to organize (absolute path)"
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/rule" }
+    },
+    "post_actions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/post_action" }
+    }
+  },
+  "definitions": {
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_age_days": { "type": "integer", "minimum": 0 },
+        "max_age_days": { "type": "integer", "minimum": 0 },
+        "min_size_kb": { "type": "integer", "minimum": 0 },
+        "contains_text": { "type": "string" },
+        "not_contains_text": { "type": "string" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "action"],
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "minLength": 1,
+          "description": "File pattern to match (glob style: *.pdf, project-*.docx, etc.)"
+        },
+        "condition": { "$ref": "#/definitions/condition" },
+        "action": {
+          "type": "string",
+          "enum": ["move", "copy", "delete", "rename"],
+          "description": "What to do with matching files"
+        },
+        "destination": {
+          "type": "string",
+          "description": "Where to move/copy files (for move/copy actions)"
+        },
+        "template": {
+          "type": "string",
+          "description": "Rename template (for rename action). Use {name}, {ext}, {date}, {size}"
+        },
+        "create_folders": {
+          "type": "boolean",
+          "default": true,
+          "description": "Create destination folders if they don't exist"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "action": { "const": "move" } } },
+          "then": { "required": ["destination"] }
+        },
+        {
+          "if": { "properties": { "action": { "const": "copy" } } },
+          "then": { "required": ["destination"] }
+        },
+        {
+          "if": { "properties": { "action": { "const": "rename" } } },
+          "then": { "required": ["template"] }
+        }
+      ]
+    },
+    "post_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["create_index", "create_note", "run_command"]
+        },
+        "path": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "command": { "type": "string" }
+      },
+      "oneOf": [
+        {
+          "properties": { "type": { "const": "create_index" } },
+          "required": ["path", "content"]
+        },
+        {
+          "properties": { "type": { "const": "create_note" } },
+          "required": ["path", "title", "content"]
+        },
+        {
+          "properties": { "type": { "const": "run_command" } },
+          "required": ["command"]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Quantum Superposition">
+  <title>Quantum Superposition</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(62 35% 25.743467406835407%)"/>
+      <stop offset="1" stop-color="hsl(80 40% 22.820050227455795%)"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="0.58"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="96" height="96" rx="21" fill="url(#bg)"/>
+
+  <!-- grain -->
+  <g><circle cx="18.01" cy="26.91" r="1.33" fill="white" opacity="0.147"/><circle cx="31.14" cy="8.99" r="1.09" fill="white" opacity="0.144"/><circle cx="31.39" cy="35.03" r="1.48" fill="white" opacity="0.146"/><circle cx="9.85" cy="66.63" r="1.00" fill="white" opacity="0.182"/><circle cx="69.59" cy="79.30" r="1.03" fill="white" opacity="0.167"/><circle cx="46.98" cy="33.94" r="0.82" fill="white" opacity="0.230"/><circle cx="57.71" cy="69.99" r="1.05" fill="white" opacity="0.197"/><circle cx="38.20" cy="41.64" r="1.22" fill="white" opacity="0.224"/><circle cx="40.62" cy="95.64" r="0.69" fill="white" opacity="0.152"/><circle cx="36.87" cy="28.00" r="0.78" fill="white" opacity="0.154"/><circle cx="9.74" cy="55.92" r="1.06" fill="white" opacity="0.183"/><circle cx="83.54" cy="6.46" r="0.68" fill="white" opacity="0.139"/><circle cx="14.09" cy="38.67" r="1.13" fill="white" opacity="0.150"/><circle cx="63.89" cy="85.86" r="1.40" fill="white" opacity="0.125"/><circle cx="8.78" cy="93.57" r="1.38" fill="white" opacity="0.209"/><circle cx="0.36" cy="21.05" r="0.63" fill="white" opacity="0.228"/><circle cx="63.13" cy="74.96" r="1.18" fill="white" opacity="0.242"/><circle cx="85.06" cy="37.61" r="1.23" fill="white" opacity="0.158"/><circle cx="86.56" cy="77.00" r="1.37" fill="white" opacity="0.250"/><circle cx="66.98" cy="25.48" r="1.24" fill="white" opacity="0.240"/><circle cx="15.71" cy="78.13" r="1.36" fill="white" opacity="0.134"/><circle cx="44.56" cy="14.68" r="0.69" fill="white" opacity="0.160"/><circle cx="11.06" cy="91.01" r="0.72" fill="white" opacity="0.158"/><circle cx="5.85" cy="74.55" r="1.03" fill="white" opacity="0.139"/><circle cx="34.52" cy="17.65" r="0.88" fill="white" opacity="0.253"/><circle cx="58.72" cy="8.21" r="1.31" fill="white" opacity="0.206"/><circle cx="77.87" cy="7.76" r="1.43" fill="white" opacity="0.209"/><circle cx="22.09" cy="47.74" r="0.61" fill="white" opacity="0.123"/><circle cx="62.49" cy="53.47" r="0.80" fill="white" opacity="0.157"/><circle cx="65.63" cy="68.93" r="0.61" fill="white" opacity="0.228"/><circle cx="17.11" cy="20.00" r="0.92" fill="white" opacity="0.162"/><circle cx="17.78" cy="44.52" r="1.21" fill="white" opacity="0.183"/></g>
+
+  <!-- glyph -->
+  <g>
+    <rect x="43.10" y="14.30" width="9.79" height="9.79" rx="3.17" fill="hsl(242 30% 92%)" opacity="0.92"/>
+    <path d="M 48.00 28.42 L 53.18 33.60 L 48.00 38.78 L 42.82 33.60 Z" fill="hsl(214 70% 60%)" opacity="0.92"/>
+    <circle cx="33.60" cy="48.00" r="4.03" fill="hsl(214 70% 60%)" opacity="0.92"/>
+    <circle cx="91.20" cy="48.00" r="4.03" fill="hsl(214 70% 60%)" opacity="0.92"/>
+    <path d="M 19.20 57.22 L 24.38 62.40 L 19.20 67.58 L 14.02 62.40 Z" fill="hsl(242 30% 92%)" opacity="0.92"/>
+    <path d="M 76.80 57.22 L 81.98 62.40 L 76.80 67.58 L 71.62 62.40 Z" fill="hsl(242 30% 92%)" opacity="0.92"/>
+    <rect x="28.70" y="57.50" width="9.79" height="9.79" rx="3.17" fill="hsl(242 30% 92%)" opacity="0.92"/>
+    <rect x="57.50" y="57.50" width="9.79" height="9.79" rx="31.97" fill="hsl(242 30% 92%)" opacity="0.92"/>
+  </g>
+
+  <!-- overlay ring -->
+  <circle cx="49.94" cy="47.75" r="27.28" fill="none" stroke="hsl(214 70% 60%)" stroke-width="4.91" opacity="0.70"/>
+
+  <!-- overlay triangle -->
+  <path d="M 65.40 35.39
+           L 84.63 38.86
+           L 68.86 54.63
+           Z"
+        fill="hsl(242 30% 92%)" opacity="0.78" filter="url(#soft)"/>
+
+  <!-- rounded mask edge polish -->
+  <rect x="1.92" y="1.92"
+        width="92.16" height="92.16"
+        rx="18.06" fill="none"
+        stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+</svg>

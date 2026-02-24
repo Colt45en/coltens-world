@@ -1,0 +1,1 @@
+{"byEventType":{"cognition.status":23,"cognition.tool_result":6,"cognition.world_denied":5,"nucleus.brain_run":5,"nucleus.tick":23,"nucleus.tool_call":6},"generatedAt":"2026-02-16T23:44:59.756Z","sources":{"eventLog":"runtime\\events.v1.ndjson","runtimeDb":"runtime\\nexus.db"},"totals":{"cycles":5,"events":68,"offenders":0,"overloadSignals":0,"traces":3},"version":"1.0"}

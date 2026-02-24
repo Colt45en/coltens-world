@@ -1,0 +1,36 @@
+# Normalize line endings for everything
+* text=auto eol=lf
+
+# --- NDJSON stabilization ---
+*.ndjson text eol=lf
+.brain/memory/knowledge.ndjson diff=ndjson
+.brain/review/review.queue.ndjson merge=ours
+.brain/review/review.decisions.ndjson merge=ours
+
+# Treat pipeline output as generated + keep local on merge
+pipeline_results/** merge=ours -text linguist-generated
+
+# --- Windows scripts ---
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# --- Treat build output + maps as generated ---
+**/dist/** linguist-generated
+*.map linguist-generated
+
+# --- Binary files ---
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.tar.gz binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
+

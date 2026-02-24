@@ -1,0 +1,69 @@
+name: Deterministic Replay Verification
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/nucleus/src/**'
+      - 'apps/agenthub/src/**'
+      - 'packages/ledger-contracts/**'
+      - 'scripts/replay/**'
+  push:
+    branches: [main]
+
+jobs:
+  replay-verification:
+    name: Verify Deterministic Replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm run build
+
+      - name: Run replay verification tests
+        run: pnpm run test:replay
+        env:
+          NODE_ENV: test
+
+      - name: Check for replay divergences
+        if: failure()
+        run: |
+          echo "::error::Deterministic replay verification failed!"
+          echo "The ledger output diverged between runs."
+          echo "This indicates a non-deterministic function in the tool execution."
+          echo "See test output above for details."
+          exit 1
+
+      - name: Upload replay artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: replay-results
+          path: |
+            test-artifacts/
+            test-ledger.db
+          retention-days: 7
+
+      - name: Report success
+        if: success()
+        run: |
+          echo "✓ Deterministic replay verification passed"
+          echo "All tool executions are reproducible and deterministic"

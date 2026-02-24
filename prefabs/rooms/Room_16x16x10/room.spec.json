@@ -1,0 +1,45 @@
+{
+  "name": "Room_16x16x10",
+  "units": {
+    "ldu": "integer",
+    "meters_per_ldu": 0.0004
+  },
+  "constants": {
+    "ldu_per_stud": 20,
+    "ldu_per_plate": 8,
+    "ldu_per_brick": 24
+  },
+  "room": {
+    "studsX": 16,
+    "studsZ": 16,
+    "bricksH": 10,
+    "wallThicknessStuds": 1,
+    "floor": {
+      "sizeLDU": {
+        "x": 320,
+        "z": 320,
+        "thickness": 8
+      },
+      "sizeM": {
+        "x": 0.128,
+        "z": 0.128,
+        "thickness": 0.0032
+      }
+    },
+    "walls": {
+      "heightLDU": 240,
+      "heightM": 0.096,
+      "thicknessLDU": 20,
+      "thicknessM": 0.008
+    },
+    "origin": {
+      "note": "Centered on XZ; floor at Y=0"
+    }
+  },
+  "snap": {
+    "studPitchLDU": 20,
+    "studPitchM": 0.008,
+    "halfStudLDU": 10,
+    "halfPlateLDU": 4
+  }
+}

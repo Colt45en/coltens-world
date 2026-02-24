@@ -1,0 +1,58 @@
+{
+  "version": "fs-rules.v1",
+  "rules": [
+    {
+      "name": "PDFs \u2192 Documents/PDF",
+      "priority": 10,
+      "when": {
+        "glob": "**/*.pdf",
+        "except_glob": [
+          ".git/**",
+          "node_modules/**"
+        ]
+      },
+      "then": {
+        "move_to": "_sorted/PDF",
+        "rename": "{stem}__{date}{ext}",
+        "skip_if_exists": true
+      }
+    },
+    {
+      "name": "Images \u2192 Documents/Images",
+      "priority": 20,
+      "when": {
+        "ext_in": [
+          "png",
+          "jpg",
+          "jpeg",
+          "gif",
+          "webp"
+        ],
+        "except_glob": [
+          ".git/**",
+          "node_modules/**"
+        ]
+      },
+      "then": {
+        "move_to": "_sorted/Images",
+        "skip_if_exists": true
+      }
+    },
+    {
+      "name": "Text logs mentioning 'error' \u2192 Documents/Logs",
+      "priority": 30,
+      "when": {
+        "ext_in": [
+          "log",
+          "txt"
+        ],
+        "contains_text": "error"
+      },
+      "then": {
+        "copy_to": "_sorted/Logs",
+        "rename": "{stem}__{date}{ext}",
+        "skip_if_exists": true
+      }
+    }
+  ]
+}

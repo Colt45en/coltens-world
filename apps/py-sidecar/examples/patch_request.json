@@ -1,0 +1,14 @@
+{
+    "file_path": "apps/nucleus/src/routes/example.ts",
+    "instruction": "Add a new function `fetchAndValidateUser` that takes a userId (string) and returns a Promise<User>. Use fetch to get from /api/users/:id. Include error handling for 404 and network errors.",
+    "current_content": "import { Request, Response } from 'express';\n\nexport async function getUserById(req: Request, res: Response) {\n  const userId = req.params.id;\n  // TODO: implement\n  res.json({ error: 'not implemented' });\n}\n",
+    "context": {
+        "language": "typescript",
+        "constraint": "Use async/await syntax. Do not use external HTTP libraries besides native fetch.",
+        "related_files": [
+            "apps/nucleus/src/types/User.ts"
+        ]
+    },
+    "model": "gpt-4-turbo",
+    "temperature": 0.3
+}

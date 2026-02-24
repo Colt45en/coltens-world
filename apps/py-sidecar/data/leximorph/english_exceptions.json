@@ -1,0 +1,37 @@
+{
+  "happiness": {
+    "prefix": null,
+    "root": "happy",
+    "suffix": "-ness"
+  },
+  "running": {
+    "prefix": null,
+    "root": "run",
+    "suffix": "-ing"
+  },
+  "unbelievable": {
+    "prefix": "un-",
+    "root": "believe",
+    "suffix": "-able"
+  },
+  "unlockable": {
+    "prefix": "un-",
+    "root": "lock",
+    "suffix": "-able",
+    "review_required": true,
+    "candidates": [
+      {
+        "prefix": "un-",
+        "root": "lock",
+        "suffix": "-able",
+        "note": "can be unlocked"
+      },
+      {
+        "prefix": null,
+        "root": "unlock",
+        "suffix": "-able",
+        "note": "able to unlock"
+      }
+    ]
+  }
+}

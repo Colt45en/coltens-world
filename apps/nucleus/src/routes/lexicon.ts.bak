@@ -1,0 +1,10 @@
+/**
+ * BACKUP OF LEXICON ROUTES - Disabled during build fixes
+ *
+ * This file was temporarily disabled because it requires:
+ * - better-sqlite3 (not a dependency)
+ * - fastify (not a dependency)
+ * - And is not currently imported or used in index.ts
+ *
+ * To restore: rename lexicon.ts.bak to lexicon.ts and install dependencies
+ */

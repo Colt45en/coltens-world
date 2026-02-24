@@ -1,0 +1,76 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [
+    "turbo.json",
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig*.json",
+    ".npmrc",
+    ".env",
+    ".env.*",
+    "pyproject.toml",
+    "uv.lock",
+    "requirements*.txt"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "build/**",
+        "storybook-static/**",
+        "*.tsbuildinfo"
+      ]
+    },
+
+    "test": {
+      "dependsOn": ["build", "^build"],
+      "outputs": ["coverage/**"]
+    },
+
+    "lint": {
+      "outputs": []
+    },
+
+    "type-check": {
+      "dependsOn": ["^type-check"],
+      "outputs": []
+    },
+
+    "validate": {
+      "dependsOn": ["type-check", "test", "lint", "py:check", "py:test"],
+      "outputs": []
+    },
+
+    "brain": {
+      "cache": false,
+      "outputs": [".brain/indexes/**"]
+    },
+
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+
+    "clean": {
+      "cache": false,
+      "outputs": []
+    },
+
+    "py:check": {
+      "dependsOn": ["^py:check"],
+      "outputs": []
+    },
+
+    "py:test": {
+      "dependsOn": ["^py:test"],
+      "outputs": ["**/.pytest_cache/**", "**/coverage/**"]
+    },
+
+    "desktop-host": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

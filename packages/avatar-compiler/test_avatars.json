@@ -1,0 +1,64 @@
+[
+  {
+    "avatar_id": "alice_2024",
+    "morphs": { "smile": 0.5, "brow_raise": 0.2, "eye_open": 0.8 },
+    "materials": {
+      "skinColor": "#d8b59a",
+      "hairColor": "#8b4513",
+      "roughness": 0.85,
+      "metalness": 0.0
+    },
+    "textures": {
+      "skinMap": "/skin.jpg",
+      "clothingMap": "/clothing.jpg"
+    },
+    "postfx": {
+      "bloom": 0.3,
+      "ao": 0.5,
+      "smaa": true
+    },
+    "quality": {
+      "shadows": true,
+      "shadowMapSize": 1024
+    }
+  },
+  {
+    "avatar_id": "bob_2024",
+    "morphs": { "smile": 0.8, "wink": 0.5, "frown": 0.1 },
+    "materials": {
+      "skinColor": "#c8a899",
+      "hairColor": "#1a1a1a",
+      "roughness": 0.8,
+      "metalness": 0.05
+    },
+    "textures": {},
+    "postfx": {
+      "bloom": 0.25,
+      "ao": 0.45,
+      "smaa": true
+    },
+    "quality": {
+      "shadows": false,
+      "shadowMapSize": 2048
+    }
+  },
+  {
+    "avatar_id": "charlie_2024",
+    "morphs": { "smile": 0.2, "surprise": 0.7 },
+    "materials": {
+      "skinColor": "#e0c8a8",
+      "hairColor": "#ff6b35",
+      "roughness": 0.9,
+      "metalness": 0.0
+    },
+    "postfx": {
+      "bloom": 0.4,
+      "ao": 0.6,
+      "smaa": false
+    },
+    "quality": {
+      "shadows": true,
+      "shadowMapSize": 1024
+    }
+  }
+]
