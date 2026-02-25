@@ -1,0 +1,166 @@
+name: CI (PR Gate)
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run format:check
+
+  typecheck:
+    name: TypeScript Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:unit
+      - uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unit
+          name: codecov-unit
+
+  boundary-check:
+    name: Architecture Boundary Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run boundary:check
+      - name: 'Boundary Violation Found'
+        if: failure()
+        run: echo "❌ Import boundaries violated. Run 'pnpm run boundary:check' locally to fix." && exit 1
+
+  codegen-check:
+    name: Codegen Drift Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run codegen
+      - name: Check for diffs
+        run: git diff --exit-code || (echo "❌ Codegen artifacts are out of sync. Run 'pnpm run codegen' locally." && exit 1)
+
+  repo-doctor:
+    name: Repository Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: node scripts/repo-doctor.mjs
+        continue-on-error: true
+      - name: Report Issues
+        if: failure()
+        run: echo "⚠️ Repository maintenance issues detected. See logs above." && exit 0
+
+  build-check:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - name: Verify no artifacts in git
+        run: |
+          if [ -d "dist" ] && [ "$(find dist -type f 2>/dev/null | wc -l)" -gt 0 ]; then
+            echo "❌ dist/ folder has committed files (should be gitignored)"
+            exit 1
+          fi
+          echo "✅ No committed artifacts detected"
+
+  all-checks:
+    name: All Checks Passed
+    needs: [lint, typecheck, unit-tests, boundary-check, codegen-check, repo-doctor, build-check]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide result
+        run: |
+          if [ "${{ needs.lint.result }}" != "success" ] || \
+             [ "${{ needs.typecheck.result }}" != "success" ] || \
+             [ "${{ needs.unit-tests.result }}" != "success" ] || \
+             [ "${{ needs.boundary-check.result }}" != "success" ] || \
+             [ "${{ needs.codegen-check.result }}" != "success" ] || \
+             [ "${{ needs.build-check.result }}" != "success" ]; then
+            echo "❌ CI pipeline failed"
+            exit 1
+          fi
+          echo "✅ All checks passed"

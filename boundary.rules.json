@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Coltens-World: Architecture Boundary Rules",
+  "description": "Enforce strict import boundaries to maintain clean monorepo architecture",
+  "version": "1.0.0",
+
+  "rules": [
+    {
+      "name": "no-app-to-app-imports",
+      "description": "Applications cannot import from other applications",
+      "severity": "error",
+      "fromPattern": "^apps/[^/]+/src",
+      "toPattern": "^apps/[^/]+/src",
+      "allowed": false,
+      "rationale": "Apps should be independent. Share code via packages/ instead."
+    },
+
+    {
+      "name": "apps-can-import-packages",
+      "description": "Applications can import from packages (public exports only)",
+      "severity": "error",
+      "fromPattern": "^apps/",
+      "toPattern": "^packages/.*/src",
+      "allowed": true,
+      "rationale": "Apps consume shared libraries. Use public index.ts exports."
+    },
+
+    {
+      "name": "no-dist-imports",
+      "description": "Never import from dist/ folder directly",
+      "severity": "error",
+      "fromPattern": ".*",
+      "toPattern": ".*/dist",
+      "allowed": false,
+      "rationale": "Import source instead. Build system handles compilation."
+    },
+
+    {
+      "name": "no-deep-package-imports",
+      "description": "Don't import from another package's internals",
+      "severity": "error",
+      "fromPattern": "^packages/[^/]+/src",
+      "toPattern": "^packages/[^/]+/src",
+      "allowed": false,
+      "details": "Only import the public index.ts",
+      "rationale": "Packages expose APIs via src/index.ts. Use those."
+    },
+
+    {
+      "name": "contracts-first",
+      "description": "Contracts (schemas) must be generated before runtime imports",
+      "severity": "error",
+      "fromPattern": "^apps/",
+      "toPattern": "^packages/contracts",
+      "allowed": true,
+      "rationale": "Contracts are source of truth. Codegen happens before runtime."
+    },
+
+    {
+      "name": "protocol-is-foundational",
+      "description": "protocol/ can be imported by everything; nothing imports deeper",
+      "severity": "error",
+      "fromPattern": ".*",
+      "toPattern": "^packages/protocol",
+      "allowed": true,
+      "rationale": "Protocol is foundation. Build order: protocol → engine → everything else."
+    },
+
+    {
+      "name": "no-cycle-engine-to-apps",
+      "description": "Engine cannot import from apps",
+      "severity": "error",
+      "fromPattern": "^packages/engine",
+      "toPattern": "^apps/",
+      "allowed": false,
+      "rationale": "Apps depend on engine. Reverse dependency creates cycles."
+    },
+
+    {
+      "name": "ledger-is-self-contained",
+      "description": "ledger-contracts only imports from protocol and contracts",
+      "severity": "error",
+      "fromPattern": "^packages/ledger-contracts",
+      "toPattern": "^packages/(?!protocol|contracts)",
+      "allowed": false,
+      "rationale": "Ledger contracts are foundational. Keep dependency tree shallow."
+    },
+
+    {
+      "name": "python-sidecar-isolation",
+      "description": "Python sidecar should only call HTTP endpoints, not import TS packages",
+      "severity": "warning",
+      "fromPattern": "^apps/py-sidecar",
+      "toPattern": "^packages/.*(?<!contracts)",
+      "allowed": false,
+      "rationale": "Python and TS are separate runtimes. Communicate via HTTP/gRPC."
+    }
+  ],
+
+  "exceptions": [
+    {
+      "fromFile": "apps/nucleus/src/index.ts",
+      "toFile": "packages/engine/src",
+      "reason": "Nucleus is the app wrapper for engine. Special case allowed."
+    },
+    {
+      "fromFile": "tooling/**",
+      "toFile": "packages/**",
+      "reason": "Build tooling needs access to all packages for codegen."
+    },
+    {
+      "fromFile": "packages/automation-index/src",
+      "toFile": "packages/*/src",
+      "reason": "automation-index is a registry of all modules. Needs visibility."
+    }
+  ],
+
+  "buildOrder": [
+    "packages/protocol",
+    "packages/contracts",
+    "packages/ledger-contracts",
+    "packages/engine",
+    "packages/bus",
+    "packages/automation-index",
+    "apps/*",
+    "tooling/*"
+  ],
+
+  "allowedDependencyLayers": {
+    "protocol": [],
+    "contracts": ["protocol"],
+    "engine": ["protocol", "contracts", "ledger-contracts"],
+    "bus": ["protocol", "contracts"],
+    "apps": ["protocol", "contracts", "engine", "bus", "ledger-contracts", "automation-index"],
+    "tooling": ["protocol", "contracts", "engine"],
+    "sidecars": []
+  }
+}

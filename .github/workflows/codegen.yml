@@ -1,0 +1,60 @@
+name: Codegen
+
+on:
+  pull_request:
+    paths:
+      - 'packages/contracts/**'
+      - 'packages/protocol/**'
+      - '.github/workflows/codegen.yml'
+  workflow_dispatch:
+
+jobs:
+  codegen:
+    name: Generate & Check Drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run codegen
+
+      - name: Check for drift
+        run: |
+          if git diff --quiet; then
+            echo "✅ Codegen up to date"
+            exit 0
+          else
+            echo "❌ Codegen artifacts are out of sync"
+            git diff --stat
+            exit 1
+          fi
+
+      - name: Create PR comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **Codegen Drift Detected**\n\nRun `pnpm run codegen` locally and commit the changes.\n\n```bash\npnpm run codegen\ngit add packages/contracts\ngit commit -m "chore: regenerate types"\n```'
+            })
+
+      - name: Push changes if auto-fix enabled
+        if: failure() && vars.AUTO_FIX_CODEGEN == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add packages/contracts
+          git commit -m "chore(ci): regenerate types"
+          git push
