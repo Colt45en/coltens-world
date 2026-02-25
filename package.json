@@ -1,0 +1,17 @@
+{
+  "name": "coltens-world",
+  "version": "0.1.0",
+  "description": "Deterministic contract-first message-driven world engine monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --testPathPattern packages"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}

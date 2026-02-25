@@ -1,0 +1,10 @@
+{
+  "name": "@coltens/brain-nucleus",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.js",
+  "exports": { ".": "./index.js" },
+  "dependencies": {
+    "@coltens/bus": "0.1.0"
+  }
+}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coltens World Engine</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #0d0d1a; color: #cdd6f4; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    /* ── Layout ───────────────────────────────────────────────────────────── */
+    .app { display: flex; flex-direction: column; height: 100vh; }
+
+    .header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px; background: #11111b;
+      border-bottom: 1px solid #313244;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; color: #89b4fa; white-space: nowrap; }
+    .header .subtitle { font-size: 11px; color: #6c7086; }
+
+    /* ── Tabs ─────────────────────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex; gap: 2px; padding: 4px 12px 0;
+      background: #11111b; border-bottom: 1px solid #313244;
+    }
+    .tab-btn {
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: #6c7086; padding: 6px 14px; cursor: pointer; font-size: 12px;
+      transition: color 0.15s;
+    }
+    .tab-btn:hover  { color: #cdd6f4; }
+    .tab-btn.active { color: #89b4fa; border-bottom-color: #89b4fa; }
+
+    .tab-panels { flex: 1; overflow: hidden; }
+    .tab-panel  { display: none; height: 100%; padding: 10px; overflow: auto; }
+    .tab-panel.active { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── Shared UI helpers ───────────────────────────────────────────────── */
+    .row  { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+    .col  { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 200px; }
+    .btn  {
+      background: #313244; color: #cdd6f4; border: 1px solid #45475a;
+      border-radius: 5px; padding: 5px 12px; cursor: pointer; font-size: 12px;
+    }
+    .btn:hover { background: #45475a; }
+    .btn.primary { background: #89b4fa; color: #1e1e2e; border-color: #89b4fa; }
+    .btn.danger  { background: #f38ba8; color: #1e1e2e; border-color: #f38ba8; }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+    label { font-size: 11px; color: #a6adc8; }
+    input.field, textarea.field {
+      background: #1e1e2e; color: #cdd6f4; border: 1px solid #45475a;
+      border-radius: 4px; padding: 4px 8px; font: 12px monospace;
+      width: 100%;
+    }
+    input.field:focus, textarea.field:focus { outline: none; border-color: #89b4fa; }
+    pre.output {
+      background: #11111b; color: #a6e3a1; font: 11px/1.4 monospace;
+      padding: 8px; border-radius: 4px; overflow: auto;
+      max-height: 200px; border: 1px solid #313244;
+    }
+    .section-title { font-size: 11px; text-transform: uppercase; color: #89b4fa; margin-bottom: 2px; }
+
+    /* ── Game Environment ────────────────────────────────────────────────── */
+    #panel-game {
+      flex-direction: row;
+    }
+    .game-col-left  { display: flex; flex-direction: column; gap: 8px; flex: 0 0 420px; }
+    .game-col-right { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 220px; }
+
+    #game-canvas {
+      display: block;
+      background: #0d0d18;
+      border: 1px solid #313244;
+      border-radius: 6px;
+    }
+    .game-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    #bus-log {
+      flex: 1;
+      background: #11111b;
+      border: 1px solid #313244;
+      border-radius: 4px;
+      padding: 6px;
+      font: 11px/1.4 monospace;
+      color: #6c7086;
+      overflow-y: auto;
+      max-height: 220px;
+    }
+    #bus-log div:last-child { color: #cdd6f4; }
+
+    /* ── Code Editor ─────────────────────────────────────────────────────── */
+    #panel-code { padding: 0; }
+    #code-editor-root { height: 100%; }
+
+    /* ── Agent Tools ─────────────────────────────────────────────────────── */
+    #tools-manifest { max-height: 260px; }
+
+    /* ── Avatar / Prefab creators ────────────────────────────────────────── */
+    #avatar-creator-root,
+    #prefab-creator-root { flex: 1; overflow: hidden; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header class="header">
+    <h1>🌍 Coltens World Engine</h1>
+    <span class="subtitle">deterministic · contract-first · message-driven</span>
+  </header>
+
+  <!-- Tab bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn" data-tab="game">🎮 Game</button>
+    <button class="tab-btn" data-tab="code">📝 Code Editor</button>
+    <button class="tab-btn" data-tab="tools">🔧 Agent Tools</button>
+    <button class="tab-btn" data-tab="graphics">🎨 Graphics</button>
+    <button class="tab-btn" data-tab="avatar">🧍 Avatar</button>
+    <button class="tab-btn" data-tab="prefab">📦 Prefabs</button>
+  </nav>
+
+  <!-- Tab panels -->
+  <div class="tab-panels">
+
+    <!-- ── Game Environment ─────────────────────────────────────────────── -->
+    <div class="tab-panel" id="panel-game">
+      <div class="game-col-left">
+        <canvas id="game-canvas" width="400" height="300"></canvas>
+        <div class="game-controls">
+          <button class="btn primary" id="btn-start">▶ Start</button>
+          <button class="btn danger"  id="btn-stop" disabled>⏹ Stop</button>
+          <button class="btn"         id="btn-snapshot">📸 Snapshot</button>
+        </div>
+        <pre class="output" id="snapshot-out" style="max-height:120px">(click Snapshot)</pre>
+      </div>
+      <div class="game-col-right">
+        <div class="section-title">Message Bus Log</div>
+        <div id="bus-log"></div>
+        <div class="section-title" style="margin-top:4px">Engine Info</div>
+        <div style="font-size:11px;color:#6c7086;line-height:1.8">
+          Modules: <strong style="color:#cdd6f4">world-engine · brain-nucleus · agent-tools ·
+          code-editor · graphics-pipeline · avatar-creator · prefab-creator</strong><br>
+          Architecture: ECS + message bus + fixed-step tick<br>
+          Agents wander autonomously every 4 ticks
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Code Editor ───────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="panel-code">
+      <div id="code-editor-root" style="flex:1;min-height:0"></div>
+    </div>
+
+    <!-- ── Agent Tools ───────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="panel-tools">
+      <div class="row" style="align-items:stretch">
+        <div class="col">
+          <div class="section-title">Tool Manifest</div>
+          <pre class="output" id="tools-manifest" style="max-height:400px;flex:1"></pre>
+        </div>
+        <div class="col">
+          <div class="section-title">Call a Tool</div>
+          <label>Tool name</label>
+          <input class="field" id="tool-call-name" type="text" placeholder="world.snapshot" value="world.snapshot"/>
+          <label>Arguments (JSON)</label>
+          <textarea class="field" id="tool-call-args" style="min-height:80px">{}</textarea>
+          <button class="btn primary" id="tool-call-btn">⚡ Execute</button>
+          <div class="section-title">Result</div>
+          <pre class="output" id="tool-call-out">(result will appear here)</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Graphics Pipeline ─────────────────────────────────────────────── -->
+    <div class="tab-panel" id="panel-graphics">
+      <div class="section-title">Graphics Pipeline – Live Scene</div>
+      <p style="font-size:12px;color:#6c7086;margin-bottom:6px">
+        The pipeline uses a layered Canvas 2D renderer (background / entities / ui).
+        Start the Game tab to see the pipeline render the live world.  Below is a
+        standalone demo of available primitives.
+      </p>
+      <canvas id="gfx-demo" width="600" height="280" style="background:#0d0d18;border:1px solid #313244;border-radius:6px;max-width:100%"></canvas>
+      <script type="module">
+        import { GraphicsPipeline, Layer, ShapeNode, TextNode } from './packages/graphics-pipeline/src/GraphicsPipeline.js';
+        const canvas = document.getElementById('gfx-demo');
+        const p = new GraphicsPipeline(canvas);
+        const layer = p.addLayer('demo', 0);
+
+        // Background
+        layer.add(new ShapeNode({ id:'bg', x:300, y:140, shape:'rect', width:600, height:280, fillStyle:'#13131f' }));
+
+        // Shapes showcase
+        layer.add(new ShapeNode({ id:'r1', x:60,  y:80,  shape:'rect',    width:80, height:60, fillStyle:'#89b4fa', strokeStyle:'#cdd6f4', lineWidth:2 }));
+        layer.add(new ShapeNode({ id:'c1', x:200, y:80,  shape:'circle',  radius:35, fillStyle:'#a6e3a1', strokeStyle:'#cdd6f4', lineWidth:2 }));
+        layer.add(new ShapeNode({ id:'p1', x:340, y:80,  shape:'polygon',
+          points:[[-30,-35],[30,-35],[40,0],[0,35],[-40,0]],
+          fillStyle:'#fab387', strokeStyle:'#cdd6f4', lineWidth:2 }));
+        layer.add(new ShapeNode({ id:'r2', x:480, y:80,  shape:'circle',  radius:25, fillStyle:'#cba6f7' }));
+
+        // Labels
+        [['Rect','#89b4fa',60],['Circle','#a6e3a1',200],['Polygon','#fab387',340],['Sprite\n(placeholder)','#cba6f7',480]].forEach(([t,c,x]) => {
+          layer.add(new TextNode({ id:`lbl${x}`, x, y:155, text:t, fillStyle:c, font:'bold 11px sans-serif' }));
+        });
+
+        layer.add(new TextNode({ id:'hdr', x:300, y:220, text:'GraphicsPipeline — ShapeNode · TextNode · SpriteNode · Layer', fillStyle:'#6c7086', font:'11px monospace' }));
+
+        p.render();
+      </script>
+    </div>
+
+    <!-- ── Avatar Creator ────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="panel-avatar">
+      <div class="section-title">Avatar Creator</div>
+      <div id="avatar-creator-root" style="flex:1;min-height:0;overflow:auto"></div>
+    </div>
+
+    <!-- ── Prefab Creator ────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="panel-prefab">
+      <div class="section-title">Prefab Creator</div>
+      <div id="prefab-creator-root" style="flex:1;min-height:0;overflow:auto"></div>
+    </div>
+
+  </div><!-- .tab-panels -->
+</div><!-- .app -->
+
+<script type="module" src="./app/main.js"></script>
+</body>
+</html>

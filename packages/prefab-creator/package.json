@@ -1,0 +1,10 @@
+{
+  "name": "@coltens/prefab-creator",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.js",
+  "exports": { ".": "./index.js" },
+  "dependencies": {
+    "@coltens/world-engine": "0.1.0"
+  }
+}
