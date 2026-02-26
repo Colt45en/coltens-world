@@ -12,6 +12,7 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^8.18.0",
     "@react-three/postprocessing": "^3.0.4",
+    "@world-engine/avatar-core": "workspace:*",
     "leva": "^0.10.0",
     "postprocessing": "^6.38.0",
     "react": "^18.3.1",
