@@ -1,0 +1,58 @@
+name: Code Scanning (diagtool)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-sarif:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build build-essential
+
+      - name: Build (capture diagnostics)
+        run: |
+          set -o pipefail
+          # Example build; replace with yours
+          # pnpm run build 2>&1 | tee build.log
+          echo "Build placeholder"
+
+      - name: Convert build.log → SARIF + ledger
+        if: always()  # run even if build fails
+        run: |
+          python scripts/diagtool.py \
+            --kind cpp \
+            --emit sarif \
+            --emit ledger \
+            --srcroot "$GITHUB_WORKSPACE" \
+            --sarif-out results.sarif.json \
+            --ledger-out ledger.ndjson \
+            --ledger-chain \
+            --in build.log
+
+      - name: Upload SARIF to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif.json
+          category: diagtool-cpp
+
+      - name: Archive ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostic-ledger
+          path: ledger.ndjson
