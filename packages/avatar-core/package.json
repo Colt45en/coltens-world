@@ -1,0 +1,38 @@
+{
+  "name": "@world-engine/avatar-core",
+  "version": "0.1.0",
+  "description": "Avatar geometry, morph, LOD, atlas, and merge pipeline (DOM-free core)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./morph": "./dist/morph/index.js",
+    "./lod": "./dist/lod/index.js",
+    "./merge": "./dist/merge/index.js",
+    "./atlas": "./dist/atlas/index.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "three": "^r128"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "avatar",
+    "geometry",
+    "morph",
+    "lod",
+    "atlas"
+  ]
+}

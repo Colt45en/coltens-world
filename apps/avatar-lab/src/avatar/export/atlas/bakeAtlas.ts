@@ -1,4 +1,16 @@
+/**
+ * SHIM: bakeAtlas re-exported from @world-engine/avatar-core
+ * Original: apps/avatar-lab/src/avatar/export/atlas/bakeAtlas.ts
+ * 
+ * Browser-specific wrapper: adds Canvas support on top of DOM-free core.
+ * Provides canvas textures for THREE.js rendering.
+ */
+
 import * as THREE from "three";
+import { remapGeometryUVsToRect, type AtlasRect } from "@world-engine/avatar-core/atlas";
+
+// Re-export pure functions
+export { remapGeometryUVsToRect };
 
 export type AtlasSlot = {
   key: string;
@@ -12,6 +24,9 @@ export type AtlasResult = {
   rectByKey: Record<string, AtlasSlot["rect"]>;
 };
 
+/**
+ * Load image from URL (browser-specific).
+ */
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -22,38 +37,35 @@ function loadImage(url: string): Promise<HTMLImageElement> {
   });
 }
 
-function createEmptyCanvas(size: number): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } {
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext("2d");
-  if (!context) throw new Error("2D canvas context unavailable");
-
-  context.fillStyle = "rgba(0,0,0,0)";
-  context.fillRect(0, 0, size, size);
-  return { canvas, context };
-}
-
+/**
+ * Browser-specific canvas-based atlas baking.
+ * Converts image URLs to canvas texture + rectangles.
+ */
 export async function bakeFixedAtlas2x2(opts: {
   atlasSize: number;
   slots: Array<{ key: string; url?: string }>;
 }): Promise<AtlasResult> {
   const { atlasSize, slots } = opts;
 
-  const rectByKey: Record<string, AtlasSlot["rect"]> = {};
-  const getRect = (index: number): AtlasSlot["rect"] => {
-    const col = index % 2;
-    const row = Math.floor(index / 2);
-    return { x: col * 0.5, y: row * 0.5, w: 0.5, h: 0.5 };
-  };
+  // Create canvas
+  const canvas = document.createElement("canvas");
+  canvas.width = atlasSize;
+  canvas.height = atlasSize;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("2D canvas context unavailable");
 
-  const { canvas, context } = createEmptyCanvas(atlasSize);
+  context.fillStyle = "rgba(0,0,0,0)";
+  context.fillRect(0, 0, atlasSize, atlasSize);
 
+  // Load images and composite into canvas
+  const rectByKey: Record<string, AtlasRect> = {};
   for (let i = 0; i < slots.length; i++) {
     const slot = slots[i];
     if (!slot) continue;
 
-    const rect = getRect(i);
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const rect = { x: col * 0.5, y: row * 0.5, w: 0.5, h: 0.5 };
     rectByKey[slot.key] = rect;
 
     if (!slot.url) continue;
@@ -66,10 +78,11 @@ export async function bakeFixedAtlas2x2(opts: {
       const dh = rect.h * atlasSize;
       context.drawImage(image, dx, dy, dw, dh);
     } catch {
-      // keep slot empty when image fails to load
+      // Keep slot empty on load failure
     }
   }
 
+  // Convert canvas to THREE texture
   const atlasTexture = new THREE.CanvasTexture(canvas);
   atlasTexture.colorSpace = THREE.SRGBColorSpace;
   atlasTexture.wrapS = THREE.ClampToEdgeWrapping;
@@ -81,20 +94,4 @@ export async function bakeFixedAtlas2x2(opts: {
     atlasCanvas: canvas,
     rectByKey,
   };
-}
-
-export function remapGeometryUVsToRect(
-  geometry: THREE.BufferGeometry,
-  rect: { x: number; y: number; w: number; h: number }
-): void {
-  const uv = geometry.getAttribute("uv") as THREE.BufferAttribute | undefined;
-  if (!uv) return;
-
-  for (let i = 0; i < uv.count; i++) {
-    const u = uv.getX(i);
-    const v = uv.getY(i);
-    uv.setXY(i, rect.x + u * rect.w, rect.y + v * rect.h);
-  }
-
-  uv.needsUpdate = true;
 }
