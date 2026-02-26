@@ -3,16 +3,16 @@
  * Pure, DOM-free avatar geometry pipeline
  */
 
-export * from "./types.js";
+export * from "./types";
 
 // Morph
-export * from "./morph/index.js";
+export * from "./morph/index";
 
 // Merge
-export * from "./merge/index.js";
+export * from "./merge/index";
 
 // LOD
-export * from "./lod/index.js";
+export * from "./lod/index";
 
 // Atlas (surface + packing + baking)
-export * from "./atlas/index.js";
+export * from "./atlas/index";

@@ -1,1 +1,1 @@
-export * from "./mergeByPart.js";
+export * from "./mergeByPart";

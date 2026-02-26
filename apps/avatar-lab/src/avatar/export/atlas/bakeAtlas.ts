@@ -1,13 +1,13 @@
 /**
  * SHIM: bakeAtlas re-exported from @world-engine/avatar-core
  * Original: apps/avatar-lab/src/avatar/export/atlas/bakeAtlas.ts
- * 
+ *
  * Browser-specific wrapper: adds Canvas support on top of DOM-free core.
  * Provides canvas textures for THREE.js rendering.
  */
 
+import { remapGeometryUVsToRect, type AtlasRect } from "@world-engine/avatar-core";
 import * as THREE from "three";
-import { remapGeometryUVsToRect, type AtlasRect } from "@world-engine/avatar-core/atlas";
 
 // Re-export pure functions
 export { remapGeometryUVsToRect };

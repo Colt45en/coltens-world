@@ -1,9 +1,9 @@
 /**
  * LOD: build distance-based level-of-detail using SimplifyModifier
  */
-import type * as THREE from "three";
+import * as THREE from "three";
 import { SimplifyModifier } from "three/examples/jsm/modifiers/SimplifyModifier.js";
-import type { LODConfig } from "../types.js";
+import type { LODConfig } from "../types";
 
 /**
  * Build LOD levels for a single static mesh.

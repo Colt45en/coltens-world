@@ -4,8 +4,8 @@
  * This module is DOM-free and works directly with THREE.BufferGeometry.
  * It deterministically bakes all active morph targets into the position and normal attributes.
  */
-import type * as THREE from "three";
-import type { BakeMorphOptions } from "../types.js";
+import * as THREE from "three";
+import type { BakeMorphOptions } from "../types";
 
 function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));

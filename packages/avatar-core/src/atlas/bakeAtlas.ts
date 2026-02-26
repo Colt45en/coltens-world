@@ -4,9 +4,9 @@
  * Caller provides pixel data; atlas core does the layout and UV remapping.
  */
 import type * as THREE from "three";
-import type { AtlasRect } from "../types.js";
-import { packAtlas2x2, type AtlasSlot } from "./packer.js";
-import { defaultSurfaceFactory, type ImageSurface } from "./surface.js";
+import type { AtlasRect } from "../types";
+import { packAtlas2x2, type AtlasSlot } from "./packer";
+import { defaultSurfaceFactory, type ImageSurface } from "./surface";
 
 export type BakeAtlasInput = {
   atlasSize: number;

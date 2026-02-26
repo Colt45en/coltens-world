@@ -1,1 +1,1 @@
-export * from "./bakeMorphTargets.js";
+export * from "./bakeMorphTargets";

@@ -16,13 +16,13 @@
     "postprocessing": "^6.38.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "three": "^0.182.0",
+    "three": "^r128",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
-    "@types/three": "^0.182.0",
+    "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^4.2.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.8"

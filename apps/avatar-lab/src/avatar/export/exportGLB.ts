@@ -1,17 +1,17 @@
 /**
  * LEGACY SHIM: exportAvatarGLB calls the new compiler pipeline
- * 
+ *
  * This maintains backward compatibility with existing avatar-lab code.
  * New code should use @world-engine/avatar-compiler directly.
  */
 
-import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
 import type * as THREE from "three";
-import type { AvatarDNA } from "../dna";
+import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
 import { timeSection } from "../../perf/bench";
+import type { AvatarDNA } from "../dna";
 import { buildMaterialsByPart, inferPart } from "../materials/buildPartMaterials";
-import { bakeMorphTargetsIntoGeometry } from "./bakeMorphTargets";
 import { bakeFixedAtlas2x2, remapGeometryUVsToRect } from "./atlas/bakeAtlas";
+import { bakeMorphTargetsIntoGeometry } from "./bakeMorphTargets";
 import { applyLODToMergedMeshes } from "./lod/buildLOD";
 import { inferPartKey, mergeStaticMeshesByPart, type PartKey } from "./merge/mergeByPart";
 

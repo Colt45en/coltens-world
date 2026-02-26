@@ -1,9 +1,9 @@
 /**
  * Merge: infer body part, bake transforms, merge geometries by part
  */
-import type * as THREE from "three";
+import * as THREE from "three";
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import type { PartKey } from "../types.js";
+import type { PartKey } from "../types";
 
 /**
  * Infer body part from object name and userData.

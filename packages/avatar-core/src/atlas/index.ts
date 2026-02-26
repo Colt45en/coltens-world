@@ -1,3 +1,3 @@
-export * from "./bakeAtlas.js";
-export * from "./packer.js";
-export * from "./surface.js";
+export * from "./bakeAtlas";
+export * from "./packer";
+export * from "./surface";

@@ -15,17 +15,6 @@ export type AtlasRect = {
   h: number;
 };
 
-export type ImageSurface = {
-  width: number;
-  height: number;
-  getPixels(): Uint8ClampedArray;
-  setPixels(pixels: Uint8ClampedArray): void;
-};
-
-export type SurfaceFactory = {
-  create(width: number, height: number): ImageSurface;
-};
-
 export type BakeAtlasSlot = {
   key: string;
   pixelBuffer?: Uint8ClampedArray; // w*h*4 RGBA

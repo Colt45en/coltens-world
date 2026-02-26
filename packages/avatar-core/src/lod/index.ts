@@ -1,1 +1,1 @@
-export * from "./buildLOD.js";
+export * from "./buildLOD";
