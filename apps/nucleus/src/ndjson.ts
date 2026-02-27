@@ -1,48 +1,51 @@
 /**
- * apps/nucleus/src/ndjson.ts
+ * NDJSON reader: handles chunk boundaries gracefully
  *
- * NDJSON streaming utilities for parsing newline-delimited JSON.
- * Handles packet splits and partial lines gracefully.
+ * Example:
+ *   for await (const line of ndjsonLines(response.body)) {
+ *     const event = JSON.parse(line);
+ *   }
  */
 
-export async function* readNdjsonStream(
-    body: ReadableStream<Uint8Array>
-): AsyncGenerator<any> {
-    const reader = body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
+export async function* ndjsonLines(
+  stream: ReadableStream<Uint8Array>
+): AsyncGenerator<string, void, unknown> {
+  const reader = stream.getReader();
+  const decoder = new TextDecoder("utf-8", { fatal: false });
 
-    try {
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
+  let buffer = "";
 
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split("\n");
-            buffer = lines.pop() ?? "";
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
 
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed) continue;
-                try {
-                    yield JSON.parse(trimmed);
-                } catch {
-                    console.warn("[ndjson] failed to parse line:", trimmed);
-                    // skip invalid lines
-                }
-            }
+      if (done) {
+        // flush any remaining line
+        const tail = buffer.trim();
+        if (tail.length > 0) {
+          yield tail;
         }
+        break;
+      }
 
-        // Handle remaining buffer (final partial or complete line)
-        const final = buffer.trim();
-        if (final) {
-            try {
-                yield JSON.parse(final);
-            } catch {
-                // Ignore incomplete final line
-            }
+      // Append decoded chunk to buffer
+      buffer += decoder.decode(value, { stream: true });
+
+      // Extract complete lines
+      while (true) {
+        const nlIdx = buffer.indexOf("\n");
+        if (nlIdx === -1) break;
+
+        // Yield complete line (without newline)
+        const line = buffer.slice(0, nlIdx).trim();
+        buffer = buffer.slice(nlIdx + 1);
+
+        if (line.length > 0) {
+          yield line;
         }
-    } finally {
-        reader.releaseLock();
+      }
     }
+  } finally {
+    reader.releaseLock();
+  }
 }

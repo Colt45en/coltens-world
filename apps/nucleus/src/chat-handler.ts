@@ -28,10 +28,7 @@ export class ChatHandler {
   /**
    * Handle incoming chat.request from IDE
    */
-  async handleChatRequest(
-    env: Envelope<ChatRequest>,
-    ws: WebSocket
-  ): Promise<void> {
+  async handleChatRequest(env: Envelope<ChatRequest>, ws: WebSocket): Promise<void> {
     const traceId = env.traceId;
 
     // Validate payload
@@ -68,17 +65,26 @@ export class ChatHandler {
   }
 
   /**
-   * Call Brain endpoint and stream back events to UI
+   * Call Brain endpoint and stream back events to UI with:
+   * - Abort support (client disconnect)
+   * - Backpressure (ws.bufferedAmount)
+   * - Schema validation (StreamEvent)
+   * - Monotonic seq + turnId tracking
    */
   private async streamChatFromBrain(
     req: ChatRequest,
     traceId: string,
     ws: WebSocket
   ): Promise<void> {
+    const turnId = randomId("turn");
     const url = `${BRAIN_HTTP_ENDPOINT}/chat/stream`;
 
-    const controller = new AbortController();
-    const timeoutHandle = setTimeout(() => controller.abort(), 60_000);
+    // P0.2: Abort on client disconnect
+    const abort = new AbortController();
+    const onWsClose = () => abort.abort("ws_closed");
+    ws.once("close", onWsClose);
+
+    const timeoutHandle = setTimeout(() => abort.abort("timeout"), 60_000);
 
     try {
       const resp = await fetch(url, {
@@ -86,9 +92,10 @@ export class ChatHandler {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           traceId,
+          turnId,
           ...req,
         }),
-        signal: controller.signal,
+        signal: abort.signal,
       });
 
       if (!resp.ok) {
@@ -99,63 +106,107 @@ export class ChatHandler {
         throw new Error("No response body from Brain");
       }
 
-      // Stream events line-by-line (NDJSON)
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
+      // P0.4: Use unified StreamEvent validator
+      const { validateStreamEvent } = await import("@world-engine/protocol");
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      // P0.3: Track WebSocket backpressure
+      const MAX_WS_BUFFERED = 2 * 1024 * 1024; // 2MB
+      const WS_DRAIN_POLL_MS = 10;
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-
-        for (let i = 0; i < lines.length - 1; i++) {
-          const lineEntry = lines[i];
-          if (!lineEntry) continue;
-          const line = lineEntry.trim();
-          if (!line) continue;
-
-          try {
-            const event = JSON.parse(line);
-            // Forward streaming event to UI as-is
-            ws.send(
-              JSON.stringify(
-                createEnvelope(`chat.stream_event`, event, traceId, "nucleus")
-              )
-            );
-          } catch (err) {
-            console.warn(`[chat] Failed to parse stream event: ${err}`);
-          }
+      async function waitForDrain() {
+        while (ws.readyState === ws.OPEN && ws.bufferedAmount > MAX_WS_BUFFERED) {
+          await new Promise((r) => setTimeout(r, WS_DRAIN_POLL_MS));
         }
-
-        const lastLine = lines[lines.length - 1];
-        buffer = lastLine ?? "";
       }
 
-      if (buffer.trim()) {
+      // P0.1: Track seq for ordering
+      let seq = 0;
+
+      // P0.3: Stream line-by-line with new ndjsonLines utility
+      const { ndjsonLines } = await import("./ndjson.js");
+
+      for await (const line of ndjsonLines(resp.body)) {
+        // P0.2: Check if client closed
+        if (ws.readyState !== ws.OPEN) {
+          console.log(`[chat] ${traceId} client closed, stopping stream`);
+          break;
+        }
+
+        let parsed: unknown;
         try {
-          const event = JSON.parse(buffer);
-          ws.send(
-            JSON.stringify(
-              createEnvelope(`chat.stream_event`, event, traceId, "nucleus")
-            )
-          );
+          parsed = JSON.parse(line);
         } catch (err) {
-          console.warn(`[chat] Failed to parse final stream event: ${err}`);
+          console.warn(`[chat] ${traceId} failed to parse JSON: ${err}`);
+          const error: Envelope<{ error: string }> = createEnvelope(
+            "chat.error",
+            { error: `Invalid stream JSON: ${String(err)}` },
+            traceId,
+            "nucleus"
+          );
+          ws.send(JSON.stringify(error));
+          continue;
+        }
+
+        // P0.4: Validate schema before forwarding
+        const validated = validateStreamEvent(parsed);
+        if (!validated) {
+          console.warn(`[chat] ${traceId} schema validation failed:`, parsed);
+          const error: Envelope<{ error: string }> = createEnvelope(
+            "chat.error",
+            {
+              error: `Invalid stream event schema`,
+            },
+            traceId,
+            "nucleus"
+          );
+          ws.send(JSON.stringify(error));
+          continue;
+        }
+
+        // Inject turnId + seq if missing (Brain might not have them yet)
+        const enriched: any = {
+          ...validated,
+          turnId: validated.turnId || turnId,
+          seq: validated.seq !== undefined ? validated.seq : seq++,
+          ts: validated.ts || Date.now(),
+        };
+
+        // P0.3: Backpressure
+        await waitForDrain();
+
+        // Forward to IDE
+        ws.send(JSON.stringify(createEnvelope(`chat.stream_event`, enriched, traceId, "nucleus")));
+
+        // Stop on completion
+        if (enriched.type === "done" || enriched.type === "error") {
+          break;
         }
       }
 
       // Signal completion
-      const done: Envelope<{ traceId: string }> = createEnvelope(
+      const done: Envelope<{ traceId: string; turnId: string }> = createEnvelope(
         "chat.done",
-        { traceId },
+        { traceId, turnId },
         traceId,
         "nucleus"
       );
       ws.send(JSON.stringify(done));
+    } catch (err: any) {
+      const reason = abort.signal.aborted
+        ? `cancelled: ${String(abort.signal.reason ?? "unknown")}`
+        : `chat error: ${err?.message ?? "unknown"}`;
+
+      console.log(`[chat] ${traceId} stream ended: ${reason}`);
+
+      const error: Envelope<{ error: string }> = createEnvelope(
+        "chat.error",
+        { error: reason },
+        traceId,
+        "nucleus"
+      );
+      ws.send(JSON.stringify(error));
     } finally {
+      ws.off("close", onWsClose);
       clearTimeout(timeoutHandle);
     }
   }
@@ -192,7 +243,10 @@ export class ChatHandler {
    * - Binds all chunks to traceId for IDE stream binding
    */
   async handleBrainChat(
-    env: BusEnvelope<"brain.chat", { traceId: string; message: string; mode?: string; context?: Record<string, unknown> }>,
+    env: BusEnvelope<
+      "brain.chat",
+      { traceId: string; message: string; mode?: string; context?: Record<string, unknown> }
+    >,
     ws: WebSocket
   ): Promise<void> {
     const t0 = Date.now();
@@ -201,9 +255,7 @@ export class ChatHandler {
 
     const HUB_INSTANCE_ID = "nucleus_1";
 
-    function send<T extends keyof MessageMap>(
-      e: BusEnvelope<T, MessageMap[T]>
-    ): void {
+    function send<T extends keyof MessageMap>(e: BusEnvelope<T, MessageMap[T]>): void {
       try {
         ws.send(JSON.stringify(e));
       } catch (err) {
@@ -279,16 +331,13 @@ export class ChatHandler {
           toolsUsed.push("prompt.operator.patch");
 
           finalText =
-            "✅ PatchOperator result:\n\n```json\n" +
-            JSON.stringify(opResult, null, 2) +
-            "\n```";
+            "✅ PatchOperator result:\n\n```json\n" + JSON.stringify(opResult, null, 2) + "\n```";
         } catch (err: any) {
           operatorExecuted = {
             operatorId: "prompt.operator.patch",
             ok: false,
           };
-          finalText =
-            `❌ PatchOperator error:\n${err?.message ?? String(err)}`;
+          finalText = `❌ PatchOperator error:\n${err?.message ?? String(err)}`;
         }
       } else {
         // 3) Minimal fallback response

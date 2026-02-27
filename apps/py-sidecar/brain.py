@@ -14,10 +14,12 @@ Handles:
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Literal
 import json
 import asyncio
+import time
 from datetime import datetime
+from uuid import uuid4
 
 app = FastAPI(title="Brain", version="1.0.0")
 
@@ -68,8 +70,27 @@ class ChatResponse(BaseModel):
 
 
 class StreamEvent(BaseModel):
-    type: str  # "text_chunk", "tool_call", "citation", "memory_write", "done"
+    """
+    Streaming event contract (mirrors TypeScript packages/protocol/src/chatStream.ts)
+
+    v:       Schema version (always "1.0")
+    traceId: Request correlation ID
+    turnId:  User turn ID (unique per chat)
+    seq:     Monotonic counter (0-based)
+    type:    Event type discriminator
+    data:    Type-specific payload
+    ts:      Server-side timestamp (ms)
+    """
+    v: Literal["1.0"] = "1.0"
+    traceId: str = Field(..., min_length=1, max_length=256)
+    turnId: str = Field(..., min_length=1, max_length=256)
+    seq: int = Field(...)  # Set by caller
+    type: Literal[
+        "text_chunk", "tool_call", "tool_result",
+        "citation", "memory_write", "done", "error"
+    ]
     data: dict = Field(default_factory=dict)
+    ts: Optional[int] = Field(default=None)  # Will be set if None
 
 
 # ============================================================================

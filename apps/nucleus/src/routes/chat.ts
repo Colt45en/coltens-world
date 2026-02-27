@@ -13,7 +13,7 @@ import type { BusEnvelope } from "@world-engine/protocol";
 import { nowMs, randomId } from "@world-engine/protocol";
 import type { WebSocket } from "ws";
 import { CurriculumConstraintStore } from "../constraints/CurriculumConstraintStore";
-import { readNdjsonStream } from "../ndjson";
+import { ndjsonLines } from "../ndjson";
 import { ToolExecutor } from "../tool/executor";
 import type { ToolCall } from "../tool/types";
 
@@ -97,57 +97,65 @@ export async function handleChatRequestStreaming(
         }
 
         // Stream NDJSON chunks from Brain
-        for await (const chunk of readNdjsonStream(brainRes.body)) {
-            if (!chunk || typeof chunk !== "object") continue;
+        for await (const line of ndjsonLines(brainRes.body)) {
+          let chunk: any;
+          try {
+            chunk = JSON.parse(line);
+          } catch (e) {
+            console.warn(`[chat] Failed to parse NDJSON line: ${e}`);
+            continue;
+          }
 
-            const chunkType = chunk.type ?? "chat.delta.v1";
+          if (!chunk || typeof chunk !== "object") continue;
 
-            // Collect tool calls for later execution
-            if (chunkType === "chat.tool_call.v1") {
-                const toolCallId = chunk.payload?.toolCallId ?? `tc-${messageId}-${toolCalls.length}`;
-                toolCalls.push({
-                    toolCallId,
-                    name: chunk.payload?.name as any,
-                    args: chunk.payload?.arguments ?? chunk.payload?.args ?? {},
-                });
-                console.log(`[chat] Collected tool: ${chunk.payload?.name} (id=${toolCallId})`);
-            }
+          const chunkType = chunk.type ?? "chat.delta.v1";
 
-            // Forward as WS envelope with continuity
-            send(ws, {
+          // Collect tool calls for later execution
+          if (chunkType === "chat.tool_call.v1") {
+            const toolCallId = chunk.payload?.toolCallId ?? `tc-${messageId}-${toolCalls.length}`;
+            toolCalls.push({
+              toolCallId,
+              name: chunk.payload?.name as any,
+              args: chunk.payload?.arguments ?? chunk.payload?.args ?? {},
+            });
+            console.log(`[chat] Collected tool: ${chunk.payload?.name} (id=${toolCallId})`);
+          }
+
+          // Forward as WS envelope with continuity
+          send(ws, {
+            v: 2,
+            type: chunkType,
+            id: randomId("srv"),
+            ts: nowMs(),
+            from: { role: "nucleus", instanceId: HUB_INSTANCE_ID },
+            sessionId,
+            traceId: chunk.traceId ?? traceId,
+            messageId: chunk.messageId ?? messageId,
+            payload: chunk.payload ?? {},
+          });
+
+          // When stream ends, execute all collected tools
+          if (chunkType === "chat.done.v1") {
+            if (toolCalls.length > 0) {
+              console.log(`[chat] Executing ${toolCalls.length} tools for message ${messageId}`);
+              for (const call of toolCalls) {
+                await toolExecutor.execute(traceId, sessionId, call);
+              }
+
+              // Signal tool phase complete
+              send(ws, {
                 v: 2,
-                type: chunkType,
+                type: "tool.batch.done.v1",
                 id: randomId("srv"),
                 ts: nowMs(),
                 from: { role: "nucleus", instanceId: HUB_INSTANCE_ID },
                 sessionId,
-                traceId: chunk.traceId ?? traceId,
-                messageId: chunk.messageId ?? messageId,
-                payload: chunk.payload ?? {},
-            });
-
-            // When stream ends, execute all collected tools
-            if (chunkType === "chat.done.v1") {
-                if (toolCalls.length > 0) {
-                    console.log(`[chat] Executing ${toolCalls.length} tools for message ${messageId}`);
-                    for (const call of toolCalls) {
-                        await toolExecutor.execute(traceId, sessionId, call);
-                    }
-
-                    // Signal tool phase complete
-                    send(ws, {
-                        v: 2,
-                        type: "tool.batch.done.v1",
-                        id: randomId("srv"),
-                        ts: nowMs(),
-                        from: { role: "nucleus", instanceId: HUB_INSTANCE_ID },
-                        sessionId,
-                        traceId,
-                        messageId,
-                        payload: { count: toolCalls.length },
-                    });
-                }
+                traceId,
+                messageId,
+                payload: { count: toolCalls.length },
+              });
             }
+          }
         }
     } catch (err: any) {
         console.error(`[chat] stream error:`, err?.message);

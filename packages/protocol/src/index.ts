@@ -14,6 +14,7 @@ export {
 } from "./bus/buildEvidenceBus.js";
 export * from "./capabilities";
 export * from "./chat";
+export * from "./chatStream";
 export * from "./contracts/flowstate";
 export * from "./contracts/gameRuntime";
 export * from "./contracts/labs";
