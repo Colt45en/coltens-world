@@ -1,0 +1,465 @@
+{
+  "style_id": "gost-name-sort",
+  "style_version": "1.0.0",
+  "default_lcid": 1033,
+  "origin": {
+    "xslt_version": "1.0",
+    "msxsl_node_set_required": true,
+    "output_method": "html",
+    "output_encoding": "us-ascii",
+    "word_bibliography_version": "2006.5.07",
+    "word_xsl_version": "2003",
+    "style_name_en": "GOST - Name Sort"
+  },
+  "locales": {
+    "1033": {
+      "lcid": 1033,
+      "culture": "en-US",
+      "properties": {
+        "direction": "ltr",
+        "space": " ",
+        "non_breaking_space": "\u00A0",
+        "dot": ".",
+        "dot_initial": ".",
+        "list_separator": ",",
+        "group_separator": ";",
+        "enum_separator": ":",
+        "enum": ":",
+        "equal": "=",
+        "open_quote": "\u201C",
+        "close_quote": "\u201D",
+        "open_bracket": "(",
+        "close_bracket": ")",
+        "from_to_dash": "\u2013",
+        "open_link": "<",
+        "close_link": ">",
+        "authors_separator": ",",
+        "end_chars": ".!?:;)]}»\u201D",
+        "hyphens": "-\u2013\u2014",
+        "normalize_space": "no",
+        "no_comma_before_and": "no",
+        "no_and_before_last_author": "no"
+      },
+      "strings": {
+        "online_cap": "Online",
+        "online_uncap": "online",
+        "filed_cap": "Filed",
+        "patent_filed_cap": "Patent filed",
+        "in_cap": "In",
+        "in_name_cap": "In",
+        "with_uncap": "with",
+        "version_short_cap": "Ver.",
+        "interview_cap": "Interview",
+        "interview_with_cap": "Interview with",
+        "interview_by_cap": "Interview by",
+        "by_cap": "By",
+        "and_uncap": "and",
+        "and_others_uncap": "et al.",
+        "motion_picture_cap": "Motion picture",
+        "patent_cap": "Patent",
+        "edition_short_uncap": "ed.",
+        "edition_uncap": "edition",
+        "retrieved_from_cap": "Retrieved from",
+        "retrieved_cap": "Retrieved",
+        "from_cap": "From",
+        "from_uncap": "from",
+        "no_date_short_uncap": "n.d.",
+        "number_short_cap": "No.",
+        "number_short_uncap": "no.",
+        "patent_number_short_cap": "Pat. No.",
+        "pages_continuous_short": "pp.",
+        "page_short": "p.",
+        "sine_nomine_short": "s.n.",
+        "sine_loco_short": "s.l.",
+        "sine_loco_sine_nomine_short": "s.l., s.n.",
+        "volume_of_short_cap": "Vol. of",
+        "volumes_of_short_cap": "Vols. of",
+        "volume_short_cap": "Vol.",
+        "volume_short_uncap": "vol.",
+        "volumes_short_cap": "Vols.",
+        "volumes_short_uncap": "vols.",
+        "volume_cap": "Volume",
+        "author_short_uncap": "author",
+        "book_author_short_uncap": "book author",
+        "artist_short_uncap": "artist",
+        "writer_cap": "Writer",
+        "writers_cap": "Writers",
+        "writer_short_uncap": "writer",
+        "conducted_by_cap": "Conducted by",
+        "conducted_by_uncap": "conducted by",
+        "conductor_cap": "Conductor",
+        "conductors_cap": "Conductors",
+        "conductor_short_cap": "Cond.",
+        "conductor_short_uncap": "cond.",
+        "conductors_short_cap": "Conds.",
+        "conductors_short_uncap": "conds.",
+        "counsel_short_uncap_iso": "counsel",
+        "counsel_short_uncap": "counsel",
+        "directed_by_cap": "Directed by",
+        "directed_by_uncap": "directed by",
+        "director_cap": "Director",
+        "directors_cap": "Directors",
+        "director_short_cap": "Dir.",
+        "director_short_uncap": "dir.",
+        "directors_short_cap": "Dirs.",
+        "directors_short_uncap": "dirs.",
+        "edited_by_cap": "Edited by",
+        "edited_by_uncap": "edited by",
+        "editor_cap": "Editor",
+        "editors_cap": "Editors",
+        "editor_short_cap": "Ed.",
+        "editor_short_uncap": "ed.",
+        "editors_short_cap": "Eds.",
+        "editors_short_uncap": "eds.",
+        "interviewee_short_uncap": "interviewee",
+        "interviewer_cap": "Interviewer",
+        "interviewers_cap": "Interviewers",
+        "inventor_short_uncap": "inventor",
+        "performed_by_cap": "Performed by",
+        "performed_by_uncap": "performed by",
+        "performer_cap": "Performer",
+        "performers_cap": "Performers",
+        "performer_short_cap": "Perf.",
+        "performer_short_uncap": "perf.",
+        "performers_short_cap": "Perfs.",
+        "performers_short_uncap": "perfs.",
+        "produced_by_cap": "Produced by",
+        "produced_by_uncap": "produced by",
+        "producer_cap": "Producer",
+        "producers_cap": "Producers",
+        "production_company_short_cap": "Prod. Co.",
+        "producer_short_cap": "Prod.",
+        "producers_short_cap": "Prods.",
+        "producer_short_uncap": "prod.",
+        "translated_by_cap": "Translated by",
+        "translated_by_uncap": "translated by",
+        "translator_cap": "Translator",
+        "translators_cap": "Translators",
+        "translator_short_cap": "Trans.",
+        "translator_short_uncap": "trans.",
+        "translators_short_cap": "Transs.",
+        "translators_short_uncap": "transs.",
+        "composer_cap": "Composer",
+        "composers_cap": "Composers",
+        "composer_short_cap": "Comp.",
+        "composers_short_cap": "Comps.",
+        "composer_short_uncap_iso": "comp.",
+        "compiled_by_cap": "Compiled by",
+        "compiled_by_uncap": "compiled by",
+        "compiler_cap": "Compiler",
+        "compilers_cap": "Compilers",
+        "compiler_short_cap": "Comp.",
+        "compiler_short_uncap": "comp.",
+        "compilers_short_cap": "Comps.",
+        "compilers_short_uncap": "comps.",
+        "compiler_short_uncap_iso": "comp."
+      },
+      "name_formats": {
+        "citation_long": {
+          "FML": "%L %f %m",
+          "FM": "%F %m",
+          "ML": "%M %L",
+          "FL": "%L %f"
+        },
+        "citation_short": {
+          "FML": "%L %f %m",
+          "FM": "%F %m",
+          "ML": "%M %L",
+          "FL": "%L %f"
+        },
+        "bibliography_authors": {
+          "FML": "%L %F %M",
+          "FM": "%L %F %M",
+          "ML": "%L %M",
+          "FL": "%L %F"
+        },
+        "simple_author": {
+          "F": "%F",
+          "M": "%M",
+          "L": "%L"
+        },
+        "upper_last_default": "no",
+        "with_dot_default": "yes"
+      },
+      "date_formats": {
+        "DMY": "%D.%M.%Y",
+        "DM": "%D.%M",
+        "MY": "%M.%Y",
+        "DY": "%D.%Y"
+      }
+    }
+  },
+  "source_types": {
+    "Book": {
+      "source_type": "Book",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:Year",
+        "b:City",
+        "b:Publisher",
+        "b:Volume"
+      ],
+      "main_contributor_priority": ["Author", "Editor", "Translator"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "BookSection": {
+      "source_type": "BookSection",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:Author/b:BookAuthor/b:NameList",
+        "b:BookTitle",
+        "b:Year",
+        "b:City",
+        "b:Publisher",
+        "b:Volume"
+      ],
+      "main_contributor_priority": ["Author"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "JournalArticle": {
+      "source_type": "JournalArticle",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:Year",
+        "b:City",
+        "b:Publisher",
+        "b:Volume",
+        "b:Issue"
+      ],
+      "main_contributor_priority": ["Author", "Editor"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "ArticleInAPeriodical": {
+      "source_type": "ArticleInAPeriodical",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:PeriodicalTitle",
+        "b:City",
+        "b:Year",
+        "b:Edition",
+        "b:Volume",
+        "b:Issue",
+        "b:Publisher"
+      ],
+      "main_contributor_priority": ["Author"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "ConferenceProceedings": {
+      "source_type": "ConferenceProceedings",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:Year",
+        "b:ConferenceName",
+        "b:City",
+        "b:Publisher",
+        "b:Volume"
+      ],
+      "main_contributor_priority": ["Author"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Report": {
+      "source_type": "Report",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:Year",
+        "b:City",
+        "b:Publisher"
+      ],
+      "main_contributor_priority": ["Author"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "SoundRecording": {
+      "source_type": "SoundRecording",
+      "important_fields": [
+        "b:Author/b:Artist/b:NameList",
+        "b:Title",
+        "b:AlbumTitle",
+        "b:ProductionCompany",
+        "b:Year",
+        "b:Medium",
+        "b:City"
+      ],
+      "main_contributor_priority": ["Artist", "Performer", "Composer", "Conductor", "ProducerName"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Performance": {
+      "source_type": "Performance",
+      "important_fields": [
+        "b:Author/b:Writer/b:NameList",
+        "b:Title",
+        "b:ProductionCompany",
+        "b:Theater",
+        "b:Year",
+        "b:City"
+      ],
+      "main_contributor_priority": ["Writer", "Director", "Performer", "ProducerName"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Art": {
+      "source_type": "Art",
+      "important_fields": [
+        "b:Author/b:Artist/b:NameList",
+        "b:Title",
+        "b:Institution",
+        "b:Year",
+        "b:City"
+      ],
+      "main_contributor_priority": ["Artist"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "DocumentFromInternetSite": {
+      "source_type": "DocumentFromInternetSite",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:InternetSiteTitle",
+        "b:ProductionCompany",
+        "b:Year",
+        "b:Month",
+        "b:Day",
+        "b:YearAccessed",
+        "b:MonthAccessed",
+        "b:DayAccessed",
+        "b:URL",
+        "b:Version"
+      ],
+      "main_contributor_priority": ["Author"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "InternetSite": {
+      "source_type": "InternetSite",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:InternetSiteTitle",
+        "b:ProductionCompany",
+        "b:Year",
+        "b:Month",
+        "b:Day",
+        "b:YearAccessed",
+        "b:MonthAccessed",
+        "b:DayAccessed",
+        "b:URL",
+        "b:Version"
+      ],
+      "main_contributor_priority": ["Author"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Film": {
+      "source_type": "Film",
+      "important_fields": [
+        "b:Author/b:Director/b:NameList",
+        "b:Title",
+        "b:ProductionCompany",
+        "b:Year"
+      ],
+      "main_contributor_priority": ["Director", "Writer", "Performer", "ProducerName"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Interview": {
+      "source_type": "Interview",
+      "important_fields": [
+        "b:Author/b:Interviewee/b:NameList",
+        "b:Title",
+        "b:BroadcastTitle",
+        "b:Year",
+        "b:Month",
+        "b:Day",
+        "b:Broadcaster",
+        "b:Station",
+        "b:City"
+      ],
+      "main_contributor_priority": ["Interviewee"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Patent": {
+      "source_type": "Patent",
+      "important_fields": [
+        "b:Author/b:Inventor/b:NameList",
+        "b:Title",
+        "b:Year",
+        "b:Month",
+        "b:Day",
+        "b:CountryRegion"
+      ],
+      "main_contributor_priority": ["Inventor"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "ElectronicSource": {
+      "source_type": "ElectronicSource",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:City",
+        "b:ProductionCompany",
+        "b:Medium",
+        "b:Volume",
+        "b:Year"
+      ],
+      "main_contributor_priority": ["Author", "Editor", "ProducerName", "Translator"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Case": {
+      "source_type": "Case",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:City",
+        "b:Court",
+        "b:Year"
+      ],
+      "main_contributor_priority": ["Author", "Counsel"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    },
+    "Misc": {
+      "source_type": "Misc",
+      "important_fields": [
+        "b:Author/b:Author/b:NameList",
+        "b:Title",
+        "b:PublicationTitle",
+        "b:Year",
+        "b:City",
+        "b:Publisher",
+        "b:Volume",
+        "b:Issue"
+      ],
+      "main_contributor_priority": ["Author", "Editor", "Compiler", "Translator"],
+      "supports_citation": true,
+      "supports_bibliography": true
+    }
+  },
+  "render_rules": {
+    "max_author": 99,
+    "et_al": {
+      "threshold": 4,
+      "position": 1,
+      "and_others_string_key": "and_others_uncap"
+    },
+    "sort": {
+      "key": "sorting_string",
+      "tie_breaker": "source_id"
+    }
+  }
+}
