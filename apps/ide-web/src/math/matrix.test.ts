@@ -35,13 +35,13 @@ function assertClose(a: number, b: number, eps = 1e-6) {
   const inv = m.clone().invert();
   const id = m.clone().multiply(inv);
   // check a few identity entries
-  assertClose(id.elements[0], 1);
-  assertClose(id.elements[5], 1);
-  assertClose(id.elements[10], 1);
-  assertClose(id.elements[15], 1);
-  assertClose(id.elements[12], 0);
-  assertClose(id.elements[13], 0);
-  assertClose(id.elements[14], 0);
+  assertClose(id.elements[0] ?? 0, 1);
+  assertClose(id.elements[5] ?? 0, 1);
+  assertClose(id.elements[10] ?? 0, 1);
+  assertClose(id.elements[15] ?? 0, 1);
+  assertClose(id.elements[12] ?? 0, 0);
+  assertClose(id.elements[13] ?? 0, 0);
+  assertClose(id.elements[14] ?? 0, 0);
 }
 
 console.log("✅ matrix sanity tests passed");
@@ -139,9 +139,9 @@ console.log("✅ Matrix4.compose/decompose with quaternion rotation");
   const normalMat = m.extractNormalMatrix();
 
   // (2I)^-1 = 0.5I, transpose = 0.5I
-  assertClose(normalMat.elements[0], 0.5, 1e-5);
-  assertClose(normalMat.elements[4], 0.5, 1e-5);
-  assertClose(normalMat.elements[8], 0.5, 1e-5);
+  assertClose(normalMat.elements[0] ?? 0, 0.5, 1e-5);
+  assertClose(normalMat.elements[4] ?? 0, 0.5, 1e-5);
+  assertClose(normalMat.elements[8] ?? 0, 0.5, 1e-5);
 }
 console.log("✅ Matrix4.extractNormalMatrix uniform scale");
 
@@ -151,8 +151,8 @@ console.log("✅ Matrix4.extractNormalMatrix uniform scale");
   const normalMat = m.extractNormalMatrix();
 
   // diag(2,1,1)^-1 = diag(0.5,1,1), transpose = same
-  assertClose(normalMat.elements[0], 0.5, 1e-5);
-  assertClose(normalMat.elements[4], 1.0, 1e-5);
-  assertClose(normalMat.elements[8], 1.0, 1e-5);
+  assertClose(normalMat.elements[0] ?? 0, 0.5, 1e-5);
+  assertClose(normalMat.elements[4] ?? 0, 1.0, 1e-5);
+  assertClose(normalMat.elements[8] ?? 0, 1.0, 1e-5);
 }
 console.log("✅ Matrix4.extractNormalMatrix non-uniform scale");

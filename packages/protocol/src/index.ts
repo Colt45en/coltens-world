@@ -2,10 +2,22 @@ export * from "./buildEvidence";
 // buildEvidenceBus exports BusEnvelope but conflicts with generic BusEnvelope from envelopes.
 // Re-export specific types only:
 export {
-  AnyBuildEvidenceBusMsgSchema, BusEnvelopeSchema as BuildEvidenceBusEnvelopeSchema, BuildEvidenceGeneratedMsgSchema, BuildEvidenceRequestMsgSchema, EVT_BUILD_EVIDENCE_GENERATED, EVT_BUILD_EVIDENCE_REQUEST, type AnyBuildEvidenceBusMsg, type BuildEvidenceGeneratedMsg, type BuildEvidenceRequestMsg
+  AnyBuildEvidenceBusMsgSchema,
+  BusEnvelopeSchema as BuildEvidenceBusEnvelopeSchema,
+  BuildEvidenceGeneratedMsgSchema,
+  BuildEvidenceRequestMsgSchema,
+  EVT_BUILD_EVIDENCE_GENERATED,
+  EVT_BUILD_EVIDENCE_REQUEST,
+  type AnyBuildEvidenceBusMsg,
+  type BuildEvidenceGeneratedMsg,
+  type BuildEvidenceRequestMsg,
 } from "./bus/buildEvidenceBus.js";
 export * from "./capabilities";
 export * from "./chat";
+export * from "./contracts/flowstate";
+export * from "./contracts/gameRuntime";
+export * from "./contracts/labs";
+export * from "./contracts/worldGraph";
 export * from "./envelopes"; // canonical BusEnvelope<TType, TPayload>
 export * from "./ide";
 export * from "./idle"; // idle autonomy guard command/effect split
@@ -15,6 +27,3 @@ export * from "./schemas";
 export * from "./system/health"; // system health contracts
 export * from "./types";
 export * from "./uee";
-export * from "./contracts/flowstate";
-export * from "./contracts/gameRuntime";
-export * from "./contracts/worldGraph";

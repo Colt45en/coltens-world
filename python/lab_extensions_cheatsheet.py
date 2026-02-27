@@ -5,8 +5,13 @@ Quick reference for common extension patterns.
 """
 
 # ============= IMPORTS =============
+from lab_extensions import (
+    CustomLabGenerator,
+    LabMetadata,
+    LabTemplateMixin,
+    RegistryLabGenerator,
+)
 from lab_generator import LabGenerator
-from lab_extensions import RegistryLabGenerator, LabMetadata, LabTemplateMixin, CustomLabGenerator
 
 # ============= PATTERN 1: Simple Subclass (5 minutes) =============
 
@@ -15,8 +20,8 @@ from lab_extensions import RegistryLabGenerator, LabMetadata, LabTemplateMixin, 
 class MyLabGenerator(LabGenerator):
     """Add custom labs via subclassing."""
 
-    def _define_labs(self):
-        labs = super()._define_labs()
+    def _define_labs(self) -> dict[str, dict[str, str]]:
+        labs: dict[str, dict[str, str]] = super()._define_labs()  # type: ignore[assignment]
         labs["my_lab"] = self._lab_my_lab()
         return labs
 
@@ -25,7 +30,7 @@ class MyLabGenerator(LabGenerator):
         return {
             "main_code": '''"""Custom Lab"""
 def my_function():
-    # TODO: Implement
+    # TODO: #2 Implement
     pass
 ''',
             "test_code": '''"""Tests"""
@@ -70,7 +75,7 @@ gen.register_custom_lab("custom_01", "My Lab", my_custom_lab, metadata)
 
 # ============= PATTERN 3: Template Generation (2 minutes) =============
 
-class TemplateGen(LabTemplateMixin, RegistryLabGenerator):
+class TemplateGen(RegistryLabGenerator, LabTemplateMixin):
     def __init__(self):
         super().__init__()
 
@@ -99,17 +104,18 @@ def test_sum():
 class ValidatingGen(CustomLabGenerator):
     """Enforce quality standards."""
 
-    def _validate_lab(self, lab_id: str, lab_files: dict) -> None:
+    def _validate_lab(self, lab_id: str, lab_files: dict[str, str]) -> None:
         super()._validate_lab(lab_id, lab_files)
 
         # Custom checks
-        if lab_files["test_code"].count("def test_") < 2:
+        test_code = lab_files["test_code"]
+        if test_code.count("def test_") < 2:
             raise ValueError("Minimum 2 tests required")
 
     def _pre_generation_hook(self, lab_id: str) -> None:
         print(f"Generating {lab_id}...")
 
-    def _post_generation_hook(self, lab_id: str, lab_files: dict) -> None:
+    def _post_generation_hook(self, lab_id: str, lab_files: dict[str, str]) -> None:
         print(f"✓ Generated {lab_id}")
 
 # Usage:

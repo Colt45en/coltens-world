@@ -1,0 +1,23 @@
+{
+  "name": "@world-engine/avatar-sandbox",
+  "version": "1.0.0",
+  "description": "Interactive GLB avatar creation sandbox with WEGC support",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@world-engine/wegc-geometry": "workspace:*",
+    "three": "^0.160.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@vitejs/plugin-basic-ssl": "^1.0.1",
+    "typescript": "^5",
+    "vite": "^5.0.8"
+  }
+}

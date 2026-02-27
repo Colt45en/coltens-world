@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GlassPanel, NeonButton, NeonTitle } from "../ui/neon";
 import {
   createSimpleTileset,
   WaveFunctionCollapse,
   type Tile,
 } from "../utils/waveFunctionCollapse";
+import styles from "./LabWaveFunctionCollapsePage.module.css";
 
 export function LabWaveFunctionCollapsePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -172,8 +173,7 @@ export function LabWaveFunctionCollapsePage() {
           <div className="flex items-center justify-center bg-black/30 rounded-xl p-4">
             <canvas
               ref={canvasRef}
-              className="border border-white/10 rounded-lg"
-              style={{ imageRendering: "pixelated", width: "400px", height: "400px" }}
+              className={`border border-white/10 rounded-lg ${styles.generationCanvas}`}
             />
           </div>
 
@@ -196,8 +196,8 @@ export function LabWaveFunctionCollapsePage() {
               {tiles.map((tile) => (
                 <div key={tile.id} className="flex items-center gap-2">
                   <div
-                    className="w-6 h-6 rounded border border-white/20"
-                    style={{ backgroundColor: tile.color }}
+                    className={`w-6 h-6 rounded border border-white/20 ${styles.tileColorSwatch}`}
+                    style={{ "--tile-color": tile.color } as React.CSSProperties}
                   />
                   <span className="text-xs text-white/70">{tile.name}</span>
                 </div>
@@ -220,6 +220,7 @@ export function LabWaveFunctionCollapsePage() {
                 </label>
                 <input
                   type="range"
+                  title="Grid size slider"
                   min="5"
                   max="40"
                   step="5"
@@ -322,8 +323,8 @@ export function LabWaveFunctionCollapsePage() {
             <div className="text-xs text-white/60 space-y-2">
               <p>
                 <strong className="text-white/80">Bitmask Optimization:</strong> High-performance
-                implementations use bitwise operations for constraint propagation, checking dozens of
-                rules per cycle.
+                implementations use bitwise operations for constraint propagation, checking dozens
+                of rules per cycle.
               </p>
               <p>
                 <strong className="text-white/80">Backtracking:</strong> Contradictions (zero valid

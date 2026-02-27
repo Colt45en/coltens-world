@@ -3,8 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 // @ts-ignore - three.examples doesn't have proper TS types
-import * as SkeletonUtilsModule from "three/examples/jsm/utils/SkeletonUtils.js";
-const SkeletonUtils = SkeletonUtilsModule.SkeletonUtils || SkeletonUtilsModule.default || SkeletonUtilsModule;
+import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils.js";
 
 // =============================================================
 // DNA Types
@@ -776,7 +775,7 @@ function AvatarGLB({
   crossfadeSec: number;
   onSkeletonReady: (skel: THREE.Skeleton | null) => void;
 }) {
-  const group = useRef<THREE.Group>(null);
+  const group = useRef<THREE.Group>(null) as any;
 
   const gltf = useGLTF(ASSETS.avatar) as any;
   const root = useMemo(() => SkeletonUtils.clone(gltf.scene) as THREE.Object3D, [gltf.scene]);
@@ -816,7 +815,7 @@ function AvatarGLB({
     applyARKitToMorphTargets(morphMeshes, (dna as any).face?.arkit ?? {});
   }, [morphMeshes, dna.morphs, dna]);
 
-  const { actions, names, mixer } = useAnimations(gltf.animations ?? [], group);
+  const { actions, names, mixer } = useAnimations(gltf.animations ?? [], group as any);
 
   const lastClip = useRef<string>("");
 
@@ -1158,12 +1157,9 @@ export default function AvatarEditorStage() {
   );
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden" style={{ background: "#141821", color: "#e6eefc" }}>
+    <div className="h-screen w-screen flex overflow-hidden bg-[#141821] text-[#e6eefc]">
       {/* Sidebar */}
-      <div
-        className="w-[460px] min-w-[360px] max-w-[620px] overflow-auto border-r border-black/70"
-        style={{ background: "linear-gradient(180deg,#1c2230,#161b26)" }}
-      >
+      <div className="w-[460px] min-w-[360px] max-w-[620px] overflow-auto border-r border-black/70 bg-gradient-to-b from-[#1c2230] to-[#161b26]">
         <div className="m-4">
           <div className="text-xl font-extrabold">Avatar Editor — GLB + MorphTargets</div>
           <div className="text-xs text-sky-200/70 mt-1">
@@ -1176,6 +1172,7 @@ export default function AvatarEditorStage() {
           <div className="font-semibold mb-2">Presets</div>
           <div className="flex items-center gap-2">
             <select
+              aria-label="Avatar preset selection"
               className="flex-1 px-2 py-2 rounded-md bg-white/10 border border-white/20"
               value={presetIdx}
               onChange={(e) => applyPreset(parseInt(e.target.value, 10))}
@@ -1186,7 +1183,10 @@ export default function AvatarEditorStage() {
                 </option>
               ))}
             </select>
-            <button className="px-3 py-2 rounded-md border border-white/20 bg-white/10 hover:bg-white/20" onClick={() => applyPreset(presetIdx)}>
+            <button
+              className="px-3 py-2 rounded-md border border-white/20 bg-white/10 hover:bg-white/20"
+              onClick={() => applyPreset(presetIdx)}
+            >
               Reset
             </button>
           </div>
@@ -1197,8 +1197,15 @@ export default function AvatarEditorStage() {
           <div className="font-semibold mb-2">Clothes Staging</div>
           <div className="grid grid-cols-2 gap-2 text-sm">
             {(["shirt", "pants", "shoes", "mask"] as const).map((k) => (
-              <label key={k} className="flex items-center gap-2 p-2 rounded bg-black/20 border border-white/10">
-                <input checked={(outfit as any)[k]} type="checkbox" onChange={(e) => setOutfit((o) => ({ ...o, [k]: e.target.checked }))} />
+              <label
+                key={k}
+                className="flex items-center gap-2 p-2 rounded bg-black/20 border border-white/10"
+              >
+                <input
+                  checked={(outfit as any)[k]}
+                  type="checkbox"
+                  onChange={(e) => setOutfit((o) => ({ ...o, [k]: e.target.checked }))}
+                />
                 <span className="capitalize">{k}</span>
               </label>
             ))}
@@ -1217,7 +1224,9 @@ export default function AvatarEditorStage() {
             />
             <button
               className={`px-3 py-2 rounded-md border border-white/20 font-semibold ${
-                paused ? "bg-slate-500/40 hover:bg-slate-500/50" : "bg-emerald-500/40 hover:bg-emerald-500/50"
+                paused
+                  ? "bg-slate-500/40 hover:bg-slate-500/50"
+                  : "bg-emerald-500/40 hover:bg-emerald-500/50"
               }`}
               onClick={() => setPaused((p) => !p)}
             >
@@ -1227,12 +1236,30 @@ export default function AvatarEditorStage() {
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
             <div className="p-2 rounded bg-black/20 border border-white/10">
               <div className="text-sky-200/80">Speed</div>
-              <input type="range" min={0.1} max={2.0} step={0.05} value={speed} onChange={(e) => setSpeed(parseFloat(e.target.value))} className="w-full" title="Animation speed multiplier" />
+              <input
+                type="range"
+                min={0.1}
+                max={2.0}
+                step={0.05}
+                value={speed}
+                onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                className="w-full"
+                title="Animation speed multiplier"
+              />
               <div className="font-mono">{speed.toFixed(2)}x</div>
             </div>
             <div className="p-2 rounded bg-black/20 border border-white/10">
               <div className="text-sky-200/80">Crossfade</div>
-              <input type="range" min={0.01} max={1.0} step={0.01} value={crossfadeSec} onChange={(e) => setCrossfadeSec(parseFloat(e.target.value))} className="w-full" title="Crossfade duration in seconds" />
+              <input
+                type="range"
+                min={0.01}
+                max={1.0}
+                step={0.01}
+                value={crossfadeSec}
+                onChange={(e) => setCrossfadeSec(parseFloat(e.target.value))}
+                className="w-full"
+                title="Crossfade duration in seconds"
+              />
               <div className="font-mono">{crossfadeSec.toFixed(2)}s</div>
             </div>
           </div>
@@ -1244,25 +1271,51 @@ export default function AvatarEditorStage() {
           <div className="grid grid-cols-2 gap-2 text-sm">
             <label className="p-2 rounded bg-black/20 border border-white/10">
               <div className="text-xs text-sky-200/80 mb-1">Skin</div>
-              <input type="color" value={dna.materials.skinColor} onChange={(e) => setMat({ skinColor: e.target.value })} className="w-full h-9" />
+              <input
+                type="color"
+                value={dna.materials.skinColor}
+                onChange={(e) => setMat({ skinColor: e.target.value })}
+                className="w-full h-9"
+              />
             </label>
             <label className="p-2 rounded bg-black/20 border border-white/10">
               <div className="text-xs text-sky-200/80 mb-1">Hair</div>
-              <input type="color" value={dna.materials.hairColor} onChange={(e) => setMat({ hairColor: e.target.value })} className="w-full h-9" />
+              <input
+                type="color"
+                value={dna.materials.hairColor}
+                onChange={(e) => setMat({ hairColor: e.target.value })}
+                className="w-full h-9"
+              />
             </label>
             <label className="p-2 rounded bg-black/20 border border-white/10 col-span-2">
               <div className="flex justify-between">
                 <span className="text-xs text-sky-200/80">Roughness</span>
                 <span className="font-mono text-xs">{dna.materials.roughness.toFixed(2)}</span>
               </div>
-              <input type="range" min={0} max={1} step={0.01} value={dna.materials.roughness} onChange={(e) => setMat({ roughness: parseFloat(e.target.value) })} className="w-full" />
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={dna.materials.roughness}
+                onChange={(e) => setMat({ roughness: parseFloat(e.target.value) })}
+                className="w-full"
+              />
             </label>
             <label className="p-2 rounded bg-black/20 border border-white/10 col-span-2">
               <div className="flex justify-between">
                 <span className="text-xs text-sky-200/80">Metalness</span>
                 <span className="font-mono text-xs">{dna.materials.metalness.toFixed(2)}</span>
               </div>
-              <input type="range" min={0} max={1} step={0.01} value={dna.materials.metalness} onChange={(e) => setMat({ metalness: parseFloat(e.target.value) })} className="w-full" />
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={dna.materials.metalness}
+                onChange={(e) => setMat({ metalness: parseFloat(e.target.value) })}
+                className="w-full"
+              />
             </label>
           </div>
         </section>
@@ -1291,7 +1344,15 @@ export default function AvatarEditorStage() {
               <span className="text-xs text-sky-200/80">Bloom (rim light)</span>
               <span className="font-mono text-xs">{dna.postfx.bloom.toFixed(2)}</span>
             </div>
-            <input type="range" min={0} max={0.6} step={0.01} value={dna.postfx.bloom} onChange={(e) => setPost({ bloom: parseFloat(e.target.value) })} className="w-full" />
+            <input
+              type="range"
+              min={0}
+              max={0.6}
+              step={0.01}
+              value={dna.postfx.bloom}
+              onChange={(e) => setPost({ bloom: parseFloat(e.target.value) })}
+              className="w-full"
+            />
           </label>
 
           <label className="block p-2 rounded bg-black/20 border border-white/10 mb-2">
@@ -1299,16 +1360,32 @@ export default function AvatarEditorStage() {
               <span className="text-xs text-sky-200/80">AO (contact shadows)</span>
               <span className="font-mono text-xs">{dna.postfx.ao.toFixed(2)}</span>
             </div>
-            <input type="range" min={0} max={0.8} step={0.01} value={dna.postfx.ao} onChange={(e) => setPost({ ao: parseFloat(e.target.value) })} className="w-full" />
+            <input
+              type="range"
+              min={0}
+              max={0.8}
+              step={0.01}
+              value={dna.postfx.ao}
+              onChange={(e) => setPost({ ao: parseFloat(e.target.value) })}
+              className="w-full"
+            />
           </label>
 
           <label className="flex items-center gap-2 p-2 rounded bg-black/20 border border-white/10 text-sm mb-2">
-            <input type="checkbox" checked={dna.postfx.smaa} onChange={(e) => setPost({ smaa: e.target.checked })} />
+            <input
+              type="checkbox"
+              checked={dna.postfx.smaa}
+              onChange={(e) => setPost({ smaa: e.target.checked })}
+            />
             <span>SMAA → Antialias</span>
           </label>
 
           <label className="flex items-center gap-2 p-2 rounded bg-black/20 border border-white/10 text-sm mb-2">
-            <input type="checkbox" checked={dna.quality.shadows} onChange={(e) => setQuality({ shadows: e.target.checked })} />
+            <input
+              type="checkbox"
+              checked={dna.quality.shadows}
+              onChange={(e) => setQuality({ shadows: e.target.checked })}
+            />
             <span>Shadows</span>
           </label>
 
@@ -1346,7 +1423,16 @@ export default function AvatarEditorStage() {
                       title={`Morph target value for ${k}`}
                     />
                   </div>
-                  <input type="range" min={-1} max={1} step={0.01} value={v} onChange={(e) => setMorph(k, parseFloat(e.target.value))} className="w-full" title={`Adjust morph target slider for ${k}`} />
+                  <input
+                    type="range"
+                    min={-1}
+                    max={1}
+                    step={0.01}
+                    value={v}
+                    onChange={(e) => setMorph(k, parseFloat(e.target.value))}
+                    className="w-full"
+                    title={`Adjust morph target slider for ${k}`}
+                  />
                 </div>
               );
             })}
@@ -1358,7 +1444,11 @@ export default function AvatarEditorStage() {
           <div className="font-semibold mb-2">ARKit Import (JSON)</div>
 
           <label className="flex items-center gap-2 p-2 rounded bg-black/20 border border-white/10 text-sm mb-2">
-            <input type="checkbox" checked={mergeArkit} onChange={(e) => setMergeArkit(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={mergeArkit}
+              onChange={(e) => setMergeArkit(e.target.checked)}
+            />
             <span>Merge into existing (else replace)</span>
           </label>
 
@@ -1410,7 +1500,7 @@ export default function AvatarEditorStage() {
             <button
               className="px-3 py-2 rounded-md border border-white/20 bg-rose-500/20 hover:bg-rose-500/30 font-bold col-span-1"
               onClick={() => {
-                setDna((prev) => ({ ...prev, face: { ...(prev as any).face ?? {}, arkit: {} } }));
+                setDna((prev) => ({ ...prev, face: { ...((prev as any).face ?? {}), arkit: {} } }));
                 setArkitImportInfo(null);
                 setArkitFrames([]);
                 setArkitFrameIndex(0);
@@ -1434,7 +1524,7 @@ export default function AvatarEditorStage() {
               }}
               title="Export { frames: [...] } with preserved timeSec"
             >
-              Copy Timeline ({'{'} frames {'}'})
+              Copy Timeline ({"{"} frames {"}"})
             </button>
           </div>
 
@@ -1466,7 +1556,9 @@ export default function AvatarEditorStage() {
           <div className="flex gap-2">
             <button
               className="flex-1 px-3 py-2 rounded-md border border-white/20 bg-emerald-400/20 hover:bg-emerald-400/30 font-bold"
-              onClick={async () => alert((await copyToClipboard(exportJson)) ? "Copied ✅" : "Clipboard blocked ❌")}
+              onClick={async () =>
+                alert((await copyToClipboard(exportJson)) ? "Copied ✅" : "Clipboard blocked ❌")
+              }
             >
               Copy JSON
             </button>
@@ -1477,7 +1569,12 @@ export default function AvatarEditorStage() {
                 if (!raw) return;
                 try {
                   const parsed = JSON.parse(raw) as AvatarDNA;
-                  if (!parsed?.morphs || !parsed?.materials || !parsed?.postfx || !parsed?.quality) {
+                  if (
+                    !parsed?.morphs ||
+                    !parsed?.materials ||
+                    !parsed?.postfx ||
+                    !parsed?.quality
+                  ) {
                     alert("Invalid DNA shape.");
                     return;
                   }
@@ -1495,7 +1592,14 @@ export default function AvatarEditorStage() {
 
       {/* Viewer */}
       <div className="flex-1 relative">
-        <Scene dna={dna} outfit={outfit} activeClip={activeClip} speed={speed} paused={paused} crossfadeSec={crossfadeSec} />
+        <Scene
+          dna={dna}
+          outfit={outfit}
+          activeClip={activeClip}
+          speed={speed}
+          paused={paused}
+          crossfadeSec={crossfadeSec}
+        />
       </div>
     </div>
   );

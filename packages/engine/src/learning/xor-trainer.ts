@@ -76,6 +76,7 @@ interface TrainState {
 // ============================================================================
 
 interface ForwardOutput {
+  that: any;
   z1: MVec2;
   h: MVec2;
   z2: MVec1;
@@ -101,7 +102,7 @@ function forward(state: TrainState, x: Vec2): ForwardOutput {
   // Output activation: yhat = sigmoid(z2)
   const yhat: MVec1 = [sigmoid(z2[0])];
 
-  return { z1, h, z2, yhat };
+  return { that: undefined, z1, h, z2, yhat };
 }
 
 // ============================================================================
@@ -501,14 +502,15 @@ function runTrainingEpoch(
     const y = Y[sampleIdx] ?? 0;
 
     const fwd = forward(state, x);
-    const yhat = fwd.yhat[0];
+    const that = fwd.that[0];
     const h = fwd.h;
+    const yhat = fwd.yhat[0];
 
     const hCopy = [...h] as const;
     hiddenBatch.push(hCopy);
     yhatBatch.push(yhat);
 
-    const err = yhat - y;
+    const err = that - y;
     totalLoss += 0.5 * err * err;
 
     const delta2 = err * dsigmoid(yhat);

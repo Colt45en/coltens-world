@@ -1,115 +1,165 @@
+/**
+ * Env-Sandbox Contracts: Type Definitions & Zod Schemas
+ *
+ * Single source of truth for all types in the system.
+ * Zod schemas enable runtime validation at boundaries.
+ * Implements policy-based governance, audit ledger, and process isolation.
+ */
+
 import { z } from "zod";
-import { KeySchema, LayerNameSchema } from "./types";
 
-/**
- * Env value kinds:
- * - string: raw text
- * - number: numeric
- * - boolean: true/false
- * - json: object/array (stored as stable JSON string in ENV)
- */
-export const EnvValueKindSchema = z.enum(["string", "number", "boolean", "json"]);
-export type EnvValueKind = z.infer<typeof EnvValueKindSchema>;
+// ===== Capabilities =====
+export const CapabilitySchema = z.enum([
+  "read:env",
+  "read:fs",
+  "write:fs",
+  "write:memory",
+  "execute:code",
+  "execute:child_process",
+  "execute:worker",
+  "network:client",
+]);
+export type Capability = z.infer<typeof CapabilitySchema>;
 
-export const EnvKeySpecSchema = z.object({
-  key: KeySchema,
-  kind: EnvValueKindSchema,
-  description: z.string().min(1).max(500),
-  default: z.union([z.string(), z.number(), z.boolean(), z.record(z.any()), z.array(z.any())]).optional(),
-  allowed_layers: z.array(LayerNameSchema).optional(),
-  // Optional: forbid changes unless gate(s) are satisfied
-  required_gates: z.array(z.string().min(1).max(64)).optional()
-});
+// ===== Resource Types =====
+export const ResourceTypeSchema = z.enum(["file", "process", "network", "system", "sandbox"]);
+export type ResourceType = z.infer<typeof ResourceTypeSchema>;
 
-export type EnvKeySpec = z.infer<typeof EnvKeySpecSchema>;
+// ===== Policy Decision =====
+export const DecisionSchema = z.enum(["allow", "deny", "audit", "ratelimit"]);
+export type Decision = z.infer<typeof DecisionSchema>;
 
-export const EnvCodexSchema = z.object({
-  meta: z.object({
-    title: z.string().default("Env Codex"),
-    version: z.string().regex(/^\d+\.\d+\.\d+$/).default("1.0.0"),
-    created_at: z.string().datetime().optional()
-  }),
-  /**
-   * Gates are boolean switches that policy can use.
-   * Examples:
-   * - resource_scarcity
-   * - observer_effect
-   * - production_lock
-   */
-  gates: z.record(z.string().min(1).max(64), z.boolean()).default({}),
-  /**
-   * Allowlist registry (the contract).
-   */
-  registry: z.array(EnvKeySpecSchema).default([]),
-  /**
-   * Policy rules (simple and enforceable).
-   */
-  policy: z.object({
-    // If true, setting an unknown key fails.
-    fail_on_unknown_key: z.boolean().default(true),
-    // If true, missing required gate blocks change.
-    enforce_gates: z.boolean().default(true),
-    // Keys that cannot be changed when production_lock gate is true.
-    production_locked_prefixes: z.array(z.string().min(1).max(64)).default(["PROD_", "SECRET_", "TOKEN_", "KEY_"])
-  }).default({
-    fail_on_unknown_key: true,
-    enforce_gates: true,
-    production_locked_prefixes: ["PROD_", "SECRET_", "TOKEN_", "KEY_"]
+// ===== Severity Levels =====
+export const SeveritySchema = z.enum(["info", "warning", "high", "critical"]);
+export type Severity = z.infer<typeof SeveritySchema>;
+
+// ===== Rate Limiting =====
+export const RateLimitSchema = z
+  .object({
+    maxPerSecond: z.number().int().positive().optional(),
+    maxPerMinute: z.number().int().positive().optional(),
   })
-});
+  .strict();
 
-export type EnvCodex = z.infer<typeof EnvCodexSchema>;
+// ===== Rule Conditions =====
+export const RuleConditionSchema = z
+  .object({
+    path: z.string().optional(), // glob-like: /tmp/*, **/*.json
+    capability: CapabilitySchema.optional(),
+    networkAllowed: z.boolean().optional(),
+  })
+  .strict();
 
-export function codexToMap(codex: EnvCodex): Map<string, EnvKeySpec> {
-  const m = new Map<string, EnvKeySpec>();
-  for (const spec of codex.registry) m.set(spec.key, spec);
-  return m;
-}
+// ===== Policy Rule =====
+export const PolicyRuleSchema = z
+  .object({
+    id: z.string().min(1),
+    resourceType: ResourceTypeSchema,
+    action: DecisionSchema,
+    operation: z.string().min(1),
+    condition: RuleConditionSchema.optional(),
+    priority: z.number().int().default(100),
+    rateLimit: RateLimitSchema.optional(),
+    createdAt: z.string().min(1),
+  })
+  .strict();
+export type PolicyRule = z.infer<typeof PolicyRuleSchema>;
 
-/**
- * Stable JSON encoding for ENV storage.
- * - deterministic key order for objects
- * - no whitespace
- */
-export function stableJsonStringify(value: unknown): string {
-  const normalize = (v: any): any => {
-    if (Array.isArray(v)) return v.map(normalize);
-    if (v && typeof v === "object") {
-      const keys = Object.keys(v).sort();
-      const out: Record<string, any> = {};
-      for (const k of keys) out[k] = normalize(v[k]);
-      return out;
-    }
-    return v;
-  };
-  return JSON.stringify(normalize(value));
-}
+// ===== Policy =====
+export const PolicySchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    version: z.string().min(1),
+    isActive: z.boolean(),
+    isDefault: z.boolean(),
+    rules: z.array(PolicyRuleSchema),
+    createdAt: z.string().min(1),
+    updatedAt: z.string().min(1),
+  })
+  .strict();
+export type Policy = z.infer<typeof PolicySchema>;
 
-export function parseTypedValue(kind: EnvValueKind, raw: string): string {
-  switch (kind) {
-    case "string":
-      return raw;
-    case "number": {
-      const n = Number(raw);
-      if (!Number.isFinite(n)) throw new Error(`Invalid number: "${raw}"`);
-      return String(n);
-    }
-    case "boolean": {
-      const s = raw.trim().toLowerCase();
-      if (s === "true" || s === "1") return "true";
-      if (s === "false" || s === "0") return "false";
-      throw new Error(`Invalid boolean: "${raw}" (use true/false)`);
-    }
-    case "json": {
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(raw);
-      } catch {
-        throw new Error(`Invalid JSON: "${raw}"`);
-      }
-      return stableJsonStringify(parsed);
-    }
-    default:
-      throw new Error(`Unknown EnvValueKind: "${kind}"`);
-  }
-}
+// ===== Sandbox State =====
+export const SandboxStateSchema = z.enum([
+  "created",
+  "initialized",
+  "running",
+  "completed",
+  "failed",
+  "destroyed",
+]);
+export type SandboxState = z.infer<typeof SandboxStateSchema>;
+
+// ===== Sandbox Config =====
+export const SandboxConfigSchema = z
+  .object({
+    policyId: z.string().min(1),
+    capabilities: z.array(CapabilitySchema),
+    memoryLimit: z.number().int().positive().default(512),
+    diskLimit: z.number().int().positive().default(100),
+    cpuLimit: z.number().int().positive().max(100).default(50),
+    timeout: z.number().int().positive().default(30000),
+    networkAllowed: z.boolean().default(false),
+  })
+  .strict();
+export type SandboxConfig = z.infer<typeof SandboxConfigSchema>;
+
+// ===== Sandbox =====
+export const SandboxSchema = z
+  .object({
+    id: z.string().min(1),
+    config: SandboxConfigSchema,
+    state: SandboxStateSchema,
+    createdAt: z.string().min(1),
+    metadata: z.record(z.any()).optional(),
+  })
+  .strict();
+export type Sandbox = z.infer<typeof SandboxSchema>;
+
+// ===== Language =====
+export const LanguageSchema = z.enum(["javascript", "typescript", "python", "bash", "json"]);
+export type Language = z.infer<typeof LanguageSchema>;
+
+// ===== Execution Request =====
+export const ExecutionRequestSchema = z
+  .object({
+    sandboxId: z.string().min(1),
+    language: LanguageSchema,
+    code: z.string().min(1),
+    args: z.record(z.any()).default({}),
+  })
+  .strict();
+export type ExecutionRequest = z.infer<typeof ExecutionRequestSchema>;
+
+// ===== Execution Response =====
+export const ExecutionResponseSchema = z
+  .object({
+    ok: z.boolean(),
+    stdout: z.string(),
+    stderr: z.string(),
+    result: z.any().optional(),
+    exitCode: z.number().int().optional(),
+    durationMs: z.number().int().nonnegative(),
+  })
+  .strict();
+export type ExecutionResponse = z.infer<typeof ExecutionResponseSchema>;
+
+// ===== Audit Event =====
+export const AuditEventSchema = z
+  .object({
+    id: z.string().min(1),
+    atUtc: z.string().min(1),
+    action: z.string().min(1),
+    actor: z.string().min(1),
+    resourceType: ResourceTypeSchema,
+    resource: z.record(z.any()).default({}),
+    decision: z.enum(["allow", "deny", "audit"]),
+    severity: SeveritySchema.default("info"),
+    reason: z.string().optional(),
+    sandboxId: z.string().optional(),
+    prevHash: z.string().optional(),
+    hash: z.string().optional(),
+  })
+  .strict();
+export type AuditEvent = z.infer<typeof AuditEventSchema>;

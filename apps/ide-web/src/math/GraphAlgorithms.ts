@@ -119,9 +119,11 @@ export class GraphAlgorithms {
 
     for (let i = 0; i < this.nodes.length; i++) {
       const nodeA = this.nodes[i];
+      if (!nodeA) continue;
 
       for (let j = i + 1; j < this.nodes.length; j++) {
         const nodeB = this.nodes[j];
+        if (!nodeB) continue;
         const distSq = nodeA.position.distanceSquaredTo(nodeB.position);
 
         if (distSq < maxDistSq) {
@@ -235,6 +237,7 @@ export class GraphAlgorithms {
 
       unvisited.delete(currentId);
       const current = this.nodes[currentId];
+      if (!current) break;
 
       // Check all neighbors
       for (const neighbor of current.connections) {
@@ -264,7 +267,7 @@ export class GraphAlgorithms {
     }
 
     // If path doesn't reach start, no valid path exists
-    if (path.length > 0 && !path[0].equals(startNode.position)) {
+    if (path.length > 0 && startNode && path[0] && !path[0].equals(startNode.position)) {
       return [];
     }
 
@@ -287,7 +290,7 @@ export class GraphAlgorithms {
   findNearestNode(point: Vector3): GraphNode | null {
     if (this.nodes.length === 0) return null;
 
-    let nearest = this.nodes[0];
+    let nearest = this.nodes[0]!;
     let minDistSq = point.distanceSquaredTo(nearest.position);
 
     for (const node of this.nodes) {

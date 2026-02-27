@@ -226,7 +226,7 @@ function PlayerController() {
       velocity.lerp(ZERO, t);
     }
 
-    camera.position.addScaledVector(velocity as unknown as THREE.Vector3, dt);
+    (camera.position as unknown as THREE.Vector3).addScaledVector(velocity, dt);
   };
 
   const findHoveredInteractable = () => {

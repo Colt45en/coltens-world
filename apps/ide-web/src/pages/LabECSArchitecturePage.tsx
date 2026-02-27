@@ -271,6 +271,7 @@ export function LabECSArchitecturePage() {
               onChange={(e) => setEntityCount(Number(e.target.value))}
               disabled={isRunning}
               className="w-full accent-cyan-500"
+              title="Entity count for benchmark"
             />
           </div>
 

@@ -250,12 +250,100 @@ class AlgorithmLabGenerator(RegistryLabGenerator):
     Demonstrates: Use templates to generate multiple similar labs quickly
     """
 
-    def __init__(self):
-        super().__init__()
-        self._add_sorting_labs()
-        self._add_search_labs()
-
-    def _add_sorting_labs(self):
+        def __init__(self):
+            super().__init__()
+            self._add_sorting_labs()
+            self._add_search_labs()
+    
+        def _add_search_labs(self):
+            """Add search algorithm labs."""
+            algorithms = [
+                ("Linear Search", "Scan sequentially", "O(n)"),
+                ("Binary Search", "Divide search space", "O(log n)"),
+            ]
+    
+            for i, (name, desc, complexity) in enumerate(algorithms, 1):
+                lab_id = f"algo_search_{i:02d}_{name.lower().replace(' ', '_')}"
+    
+                spec = LabSpec(
+                    metadata=LabMetadata(
+                        lab_id=lab_id,
+                        title=f"Implement {name}",
+                        description=f"Implement {desc}",
+                        difficulty="intermediate",
+                        duration_hours=2.0,
+                        topics=["algorithms", "searching"],
+                        learning_outcomes=[
+                            f"Understand {name} algorithm",
+                            f"Analyze {complexity} complexity",
+                            "Implement in Python",
+                        ],
+                    ),
+                    main_code=f'''"""
+    Lab: {name} Implementation
+    
+    Algorithm: {name}
+    Description: {desc}
+    Time Complexity: {complexity}
+    """
+    
+    def {name.lower().replace(' ', '_')}(arr, target):
+        """
+        Implement {name} algorithm.
+    
+        Args:
+            arr: List of elements
+            target: Element to search for
+    
+        Returns:
+            Index of target if found, -1 otherwise
+        """
+        # TODO: Implement {name}
+        pass
+    
+    if __name__ == "__main__":
+        test_arr = [1, 3, 5, 7, 9, 11]
+        result = {name.lower().replace(' ', '_')}(test_arr, 7)
+        print(f"Index: {{result}}")
+    ''',
+                    test_code=f'''"""Tests for {name} implementation"""
+    import pytest
+    
+    def test_{name.lower().replace(' ', '_')}_found():
+        """Test when element is found."""
+        arr = [1, 3, 5, 7, 9]
+        # TODO: Test that target is found
+        pass
+    
+    def test_{name.lower().replace(' ', '_')}_not_found():
+        """Test when element is not found."""
+        arr = [1, 3, 5, 7, 9]
+        # TODO: Test that -1 is returned
+        pass
+    
+    def test_{name.lower().replace(' ', '_')}_empty():
+        """Test empty list."""
+        assert {name.lower().replace(' ', '_')}([], 5) == -1
+    ''',
+                    readme=f"""# {name} Implementation
+    
+    ## Algorithm Description
+    {desc}
+    
+    ## Complexity Analysis
+    - Time: {complexity}
+    - Space: O(1)
+    
+    ## Success Criteria
+    - All unit tests pass
+    - Student explains time complexity
+    - Code is well-commented
+    """,
+                )
+    
+                self.register_template_lab(lab_id, spec)
+    
+        def _add_sorting_labs(self):
         """Add sorting algorithm labs."""
         algorithms = [
             ("Bubble Sort", "Swap adjacent elements", "O(n²)"),

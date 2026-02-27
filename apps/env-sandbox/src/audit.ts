@@ -1,85 +1,261 @@
-import fs from "node:fs";
-import path from "node:path";
-import { ensureDir } from "./storage";
+/**
+ * Audit Ledger: Append-Only, Hash-Chained Event Log
+ *
+ * - All events are immutable once written
+ * - Hash chain provides integrity verification
+ * - Sealing prevents further modifications
+ * - Canonical JSON for deterministic serialization
+ */
 
-export type AuditEvent =
-    | {
-        type: "SET";
-        ts: string;
-        layer: string;
-        key: string;
-        value: string;
-        actor?: string;
-        note?: string;
+import crypto from "node:crypto";
+import type { AuditEvent, ResourceType, Severity } from "./contracts.js";
+import { AuditEventSchema } from "./contracts.js";
+
+/**
+ * Canonical JSON serialization (stable key order, no whitespace)
+ */
+function canonicalJSON(obj: any): string {
+  const stack: any[] = [];
+  const keys = new Set<any>();
+
+  return JSON.stringify(obj, (key: string, value: any) => {
+    if (typeof value === "object" && value !== null) {
+      if (stack.includes(value)) {
+        throw new Error("Circular reference in audit event");
+      }
+      stack.push(value);
+      keys.clear();
     }
-    | {
-        type: "UNSET";
-        ts: string;
-        layer: string;
-        key: string;
-        actor?: string;
-        note?: string;
+    return value;
+  });
+}
+
+/**
+ * SHA256 hash (hex string)
+ */
+function hashEvent(data: string): string {
+  return crypto.createHash("sha256").update(data).digest("hex");
+}
+
+/**
+ * AuditLedger: Append-only log with hash chaining
+ */
+export class AuditLedger {
+  private events: AuditEvent[] = [];
+  private sealed = false;
+  private sealHash: string | null = null;
+
+  /**
+   * Append a new event to the ledger
+   */
+  append(event: Omit<AuditEvent, "id" | "hash" | "prevHash">): AuditEvent {
+    if (this.sealed) {
+      throw new Error("Ledger is sealed; no further events can be appended");
     }
-    | {
-        type: "CLEAR_LAYER";
-        ts: string;
-        layer: string;
-        actor?: string;
-        note?: string;
-    }
-    | {
-        type: "APPLY_PROFILE";
-        ts: string;
-        layer: string;
-        profile: string;
-        actor?: string;
-        note?: string;
-    }
-    | {
-        type: "BIND_CODEX";
-        ts: string;
-        layer: string;
-        codex_title: string;
-        codex_version: string;
-        actor?: string;
-        note?: string;
+
+    // Generate ID
+    const id = crypto.randomBytes(16).toString("hex");
+
+    // Get prevHash from last event
+    const prevEvent = this.events[this.events.length - 1];
+    const prevHash = prevEvent?.hash || "";
+
+    // Create canonical JSON for hashing (without id, hash, prevHash)
+    const eventData = {
+      atUtc: event.atUtc,
+      action: event.action,
+      actor: event.actor,
+      resourceType: event.resourceType,
+      resource: event.resource || {},
+      decision: event.decision,
+      severity: event.severity || "info",
+      reason: event.reason,
+      sandboxId: event.sandboxId,
     };
 
-function nowIso(): string {
-    return new Date().toISOString();
-}
+    const canonical = canonicalJSON(eventData);
+    const hash = hashEvent(canonical);
 
-export function resolveAuditPath(stateFile: string): string {
-    const root = path.dirname(stateFile);
-    return path.join(root, "audit.ndjson");
-}
+    const auditEvent: AuditEvent = {
+      id,
+      atUtc: event.atUtc,
+      action: event.action,
+      actor: event.actor,
+      resourceType: event.resourceType,
+      resource: event.resource || {},
+      decision: event.decision,
+      severity: event.severity || "info",
+      reason: event.reason,
+      sandboxId: event.sandboxId,
+      prevHash: prevHash || undefined,
+      hash,
+    };
 
-export function appendAudit(stateFile: string, evt: Omit<AuditEvent, "ts">): void {
-    const file = resolveAuditPath(stateFile);
-    ensureDir(path.dirname(file));
-    const line = JSON.stringify({ ...evt, ts: nowIso() }) + "\n";
-    fs.appendFileSync(file, line, "utf-8");
-}
+    // Validate
+    AuditEventSchema.parse(auditEvent);
 
-export function readAuditSince(stateFile: string, sinceIso?: string): AuditEvent[] {
-    const file = resolveAuditPath(stateFile);
-    if (!fs.existsSync(file)) return [];
-    const raw = fs.readFileSync(file, "utf-8").trim();
-    if (!raw) return [];
-    const lines = raw.split("\n");
+    this.events.push(auditEvent);
+    return auditEvent;
+  }
 
-    const since = sinceIso ? Date.parse(sinceIso) : null;
-    if (sinceIso && Number.isNaN(since ?? NaN)) throw new Error(`Invalid --since ISO: ${sinceIso}`);
-
-    const out: AuditEvent[] = [];
-    for (const line of lines) {
-        const evt = JSON.parse(line) as AuditEvent;
-        if (!since) out.push(evt);
-        else {
-            const t = Date.parse(evt.ts);
-            if (!Number.isFinite(t)) continue;
-            if (t >= since) out.push(evt);
-        }
+  /**
+   * Seal the ledger (prevent future append)
+   */
+  seal(): string {
+    if (this.sealed) {
+      return this.sealHash!;
     }
-    return out;
+
+    const lastEvent = this.events[this.events.length - 1];
+    const finalHash = lastEvent?.hash || "";
+    this.sealHash = hashEvent(finalHash + "|SEALED");
+    this.sealed = true;
+    return this.sealHash;
+  }
+
+  /**
+   * Verify hash chain integrity
+   */
+  verifyHashChain(): { valid: boolean; brokenAt: number | null } {
+    let prevHash = "";
+
+    for (let i = 0; i < this.events.length; i++) {
+      const event = this.events[i]!;
+
+      // Expected prevHash
+      if (event.prevHash !== (prevHash || undefined)) {
+        return { valid: false, brokenAt: i };
+      }
+
+      // Recompute hash
+      const eventData = {
+        atUtc: event.atUtc,
+        action: event.action,
+        actor: event.actor,
+        resourceType: event.resourceType,
+        resource: event.resource,
+        decision: event.decision,
+        severity: event.severity,
+        reason: event.reason,
+        sandboxId: event.sandboxId,
+      };
+
+      const canonical = canonicalJSON(eventData);
+      const expectedHash = hashEvent(canonical);
+
+      if (event.hash !== expectedHash) {
+        return { valid: false, brokenAt: i };
+      }
+
+      prevHash = event.hash;
+    }
+
+    return { valid: true, brokenAt: null };
+  }
+
+  /**
+   * Get all events
+   */
+  getEvents(): AuditEvent[] {
+    return [...this.events];
+  }
+
+  /**
+   * Filter events by action
+   */
+  byAction(action: string): AuditEvent[] {
+    return this.events.filter((e) => e.action === action);
+  }
+
+  /**
+   * Filter events by sandbox
+   */
+  bySandbox(sandboxId: string): AuditEvent[] {
+    return this.events.filter((e) => e.sandboxId === sandboxId);
+  }
+
+  /**
+   * Get violation events (deny or high/critical severity)
+   */
+  violations(): AuditEvent[] {
+    return this.events.filter(
+      (e) => e.decision === "deny" || e.severity === "high" || e.severity === "critical"
+    );
+  }
+
+  /**
+   * Export as JSON
+   */
+  export(): object {
+    return {
+      version: "1.0.0",
+      sealed: this.sealed,
+      sealHash: this.sealHash,
+      eventCount: this.events.length,
+      events: this.events,
+    };
+  }
+
+  /**
+   * Get size (number of events)
+   */
+  size(): number {
+    return this.events.length;
+  }
+
+  /**
+   * Check if sealed
+   */
+  isSealed(): boolean {
+    return this.sealed;
+  }
+}
+
+/**
+ * Global audit ledger instance
+ */
+let globalLedger: AuditLedger | null = null;
+
+/**
+ * Initialize or get global ledger
+ */
+export function getAuditLedger(): AuditLedger {
+  if (!globalLedger) {
+    globalLedger = new AuditLedger();
+  }
+  return globalLedger;
+}
+
+/**
+ * Reset global ledger (for testing)
+ */
+export function resetAuditLedger(): void {
+  globalLedger = null;
+}
+
+/**
+ * Convenience function: audit an event
+ */
+export function auditLog(
+  action: string,
+  actor: string,
+  resourceType: ResourceType,
+  decision: "allow" | "deny" | "audit",
+  resource: Record<string, any> = {},
+  severity: Severity = "info",
+  sandboxId?: string,
+  reason?: string
+): AuditEvent {
+  const ledger = getAuditLedger();
+  return ledger.append({
+    atUtc: new Date().toISOString(),
+    action,
+    actor,
+    resourceType,
+    resource,
+    decision,
+    severity,
+    sandboxId,
+    reason,
+  });
 }

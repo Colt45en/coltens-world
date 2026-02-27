@@ -134,6 +134,9 @@ export * from "./contracts/representation/index.js";
 export * from "./contracts/util/exhaustive.js";
 export * from "./contracts/util/require-schema.js";
 
+// Formatting kernel (deterministic text normalization + sort keys)
+export * from "./formatting/index.js";
+
 // JSON value types & coercion (engine-owned, Prisma-independent)
 export { coerceJsonValue, requireJsonObject, requireJsonValue } from "./runtime/json.js";
 export type { JsonObject, JsonPrimitive, JsonValue } from "./runtime/json.js";
@@ -146,5 +149,12 @@ export * from "./learning/index.js";
 
 // Deterministic game foundation (fixed tick runtime + hash chain)
 export * from "./game-foundation/index.js";
+
+// World Engine: Ring-based deterministic simulation
+export { canonicalEqual, canonicalize, contentAddressedId, sha256Hex, stableStringify } from "./determinism/canon";
+export type { Json } from "./determinism/canon";
+export { createConceptExtractionPipeline } from "./pipelines/conceptExtraction";
+export { WorldEngineRuntime } from "./world/runtime";
+export type { Pipeline } from "./world/runtime";
 
 export default ECSEngine;

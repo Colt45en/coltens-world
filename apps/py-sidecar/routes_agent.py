@@ -7,12 +7,15 @@ Adds multi-modal agent capabilities:
 """
 
 import base64
-import io
 import importlib.util
-from typing import Optional, Dict, Any
+import io
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from fastapi import FastAPI
 
 # Optional imports (gracefully handle if not installed)
 try:
@@ -29,7 +32,7 @@ NUMPY_AVAILABLE = importlib.util.find_spec("numpy") is not None
 
 class AudioTranscribeRequest(BaseModel):
     audio: str  # base64 encoded audio data
-    language: Optional[str] = "en"
+    language: str = "en"
     format: str = "webm"
 
 class AudioTranscribeResponse(BaseModel):
@@ -51,7 +54,7 @@ class AudioSynthesizeResponse(BaseModel):
 
 class VisualAnalyzeRequest(BaseModel):
     image: str  # base64 encoded image
-    prompt: Optional[str] = "Describe this image in detail"
+    prompt: str = "Describe this image in detail"
     max_tokens: int = 300
 
 class VisualAnalyzeResponse(BaseModel):
@@ -182,7 +185,7 @@ def create_agent_routes() -> APIRouter:
     visual_processor = VisualProcessor()
 
     @router.get("/status")
-    async def get_agent_status():
+    async def get_agent_status() -> Dict[str, Any]:
         """Get agent system status"""
         return {
             "status": "online",
@@ -199,7 +202,7 @@ def create_agent_routes() -> APIRouter:
         }
 
     @router.post("/audio/transcribe", response_model=AudioTranscribeResponse)
-    async def transcribe_audio(request: AudioTranscribeRequest):
+    async def transcribe_audio(request: AudioTranscribeRequest) -> AudioTranscribeResponse:
         """Transcribe audio to text"""
         try:
             audio_data = base64.b64decode(request.audio)
@@ -208,7 +211,7 @@ def create_agent_routes() -> APIRouter:
             raise HTTPException(500, f"Transcription failed: {str(e)}")
 
     @router.post("/audio/synthesize", response_model=AudioSynthesizeResponse)
-    async def synthesize_audio(request: AudioSynthesizeRequest):
+    async def synthesize_audio(request: AudioSynthesizeRequest) -> AudioSynthesizeResponse:
         """Synthesize text to audio"""
         try:
             return await audio_processor.synthesize(request.text, request.voice, request.speed)
@@ -216,7 +219,7 @@ def create_agent_routes() -> APIRouter:
             raise HTTPException(500, f"Synthesis failed: {str(e)}")
 
     @router.post("/visual/analyze", response_model=VisualAnalyzeResponse)
-    async def analyze_image(request: VisualAnalyzeRequest):
+    async def analyze_image(request: VisualAnalyzeRequest) -> VisualAnalyzeResponse:
         """Analyze image and return description"""
         try:
             return await visual_processor.analyze(request.image, request.prompt)
@@ -224,7 +227,7 @@ def create_agent_routes() -> APIRouter:
             raise HTTPException(500, f"Visual analysis failed: {str(e)}")
 
     @router.post("/visual/objects")
-    async def detect_objects(request: VisualAnalyzeRequest):
+    async def detect_objects(request: VisualAnalyzeRequest) -> list[Dict[str, Any]]:
         """Detect objects in image"""
         try:
             return await visual_processor.detect_objects(request.image)
@@ -237,7 +240,7 @@ def create_agent_routes() -> APIRouter:
 # Add to existing FastAPI app
 # ============================================================================
 
-def setup_agent_system(app):
+def setup_agent_system(app: "FastAPI") -> None:
     """Setup agent system in existing FastAPI app"""
     agent_router = create_agent_routes()
     app.include_router(agent_router)

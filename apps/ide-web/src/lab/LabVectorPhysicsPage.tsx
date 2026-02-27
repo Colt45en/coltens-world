@@ -154,7 +154,10 @@ class ArmSystem {
   draw(ctx: CanvasRenderingContext2D, showTrail: boolean = true) {
     if (showTrail && this.trail.length > 3) {
       ctx.beginPath();
-      ctx.moveTo(this.trail[0].x, this.trail[0].y);
+      const firstPoint = this.trail[0];
+      if (firstPoint) {
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+      }
       for (const p of this.trail) ctx.lineTo(p.x, p.y);
       ctx.strokeStyle = `hsla(${this.hue}, 80%, 60%, 0.3)`;
       ctx.lineWidth = 2;
@@ -163,8 +166,8 @@ class ArmSystem {
 
     ctx.lineCap = "round";
     for (let i = 0; i < this.segments.length; i++) {
-      const a = this.segments[i].pos;
-      const b = i === 0 ? this.anchor : this.segments[i - 1].pos;
+      const a = this.segments[i]!.pos;
+      const b = i === 0 ? this.anchor : this.segments[i - 1]!.pos;
       ctx.strokeStyle = `hsl(${(this.hue + i * 18) % 360}, 75%, 58%)`;
       ctx.lineWidth = Math.max(2, 10 - i * 1.2);
       ctx.beginPath();
@@ -323,7 +326,7 @@ export function LabVectorPhysicsPage() {
       const R = 64;
       for (let i = 0; i < state.arms.length; i++) {
         const a = (i / state.arms.length) * Math.PI * 2;
-        state.arms[i].anchor = new Vec(
+        state.arms[i]!.anchor = new Vec(
           state.pos.x + Math.cos(a) * R,
           state.pos.y + Math.sin(a) * R
         );
@@ -408,7 +411,7 @@ export function LabVectorPhysicsPage() {
         let best = -1;
         let bd = 1e9;
         for (let i = 0; i < state.obstacles.length; i++) {
-          const d = state.obstacles[i].p.sub(p).mag();
+          const d = state.obstacles[i]!.p.sub(p).mag();
           if (d < bd) {
             bd = d;
             best = i;
@@ -464,6 +467,7 @@ export function LabVectorPhysicsPage() {
                   value={timeScale}
                   onChange={(e) => setTimeScale(parseFloat(e.target.value))}
                   className="w-full"
+                  title="Speed multiplier"
                 />
               </div>
               <div>
@@ -478,6 +482,7 @@ export function LabVectorPhysicsPage() {
                   value={gravity}
                   onChange={(e) => setGravity(parseFloat(e.target.value))}
                   className="w-full"
+                  title="Gravity strength"
                 />
               </div>
               <div>
@@ -492,6 +497,7 @@ export function LabVectorPhysicsPage() {
                   value={springK}
                   onChange={(e) => setSpringK(parseFloat(e.target.value))}
                   className="w-full"
+                  title="Spring constant"
                 />
               </div>
             </div>
@@ -509,6 +515,7 @@ export function LabVectorPhysicsPage() {
                   value={fabrikIters}
                   onChange={(e) => setFabrikIters(parseInt(e.target.value, 10))}
                   className="w-full"
+                  title="FABRIK solver iterations"
                 />
               </div>
               <div>
@@ -523,6 +530,7 @@ export function LabVectorPhysicsPage() {
                   value={armCount}
                   onChange={(e) => setArmCount(parseInt(e.target.value, 10))}
                   className="w-full"
+                  title="Number of arms"
                 />
               </div>
               <div>
@@ -537,6 +545,7 @@ export function LabVectorPhysicsPage() {
                   value={segCount}
                   onChange={(e) => setSegCount(parseInt(e.target.value, 10))}
                   className="w-full"
+                  title="Segments per arm"
                 />
               </div>
             </div>

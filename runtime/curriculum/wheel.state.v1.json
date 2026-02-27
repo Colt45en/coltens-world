@@ -1,0 +1,16 @@
+{
+  "version": "wheel.state.v1",
+  "wheel_id": "learning-wheel",
+  "trace_id": "trace_curriculum_learning",
+  "rotation": 1,
+  "stop_index": 0,
+  "seq": 0,
+  "inflight": null,
+  "history": [],
+  "stats": {
+    "total_calls": 0,
+    "total_completions": 0,
+    "total_errors": 0,
+    "checkpoints_saved": 0
+  }
+}

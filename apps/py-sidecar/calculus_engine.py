@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Callable, List, Tuple, Optional, Union, Any
+from typing import Any, Callable, List, Optional, Tuple, Union
 
 Number = Union[float, complex]
 Vec = Union[float, List[float], Tuple[float, ...]]
@@ -25,31 +25,31 @@ def _is_scalar(y: Any) -> bool:
 
 def _v_add(a: Vec, b: Vec) -> Vec:
     if _is_scalar(a) and _is_scalar(b):
-        return float(a) + float(b)
-    aa = list(a)  # type: ignore[arg-type]
-    bb = list(b)  # type: ignore[arg-type]
+        return float(a) + float(b)  # type: ignore[arg-type]
+    aa: List[float] = list(a)  # type: ignore[arg-type]
+    bb: List[float] = list(b)  # type: ignore[arg-type]
     return [aa[i] + bb[i] for i in range(len(aa))]
 
 
 def _v_sub(a: Vec, b: Vec) -> Vec:
     if _is_scalar(a) and _is_scalar(b):
-        return float(a) - float(b)
-    aa = list(a)  # type: ignore[arg-type]
-    bb = list(b)  # type: ignore[arg-type]
+        return float(a) - float(b)  # type: ignore[arg-type]
+    aa: List[float] = list(a)  # type: ignore[arg-type]
+    bb: List[float] = list(b)  # type: ignore[arg-type]
     return [aa[i] - bb[i] for i in range(len(aa))]
 
 
 def _v_mul(a: Vec, s: float) -> Vec:
     if _is_scalar(a):
-        return float(a) * s
-    aa = list(a)  # type: ignore[arg-type]
+        return float(a) * s  # type: ignore[arg-type]
+    aa: List[float] = list(a)  # type: ignore[arg-type]
     return [aa[i] * s for i in range(len(aa))]
 
 
 def _v_norm_inf(a: Vec) -> float:
     if _is_scalar(a):
-        return abs(float(a))
-    aa = list(a)  # type: ignore[arg-type]
+        return abs(float(a))  # type: ignore[arg-type]
+    aa: List[float] = list(a)  # type: ignore[arg-type]
     return max(abs(x) for x in aa) if aa else 0.0
 
 
@@ -122,10 +122,18 @@ class Calculus:
 
         if method in ("forward", "backward"):
             hh = h if h is not None else Calculus._auto_h(x, order=1)
+            f_val: Number
+            f_x: Number = f(x)
             if method == "forward":
-                d = (float(f(x + hh)) - float(f(x))) / hh
+                f_val = f(x + hh)
+                f_val_real = f_val.real if isinstance(f_val, complex) else f_val
+                f_x_real = f_x.real if isinstance(f_x, complex) else f_x
+                d = (float(f_val_real) - float(f_x_real)) / hh
             else:
-                d = (float(f(x)) - float(f(x - hh))) / hh
+                f_val = f(x - hh)
+                f_val_real = f_val.real if isinstance(f_val, complex) else f_val
+                f_x_real = f_x.real if isinstance(f_x, complex) else f_x
+                d = (float(f_x_real) - float(f_val_real)) / hh
             # error estimate: crude (first-order)
             return DerivativeResult(value=d, error_est=abs(d) * hh, h_used=hh)
 
@@ -133,7 +141,11 @@ class Calculus:
             hh = h if h is not None else Calculus._auto_h(x, order=2)
 
             def D(step: float) -> float:
-                return (float(f(x + step)) - float(f(x - step))) / (2.0 * step)
+                fval_plus: Number = f(x + step)
+                fval_minus: Number = f(x - step)
+                fp = float(fval_plus.real if isinstance(fval_plus, complex) else fval_plus)
+                fm = float(fval_minus.real if isinstance(fval_minus, complex) else fval_minus)
+                return (fp - fm) / (2.0 * step)
 
             d1 = D(hh)
             if not richardson:
@@ -149,12 +161,15 @@ class Calculus:
             hh = h if h is not None else Calculus._auto_h(x, order=4)
 
             def D(step: float) -> float:
-                return (
-                    -float(f(x + 2 * step))
-                    + 8.0 * float(f(x + step))
-                    - 8.0 * float(f(x - step))
-                    + float(f(x - 2 * step))
-                ) / (12.0 * step)
+                v1: Number = f(x + 2 * step)
+                v2: Number = f(x + step)
+                v3: Number = f(x - step)
+                v4: Number = f(x - 2 * step)
+                f1 = float(v1.real if isinstance(v1, complex) else v1)
+                f2 = float(v2.real if isinstance(v2, complex) else v2)
+                f3 = float(v3.real if isinstance(v3, complex) else v3)
+                f4 = float(v4.real if isinstance(v4, complex) else v4)
+                return (-f1 + 8.0 * f2 - 8.0 * f3 + f4) / (12.0 * step)
 
             d1 = D(hh)
             if not richardson:

@@ -23,7 +23,7 @@ Four main geometry modules moved from avatar-lab to pure TypeScript core:
    - Stable merge order for reproducibility
 
 3. **`buildLOD.ts`** — Level-of-Detail
-   - Creates SimplifyModifier-based LOD levels  
+   - Creates SimplifyModifier-based LOD levels
    - Distance-based level selection
    - Maintains merged geometry structure
 
@@ -210,10 +210,10 @@ apps/avatar-lab/src/avatar/export/
 
 ## Validation
 
-✅ **TypeScript safety**: Full workspace typecheck passes  
-✅ **Backward compat**: All shim imports work  
-✅ **Build output**: avatar-core dist/ generated correctly  
-✅ **Export paths**: Package.json exports properly configured  
+✅ **TypeScript safety**: Full workspace typecheck passes
+✅ **Backward compat**: All shim imports work
+✅ **Build output**: avatar-core dist/ generated correctly
+✅ **Export paths**: Package.json exports properly configured
 ✅ **Git history**: Clean commits with clear intent
 
 ---

@@ -1025,7 +1025,7 @@ const AnimatedCube = ({ isAnimating }: { isAnimating: boolean }) => {
   });
 
   return (
-    <mesh ref={ref} position={[5, 3, -5]} scale={0.8}>
+    <mesh ref={ref as any} position={[5, 3, -5]} scale={0.8}>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial
         color="#ff6b9d"
@@ -1474,7 +1474,10 @@ export default function LabMathWorkspacePage() {
   // Render stable canvas contents (no remounting on hotkey changes)
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden" style={{ background: "#141821", color: "#e6eefc" }}>
+    <div
+      className="h-screen w-screen flex overflow-hidden"
+      style={{ background: "#141821", color: "#e6eefc" }}
+    >
       {/* Sidebar */}
       <div
         className="w-[430px] min-w-[340px] max-w-[520px] overflow-auto border-r border-black/70 z-10"
@@ -1500,6 +1503,7 @@ export default function LabMathWorkspacePage() {
                 setMetersPerUU(isFinite(v) && v > 0 ? v : 1.0);
               }}
               className="flex-1 px-2 py-2 rounded-md bg-white/10 border border-white/20 font-mono"
+              title="Meters per world unit conversion factor"
             />
           </div>
 
@@ -1522,11 +1526,10 @@ export default function LabMathWorkspacePage() {
 
           <div className="text-xs text-sky-200/70 mt-2">
             <div>
-              Lengths scale by <b>m/uu</b>. Areas scale by <b>(m/uu)²</b>. Volumes scale by <b>(m/uu)³</b>.
+              Lengths scale by <b>m/uu</b>. Areas scale by <b>(m/uu)²</b>. Volumes scale by{" "}
+              <b>(m/uu)³</b>.
             </div>
           </div>
-
-
         </div>
 
         {/* Connection */}
@@ -1548,7 +1551,13 @@ export default function LabMathWorkspacePage() {
               Connect
             </button>
             <Badge>
-              {conn === "ok" ? "Connected" : conn === "connecting" ? "Connecting…" : conn === "down" ? "Disconnected" : "Idle"}
+              {conn === "ok"
+                ? "Connected"
+                : conn === "connecting"
+                  ? "Connecting…"
+                  : conn === "down"
+                    ? "Disconnected"
+                    : "Idle"}
             </Badge>
             <Badge>Remote FPS {hud.fps}</Badge>
             <Badge>Local FPS {typeof localFps === "string" ? localFps : localFps.toFixed(0)}</Badge>
@@ -1562,7 +1571,9 @@ export default function LabMathWorkspacePage() {
             type="button"
             onClick={() => setIsAnimating(!isAnimating)}
             className={`w-full px-3 py-2 rounded-md border border-white/20 font-semibold transition ${
-              isAnimating ? "bg-emerald-500/40 hover:bg-emerald-500/50" : "bg-slate-500/40 hover:bg-slate-500/50"
+              isAnimating
+                ? "bg-emerald-500/40 hover:bg-emerald-500/50"
+                : "bg-slate-500/40 hover:bg-slate-500/50"
             }`}
           >
             {isAnimating ? "⏸ Pause" : "▶ Resume"}
@@ -1573,6 +1584,7 @@ export default function LabMathWorkspacePage() {
         <div className="m-3 p-3 rounded-xl border border-white/10 bg-white/5">
           <div className="font-semibold mb-2">Character Presets</div>
           <select
+            aria-label="Character preset selection"
             value={selectedCharacterIdx}
             onChange={(e) => setSelectedCharacterIdx(parseInt(e.target.value))}
             className="w-full px-2 py-2 rounded-md bg-white/10 border border-white/20 text-white mb-3"
@@ -1591,21 +1603,31 @@ export default function LabMathWorkspacePage() {
                   <span className="text-sky-200/70">Skin:</span>
                   <div
                     className="w-full h-6 rounded border border-white/20 mt-1"
-                    style={{ backgroundColor: CHARACTER_PRESETS[selectedCharacterIdx].materials.skinColor }}
+                    style={{
+                      backgroundColor: CHARACTER_PRESETS[selectedCharacterIdx].materials.skinColor,
+                    }}
                   />
                 </div>
                 <div>
                   <span className="text-sky-200/70">Hair:</span>
                   <div
                     className="w-full h-6 rounded border border-white/20 mt-1"
-                    style={{ backgroundColor: CHARACTER_PRESETS[selectedCharacterIdx].materials.hairColor }}
+                    style={{
+                      backgroundColor: CHARACTER_PRESETS[selectedCharacterIdx].materials.hairColor,
+                    }}
                   />
                 </div>
               </div>
 
               <div className="text-sky-200/70 mt-2">
-                <div>Roughness: {CHARACTER_PRESETS[selectedCharacterIdx].materials.roughness.toFixed(2)}</div>
-                <div>Metalness: {CHARACTER_PRESETS[selectedCharacterIdx].materials.metalness.toFixed(2)}</div>
+                <div>
+                  Roughness:{" "}
+                  {CHARACTER_PRESETS[selectedCharacterIdx].materials.roughness.toFixed(2)}
+                </div>
+                <div>
+                  Metalness:{" "}
+                  {CHARACTER_PRESETS[selectedCharacterIdx].materials.metalness.toFixed(2)}
+                </div>
               </div>
 
               <div className="text-sky-200/70 text-xs mt-2 bg-black/30 p-2 rounded">
@@ -1617,7 +1639,8 @@ export default function LabMathWorkspacePage() {
                       <div key={key} className="flex justify-between">
                         <span>{key}:</span>
                         <span className={val > 0 ? "text-green-400" : "text-blue-400"}>
-                          {(val > 0 ? "+" : "")}{val.toFixed(2)}
+                          {val > 0 ? "+" : ""}
+                          {val.toFixed(2)}
                         </span>
                       </div>
                     ))}
@@ -1669,7 +1692,8 @@ export default function LabMathWorkspacePage() {
           </div>
 
           <div className="text-xs text-sky-200/70 mt-2">
-            <b>Controls:</b> W/E/R • Q local/world • Orbit: RMB • Pan: MMB • Zoom: wheel • Select: LMB
+            <b>Controls:</b> W/E/R • Q local/world • Orbit: RMB • Pan: MMB • Zoom: wheel • Select:
+            LMB
           </div>
         </div>
 
@@ -1711,7 +1735,11 @@ export default function LabMathWorkspacePage() {
           </Accordion>
 
           <Accordion title="Math Inspector (Analytic + Validation)" defaultOpen>
-            {!selectedObj && <div className="text-sm text-white/70">Select an object to see metrics + validation.</div>}
+            {!selectedObj && (
+              <div className="text-sm text-white/70">
+                Select an object to see metrics + validation.
+              </div>
+            )}
 
             {selectedObj && analyticDisp && (
               <div className="space-y-3">
@@ -1733,7 +1761,9 @@ export default function LabMathWorkspacePage() {
                   <div className="text-sky-200/80">dims ({displayUnit})</div>
                   <div>
                     {JSON.stringify(
-                      Object.fromEntries(Object.entries(analyticDisp.dimsDisp).map(([k, v]) => [k, +fmt(v, 6)]))
+                      Object.fromEntries(
+                        Object.entries(analyticDisp.dimsDisp).map(([k, v]) => [k, +fmt(v, 6)])
+                      )
                     )}
                   </div>
                 </div>
@@ -1742,19 +1772,22 @@ export default function LabMathWorkspacePage() {
                   <div className="p-2 rounded-lg bg-black/20 border border-white/10">
                     <div className="text-xs text-sky-200/80">Volume</div>
                     <div className="font-mono">
-                      {fmt(analyticDisp.volumeDisp, 6)} <UnitPow unit={unitPowForDisplay(displayUnit, 3)} pow={3} />
+                      {fmt(analyticDisp.volumeDisp, 6)}{" "}
+                      <UnitPow unit={unitPowForDisplay(displayUnit, 3)} pow={3} />
                     </div>
                   </div>
                   <div className="p-2 rounded-lg bg-black/20 border border-white/10">
                     <div className="text-xs text-sky-200/80">LSA</div>
                     <div className="font-mono">
-                      {fmt(analyticDisp.lsaDisp, 6)} <UnitPow unit={unitPowForDisplay(displayUnit, 2)} pow={2} />
+                      {fmt(analyticDisp.lsaDisp, 6)}{" "}
+                      <UnitPow unit={unitPowForDisplay(displayUnit, 2)} pow={2} />
                     </div>
                   </div>
                   <div className="p-2 rounded-lg bg-black/20 border border-white/10">
                     <div className="text-xs text-sky-200/80">TSA</div>
                     <div className="font-mono">
-                      {fmt(analyticDisp.tsaDisp, 6)} <UnitPow unit={unitPowForDisplay(displayUnit, 2)} pow={2} />
+                      {fmt(analyticDisp.tsaDisp, 6)}{" "}
+                      <UnitPow unit={unitPowForDisplay(displayUnit, 2)} pow={2} />
                     </div>
                   </div>
                 </div>
@@ -1776,19 +1809,23 @@ export default function LabMathWorkspacePage() {
 
                 {validation && compare && (
                   <div className="p-2 rounded-lg bg-black/20 border border-white/10">
-                    <div className="text-xs text-sky-200/80 mb-2">Mesh-derived validation (triangle integration)</div>
+                    <div className="text-xs text-sky-200/80 mb-2">
+                      Mesh-derived validation (triangle integration)
+                    </div>
 
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-2 rounded bg-black/20 border border-white/10">
                         <div className="text-xs text-sky-200/80">Mesh Surface Area</div>
                         <div className="font-mono">
-                          {fmt(compare.meshAreaDisp, 6)} <UnitPow unit={unitPowForDisplay(displayUnit, 2)} pow={2} />
+                          {fmt(compare.meshAreaDisp, 6)}{" "}
+                          <UnitPow unit={unitPowForDisplay(displayUnit, 2)} pow={2} />
                         </div>
                       </div>
                       <div className="p-2 rounded bg-black/20 border border-white/10">
                         <div className="text-xs text-sky-200/80">Mesh Volume</div>
                         <div className="font-mono">
-                          {fmt(compare.meshVolDisp, 6)} <UnitPow unit={unitPowForDisplay(displayUnit, 3)} pow={3} />
+                          {fmt(compare.meshVolDisp, 6)}{" "}
+                          <UnitPow unit={unitPowForDisplay(displayUnit, 3)} pow={3} />
                         </div>
                       </div>
 
@@ -1810,7 +1847,8 @@ export default function LabMathWorkspacePage() {
                         <span className="text-amber-300">open/mixed winding</span>
                       )}
                       {" • "}
-                      cancellation ratio: <b className="font-mono">{fmt(validation.cancellationRatio, 3)}</b>
+                      cancellation ratio:{" "}
+                      <b className="font-mono">{fmt(validation.cancellationRatio, 3)}</b>
                     </div>
 
                     {validation.warnings?.length > 0 && (
@@ -1835,7 +1873,9 @@ export default function LabMathWorkspacePage() {
           </Accordion>
 
           <Accordion title="Math Properties" defaultOpen>
-            {!selectedObj && <div className="text-sm text-white/70">Select an object to see math analysis.</div>}
+            {!selectedObj && (
+              <div className="text-sm text-white/70">Select an object to see math analysis.</div>
+            )}
 
             {selectedObj && regularMath && (
               <div className="space-y-3">
@@ -1843,10 +1883,26 @@ export default function LabMathWorkspacePage() {
                 <div className="p-2 rounded-lg bg-black/20 border border-cyan-300/20">
                   <div className="text-xs text-cyan-200/80 mb-1">📦 Bounding Box</div>
                   <div className="font-mono text-xs space-y-1">
-                    <div>Min: [{fmt(regularMath.boundingBox.min[0], 3)}, {fmt(regularMath.boundingBox.min[1], 3)}, {fmt(regularMath.boundingBox.min[2], 3)}]</div>
-                    <div>Max: [{fmt(regularMath.boundingBox.max[0], 3)}, {fmt(regularMath.boundingBox.max[1], 3)}, {fmt(regularMath.boundingBox.max[2], 3)}]</div>
-                    <div>Size: [{fmt(regularMath.boundingBox.size[0], 3)}, {fmt(regularMath.boundingBox.size[1], 3)}, {fmt(regularMath.boundingBox.size[2], 3)}]</div>
-                    <div>Center: [{fmt(regularMath.boundingBox.center[0], 3)}, {fmt(regularMath.boundingBox.center[1], 3)}, {fmt(regularMath.boundingBox.center[2], 3)}]</div>
+                    <div>
+                      Min: [{fmt(regularMath.boundingBox.min[0], 3)},{" "}
+                      {fmt(regularMath.boundingBox.min[1], 3)},{" "}
+                      {fmt(regularMath.boundingBox.min[2], 3)}]
+                    </div>
+                    <div>
+                      Max: [{fmt(regularMath.boundingBox.max[0], 3)},{" "}
+                      {fmt(regularMath.boundingBox.max[1], 3)},{" "}
+                      {fmt(regularMath.boundingBox.max[2], 3)}]
+                    </div>
+                    <div>
+                      Size: [{fmt(regularMath.boundingBox.size[0], 3)},{" "}
+                      {fmt(regularMath.boundingBox.size[1], 3)},{" "}
+                      {fmt(regularMath.boundingBox.size[2], 3)}]
+                    </div>
+                    <div>
+                      Center: [{fmt(regularMath.boundingBox.center[0], 3)},{" "}
+                      {fmt(regularMath.boundingBox.center[1], 3)},{" "}
+                      {fmt(regularMath.boundingBox.center[2], 3)}]
+                    </div>
                   </div>
                 </div>
 
@@ -1854,9 +1910,21 @@ export default function LabMathWorkspacePage() {
                 <div className="p-2 rounded-lg bg-black/20 border border-blue-300/20">
                   <div className="text-xs text-blue-200/80 mb-1">🔄 Transform</div>
                   <div className="font-mono text-xs space-y-1">
-                    <div>Position: [{fmt(regularMath.transform.position[0], 3)}, {fmt(regularMath.transform.position[1], 3)}, {fmt(regularMath.transform.position[2], 3)}]</div>
-                    <div>Scale: [{fmt(regularMath.transform.scale[0], 3)}, {fmt(regularMath.transform.scale[1], 3)}, {fmt(regularMath.transform.scale[2], 3)}]</div>
-                    <div>Rotation (rad): [{fmt(regularMath.transform.rotation[0], 3)}, {fmt(regularMath.transform.rotation[1], 3)}, {fmt(regularMath.transform.rotation[2], 3)}]</div>
+                    <div>
+                      Position: [{fmt(regularMath.transform.position[0], 3)},{" "}
+                      {fmt(regularMath.transform.position[1], 3)},{" "}
+                      {fmt(regularMath.transform.position[2], 3)}]
+                    </div>
+                    <div>
+                      Scale: [{fmt(regularMath.transform.scale[0], 3)},{" "}
+                      {fmt(regularMath.transform.scale[1], 3)},{" "}
+                      {fmt(regularMath.transform.scale[2], 3)}]
+                    </div>
+                    <div>
+                      Rotation (rad): [{fmt(regularMath.transform.rotation[0], 3)},{" "}
+                      {fmt(regularMath.transform.rotation[1], 3)},{" "}
+                      {fmt(regularMath.transform.rotation[2], 3)}]
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1892,7 +1960,8 @@ export default function LabMathWorkspacePage() {
               accept="image/*"
               onChange={onTextureUpload}
               className="flex-1 text-sm"
-              placeholder="Choose an image file"
+              title="Upload a grid texture image file"
+              aria-label="Grid texture image file"
             />
           </div>
           <div className="flex items-center gap-2 my-2">
@@ -1905,7 +1974,9 @@ export default function LabMathWorkspacePage() {
               min={1}
               max={256}
               value={gridTexRepeat}
-              onChange={(e) => setGridTexRepeat(Math.max(1, Math.min(256, parseInt(e.target.value) || 8)))}
+              onChange={(e) =>
+                setGridTexRepeat(Math.max(1, Math.min(256, parseInt(e.target.value) || 8)))
+              }
               className="flex-1 px-2 py-2 rounded-md bg-white/10 border border-white/20"
             />
           </div>
@@ -1946,7 +2017,9 @@ export default function LabMathWorkspacePage() {
         <div className="absolute left-3 right-3 top-3 pointer-events-none flex justify-between gap-2 z-10">
           <div className="pointer-events-auto bg-black/40 border border-white/10 rounded-xl px-3 py-2 backdrop-blur">
             <div className="flex items-center gap-2">
-              <div className={`w-2.5 h-2.5 rounded-full ${conn === "ok" ? "bg-emerald-400" : "bg-rose-400"}`} />
+              <div
+                className={`w-2.5 h-2.5 rounded-full ${conn === "ok" ? "bg-emerald-400" : "bg-rose-400"}`}
+              />
               <span className="text-xs text-sky-200/80 max-w-[480px] truncate">{wsUrl}</span>
               <Badge>BPM {hud.bpm}</Badge>
               <div className="w-40 h-1.5 rounded bg-white/20 overflow-hidden">

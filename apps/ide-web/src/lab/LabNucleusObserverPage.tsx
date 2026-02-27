@@ -154,6 +154,7 @@ export function LabNucleusObserverPage() {
                 type="text"
                 value={selectedApproval}
                 disabled
+                title="Approval ID"
                 className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded text-white/60 text-sm"
               />
             </div>

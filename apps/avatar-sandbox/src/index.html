@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Engine Avatar Sandbox - WEGC v1.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            overscroll-behavior: none;
+            color: #E2E8F0;
+            user-select: none;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #020617;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            grid-template-columns: 300px 1fr 320px;
+            grid-template-areas:
+                "header header header"
+                "sidebar viewport props";
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #header {
+            grid-area: header;
+            background-color: #0F172A;
+            padding: 1rem;
+            border-bottom: 1px solid #1E293B;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #E2E8F0;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #2563EB, #1E40AF);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        #sidebar {
+            grid-area: sidebar;
+            background-color: #0F172A;
+            border-right: 1px solid #1E293B;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        #viewport {
+            grid-area: viewport;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+        }
+
+        #canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
+
+        #props {
+            grid-area: props;
+            background-color: #0F172A;
+            border-left: 1px solid #1E293B;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .panel {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-header {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 800;
+            border-bottom: 2px solid #1E293B;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #60A5FA;
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #94A3B8;
+            margin-bottom: 0.25rem;
+            display: block;
+            font-weight: 600;
+        }
+
+        input[type="range"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            color: #E2E8F0;
+            font-size: 0.875rem;
+        }
+
+        input[type="range"] {
+            padding: 0;
+            height: 6px;
+            accent-color: #3B82F6;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        button:hover {
+            background-color: #2563EB;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background-color: #475569;
+        }
+
+        button.secondary:hover {
+            background-color: #64748B;
+        }
+
+        button.danger {
+            background-color: #DC2626;
+        }
+
+        button.danger:hover {
+            background-color: #B91C1C;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: #166534;
+            color: #86EFAC;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .info-box {
+            background-color: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #CBD5E1;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #0F172A;
+            border-left: 3px solid #3B82F6;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .metric-label {
+            color: #94A3B8;
+        }
+
+        .metric-value {
+            color: #60A5FA;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div id="header">
+            <div class="header-title">
+                <div class="w-5 h-5 rounded bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">W</div>
+                <span>World Engine Avatar Sandbox</span>
+                <span class="header-badge">WEGC v1.0</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="secondary" id="btn-reset">Reset Avatar</button>
+                <button class="secondary" id="btn-export">Export GLB</button>
+                <button class="danger" id="btn-clear">Clear All</button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="panel">
+                <div class="panel-header">Avatar Setup</div>
+                <div class="control-group">
+                    <label class="control-label">Avatar Name</label>
+                    <input type="text" id="avatar-name" placeholder="My Avatar" value="CustomAvatar">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Avatar ID</label>
+                    <input type="text" id="avatar-id" readonly class="bg-gray-900">
+                </div>
+                <button id="btn-gen-id">Generate ID</button>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Skeleton</div>
+                <div id="skeleton-list" class="text-sm space-y-1 max-h-48 overflow-y-auto"></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Load Assets</div>
+                <div class="control-group">
+                    <label class="control-label">GLB Model</label>
+                    <input type="file" id="file-glb" accept=".glb,.gltf">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Texture (Skin)</label>
+                    <input type="file" id="file-texture" accept="image/*">
+                </div>
+                <button id="btn-load">Load Assets</button>
+            </div>
+        </div>
+
+        <!-- Viewport -->
+        <div id="viewport">
+            <canvas id="canvas"></canvas>
+            <div class="absolute bottom-4 left-4 text-xs text-slate-400 bg-slate-900/80 p-2 rounded border border-slate-800 pointer-events-none">
+                <div><span class="text-blue-400 font-bold">LMB</span> Rotate • <span class="text-blue-400 font-bold">Scroll</span> Zoom</div>
+                <div><span class="text-blue-400 font-bold">R</span> Rotate Joint • <span class="text-blue-400 font-bold">T</span> Move Joint</div>
+            </div>
+        </div>
+
+        <!-- Properties Panel -->
+        <div id="props">
+            <div class="panel">
+                <div class="panel-header">Selected Joint</div>
+                <div id="joint-info" class="info-box">
+                    <div class="text-slate-500">No joint selected</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Pose Energy</div>
+                <div id="energy-metrics"></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Constraints</div>
+                <div class="control-group">
+                    <label class="control-label">Mode</label>
+                    <select id="constraint-mode" style="width: 100%; padding: 0.5rem;">
+                        <option value="ARMOR_SAFE">ARMOR_SAFE</option>
+                        <option value="DEFAULT">DEFAULT</option>
+                        <option value="ACROBATIC">ACROBATIC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Rotation (Degrees)</div>
+                <div class="control-group">
+                    <label class="control-label">X (Roll)</label>
+                    <input type="range" id="rot-x" min="-180" max="180" value="0">
+                    <span id="rot-x-val">0°</span>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Y (Pitch)</label>
+                    <input type="range" id="rot-y" min="-180" max="180" value="0">
+                    <span id="rot-y-val">0°</span>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Z (Yaw)</label>
+                    <input type="range" id="rot-z" min="-180" max="180" value="0">
+                    <span id="rot-z-val">0°</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Material</div>
+                <div class="control-group">
+                    <label class="control-label">Skin Color</label>
+                    <input type="text" id="skin-color" value="#d8b69a">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Roughness</label>
+                    <input type="range" id="roughness" min="0" max="1" step="0.1" value="0.85">
+                    <span id="roughness-val">0.85</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <button id="btn-manifest">View Manifest</button>
+                <button id="btn-export-json" class="secondary" style="margin-top: 0.5rem;">Export JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+</body>
+</html>

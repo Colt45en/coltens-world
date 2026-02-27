@@ -9,12 +9,13 @@
  * 5. WS clients subscribe and receive real-time updates
  */
 
+import { globalBus } from "./bus/busHub";
+
 // TODO: Import from @world-engine/engine when available
 // import type { BusEnvelopeV1 } from "@world-engine/engine";
 
 // Placeholder type
 type BusEnvelopeV1 = any;
-import { globalBus } from "./bus/busHub";
 
 /**
  * Example: Unified runner emitting pipeline events to the bus

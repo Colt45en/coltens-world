@@ -13,10 +13,10 @@
  * - POST /approvals/:approval_id/decide
  */
 
-import { Ledger } from '../ledger/ledger';
-import { ApprovalStateMachine } from '../approvals/state-machine';
 import type { AnyEvent } from '@world-engine/ledger-contracts';
 import { URL } from 'node:url';
+import { ApprovalStateMachine } from "../approvals/state-machine";
+import { Ledger } from "../ledger/ledger";
 
 export function createLedgerRoutes(ledger: Ledger, approvals: ApprovalStateMachine) {
   return async (req: any, res: any): Promise<boolean> => {
@@ -265,7 +265,7 @@ export async function initializeLedger(): Promise<{ ledger: Ledger; approvals: A
 
   // Rebuild approvals cache from ledger on startup
   const allEvents = await ledger.range(1, 100000);
-  approvals.rebuildFromEvents(allEvents);
+  approvals.rebuildFromEvents(allEvents as any);
 
   return { ledger, approvals };
 }

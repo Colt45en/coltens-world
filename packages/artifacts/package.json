@@ -1,0 +1,25 @@
+{
+  "name": "@world-engine/artifacts",
+  "version": "1.0.0",
+  "description": "Artifact store with content-addressed bundling and canonical sort keys",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@world-engine/engine": "workspace:*",
+    "@world-engine/ledger": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.3"
+  }
+}

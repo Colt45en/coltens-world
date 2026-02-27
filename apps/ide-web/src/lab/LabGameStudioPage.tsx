@@ -1,6 +1,6 @@
 import { Grid, OrbitControls, TransformControls } from "@react-three/drei";
-import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, type ThreeEvent } from "@react-three/fiber";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
 
@@ -209,7 +209,9 @@ function computeAnalyticMetricsWorld(obj: THREE.Object3D | null): PrefabMetrics 
       out.lsaWorld = out.tsaWorld;
     } else {
       out.approx = true;
-      out.notes.push("Non-uniform scale → ellipsoid. Volume exact; surface area uses Knud Thomsen approximation.");
+      const newLocal =
+        "Non-uniform scale → ellipsoid. Volume exact; surface area uses Knud Thomsen approximation.";
+      out.notes.push(newLocal);
       out.tsaWorld = ellipsoidAreaApprox(a, b, c);
       out.lsaWorld = out.tsaWorld;
     }
@@ -237,7 +239,8 @@ function computeAnalyticMetricsWorld(obj: THREE.Object3D | null): PrefabMetrics 
 
     if (!almostEqual(sx, sz)) {
       out.approx = true;
-      out.notes.push("Elliptical cylinder: volume exact; lateral area uses ellipse perimeter approximation.");
+      const newLocal =
+        "Elliptical cylinder: volume exact; lateral area uses ellipse perimeter approximation.";
     }
     return out;
   }
@@ -370,7 +373,7 @@ function groundToPlaneY0(obj: THREE.Object3D, epsilon = 0.0) {
   if (obj.matrixAutoUpdate) {
     obj.position.y += dy;
     obj.updateMatrix();
-  } else {
+  } else if (obj.matrix?.elements) {
     obj.matrix.elements[13] += dy;
   }
   obj.updateMatrixWorld(true);
@@ -434,8 +437,8 @@ function Node({
   }, [id, type, initialMatrix, registerNode]);
 
   const matColor = useMemo(() => {
-    if (color) return new THREE.Color(color[0], color[1], color[2]);
-    return new THREE.Color(SHAPE_COLOR[type]);
+    if (color) return new THREE.Color(color[0], color[1], color[2]).getHex();
+    return SHAPE_COLOR[type];
   }, [color, type]);
 
   const handleDown = (e: ThreeEvent<PointerEvent>) => {
@@ -735,7 +738,9 @@ export default function LabPrefabStudioPage() {
   }, [displayUnit, metersPerUU, metrics]);
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden" style={{ background: "#141821", color: "#e6eefc" }}>
+    <div
+      className="h-screen w-screen flex overflow-hidden bg-[#141821] text-[#e6eefc]"
+    >
       {/* Sidebar */}
       <div className="w-[420px] min-w-[320px] max-w-[520px] overflow-auto border-r border-black/70">
         <div className="p-4">
@@ -758,11 +763,13 @@ export default function LabPrefabStudioPage() {
                   setMetersPerUU(isFinite(v) && v > 0 ? v : 1.0);
                 }}
                 className="flex-1 px-2 py-2 rounded-md bg-white/10 border border-white/20 font-mono"
+                title="Meters per world unit"
               />
             </div>
             <div className="flex items-center gap-2">
               <label className="text-sm text-sky-200/80 w-28">Display</label>
               <select
+                aria-label="Display unit"
                 value={displayUnit}
                 onChange={(e) => setDisplayUnit(e.target.value as UnitName)}
                 className="flex-1 px-2 py-2 rounded-md bg-white/10 border border-white/20"
@@ -788,6 +795,7 @@ export default function LabPrefabStudioPage() {
                 value={snapStep}
                 onChange={(e) => setSnapStep(Math.max(0.01, parseFloat(e.target.value) || 0.5))}
                 className="flex-1 px-2 py-2 rounded-md bg-white/10 border border-white/20 font-mono"
+                placeholder="0.5"
               />
             </div>
             <div className="text-xs text-sky-200/70 mt-2">
@@ -840,7 +848,9 @@ export default function LabPrefabStudioPage() {
           <div className="mt-4 p-3 rounded-xl border border-white/10 bg-white/5">
             <div className="font-semibold mb-2">Spawn Primitives</div>
             <div className="grid grid-cols-2 gap-2">
-              {(["box", "sphere", "cylinder", "cone", "hemisphere", "plane", "torus"] as ShapeKind[]).map((k) => (
+              {(
+                ["box", "sphere", "cylinder", "cone", "hemisphere", "plane", "torus"] as ShapeKind[]
+              ).map((k) => (
                 <button
                   key={k}
                   type="button"
@@ -856,7 +866,9 @@ export default function LabPrefabStudioPage() {
           {/* Metrics */}
           <div className="mt-4 p-3 rounded-xl border border-white/10 bg-white/5">
             <div className="font-semibold mb-2">Prefab Metrics</div>
-            {!selected && <div className="text-sm text-white/70">Select an object to view metrics.</div>}
+            {!selected && (
+              <div className="text-sm text-white/70">Select an object to view metrics.</div>
+            )}
 
             {selected && disp && (
               <div className="space-y-3">
@@ -876,7 +888,13 @@ export default function LabPrefabStudioPage() {
 
                 <div className="p-2 rounded-lg bg-black/20 border border-white/10 font-mono text-xs">
                   <div className="text-sky-200/80">dims ({displayUnit})</div>
-                  <div>{JSON.stringify(Object.fromEntries(Object.entries(disp.dimsDisp).map(([k, v]) => [k, +fmt(v, 6)])))}</div>
+                  <div>
+                    {JSON.stringify(
+                      Object.fromEntries(
+                        Object.entries(disp.dimsDisp).map(([k, v]) => [k, +fmt(v, 6)])
+                      )
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
@@ -897,9 +915,15 @@ export default function LabPrefabStudioPage() {
                 {aabb && (
                   <div className="p-2 rounded-lg bg-black/20 border border-white/10 font-mono text-xs">
                     <div className="text-sky-200/80">AABB (world)</div>
-                    <div>size: [{fmt(aabb.size[0], 3)}, {fmt(aabb.size[1], 3)}, {fmt(aabb.size[2], 3)}]</div>
-                    <div>min: [{fmt(aabb.min[0], 3)}, {fmt(aabb.min[1], 3)}, {fmt(aabb.min[2], 3)}]</div>
-                    <div>max: [{fmt(aabb.max[0], 3)}, {fmt(aabb.max[1], 3)}, {fmt(aabb.max[2], 3)}]</div>
+                    <div>
+                      size: [{fmt(aabb.size[0], 3)}, {fmt(aabb.size[1], 3)}, {fmt(aabb.size[2], 3)}]
+                    </div>
+                    <div>
+                      min: [{fmt(aabb.min[0], 3)}, {fmt(aabb.min[1], 3)}, {fmt(aabb.min[2], 3)}]
+                    </div>
+                    <div>
+                      max: [{fmt(aabb.max[0], 3)}, {fmt(aabb.max[1], 3)}, {fmt(aabb.max[2], 3)}]
+                    </div>
                   </div>
                 )}
 

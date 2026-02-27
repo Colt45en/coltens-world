@@ -122,8 +122,8 @@ export function LabAvatarCompilerPage() {
               Avatar Compiler (V2)
             </NeonTitle>
             <p className="text-white/60 mt-2">
-              Deterministic avatar compilation with content addressing. Upload a JSON array of avatar DNA
-              objects to compile in batch.
+              Deterministic avatar compilation with content addressing. Upload a JSON array of
+              avatar DNA objects to compile in batch.
             </p>
           </div>
           <NeonButton variant="ghost" onClick={() => navigate("/")} className="ml-4">
@@ -149,8 +149,11 @@ export function LabAvatarCompilerPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-white/60 mb-2">Atlas Size</label>
+            <label htmlFor="atlas-size" className="block text-sm text-white/60 mb-2">
+              Atlas Size
+            </label>
             <select
+              id="atlas-size"
               value={atlasSize}
               onChange={(e) => setAtlasSize(Number(e.target.value))}
               disabled={compiling}
@@ -166,8 +169,11 @@ export function LabAvatarCompilerPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-white/60 mb-2">LOD Levels</label>
+            <label htmlFor="lod-levels" className="block text-sm text-white/60 mb-2">
+              LOD Levels
+            </label>
             <select
+              id="lod-levels"
               value={lodLevels}
               onChange={(e) => setLodLevels(Number(e.target.value))}
               disabled={compiling}
@@ -195,6 +201,7 @@ export function LabAvatarCompilerPage() {
               accept=".json"
               onChange={handleFileSelect}
               disabled={compiling}
+              title="Upload a JSON file containing avatar DNA objects"
               className="flex-1 px-3 py-2 bg-slate-800/50 border border-dashed border-cyan-500/30 rounded text-white text-sm"
             />
 

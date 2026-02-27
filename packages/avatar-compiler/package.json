@@ -1,24 +1,37 @@
 {
   "name": "@world-engine/avatar-compiler",
   "version": "0.1.0",
-  "private": true,
+  "description": "Headless avatar compilation: orchestration, hashing, registry, GLB export",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./compile": "./dist/compileAvatar.js",
+    "./export": "./dist/export/index.js",
+    "./hash": "./dist/hash.js"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsc",
-    "test": "tsx --test test/*.test.ts",
-    "test:watch": "tsx --test --watch test/*.test.ts",
-    "cli": "tsx src/cli.ts"
+    "check": "tsc --noEmit",
+    "dev": "tsc --watch"
   },
   "dependencies": {
-    "pngjs": "^7.0.0"
+    "@world-engine/avatar-core": "workspace:*",
+    "three": "^r128"
   },
   "devDependencies": {
-    "@types/pngjs": "^6.0.5",
-    "tsx": "^4.19.2",
     "typescript": "^5.3.3"
-  }
+  },
+  "keywords": [
+    "avatar",
+    "compiler",
+    "glb",
+    "export",
+    "headless"
+  ]
 }

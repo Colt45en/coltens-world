@@ -105,7 +105,7 @@ function App() {
       frameloop="always"
     >
       <Suspense fallback={null}>
-        <GameScene sessionId={sessionId} instanceId={instanceId} />
+        <GameScene />
       </Suspense>
     </Canvas>
   );

@@ -177,7 +177,8 @@ export const WORLD_APPS: WorldApp[] = [
   {
     id: "lab-world-engine-blueprint",
     name: "World Engine Blueprint",
-    description: "Complete architecture reference: ECS, Render Graph, Quaternions, Origin Rebasing, Erosion.",
+    description:
+      "Complete architecture reference: ECS, Render Graph, Quaternions, Origin Rebasing, Erosion.",
     icon: "🏗️",
     kind: "route",
     path: ROUTES.lab.worldEngineBlueprint,
@@ -239,12 +240,12 @@ export const WORLD_APPS: WorldApp[] = [
   },
 
   {
-    id: "avatar-lab-legacy",
-    name: "Avatar Lab (Legacy)",
-    description: "Avatar Lab V1.3 (three.js export - deprecated).",
-    icon: "🧬",
+    id: "avatar-sandbox",
+    name: "Avatar Sandbox",
+    description: "WEGC v1.0 - Interactive avatar creator with GLB export.",
+    icon: "🧑",
     kind: "iframe",
-    url: "http://localhost:5180",
+    url: "http://localhost:5174",
     group: "tools",
   },
 

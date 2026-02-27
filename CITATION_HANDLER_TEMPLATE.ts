@@ -1,15 +1,17 @@
+import { createHash } from "crypto";
+
 /**
  * Example Nucleus handlers for citation tool-calls
  *
  * Drop-in template for apps/nucleus/src/routes/citations.ts
  * Demonstrates deterministic contract validation + ledger append
- * 
+ *
  * Note: This file is a reference implementation showing:
  * - How to import citation contracts from @we/contracts/citation
  * - Canonical JSON + SHA-256 deterministic hashing
  * - 3 tool handlers (style.ingest, sources.validate, render)
  * - Determinism test pattern
- * 
+ *
  * TODO Integration:
  * 1. Copy handler functions into apps/nucleus/src/routes/citations.ts
  * 2. Wire into Nucleus dispatcher
@@ -240,9 +242,6 @@ export async function testDeterminism() {
   const result2 = await handleStyleIngest(input);
 
   console.assert(result1.style_hash === result2.style_hash, "Hashes must match");
-  console.assert(
-    JSON.stringify(result1) === JSON.stringify(result2),
-    "Full output must match"
-  );
+  console.assert(JSON.stringify(result1) === JSON.stringify(result2), "Full output must match");
   console.log("✅ Determinism verified");
 }

@@ -62,4 +62,7 @@ export class RendererBridge {
   }
 }
 
+// GPU-accelerated swarm system (100k+ agents)
+export { NexusSwarmSystem, type NexusSwarmConfig } from "./nexus/NexusSwarmSystem";
+
 export default RendererBridge;

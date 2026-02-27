@@ -11,8 +11,8 @@ import { automation, registerModules, registry } from "@world-engine/automation-
 import { APPLICATIONS } from "@world-engine/automation-index/apps";
 import { PACKAGES } from "@world-engine/automation-index/packages";
 
-const log = (...args: any[]) => console.log("[WorldEngine]", ...args);
-const error = (...args: any[]) => console.error("[WorldEngine ERROR]", ...args);
+const log = (...args) => console.log("[WorldEngine]", ...args);
+const error = (...args) => console.error("[WorldEngine ERROR]", ...args);
 
 /**
  * Register all core modules
@@ -22,7 +22,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/protocol",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["BusEnvelope", "TaskEnvelope", "UnifiedEngineEnvelope"],
       dependencies: [],
       loaded: false,
@@ -31,7 +31,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/bus",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["BusHub", "BusClient"],
       dependencies: ["@world-engine/protocol"],
       loaded: false,
@@ -40,7 +40,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/contracts",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["ContractRegistry"],
       dependencies: ["@world-engine/protocol"],
       loaded: false,
@@ -49,7 +49,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/util",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["Logger", "Config", "Utils"],
       dependencies: [],
       loaded: false,
@@ -58,7 +58,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/math",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["Vector3", "Matrix4", "Quaternion"],
       dependencies: [],
       loaded: false,
@@ -67,7 +67,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/assets",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["AssetManager", "ResourcePool"],
       dependencies: [],
       loaded: false,
@@ -76,7 +76,7 @@ function registerCoreModules() {
     {
       name: "@world-engine/avatar-compiler",
       version: "1.0.0",
-      type: "package" as const,
+      type: "package",
       exports: ["AvatarCompiler", "AvatarPipeline"],
       dependencies: ["@world-engine/util"],
       loaded: false,

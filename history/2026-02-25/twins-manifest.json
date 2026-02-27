@@ -1,0 +1,771 @@
+{
+  "moved": [
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/core/seed.ts",
+      "jsPath": "packages/flowstate/src/core/seed.js",
+      "from": "packages/flowstate/src/core/seed.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/core/seed.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.287Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/core/tokenize.ts",
+      "jsPath": "packages/flowstate/src/core/tokenize.js",
+      "from": "packages/flowstate/src/core/tokenize.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/core/tokenize.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.289Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/evidence/canonicalJson.ts",
+      "jsPath": "packages/flowstate/src/evidence/canonicalJson.js",
+      "from": "packages/flowstate/src/evidence/canonicalJson.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/evidence/canonicalJson.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.290Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/evidence/crypto.ts",
+      "jsPath": "packages/flowstate/src/evidence/crypto.js",
+      "from": "packages/flowstate/src/evidence/crypto.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/evidence/crypto.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.290Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/evidence/download.ts",
+      "jsPath": "packages/flowstate/src/evidence/download.js",
+      "from": "packages/flowstate/src/evidence/download.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/evidence/download.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.291Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/evidence/session.ts",
+      "jsPath": "packages/flowstate/src/evidence/session.js",
+      "from": "packages/flowstate/src/evidence/session.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/evidence/session.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.292Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/render/canvasFit.ts",
+      "jsPath": "packages/flowstate/src/render/canvasFit.js",
+      "from": "packages/flowstate/src/render/canvasFit.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/render/canvasFit.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.293Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/render/heatmapRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/heatmapRenderer.js",
+      "from": "packages/flowstate/src/render/heatmapRenderer.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/render/heatmapRenderer.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.294Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/render/histogramRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/histogramRenderer.js",
+      "from": "packages/flowstate/src/render/histogramRenderer.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/render/histogramRenderer.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.294Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/render/orbitRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/orbitRenderer.js",
+      "from": "packages/flowstate/src/render/orbitRenderer.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/render/orbitRenderer.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.295Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/render/ringRenderer.ts",
+      "jsPath": "packages/flowstate/src/render/ringRenderer.js",
+      "from": "packages/flowstate/src/render/ringRenderer.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/render/ringRenderer.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.296Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/flowstate/src/render/types.ts",
+      "jsPath": "packages/flowstate/src/render/types.js",
+      "from": "packages/flowstate/src/render/types.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/render/types.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.297Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/capabilities.ts",
+      "jsPath": "packages/protocol/src/capabilities.js",
+      "from": "packages/protocol/src/capabilities.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/capabilities.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.298Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/chat.ts",
+      "jsPath": "packages/protocol/src/chat.js",
+      "from": "packages/protocol/src/chat.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/chat.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.299Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/contracts/evidence.ts",
+      "jsPath": "packages/protocol/src/contracts/evidence.js",
+      "from": "packages/protocol/src/contracts/evidence.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/contracts/evidence.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.301Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/contracts/flowstate.ts",
+      "jsPath": "packages/protocol/src/contracts/flowstate.js",
+      "from": "packages/protocol/src/contracts/flowstate.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/contracts/flowstate.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.302Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/contracts/worldGraph.ts",
+      "jsPath": "packages/protocol/src/contracts/worldGraph.js",
+      "from": "packages/protocol/src/contracts/worldGraph.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/contracts/worldGraph.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.303Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/envelopes.ts",
+      "jsPath": "packages/protocol/src/envelopes.js",
+      "from": "packages/protocol/src/envelopes.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/envelopes.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.304Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/ide.ts",
+      "jsPath": "packages/protocol/src/ide.js",
+      "from": "packages/protocol/src/ide.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/ide.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.304Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/idle.ts",
+      "jsPath": "packages/protocol/src/idle.js",
+      "from": "packages/protocol/src/idle.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/idle.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.305Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/operator.ts",
+      "jsPath": "packages/protocol/src/operator.js",
+      "from": "packages/protocol/src/operator.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/operator.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.306Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/representation.ts",
+      "jsPath": "packages/protocol/src/representation.js",
+      "from": "packages/protocol/src/representation.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/representation.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.306Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/schemas.ts",
+      "jsPath": "packages/protocol/src/schemas.js",
+      "from": "packages/protocol/src/schemas.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/schemas.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.307Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/system/health.ts",
+      "jsPath": "packages/protocol/src/system/health.js",
+      "from": "packages/protocol/src/system/health.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/system/health.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.308Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/types.ts",
+      "jsPath": "packages/protocol/src/types.js",
+      "from": "packages/protocol/src/types.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/types.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.309Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/protocol/src/uee.ts",
+      "jsPath": "packages/protocol/src/uee.js",
+      "from": "packages/protocol/src/uee.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/uee.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.309Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/tooling/src/compilers/csCompiler.ts",
+      "jsPath": "packages/tooling/src/compilers/csCompiler.js",
+      "from": "packages/tooling/src/compilers/csCompiler.js",
+      "to": "history/2026-02-25/twins/packages/tooling/src/compilers/csCompiler.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.311Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/tooling/src/compilers/helpers.ts",
+      "jsPath": "packages/tooling/src/compilers/helpers.js",
+      "from": "packages/tooling/src/compilers/helpers.js",
+      "to": "history/2026-02-25/twins/packages/tooling/src/compilers/helpers.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.312Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/tooling/src/compilers/jsCompiler.ts",
+      "jsPath": "packages/tooling/src/compilers/jsCompiler.js",
+      "from": "packages/tooling/src/compilers/jsCompiler.js",
+      "to": "history/2026-02-25/twins/packages/tooling/src/compilers/jsCompiler.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.313Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/tooling/src/compilers/types.ts",
+      "jsPath": "packages/tooling/src/compilers/types.js",
+      "from": "packages/tooling/src/compilers/types.js",
+      "to": "history/2026-02-25/twins/packages/tooling/src/compilers/types.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.314Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/tooling/src/utils-node.ts",
+      "jsPath": "packages/tooling/src/utils-node.js",
+      "from": "packages/tooling/src/utils-node.js",
+      "to": "history/2026-02-25/twins/packages/tooling/src/utils-node.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.315Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/util/src/fileUtils.ts",
+      "jsPath": "packages/util/src/fileUtils.js",
+      "from": "packages/util/src/fileUtils.js",
+      "to": "history/2026-02-25/twins/packages/util/src/fileUtils.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.317Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/util/src/hash.ts",
+      "jsPath": "packages/util/src/hash.js",
+      "from": "packages/util/src/hash.js",
+      "to": "history/2026-02-25/twins/packages/util/src/hash.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.317Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/util/src/packageName.ts",
+      "jsPath": "packages/util/src/packageName.js",
+      "from": "packages/util/src/packageName.js",
+      "to": "history/2026-02-25/twins/packages/util/src/packageName.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.318Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.95,
+      "tsPath": "packages/util/src/time.ts",
+      "jsPath": "packages/util/src/time.js",
+      "from": "packages/util/src/time.js",
+      "to": "history/2026-02-25/twins/packages/util/src/time.js",
+      "reasons": "TS has importers and JS has none",
+      "applied_at": "2026-02-25T23:51:41.319Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/env-sandbox/src/demo.ts",
+      "jsPath": "apps/env-sandbox/src/demo.js",
+      "from": "apps/env-sandbox/src/demo.js",
+      "to": "history/2026-02-25/twins/apps/env-sandbox/src/demo.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.321Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/bus-ws-bridge.ts",
+      "jsPath": "apps/nucleus/src/bus-ws-bridge.js",
+      "from": "apps/nucleus/src/bus-ws-bridge.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/bus-ws-bridge.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.322Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/bus/handlers/buildEvidence.ts",
+      "jsPath": "apps/nucleus/src/bus/handlers/buildEvidence.js",
+      "from": "apps/nucleus/src/bus/handlers/buildEvidence.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/bus/handlers/buildEvidence.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.322Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/index.ts",
+      "jsPath": "apps/nucleus/src/index.js",
+      "from": "apps/nucleus/src/index.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/index.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.323Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/router/handlers/base.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/base.js",
+      "from": "apps/nucleus/src/router/handlers/base.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/router/handlers/base.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.324Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/router/handlers/index.ts",
+      "jsPath": "apps/nucleus/src/router/handlers/index.js",
+      "from": "apps/nucleus/src/router/handlers/index.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/router/handlers/index.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.324Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/routes/buildEvidence.ts",
+      "jsPath": "apps/nucleus/src/routes/buildEvidence.js",
+      "from": "apps/nucleus/src/routes/buildEvidence.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/buildEvidence.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.325Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/routes/lexicon-disabled.ts",
+      "jsPath": "apps/nucleus/src/routes/lexicon-disabled.js",
+      "from": "apps/nucleus/src/routes/lexicon-disabled.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/lexicon-disabled.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.326Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/routes/lexicon.ts",
+      "jsPath": "apps/nucleus/src/routes/lexicon.js",
+      "from": "apps/nucleus/src/routes/lexicon.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/lexicon.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.326Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/routes/routes.ts",
+      "jsPath": "apps/nucleus/src/routes/routes.js",
+      "from": "apps/nucleus/src/routes/routes.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/routes.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.327Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/sessionStore.ts",
+      "jsPath": "apps/nucleus/src/sessionStore.js",
+      "from": "apps/nucleus/src/sessionStore.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/sessionStore.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.328Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/simulation.ts",
+      "jsPath": "apps/nucleus/src/simulation.js",
+      "from": "apps/nucleus/src/simulation.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/simulation.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.328Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/unified-runner-integration.ts",
+      "jsPath": "apps/nucleus/src/unified-runner-integration.js",
+      "from": "apps/nucleus/src/unified-runner-integration.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/unified-runner-integration.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.329Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "apps/nucleus/src/wsHub_new.ts",
+      "jsPath": "apps/nucleus/src/wsHub_new.js",
+      "from": "apps/nucleus/src/wsHub_new.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/wsHub_new.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.329Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.ts",
+      "jsPath": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js",
+      "from": "packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/lexicon/prompt-operators/optimizePrompt.schema.js",
+      "reasons": "TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.331Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "packages/protocol/src/envelopes/index.ts",
+      "jsPath": "packages/protocol/src/envelopes/index.js",
+      "from": "packages/protocol/src/envelopes/index.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/envelopes/index.js",
+      "reasons": "package entrypoint references TS file; TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.332Z"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "winner": "ts",
+      "confidence": 0.7,
+      "tsPath": "packages/protocol/src/index.ts",
+      "jsPath": "packages/protocol/src/index.js",
+      "from": "packages/protocol/src/index.js",
+      "to": "history/2026-02-25/twins/packages/protocol/src/index.js",
+      "reasons": "package entrypoint references TS file; TS importer count is dominant or equal with no JS entrypoint",
+      "applied_at": "2026-02-25T23:51:41.333Z"
+    }
+  ],
+  "errors": [
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/bus/busHub.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/bus/busHub.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/bus/publish.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/bus/publish.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/ndjson.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/ndjson.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/pty/ptySession.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/pty/ptySession.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/pty/venoManager.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/pty/venoManager.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/router/handlers/ideCli.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/router/handlers/ideCli.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/router/handlers/ideFs.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/router/handlers/ideFs.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/busReplay.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/busReplay.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/health.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/health.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/http/flowstate.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/http/flowstate.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/http/leximorph.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/http/leximorph.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/http/pipelineResults.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/http/pipelineResults.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/operatorEvent.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/operatorEvent.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/routes/wsBus.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/routes/wsBus.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/services/compilerEvidence.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/services/compilerEvidence.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/services/simRunner.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/services/simRunner.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/tool/types.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/tool/types.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "apps/nucleus/src/wsHub.js",
+      "to": "history/2026-02-25/twins/apps/nucleus/src/wsHub.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/collision.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/collision.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/multigpu/deps.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/multigpu/deps.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/multigpu/pacing.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/multigpu/pacing.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/multigpu/plan.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/multigpu/plan.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/multigpu/primitives.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/multigpu/primitives.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/multigpu/sync.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/multigpu/sync.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/multigpu/work.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/multigpu/work.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/protocol/envelope.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/protocol/envelope.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/protocol/ops.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/protocol/ops.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/protocol/sim.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/protocol/sim.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/contracts/representation/gates.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/contracts/representation/gates.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/engine/src/learning/xor-trainer.js",
+      "to": "history/2026-02-25/twins/packages/engine/src/learning/xor-trainer.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/flowstate/src/core/braceBalance.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/core/braceBalance.js",
+      "error": "source-missing"
+    },
+    {
+      "op": "move-js-twin-to-history",
+      "from": "packages/flowstate/src/core/metrics.js",
+      "to": "history/2026-02-25/twins/packages/flowstate/src/core/metrics.js",
+      "error": "source-missing"
+    }
+  ],
+  "date": "2026-02-25"
+}

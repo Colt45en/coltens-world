@@ -9,6 +9,26 @@
     ".": {
       "import": "./dist/engine/src/index.js",
       "types": "./dist/engine/src/index.d.ts"
+    },
+    "./contracts": {
+      "import": "./dist/engine/src/contracts/index.js",
+      "types": "./dist/engine/src/contracts/index.d.ts"
+    },
+    "./contracts/ledger": {
+      "import": "./dist/engine/src/contracts/ledger.js",
+      "types": "./dist/engine/src/contracts/ledger.d.ts"
+    },
+    "./contracts/artifacts": {
+      "import": "./dist/engine/src/contracts/artifacts.js",
+      "types": "./dist/engine/src/contracts/artifacts.d.ts"
+    },
+    "./contracts/json": {
+      "import": "./dist/engine/src/contracts/json.js",
+      "types": "./dist/engine/src/contracts/json.d.ts"
+    },
+    "./contracts/tool_call": {
+      "import": "./dist/engine/src/contracts/tool_call.js",
+      "types": "./dist/engine/src/contracts/tool_call.d.ts"
     }
   },
   "scripts": {

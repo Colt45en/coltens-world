@@ -7,7 +7,7 @@
     "ignoreDeprecations": "5.0",
     "outDir": "./dist",
     "lib": [
-      "ES2020"
+      "ES2021"
     ],
     "types": [
       "node"

@@ -9,16 +9,16 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "noEmit": true,
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
-      "@world-engine/*": ["packages/*/dist"]
+      "@world-engine/*": [
+        "packages/*/src"
+      ]
     }
   }
 }

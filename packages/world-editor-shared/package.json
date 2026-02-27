@@ -1,0 +1,33 @@
+{
+  "name": "@world-engine/world-editor-shared",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./canon": {
+      "types": "./dist/canon.d.ts",
+      "import": "./dist/canon.js"
+    },
+    "./governor": {
+      "types": "./dist/governor.d.ts",
+      "import": "./dist/governor.js"
+    },
+    "./ruleWriter": {
+      "types": "./dist/ruleWriter.d.ts",
+      "import": "./dist/ruleWriter.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

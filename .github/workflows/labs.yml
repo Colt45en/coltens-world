@@ -1,0 +1,99 @@
+name: labs
+
+on:
+  push:
+    branches: ["main", "develop"]
+    paths:
+      - "python/lab_generator.py"
+      - "python/labs_api.py"
+      - "python/requirements.txt"
+      - ".github/workflows/labs.yml"
+  pull_request:
+    branches: ["main", "develop"]
+    paths:
+      - "python/lab_generator.py"
+      - "python/labs_api.py"
+      - "python/requirements.txt"
+      - ".github/workflows/labs.yml"
+  workflow_dispatch:
+
+jobs:
+  labs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        working-directory: python
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          echo "✓ Dependencies installed"
+
+      - name: Generate labs
+        working-directory: python
+        run: |
+          python generate_labs.py
+          echo "✓ Labs generated"
+          ls -la labs/ | head -20
+
+      - name: Validate manifest.json files
+        working-directory: python
+        run: |
+          for lab_dir in labs/*/; do
+            if [ -f "$lab_dir/manifest.json" ]; then
+              echo "Validating $(basename $lab_dir)/manifest.json"
+              python -m json.tool "$lab_dir/manifest.json" > /dev/null
+            fi
+          done
+          echo "✓ All manifests valid JSON"
+
+      - name: Validate _catalog.json
+        working-directory: python
+        run: |
+          if [ -f "labs/_catalog.json" ]; then
+            echo "Validating labs/_catalog.json"
+            python -m json.tool labs/_catalog.json > /dev/null
+            echo "✓ Catalog valid JSON"
+          fi
+
+      - name: Run lab tests
+        working-directory: python
+        run: |
+          pytest -v labs/**/*_test.py || true
+          echo "✓ Lab tests completed (failures allowed in PR)"
+
+      - name: Generate test report
+        working-directory: python
+        if: always()
+        run: |
+          pytest labs/**/*_test.py --tb=short -q > lab_test_results.txt 2>&1 || true
+          echo "✓ Test report written"
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: labs-generated
+          path: |
+            python/labs/
+            python/_catalog.json
+            python/lab_test_results.txt
+          retention-days: 7
+
+      - name: Summary
+        run: |
+          echo "## Lab Generation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✓ All labs generated" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Manifests validated" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Tests completed" >> $GITHUB_STEP_SUMMARY

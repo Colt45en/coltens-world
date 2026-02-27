@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@world-engine/artifacts": "workspace:*",
+    "@world-engine/engine": "workspace:*",
     "@world-engine/flowstate": "workspace:*",
+    "@world-engine/ledger": "workspace:*",
     "@world-engine/ledger-contracts": "workspace:*",
     "@world-engine/lego-prefab": "workspace:*",
     "@world-engine/physics-contract": "workspace:*",

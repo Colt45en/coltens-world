@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  agenthub:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: bash -lc "pip install -r requirements.txt && python agent_hub_server.py"
+    ports:
+      - "3001:3001"
+    environment:
+      - TS_AGENT_URL=http://ts-agent:3002
+      - ALLOW_ORIGINS=*
+      - REQUEST_TIMEOUT_S=5
+      - TS_RETRY_MAX=2
+      - APPROVAL_TTL_S=600
+    depends_on:
+      - ts-agent
+
+  ts-agent:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -lc "npm install express && npm run start"
+    ports:
+      - "3002:3002"
+    environment:
+      - DEBUG=true
+      - TS_AGENT_HOST=0.0.0.0
+      - TS_AGENT_PORT=3002
