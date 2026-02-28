@@ -3,8 +3,13 @@
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "types": ["node"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "lib": [
+      "ES2021"
+    ]
   },
   "include": [
     "src/**/*.ts"

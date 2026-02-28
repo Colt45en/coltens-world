@@ -10,6 +10,10 @@
       "import": "./dist/engine/src/index.js",
       "types": "./dist/engine/src/index.d.ts"
     },
+    "./browser": {
+      "import": "./dist/engine/src/browser.js",
+      "types": "./dist/engine/src/browser.d.ts"
+    },
     "./contracts": {
       "import": "./dist/engine/src/contracts/index.js",
       "types": "./dist/engine/src/contracts/index.d.ts"

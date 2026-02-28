@@ -26,12 +26,15 @@ export type RendererConfig = z.infer<typeof RendererConfigSchema>;
 
 export const RendererStateSchema = z.object({
   is_initialized: z.boolean(),
-  canvas_element: z.instanceof(HTMLCanvasElement).optional(),
+  canvas_element: z.any().optional(),
   scene: z.object({}).optional(),
   camera: z.object({}).optional(),
   renderer_instance: z.object({}).optional(),
   last_render_packet_id: z.string().optional(),
-  last_render_hash: z.string().regex(/^[0-9a-f]{64}$/).optional(),
+  last_render_hash: z
+    .string()
+    .regex(/^[0-9a-f]{64}$/)
+    .optional(),
   frame_count: z.number().int().min(0),
   fps: z.number().finite().min(0).max(300),
 });

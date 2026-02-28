@@ -236,8 +236,8 @@ export type LedgerRangeQuery = z.infer<typeof LedgerRangeQuerySchema>;
  * Stream query: continuous log tail
  */
 export const LedgerStreamQuerySchema = z.object({
-  after_seq: z.number().optional(),
-  limit: z.number().optional().default(100),
+  after_seq: z.coerce.number().optional().default(0),
+  limit: z.coerce.number().optional().default(100),
 });
 
 export type LedgerStreamQuery = z.infer<typeof LedgerStreamQuerySchema>;

@@ -4,7 +4,7 @@
  */
 
 import type { RendererRequestV1 } from "@world-engine/engine";
-import { RendererIntentToolkit } from "@world-engine/engine";
+import { RendererIntentToolkit } from "@world-engine/engine/browser";
 
 export type ToolHandler = (input: unknown) => Promise<{ output: unknown }>;
 export type ToolRegistry = { register: (toolName: string, handler: ToolHandler) => void };
