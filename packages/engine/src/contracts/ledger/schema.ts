@@ -194,21 +194,30 @@ export const LedgerEventSchema = z.union([
 export type LedgerEvent = z.infer<typeof LedgerEventSchema>;
 
 /**
- * Ledger entry (single event record)
+ * Ledger entry: immutable append-only record with deterministic hash chaining
  */
 export const LedgerEntrySchema = z.object({
-  index: z.number(),
-  hash: z.string(),
-  event: LedgerEventSchema,
+  seq: z.number().int().nonnegative(),
+  ts_utc: z.string().datetime(),
+  type: z.string(),
+  doc_id: z.string().optional(),
+  artifact_id: z.string().optional(),
+  payload: z.any().nullable(),
+  payload_hash: z.string().regex(/^[a-f0-9]{64}$/),
+  prev_hash: z.string().regex(/^[a-f0-9]{64}$/),
+  entry_hash: z.string().regex(/^[a-f0-9]{64}$/),
 });
 
 export type LedgerEntry = z.infer<typeof LedgerEntrySchema>;
 
 /**
- * Ledger input: batch of events to append
+ * Ledger input: single entry to append
  */
 export const LedgerEventInputSchema = z.object({
-  events: z.array(LedgerEventSchema),
+  type: z.string(),
+  doc_id: z.string().optional(),
+  artifact_id: z.string().optional(),
+  payload: z.any().optional(),
 });
 
 export type LedgerEventInput = z.infer<typeof LedgerEventInputSchema>;
@@ -234,12 +243,12 @@ export const LedgerStreamQuerySchema = z.object({
 export type LedgerStreamQuery = z.infer<typeof LedgerStreamQuerySchema>;
 
 /**
- * Ledger status / verification result
+ * Ledger status
  */
 export const LedgerStatusSchema = z.object({
-  head_hash: z.string(),
-  total_events: z.number(),
-  verified: z.boolean(),
+  filePath: z.string(),
+  maxSeq: z.number().int().nonnegative(),
+  lastHash: z.string().regex(/^[a-f0-9]{64}$/),
 });
 
 export type LedgerStatus = z.infer<typeof LedgerStatusSchema>;
@@ -247,10 +256,17 @@ export type LedgerStatus = z.infer<typeof LedgerStatusSchema>;
 /**
  * Verification result for ledger integrity
  */
-export const LedgerVerifyResultSchema = z.object({
-  valid: z.boolean(),
-  errors: z.array(z.string()).optional(),
-  head_hash: z.string(),
-});
+export const LedgerVerifyResultSchema = z.union([
+  z.object({
+    ok: z.literal(true),
+    checked: z.number().int().nonnegative(),
+  }),
+  z.object({
+    ok: z.literal(false),
+    checked: z.number().int().nonnegative(),
+    bad_seq: z.number().int().nonnegative(),
+    reason: z.string(),
+  }),
+]);
 
 export type LedgerVerifyResult = z.infer<typeof LedgerVerifyResultSchema>;
