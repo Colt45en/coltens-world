@@ -14,23 +14,23 @@
  */
 
 import {
-    ActorForce,
-    ActorPhysicsState,
-    TimestepParams,
-    Vec3,
-} from '../contracts/physics/step-input';
+  ActorForce,
+  ActorPhysicsState,
+  TimestepParams,
+  Vec3,
+} from "../contracts/physics/step-input";
 import { CollisionEvent, ImpulseApplied } from '../contracts/physics/step-output';
 import { PrefabInstance } from '../contracts/world/schema';
 import { hashPayload } from '../determinism';
 import {
-    addVec3,
-    applyDamping,
-    clampVec3,
-    distanceVec3,
-    magnitudeVec3,
-    quantizeVec3,
-    scaleVec3,
-} from './determinism';
+  addVec3,
+  applyDamping,
+  clampVec3,
+  distanceVec3,
+  magnitudeVec3,
+  quantizeVec3,
+  scaleVec3,
+} from "./determinism";
 
 /**
  * Extract actor physics state from prefab instance
@@ -75,7 +75,7 @@ export function stepPhysics(
   const forceMap = new Map<string, Vec3>();
   for (const force of forces) {
     const existingForce = forceMap.get(force.actor_id) ?? [0, 0, 0];
-    forceMap.set(force.actor_id, addVec3(existingForce, force.force));
+    forceMap.set(force.actor_id, addVec3(existingForce, force.force) as Vec3);
   }
 
   // Step each dynamic actor
@@ -90,12 +90,12 @@ export function stepPhysics(
     const mass = actor.mass > 0 ? actor.mass : 1;
 
     // F = ma → a = F/m
-    const forceAccel = scaleVec3(appliedForce, 1 / mass);
+    const forceAccel = scaleVec3(appliedForce, 1 / mass) as Vec3;
     const gravityAccel = gravity; // gravity already in world units
-    const totalAccel = addVec3(forceAccel, gravityAccel);
+    const totalAccel = addVec3(forceAccel, gravityAccel) as Vec3;
 
     // Euler integration: v' = v + a*dt
-    let newVelocity = addVec3(actor.velocity, scaleVec3(totalAccel, dt));
+    let newVelocity = addVec3(actor.velocity, scaleVec3(totalAccel, dt) as Vec3);
 
     // Apply damping
     newVelocity = applyDamping(newVelocity, linearDamping);
@@ -104,7 +104,7 @@ export function stepPhysics(
     newVelocity = quantizeVec3(newVelocity, 6);
 
     // Position update: x' = x + v*dt
-    let newPosition = addVec3(actor.position, scaleVec3(newVelocity, dt));
+    let newPosition = addVec3(actor.position, scaleVec3(newVelocity, dt) as Vec3) as Vec3;
 
     // Clamp to reasonable world bounds (prevent NaN/Infinity)
     newPosition = clampVec3(newPosition, -1e4, 1e4);
@@ -123,7 +123,7 @@ export function stepPhysics(
     }
 
     // Gravity impulse (always recorded if not static)
-    const gravityImpulse = scaleVec3(gravity, mass * dt);
+    const gravityImpulse = scaleVec3(gravity, mass * dt) as Vec3;
     if (magnitudeVec3(gravityImpulse) > 0.01) {
       impulses.push({
         actor_id: actor.actor_id,
