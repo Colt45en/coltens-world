@@ -1,13 +1,35 @@
-// TODO: Physics contract package not yet created.
-// Once coltens world/packages/physics-contract is set up with proper exports,
-// update this import to reference the correct package path.
-// // TODO: Import from @world-engine/physics-contract when available
-// export * from "@world-engine/physics-contract";
+/**
+ * Physics Contracts v1
+ * Fixed timestep deterministic physics stepping with Rapier JS/WASM
+ */
 
-// Placeholder physics contract types
-export type PhysicsBody = any;
-export type PhysicsWorld = any;
-export interface PhysicsContract {
-  world: PhysicsWorld;
-  bodies: Map<string, PhysicsBody>;
-}
+export {
+  ActorForceSchema,
+  ActorPhysicsStateSchema,
+  PhysicsStepInputSchema,
+  TimestepParamsSchema,
+  Vec3Schema,
+} from "./step-input";
+
+export {
+  CollisionEventSchema,
+  ImpulseAppliedSchema,
+  PhysicsSnapshotSchema,
+  PhysicsStepOutputSchema,
+} from "./step-output";
+
+// Type exports
+export type {
+  ActorForce,
+  ActorPhysicsState,
+  PhysicsStepInput,
+  TimestepParams,
+  Vec3,
+} from "./step-input";
+
+export type {
+  CollisionEvent,
+  ImpulseApplied,
+  PhysicsSnapshot,
+  PhysicsStepOutput,
+} from "./step-output";

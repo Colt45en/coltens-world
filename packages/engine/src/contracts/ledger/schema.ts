@@ -146,6 +146,38 @@ export const WorldReplayExecutedEventSchema = LedgerEventBaseSchema.extend({
 export type WorldReplayExecutedEvent = z.infer<typeof WorldReplayExecutedEventSchema>;
 
 /**
+ * Physics Step Executed Event
+ */
+export const PhysicsStepExecutedEventSchema = LedgerEventBaseSchema.extend({
+  event_type: z.literal('physics.step.executed.v1'),
+  data: z.object({
+    tick: z.number().int().min(0),
+    dt_ms: z.number().positive().int(),
+    input_hash: z.string().regex(/^[a-f0-9]{64}$/),
+    output_hash: z.string().regex(/^[a-f0-9]{64}$/),
+    collision_count: z.number().int().min(0),
+    impulse_count: z.number().int().min(0),
+  }),
+});
+
+export type PhysicsStepExecutedEvent = z.infer<typeof PhysicsStepExecutedEventSchema>;
+
+/**
+ * Physics Snapshot Created Event
+ */
+export const PhysicsSnapshotCreatedEventSchema = LedgerEventBaseSchema.extend({
+  event_type: z.literal('physics.snapshot.created.v1'),
+  data: z.object({
+    physics_hash: z.string().regex(/^[a-f0-9]{64}$/),
+    source_snapshot_id: z.string(),
+    tick: z.number().int().min(0),
+    actor_count: z.number().int().min(0),
+  }),
+});
+
+export type PhysicsSnapshotCreatedEvent = z.infer<typeof PhysicsSnapshotCreatedEventSchema>;
+
+/**
  * Union of all ledger events
  */
 export const LedgerEventSchema = z.union([
@@ -155,6 +187,8 @@ export const LedgerEventSchema = z.union([
   PrefabBakedEventSchema,
   WorldSnapshotWrittenEventSchema,
   WorldReplayExecutedEventSchema,
+  PhysicsStepExecutedEventSchema,
+  PhysicsSnapshotCreatedEventSchema,
 ]);
 
 export type LedgerEvent = z.infer<typeof LedgerEventSchema>;

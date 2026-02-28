@@ -1,10 +1,11 @@
 /**
  * World Core Routes Index
- * All Nucleus endpoints for Mesh + Prefab + World contracts and operations
+ * All Nucleus endpoints for Mesh + Prefab + World + Physics contracts and operations
  */
 
 import { Router } from 'express';
 import meshRouter from './mesh';
+import physicsRouter from "./physics";
 import prefabRouter from './prefab';
 import worldRouter from './world';
 
@@ -14,5 +15,6 @@ const router = Router();
 router.use(meshRouter);
 router.use(prefabRouter);
 router.use(worldRouter);
+router.use(physicsRouter);
 
 export default router;

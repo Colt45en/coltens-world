@@ -40,7 +40,7 @@ const retrieved = store.retrieve(artifact_id); // undefined if not found
 - Defines: PBR material rules, triangle limits, supported extensions
 - Output: Deterministic validation reports with stable violation ordering
 
-#### Prefab  
+#### Prefab
 - **prefab/schema.ts**: `AvatarPrefab`, `BuildingPrefab`, `PrefabBakeManifest`
 - Content-addressed IDs: `prefab:<sha256(spec)>`
 - Bake process: Normalize spec → compute manifest hash → stable output
@@ -97,7 +97,7 @@ const result = executeWorldReplay(request, snapshot);
 - `POST /mesh.style.get.v1` → Retrieve style spec
 - `POST /mesh.validate_asset.v1` → Validate asset against style
 
-#### prefab.ts 
+#### prefab.ts
 - `POST /prefab.avatar.ingest.v1` → Ingest avatar prefab
 - `POST /prefab.building.ingest.v1` → Ingest building prefab
 - `POST /prefab.bake.v1` → Bake prefab → manifest
@@ -116,36 +116,36 @@ const result = executeWorldReplay(request, snapshot);
 ## Determinism Guarantees
 
 ### Contracts
-✅ All schemas validate with Zod  
-✅ Type-safe input/output across boundaries  
+✅ All schemas validate with Zod
+✅ Type-safe input/output across boundaries
 
 ### Canonical JSON + Hashing
-✅ RFC 8785 lexicographic key ordering  
-✅ No whitespace outside strings  
-✅ Stable serialization → reproducible hashes  
-✅ SHA-256 with canonical form → content-addressed IDs  
+✅ RFC 8785 lexicographic key ordering
+✅ No whitespace outside strings
+✅ Stable serialization → reproducible hashes
+✅ SHA-256 with canonical form → content-addressed IDs
 
 ### Ledger Events
-✅ Every operation appends event with `input_hashes` + `output_hashes`  
-✅ `deterministic_context` includes tool ID + engine version  
-✅ Stable field naming + ordering in events  
+✅ Every operation appends event with `input_hashes` + `output_hashes`
+✅ `deterministic_context` includes tool ID + engine version
+✅ Stable field naming + ordering in events
 
 ### Stable Ordering
-✅ **List ordering preserved when meaningful** (e.g., instances in snapshot)  
-✅ **Violations sorted** by type + message (stable)  
-✅ **Prefab manifests sorted** by key when order is non-meaningful  
+✅ **List ordering preserved when meaningful** (e.g., instances in snapshot)
+✅ **Violations sorted** by type + message (stable)
+✅ **Prefab manifests sorted** by key when order is non-meaningful
 
 ### Content-Addressed Identity
-✅ Style IDs: human (e.g., `we.mesh.style.core`) OR canonical hash  
-✅ Prefab IDs: `prefab:<sha256(spec)>`  
-✅ Snapshot IDs: `worldsnap:<sha256(payload)>`  
-✅ Artifact IDs: `artifact:<sha256(bytes)>`  
+✅ Style IDs: human (e.g., `we.mesh.style.core`) OR canonical hash
+✅ Prefab IDs: `prefab:<sha256(spec)>`
+✅ Snapshot IDs: `worldsnap:<sha256(payload)>`
+✅ Artifact IDs: `artifact:<sha256(bytes)>`
 
 ### Determinism Tests
-✅ Same input twice → identical hash  
-✅ Same manifest twice → `manifest_hash` matches  
-✅ Same snapshot twice → `snapshot_id` matches  
-✅ Shuffled order (where non-meaningful) → different hash  
+✅ Same input twice → identical hash
+✅ Same manifest twice → `manifest_hash` matches
+✅ Same snapshot twice → `snapshot_id` matches
+✅ Shuffled order (where non-meaningful) → different hash
 
 ---
 
