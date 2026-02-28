@@ -38,18 +38,25 @@ export interface NdjsonConsumerState {
 }
 
 /**
- * Async NDJSON line iterator (browser-safe)
+ * Async NDJSON line iterator (browser-safe, bounded buffer + abortable)
  */
 async function* ndjsonLines(
-  stream: ReadableStream<Uint8Array>
+  stream: ReadableStream<Uint8Array>,
+  opts?: { signal?: AbortSignal; maxBufferChars?: number }
 ): AsyncGenerator<string, void, unknown> {
   const reader = stream.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: false });
 
+  const maxBufferChars = opts?.maxBufferChars ?? 2_000_000; // ~2MB chars
   let buffer = "";
 
   try {
     while (true) {
+      // ✅ Check abort signal early
+      if (opts?.signal?.aborted) {
+        throw opts.signal.reason ?? new Error("aborted");
+      }
+
       const { value, done } = await reader.read();
 
       if (done) {
@@ -61,6 +68,13 @@ async function* ndjsonLines(
       }
 
       buffer += decoder.decode(value, { stream: true });
+
+      // ✅ Hard cap buffer growth (prevents unbounded memory)
+      if (buffer.length > maxBufferChars) {
+        throw new Error(
+          `NDJSON buffer exceeded ${maxBufferChars} chars (missing newlines or oversized line)`
+        );
+      }
 
       while (true) {
         const nlIdx = buffer.indexOf("\n");
@@ -75,7 +89,11 @@ async function* ndjsonLines(
       }
     }
   } finally {
-    reader.releaseLock();
+    try {
+      reader.releaseLock();
+    } catch {
+      // ignore
+    }
   }
 }
 
@@ -128,7 +146,7 @@ export function useNdjsonConsumer(options: NdjsonConsumerOptions): NdjsonConsume
 
         const metrics = { ok: true, dupes: 0, gaps: 0, rewinds: 0 };
 
-        for await (const line of ndjsonLines(resp.body)) {
+        for await (const line of ndjsonLines(resp.body, { signal: abortSignal })) {
           if (abortSignal.aborted) break;
 
           const event = parseP0StreamEventLine(line);

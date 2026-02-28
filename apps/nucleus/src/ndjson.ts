@@ -1,22 +1,33 @@
 /**
- * NDJSON reader: handles chunk boundaries gracefully
+ * NDJSON reader: handles chunk boundaries gracefully (bounded + abortable)
+ *
+ * - maxBufferChars prevents OOM if newline never arrives
+ * - signal allows immediate cancel on disconnect/navigation
  *
  * Example:
- *   for await (const line of ndjsonLines(response.body)) {
+ *   const controller = new AbortController();
+ *   for await (const line of ndjsonLines(response.body, { signal: controller.signal })) {
  *     const event = JSON.parse(line);
  *   }
  */
 
 export async function* ndjsonLines(
-  stream: ReadableStream<Uint8Array>
+  stream: ReadableStream<Uint8Array>,
+  opts?: { signal?: AbortSignal; maxBufferChars?: number }
 ): AsyncGenerator<string, void, unknown> {
   const reader = stream.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: false });
 
+  const maxBufferChars = opts?.maxBufferChars ?? 2_000_000; // ~2MB chars
   let buffer = "";
 
   try {
     while (true) {
+      // ✅ Check abort signal early
+      if (opts?.signal?.aborted) {
+        throw opts.signal.reason ?? new Error("aborted");
+      }
+
       const { value, done } = await reader.read();
 
       if (done) {
@@ -30,6 +41,13 @@ export async function* ndjsonLines(
 
       // Append decoded chunk to buffer
       buffer += decoder.decode(value, { stream: true });
+
+      // ✅ Hard cap buffer growth (prevents unbounded memory)
+      if (buffer.length > maxBufferChars) {
+        throw new Error(
+          `NDJSON buffer exceeded ${maxBufferChars} chars (missing newlines or oversized line)`
+        );
+      }
 
       // Extract complete lines
       while (true) {
@@ -46,6 +64,10 @@ export async function* ndjsonLines(
       }
     }
   } finally {
-    reader.releaseLock();
+    try {
+      reader.releaseLock();
+    } catch {
+      // ignore
+    }
   }
 }
