@@ -1,0 +1,19 @@
+.generationCanvas {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #1a1a1a;
+}
+
+.tileColorSwatch {
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tileColorSwatch:hover {
+  transform: scale(1.1);
+  border-color: #fff !important;
+}
