@@ -127,7 +127,7 @@ function stimulusAt(
     }
   }
 
-  for (const k of Object.keys(by).sort()) total = q(total + by[k], quantize);
+  for (const k of Object.keys(by).sort()) total = q(total + by[k]!, quantize);
 
   return { t_ms, total, by_channel: by };
 }

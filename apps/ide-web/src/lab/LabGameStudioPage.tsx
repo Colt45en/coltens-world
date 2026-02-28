@@ -374,7 +374,7 @@ function groundToPlaneY0(obj: THREE.Object3D, epsilon = 0.0) {
     obj.position.y += dy;
     obj.updateMatrix();
   } else if (obj.matrix?.elements) {
-    obj.matrix.elements[13] += dy;
+    obj.matrix.elements[13]! += dy;
   }
   obj.updateMatrixWorld(true);
 }

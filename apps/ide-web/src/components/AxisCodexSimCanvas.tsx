@@ -62,9 +62,9 @@ export const AxisCodexSimCanvas = React.forwardRef<
       const graphHeight = height - 2 * padding;
 
       // Find min/max for scaling
-      const cohs = frames.map((f) => f.heart.coherence);
+      const cohs = frames.map((f) => f.heart!.coherence);
       const maxCoh = Math.max(...cohs);
-      const stimuli = frames.map((f) => f.stimulus.total);
+      const stimuli = frames.map((f) => f.stimulus!.total);
       const maxStim = Math.max(...stimuli, 1);
 
       // Draw grid
@@ -83,7 +83,7 @@ export const AxisCodexSimCanvas = React.forwardRef<
       for (let i = 0; i < frames.length; i++) {
         const x = padding + (graphWidth / frames.length) * i;
         const w = graphWidth / frames.length;
-        const barH = (frames[i].stimulus.total / maxStim) * graphHeight;
+        const barH = (frames[i]!.stimulus!.total / maxStim) * graphHeight;
         ctx.fillRect(x, padding + graphHeight - barH, w, barH);
       }
 
@@ -93,10 +93,7 @@ export const AxisCodexSimCanvas = React.forwardRef<
       ctx.beginPath();
       for (let i = 0; i < frames.length; i++) {
         const x = padding + (graphWidth / frames.length) * i;
-        const y =
-          padding +
-          graphHeight -
-          (frames[i].heart.coherence / maxCoh) * graphHeight;
+        const y = padding + graphHeight - (frames[i]!.heart!.coherence / maxCoh) * graphHeight;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
@@ -114,9 +111,7 @@ export const AxisCodexSimCanvas = React.forwardRef<
 
         // Dot on coherence line
         const y =
-          padding +
-          graphHeight -
-          (frames[currentIndex].heart.coherence / maxCoh) * graphHeight;
+          padding + graphHeight - (frames[currentIndex]!.heart!.coherence / maxCoh) * graphHeight;
         ctx.fillStyle = "#dc3545";
         ctx.beginPath();
         ctx.arc(x, y, 5, 0, 2 * Math.PI);
