@@ -596,9 +596,7 @@ export const HeightfieldCodexButton: React.FC<HeightfieldCodexButtonProps> = ({
 
       {/* File Input */}
       <div>
-        <label className="text-xs opacity-70 block mb-1">
-          Heightmap (PNG/JPG/EXR)
-        </label>
+        <label className="text-xs opacity-70 block mb-1">Heightmap (PNG/JPG/EXR)</label>
         <input
           ref={fileInputRef}
           type="file"
@@ -639,7 +637,9 @@ export const HeightfieldCodexButton: React.FC<HeightfieldCodexButtonProps> = ({
             title="Grid size"
             className="w-full"
           />
-          <div className="text-center opacity-60">{cfg.size}×{cfg.size}</div>
+          <div className="text-center opacity-60">
+            {cfg.size}×{cfg.size}
+          </div>
         </div>
 
         {/* Height Scale */}
@@ -667,6 +667,7 @@ export const HeightfieldCodexButton: React.FC<HeightfieldCodexButtonProps> = ({
             max={20}
             value={cfg.smoothIter}
             onChange={(e) => updateCfg("smoothIter", Number(e.target.value))}
+            title="Smoothing iterations (Taubin algorithm)"
             className="w-full"
           />
           <div className="text-center opacity-60">{cfg.smoothIter} iter</div>
@@ -716,6 +717,7 @@ export const HeightfieldCodexButton: React.FC<HeightfieldCodexButtonProps> = ({
             type="checkbox"
             checked={cfg.normalize}
             onChange={(e) => updateCfg("normalize", e.target.checked)}
+            title="Automatically normalize heights to 0–1 range"
             className="w-3 h-3"
           />
           <label className="opacity-70 text-xs cursor-pointer">Auto-Normalize</label>
@@ -726,6 +728,7 @@ export const HeightfieldCodexButton: React.FC<HeightfieldCodexButtonProps> = ({
             type="checkbox"
             checked={cfg.vertexColors}
             onChange={(e) => updateCfg("vertexColors", e.target.checked)}
+            title="Enable per-vertex color by elevation"
             className="w-3 h-3"
           />
           <label className="opacity-70 text-xs cursor-pointer">Vertex Colors</label>
@@ -733,11 +736,7 @@ export const HeightfieldCodexButton: React.FC<HeightfieldCodexButtonProps> = ({
       </div>
 
       {/* Progress */}
-      {progress && (
-        <div className="text-xs p-2 bg-blue-100 rounded text-blue-700">
-          {progress}
-        </div>
-      )}
+      {progress && <div className="text-xs p-2 bg-blue-100 rounded text-blue-700">{progress}</div>}
 
       {/* Action */}
       <button

@@ -1,0 +1,170 @@
+name: Downloads Organizer (Example)
+description: |
+  Sort downloads into buckets by type, age, and size.
+  Trashes temp files, ensures folder structure, creates INDEX.
+  Safe: uses deterministic processing + full undo support.
+
+target_folder: 'C:\Users\YourName\Downloads'
+audit_log: organizer_actions.ndjson
+
+# =============================================================================
+# Rules (processed in order; first match wins)
+# =============================================================================
+
+rules:
+  # 1. Initialize folder structure
+  - id: ensure_root_structure
+    pattern: "*"
+    match: relpath
+    condition:
+      is_folder: true
+      path_pattern: "."  # Matches the root itself
+    action: ensure_structure
+    structure:
+      - Documents
+      - Images
+      - Archives
+      - Installers
+      - Notes
+      - TrashReview
+
+  # 2. Move documents (PDF, Word, text)
+  - id: move_documents_by_date
+    pattern: "*"
+    match: name
+    condition:
+      file_type: document
+    action: move
+    destination: Documents/{yyyymm}
+
+  # 3. Move images (jpg, png, gif, etc.)
+  - id: move_images_by_year
+    pattern: "*"
+    match: name
+    condition:
+      file_type: image
+      max_size_bytes: 50000000  # Only <50MB (assume large files are exports)
+    action: move
+    destination: Images/{yyyy}
+
+  # 4. Move archives (zip, rar, 7z)
+  - id: move_archives
+    pattern: "*.zip|*.rar|*.7z|*.tar|*.gz"
+    match: name
+    condition:
+      # No conditions; just pattern match
+    action: move
+    destination: Archives
+
+  # 5. Move installers
+  - id: move_installers
+    pattern: "*.exe|*.msi|*.dmg|*.pkg"
+    match: name
+    condition: {}
+    action: move
+    destination: Installers/{yyyymm}
+
+  # 6. Move code/config files
+  - id: move_code
+    pattern: "*"
+    match: name
+    condition:
+      file_type: code
+    action: move
+    destination: Documents/Code
+
+  # 7. Trash obvious temp files
+  - id: trash_temp_cache
+    pattern: "*.tmp|*.cache|*.log|*.crdownload|*.part"
+    match: name
+    condition: {}
+    action: trash
+
+  # 8. Trash old junk (>90 days, <1 KB, suspicious names)
+  - id: trash_ancient_junk
+    pattern: "*"
+    match: name
+    condition:
+      min_age_days: 90
+      max_size_bytes: 1024
+      name_pattern: "*cache*|*temp*|*junk*|*old*"
+    action: trash
+
+  # 9. Move extremely old files (>1 year) to review folder
+  - id: archive_ancient
+    pattern: "*"
+    match: name
+    condition:
+      min_age_days: 365
+    action: move
+    destination: TrashReview
+
+# =============================================================================
+# Post-organization actions
+# =============================================================================
+
+post_actions:
+  # Create a summary index
+  - type: create_index
+    path: INDEX.md
+    content: |
+      # Downloads Index
+
+      **Last updated**: {timestamp}
+
+      # Folder Tree
+
+      {folder_tree}
+
+      # Recent Files
+
+      {recent_files}
+
+      # Organization Stats
+
+      | Metric | Count |
+      |--------|-------|
+      | Total items scanned | {total_items_snapshot} |
+      | Files moved | {moved_count} |
+      | Files deleted | {deleted_count} |
+      | Files trashed | {trashed_count} |
+      | Folders created | {created_folders} |
+      | Skipped (missing) | {skipped_missing} |
+      | Errors | {errors} |
+
+      # Notes
+
+      - Recoverable deletes are in `.trash/` folder
+      - Run with `--undo` to reverse moves/trash operations
+      - Permanent deletes cannot be reversed
+      - See `organizer_actions.ndjson` for detailed audit trail
+
+  # Create a cleanup reminder
+  - type: create_note
+    title: "Cleanup Results"
+    content: |
+      # Downloads Cleaning Report
+
+      Organization completed successfully.
+
+      ## What Happened
+
+      - **Moved**: {moved_count} files into organized folders
+      - **Trashed**: {trashed_count} temp/junk files (in `.trash/`)
+      - **Created**: {created_folders} new folders
+      - **Errors**: {errors}
+
+      ## Next Steps
+
+      1. Review `TrashReview/` folder for files older than 1 year
+      2. Check `.trash/` if you deleted something important
+      3. Look at `INDEX.md` to see the new structure
+
+      ## Undo
+
+      If something went wrong, run:
+      ```
+      python organize_rules.py rules.organize.downloads.yaml --undo
+      ```
+
+      This will reverse all moves and trash operations from the last run.

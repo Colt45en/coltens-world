@@ -28,8 +28,10 @@
 4. **Contracts-First Development**
    - All schemas defined in `packages/contracts/schemas/`
    - Codegen runs before any runtime code imports contracts
-   - Generated types/validators are outputs, never hand-edited
-   - CI gate: `pnpm run codegen:check` fails on drift
+   - Generated types/validators (TS, Python, OpenAPI) are produced deterministically by `pnpm run codegen`
+   - Generated code is NOT committed to git (lives in `packages/contracts/dist/` or `.gitignored`, rebuilt during `pnpm install`)
+   - Source schemas are committed; generated outputs are never hand-edited
+   - CI gate: `pnpm run codegen:check` fails on drift (schema change without regeneration)
 
 5. **Strict Boundary Enforcement**
    - Apps cannot import from other apps
@@ -109,16 +111,21 @@ coltens-world/                           # ← Root repo
 │   └── agent-suite/                     # Research/eval tools
 │
 ├── packages/                            # ← Shared libraries
-│   ├── contracts/                       # ← SOURCE OF TRUTH for schemas
+│   ├── contracts/                       # ← SINGLE SOURCE OF TRUTH for schemas
 │   │   ├── schemas/
 │   │   │   ├── message.schema.json
 │   │   │   ├── ledger.schema.json
+│   │   │   ├── stream-event.schema.json
 │   │   │   └── workflow.schema.json
 │   │   ├── openapi/
 │   │   │   └── openapi.json             # Generated from schemas
-│   │   ├── ts/                          # Generated (TypeScript types)
+│   │   ├── dist/                        # Generated (gitignored): TS validators, Python pydantic
 │   │   └── package.json
-│   ├── protocol/                        # ← Messages & RPC contracts
+│   ├── protocol/                        # ← Re-exports generated TS types from contracts
+│   │   ├── src/
+│   │   │   ├── index.ts                 # Public exports (re-export from contracts)
+│   │   │   └── [... message helpers ...]
+│   │   └── package.json                 # Does NOT define new schemas
 │   ├── engine/                          # ← Core simulation engine
 │   ├── bus/                             # ← Event bus / message router
 │   ├── ledger-contracts/                # ← Ledger schema contracts
@@ -201,13 +208,14 @@ coltens-world/                           # ← Root repo
 ## 🔐 Dependency Layers (Build Order)
 
 ```
-Layer 0: Contracts (schemas)
-└─ packages/contracts/schemas/ (source of truth)
+Layer 0: Contracts (Canonical Schema Authority)
+└─ packages/contracts/schemas/ (SINGLE SOURCE OF TRUTH for all messages/types)
+   ↓ codegen → TS types + Python Pydantic (dist/, gitignored)
    ↓
 Layer 1: Protocol & Foundations
-├─ packages/protocol/ (messaging contracts)
-├─ packages/contracts/ (TypeScript types, generated)
-└─ packages/ledger-contracts/ (ledger schemas)
+├─ packages/protocol/ (re-exports generated types from Layer 0, adds helpers)
+├─ packages/contracts/ (codegen outputs, exposes generated validators)
+└─ packages/ledger-contracts/ (schema contracts, generated)
    ↓
 Layer 2: Core Infrastructure
 ├─ packages/engine/ (core simulation)
@@ -227,7 +235,39 @@ Layer 4: Applications
 └─ [... other apps ...]
 ```
 
-**Build Rule**: tsc respects tsconfig.json dependency order. Turbo orchestrates parallel compilation.
+**Build Rule**:
+1. Layer 0: Codegen runs (schemas → TS + Python)
+2. Layers 1–4: tsc respects tsconfig.json dependency order. Turbo orchestrates parallel compilation.
+3. Artifacts (dist/) are gitignored; deployment fetches clean builds.
+
+---
+
+## 🎯 Schema Authority Rule (Critical Anti-Pattern Prevention)
+
+**Any cross-service message shape must have exactly ONE canonical schema located in `packages/contracts/schemas/`.**
+
+This single rule prevents 90% of future schema drift and contract mismatches.
+
+### Rules:
+- ✅ Define schemas in: `packages/contracts/schemas/*.schema.json`
+- ✅ Codegen produces TS types and Python Pydantic models
+- ✅ Protocol, Brain, Nucleus, and all consumers import generated types
+- ✅ Within a single service: local TypeScript interfaces can extend generated types
+- ❌ NEVER define the same message shape in multiple places
+- ❌ NEVER hand-edit generated types (they will be overwritten on next codegen)
+- ❌ NEVER use unvalidated JSON as a message (always parse through generated validator)
+
+### Example: StreamEvent (P0.4 Production Hardening)
+```
+✅ SOURCE: packages/contracts/schemas/stream-event.schema.json
+   ↓ codegen
+✅ Generated: packages/contracts/dist/stream-event.ts (TS validator)
+✅ Generated: packages/contracts/dist/stream_event.py (Pydantic model)
+   ↓ imports
+✅ Protocol re-exports: packages/protocol/src/index.ts
+✅ Nucleus imports: import { StreamEvent } from "@world-engine/protocol"
+✅ Brain uses: from packages.contracts import StreamEvent (Python)
+```
 
 ---
 

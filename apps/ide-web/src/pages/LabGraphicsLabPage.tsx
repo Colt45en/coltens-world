@@ -264,7 +264,7 @@ export function LabGraphicsLabPage() {
               </div>
 
               <div className="bg-slate-900 rounded p-4 border border-slate-600">
-                {/* eslint-disable-next-line react/forbid-component-props */}
+                { }
                 <canvas
                   ref={canvasRef}
                   className="w-full h-96 bg-black rounded"

@@ -18,7 +18,7 @@ export const StreamEventType = z.enum([
   "error",
 ]);
 
-export type StreamEventType = z.infer<typeof StreamEventType>;
+export type StreamEventTypeValue = z.infer<typeof StreamEventType>;
 
 // ============================================================================
 // Base (all events share these fields)
@@ -33,7 +33,7 @@ export const StreamEventBase = z.object({
   ts: z.number().int().positive().optional().describe("Server-side emission timestamp (ms since epoch)"),
 });
 
-export type StreamEventBase = z.infer<typeof StreamEventBase>;
+export type StreamEventBaseType = z.infer<typeof StreamEventBase>;
 
 // ============================================================================
 // Typed Stream Events (discriminated union)
@@ -115,17 +115,17 @@ export const StreamEvent = z.discriminatedUnion("type", [
   ErrorEvent,
 ]);
 
-export type StreamEvent = z.infer<typeof StreamEvent>;
+export type StreamEventValue = z.infer<typeof StreamEvent>;
 
 // ============================================================================
 // Export for runtime validation
 // ============================================================================
 
-export function validateStreamEvent(raw: unknown): StreamEvent | null {
+export function validateStreamEvent(raw: unknown): StreamEventValue | null {
   const result = StreamEvent.safeParse(raw);
   return result.success ? result.data : null;
 }
 
-export function serializeStreamEvent(ev: StreamEvent): string {
+export function serializeStreamEvent(ev: StreamEventValue): string {
   return JSON.stringify(ev);
 }

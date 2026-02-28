@@ -11,15 +11,16 @@ Handles:
 - Streaming token-by-token
 """
 
+import asyncio
+import json
+import time
+from datetime import datetime
+from typing import List, Literal, Optional
+from uuid import uuid4
+
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from typing import Optional, List, Literal
-import json
-import asyncio
-import time
-from datetime import datetime
-from uuid import uuid4
 
 app = FastAPI(title="Brain", version="1.0.0")
 
@@ -180,64 +181,116 @@ async def health():
 
 @app.post("/chat/stream", response_class=StreamingResponse)
 async def chat_stream(req: ChatRequest):
-    """
-    Stream ChatResponse events line-by-line (NDJSON).
-
-    Events:
-    - { type: "text_chunk", data: { text: "..." } }
-    - { type: "tool_call", data: { ... } }
-    - { type: "citation", data: { ... } }
-    - { type: "memory_write", data: { ... } }
-    - { type: "done", data: { traceId: "..." } }
-    """
+    """Stream ChatResponse events as NDJSON with tracing + ordering."""
 
     async def generate():
         try:
+            # Extract trace context
+            traceId = req.traceId
+            turnId = getattr(req, "turnId", f"turn_{uuid4()}")
+
+            seq = 0  # Monotonic counter
+
             # Run planning
             text, tool_calls, citations, memory_writes = await run_reasoning(req)
 
-            # Stream text in chunks (simulate token-by-token)
+            # Stream text in chunks
             for i in range(0, len(text), 10):
                 chunk = text[i : i + 10]
                 event = StreamEvent(
-                    type="text_chunk", data={"text": chunk, "traceId": req.traceId}
+                    v="1.0",
+                    traceId=traceId,
+                    turnId=turnId,
+                    seq=seq,
+                    type="text_chunk",
+                    data={"text": chunk},
+                    ts=int(time.time() * 1000),
                 )
+                seq += 1
                 yield json.dumps(event.model_dump()) + "\n"
-                await asyncio.sleep(0.01)  # Simulate latency
+                await asyncio.sleep(0.01)
 
             # Stream tool calls
-            for tc in tool_calls:
+            for idx, tc in enumerate(tool_calls):
                 event = StreamEvent(
-                    type="tool_call", data={**tc.model_dump(), "traceId": req.traceId}
+                    v="1.0",
+                    traceId=traceId,
+                    turnId=turnId,
+                    seq=seq,
+                    type="tool_call",
+                    data={
+                        "callId": f"call_{traceId}_{idx}",  # P0.5: unique per call
+                        "name": tc.name,
+                        "args": tc.args or {},
+                        "timeoutMs": tc.timeout,
+                        "critical": tc.critical,
+                    },
+                    ts=int(time.time() * 1000),
                 )
+                seq += 1
                 yield json.dumps(event.model_dump()) + "\n"
 
             # Stream citations
             for cit in citations:
                 event = StreamEvent(
-                    type="citation", data={**cit.model_dump(), "traceId": req.traceId}
+                    v="1.0",
+                    traceId=traceId,
+                    turnId=turnId,
+                    seq=seq,
+                    type="citation",
+                    data={
+                        "type": cit.url.split("://")[0],  # Extract type from URL scheme
+                        "ref": cit.url,
+                        "text": cit.snippet or cit.title,
+                    },
+                    ts=int(time.time() * 1000),
                 )
+                seq += 1
                 yield json.dumps(event.model_dump()) + "\n"
 
             # Stream memory writes
             for mw in memory_writes:
                 event = StreamEvent(
+                    v="1.0",
+                    traceId=traceId,
+                    turnId=turnId,
+                    seq=seq,
                     type="memory_write",
-                    data={**mw.model_dump(), "traceId": req.traceId},
+                    data={
+                        "key": mw.key,
+                        "value": mw.value,
+                        "ttl": mw.ttl,
+                    },
+                    ts=int(time.time() * 1000),
                 )
+                seq += 1
                 yield json.dumps(event.model_dump()) + "\n"
 
             # Done
             event = StreamEvent(
-                type="done", data={"traceId": req.traceId, "stop_reason": "end_turn"}
+                v="1.0",
+                traceId=traceId,
+                turnId=turnId,
+                seq=seq,
+                type="done",
+                data={"stop_reason": "end_turn"},
+                ts=int(time.time() * 1000),
             )
             yield json.dumps(event.model_dump()) + "\n"
 
         except Exception as e:
+            import traceback
             error_event = StreamEvent(
-                type="error", data={"error": str(e), "traceId": req.traceId}
+                v="1.0",
+                traceId=req.traceId,
+                turnId=getattr(req, "turnId", f"turn_{uuid4()}"),
+                seq=0,
+                type="error",
+                data={"error": str(e), "code": "internal"},
+                ts=int(time.time() * 1000),
             )
             yield json.dumps(error_event.model_dump()) + "\n"
+            traceback.print_exc()
 
     return StreamingResponse(generate(), media_type="application/x-ndjson")
 

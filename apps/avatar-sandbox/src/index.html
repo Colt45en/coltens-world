@@ -231,6 +231,20 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #475569;
         }
+
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            color: #E2E8F0;
+            font-size: 0.875rem;
+        }
+
+        button.secondary {
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -259,7 +273,7 @@
                 </div>
                 <div class="control-group">
                     <label class="control-label">Avatar ID</label>
-                    <input type="text" id="avatar-id" readonly class="bg-gray-900">
+                    <input type="text" id="avatar-id" readonly class="bg-gray-900" placeholder="Auto-generated ID">
                 </div>
                 <button id="btn-gen-id">Generate ID</button>
             </div>
@@ -273,11 +287,11 @@
                 <div class="panel-header">Load Assets</div>
                 <div class="control-group">
                     <label class="control-label">GLB Model</label>
-                    <input type="file" id="file-glb" accept=".glb,.gltf">
+                    <input type="file" id="file-glb" accept=".glb,.gltf" title="Upload GLB or GLTF model file">
                 </div>
                 <div class="control-group">
                     <label class="control-label">Texture (Skin)</label>
-                    <input type="file" id="file-texture" accept="image/*">
+                    <input type="file" id="file-texture" accept="image/*" title="Upload skin texture image">
                 </div>
                 <button id="btn-load">Load Assets</button>
             </div>
@@ -309,8 +323,8 @@
             <div class="panel">
                 <div class="panel-header">Constraints</div>
                 <div class="control-group">
-                    <label class="control-label">Mode</label>
-                    <select id="constraint-mode" style="width: 100%; padding: 0.5rem;">
+                    <label class="control-label" for="constraint-mode">Mode</label>
+                    <select id="constraint-mode" title="Constraint mode selection">
                         <option value="ARMOR_SAFE">ARMOR_SAFE</option>
                         <option value="DEFAULT">DEFAULT</option>
                         <option value="ACROBATIC">ACROBATIC</option>
@@ -322,17 +336,17 @@
                 <div class="panel-header">Rotation (Degrees)</div>
                 <div class="control-group">
                     <label class="control-label">X (Roll)</label>
-                    <input type="range" id="rot-x" min="-180" max="180" value="0">
+                    <input type="range" id="rot-x" min="-180" max="180" value="0" title="X axis rotation (Roll) in degrees">
                     <span id="rot-x-val">0°</span>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Y (Pitch)</label>
-                    <input type="range" id="rot-y" min="-180" max="180" value="0">
+                    <input type="range" id="rot-y" min="-180" max="180" value="0" title="Y axis rotation (Pitch) in degrees">
                     <span id="rot-y-val">0°</span>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Z (Yaw)</label>
-                    <input type="range" id="rot-z" min="-180" max="180" value="0">
+                    <input type="range" id="rot-z" min="-180" max="180" value="0" title="Z axis rotation (Yaw) in degrees">
                     <span id="rot-z-val">0°</span>
                 </div>
             </div>
@@ -341,18 +355,18 @@
                 <div class="panel-header">Material</div>
                 <div class="control-group">
                     <label class="control-label">Skin Color</label>
-                    <input type="text" id="skin-color" value="#d8b69a">
+                    <input type="text" id="skin-color" value="#d8b69a" title="Hex color code for skin tone">
                 </div>
                 <div class="control-group">
                     <label class="control-label">Roughness</label>
-                    <input type="range" id="roughness" min="0" max="1" step="0.1" value="0.85">
+                    <input type="range" id="roughness" min="0" max="1" step="0.1" value="0.85" title="Material roughness value">
                     <span id="roughness-val">0.85</span>
                 </div>
             </div>
 
             <div class="panel">
                 <button id="btn-manifest">View Manifest</button>
-                <button id="btn-export-json" class="secondary" style="margin-top: 0.5rem;">Export JSON</button>
+                <button id="btn-export-json" class="secondary">Export JSON</button>
             </div>
         </div>
     </div>

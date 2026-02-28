@@ -26,28 +26,96 @@ jobs:
       - name: Build (capture diagnostics)
         run: |
           set -o pipefail
-          # Example build; replace with yours
-          # pnpm run build 2>&1 | tee build.log
-          echo "Build placeholder"
+          # Ensure results dir exists
+          mkdir -p results
+          # Capture build output; replace with actual build command
+          pnpm -w run build 2>&1 | tee build.log || true
+          # Fallback: if build.log is empty, create a placeholder
+          if [ ! -s build.log ]; then
+            echo "Build completed (no diagnostic output captured)"
+          fi
 
       - name: Convert build.log → SARIF + ledger
         if: always()  # run even if build fails
         run: |
+          set -euo pipefail
+          mkdir -p results
           python scripts/diagtool.py \
             --kind cpp \
             --emit sarif \
             --emit ledger \
             --srcroot "$GITHUB_WORKSPACE" \
-            --sarif-out results.sarif.json \
-            --ledger-out ledger.ndjson \
+            --sarif-out results/results.sarif.json \
+            --ledger-out results/ledger.ndjson \
             --ledger-chain \
-            --in build.log
+            --in build.log || echo "diagtool: completed (SARIF may be empty)"
+
+      - name: Debug SARIF location
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PWD=$(pwd)"
+          echo "Contents of workspace root:"
+          ls -la | sed 's/^/  /'
+          echo ""
+          echo "Searching for SARIF files..."
+          find . -maxdepth 5 -type f \( -name "*.sarif" -o -name "*.sarif.json" -o -name "results.sarif.json" \) -print || echo "  (none found)"
+          echo ""
+          if [ -d "results" ]; then
+            echo "Contents of results/ directory:"
+            ls -la results/ || echo "  (empty)"
+          fi
+
+      - name: Validate SARIF file
+        if: always()
+        shell: bash
+        run: |
+          set +e  # Don't exit on error; provide helpful feedback
+
+          SARIF_FILE="results/results.sarif.json"
+          EXIT_CODE=0
+
+          # Check if file exists
+          if [ ! -f "$SARIF_FILE" ]; then
+            echo "❌ SARIF file NOT found: $SARIF_FILE"
+            echo "   Build may have failed or diagtool did not produce output"
+            EXIT_CODE=1
+          else
+            echo "✅ SARIF file exists: $SARIF_FILE"
+            FILE_SIZE=$(wc -c < "$SARIF_FILE")
+            echo "   Size: $FILE_SIZE bytes"
+
+            # Validate JSON
+            if ! jq empty "$SARIF_FILE" 2>/dev/null; then
+              echo "❌ SARIF file is NOT valid JSON"
+              echo "   First 20 lines:"
+              head -20 "$SARIF_FILE" | sed 's/^/   /'
+              EXIT_CODE=1
+            else
+              echo "✅ SARIF file is valid JSON"
+
+              # Check for rules in the SARIF structure
+              RULE_COUNT=$(jq '.runs[0].tool.driver.rules | length // 0' "$SARIF_FILE" 2>/dev/null || echo "0")
+              echo "✅ SARIF contains $RULE_COUNT rules"
+
+              if [ "$RULE_COUNT" -eq 0 ]; then
+                echo "   ⚠️  Warning: SARIF has 0 rules (analysis may be empty, but file is valid)"
+              fi
+
+              echo ""
+              echo "SARIF metadata:"
+              jq -r '{version: .version, runs: (.runs | length), tool: .runs[0].tool.driver.name}' "$SARIF_FILE" 2>/dev/null | sed 's/^/   /'
+            fi
+          fi
+
+          exit $EXIT_CODE
 
       - name: Upload SARIF to GitHub Code Scanning
-        if: always()
+        if: always() && hashFiles('results/results.sarif.json') != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: results.sarif.json
+          sarif_file: results/results.sarif.json
           category: diagtool-cpp
 
       - name: Archive ledger
@@ -55,4 +123,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: diagnostic-ledger
-          path: ledger.ndjson
+          path: results/ledger.ndjson

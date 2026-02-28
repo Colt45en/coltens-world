@@ -1,4 +1,4 @@
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 
 /**
  * Example Nucleus handlers for citation tool-calls

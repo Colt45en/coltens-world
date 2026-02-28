@@ -7,12 +7,12 @@
  */
 
 // Core implementation
-export { bakeMorphTargets, bakeMorphTargetsInMesh } from "@world-engine/avatar-core";
-
 // Convenience wrapper for backward compat: in-place mesh mutation
 import type { BakeMorphOptions } from "@world-engine/avatar-core";
 import { bakeMorphTargetsInMesh as bakeMorphTargets_Core } from "@world-engine/avatar-core";
 import type * as THREE from "three";
+
+export { bakeMorphTargets, bakeMorphTargetsInMesh } from "@world-engine/avatar-core";
 
 /**
  * Legacy function name (in-place mesh mutation).

@@ -1,11 +1,8 @@
+import JSZip from "jszip";
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import JSZip from "jszip";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 
 /**
  * SpinCaptureCodexButton
@@ -50,8 +47,7 @@ function frameCameraTo(
   const sph = new THREE.Sphere();
   box.getBoundingSphere(sph);
 
-  const dist =
-    (sph.radius / Math.tan((camera.fov * Math.PI) / 360)) * 1.35;
+  const dist = (sph.radius / Math.tan((camera.fov * Math.PI) / 360)) * 1.35;
 
   camera.position
     .copy(sph.center)
@@ -68,10 +64,7 @@ function frameCameraTo(
   }
 }
 
-function snapshotCamera(
-  camera: THREE.PerspectiveCamera,
-  controls?: OrbitControls
-) {
+function snapshotCamera(camera: THREE.PerspectiveCamera, controls?: OrbitControls) {
   return {
     fov: camera.fov,
     aspect: camera.aspect,
@@ -127,12 +120,8 @@ function mergeCollinear(
         const d2 = dir(b);
         const aligned = Math.abs(d1.x * d2.x + d1.y * d2.y) > angleThresh;
 
-        const near = (
-          p1x: number,
-          p1y: number,
-          p2x: number,
-          p2y: number
-        ) => Math.hypot(p1x - p2x, p1y - p2y) < joinEps;
+        const near = (p1x: number, p1y: number, p2x: number, p2y: number) =>
+          Math.hypot(p1x - p2x, p1y - p2y) < joinEps;
 
         // Try join a.tail → b.head
         if (aligned && near(a.x2, a.y2, b.x1, b.y1)) {
@@ -210,23 +199,14 @@ async function computeFrontOutlineOccluded(
   renderer.readRenderTargetPixels(rt, 0, 0, rasterSize, rasterSize, pixels);
 
   function getDepth01(x: number, y: number) {
-    const ix = Math.min(
-      rasterSize - 1,
-      Math.max(0, Math.floor(x))
-    );
-    const iy = Math.min(
-      rasterSize - 1,
-      Math.max(0, Math.floor(y))
-    );
+    const ix = Math.min(rasterSize - 1, Math.max(0, Math.floor(x)));
+    const iy = Math.min(rasterSize - 1, Math.max(0, Math.floor(y)));
     const i = (iy * rasterSize + ix) * 4;
     return pixels[i] / 255;
   }
 
   // Build candidate segments
-  const edges = new THREE.EdgesGeometry(
-    mesh.geometry,
-    THREE.MathUtils.radToDeg(thresholdAngleRad)
-  );
+  const edges = new THREE.EdgesGeometry(mesh.geometry, THREE.MathUtils.radToDeg(thresholdAngleRad));
   const pos = edges.getAttribute("position") as THREE.BufferAttribute;
   const mvp = new THREE.Matrix4()
     .multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse)
@@ -237,11 +217,7 @@ async function computeFrontOutlineOccluded(
 
   for (let i = 0; i < pos.count; i += 2) {
     const A = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
-    const B = new THREE.Vector3(
-      pos.getX(i + 1),
-      pos.getY(i + 1),
-      pos.getZ(i + 1)
-    );
+    const B = new THREE.Vector3(pos.getX(i + 1), pos.getY(i + 1), pos.getZ(i + 1));
 
     const a = projectToNDC(A, mvp);
     const b = projectToNDC(B, mvp);
@@ -313,8 +289,7 @@ function collectMergedGeometry(root: THREE.Object3D): THREE.BufferGeometry {
   for (const gg of geos) {
     const p = gg.getAttribute("position") as THREE.BufferAttribute;
     const idxArray =
-      ((gg.index?.array as any) as number[]) ??
-      Array.from({ length: p.count }, (_, k) => k);
+      (gg.index?.array as any as number[]) ?? Array.from({ length: p.count }, (_, k) => k);
 
     for (let k = 0; k < p.count; k++) {
       positions.push(p.getX(k), p.getY(k), p.getZ(k));
@@ -329,20 +304,14 @@ function collectMergedGeometry(root: THREE.Object3D): THREE.BufferGeometry {
   }
 
   const g = new THREE.BufferGeometry();
-  g.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(new Float32Array(positions), 3)
-  );
+  g.setAttribute("position", new THREE.Float32BufferAttribute(new Float32Array(positions), 3));
   g.setIndex(indices);
   g.computeVertexNormals();
 
   return g;
 }
 
-function wrapAndNormalize(
-  root: THREE.Object3D,
-  targetSize = 2
-): THREE.Group {
+function wrapAndNormalize(root: THREE.Object3D, targetSize = 2): THREE.Group {
   const container = new THREE.Group();
   container.name = "ModelContainer";
   container.add(root);
@@ -363,12 +332,9 @@ function wrapAndNormalize(
 
 function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        blob ? resolve(blob) : reject(new Error("toBlob failed"));
-      },
-      "image/png"
-    );
+    canvas.toBlob((blob) => {
+      blob ? resolve(blob) : reject(new Error("toBlob failed"));
+    }, "image/png");
   });
 }
 
@@ -378,319 +344,311 @@ async function nextFrame(): Promise<void> {
 
 // ==================== REACT COMPONENT ====================
 
-export const SpinCaptureCodexButton: React.FC<SpinCaptureCodexButtonProps> =
-  ({
-    modelGroupRef,
-    cameraRef,
-    controlsRef,
-    rendererRef,
-    composerRef,
-    modelName = "model",
-  }) => {
-    const [ui, setUi] = useState<CaptureUI>({
-      edgeAngle: 35,
-      svgSize: 512,
-      pngSize: 768,
-      spinSpeed: 60, // deg/sec
-      stepDeg: 2,
-      transparency: false,
-      preserveRig: false,
-    });
+export const SpinCaptureCodexButton: React.FC<SpinCaptureCodexButtonProps> = ({
+  modelGroupRef,
+  cameraRef,
+  controlsRef,
+  rendererRef,
+  composerRef,
+  modelName = "model",
+}) => {
+  const [ui, setUi] = useState<CaptureUI>({
+    edgeAngle: 35,
+    svgSize: 512,
+    pngSize: 768,
+    spinSpeed: 60, // deg/sec
+    stepDeg: 2,
+    transparency: false,
+    preserveRig: false,
+  });
 
-    const [isCapturing, setIsCapturing] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const capturingRef = useRef(false);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const capturingRef = useRef(false);
 
-    const updateUi = (key: keyof CaptureUI, value: any) => {
-      setUi((prev) => ({ ...prev, [key]: value }));
-    };
+  const updateUi = (key: keyof CaptureUI, value: any) => {
+    setUi((prev) => ({ ...prev, [key]: value }));
+  };
 
-    const captureSpinSequence = async () => {
-      if (
-        !modelGroupRef.current ||
-        !cameraRef.current ||
-        !rendererRef.current ||
-        !composerRef.current
-      ) {
-        console.error("Missing refs");
-        return;
+  const captureSpinSequence = async () => {
+    if (
+      !modelGroupRef.current ||
+      !cameraRef.current ||
+      !rendererRef.current ||
+      !composerRef.current
+    ) {
+      console.error("Missing refs");
+      return;
+    }
+
+    setIsCapturing(true);
+    capturingRef.current = true;
+
+    try {
+      const renderer = rendererRef.current;
+      const composer = composerRef.current;
+      const zip = new JSZip();
+
+      // Save current state
+      const prevSize = new THREE.Vector2();
+      renderer.getSize(prevSize);
+      const prevPR = renderer.getPixelRatio();
+      const prevAlpha = renderer.getClearAlpha();
+
+      const total = Math.max(1, Math.round(360 / Math.max(1, ui.stepDeg)));
+      const pad = Math.max(3, String(total - 1).length);
+
+      const startY = modelGroupRef.current.rotation.y;
+      const stepRad = THREE.MathUtils.degToRad(ui.stepDeg);
+
+      // Configure for capture
+      renderer.setPixelRatio(1);
+      renderer.setSize(ui.pngSize, ui.pngSize, false);
+      composer.setSize(ui.pngSize, ui.pngSize);
+      composer.setPixelRatio(1);
+
+      if (ui.transparency) {
+        renderer.setClearAlpha(0);
       }
 
-      setIsCapturing(true);
-      capturingRef.current = true;
+      const logInterval = Math.ceil(total / 20);
 
-      try {
-        const renderer = rendererRef.current;
-        const composer = composerRef.current;
-        const zip = new JSZip();
+      for (let i = 0; i < total; i++) {
+        modelGroupRef.current.rotation.y = startY + stepRad * i;
 
-        // Save current state
-        const prevSize = new THREE.Vector2();
-        renderer.getSize(prevSize);
-        const prevPR = renderer.getPixelRatio();
-        const prevAlpha = renderer.getClearAlpha();
-
-        const total = Math.max(1, Math.round(360 / Math.max(1, ui.stepDeg)));
-        const pad = Math.max(3, String(total - 1).length);
-
-        const startY = modelGroupRef.current.rotation.y;
-        const stepRad = THREE.MathUtils.degToRad(ui.stepDeg);
-
-        // Configure for capture
-        renderer.setPixelRatio(1);
-        renderer.setSize(ui.pngSize, ui.pngSize, false);
-        composer.setSize(ui.pngSize, ui.pngSize);
-        composer.setPixelRatio(1);
-
-        if (ui.transparency) {
-          renderer.setClearAlpha(0);
-        }
-
-        const logInterval = Math.ceil(total / 20);
-
-        for (let i = 0; i < total; i++) {
-          modelGroupRef.current.rotation.y = startY + stepRad * i;
-
-          // Double render to settle post-fx
-          composer.render();
-          await nextFrame();
-          composer.render();
-
-          const blob = await canvasToBlob(renderer.domElement);
-          zip.file(
-            `frames/${modelName}_frame_${String(i).padStart(pad, "0")}.png`,
-            blob
-          );
-
-          if (i % logInterval === 0 || i === total - 1) {
-            setProgress(Math.round((i / total) * 100));
-            console.log(
-              `🎬 Captured frame ${i + 1}/${total} (${Math.round(
-                ((i + 1) / total) * 100
-              )}%)`
-            );
-          }
-        }
-
-        // Save single thumbnail at frame 0
-        modelGroupRef.current.rotation.y = startY;
+        // Double render to settle post-fx
         composer.render();
         await nextFrame();
         composer.render();
 
-        const thumbBlob = await canvasToBlob(renderer.domElement);
-        zip.file(`${modelName}.png`, thumbBlob);
+        const blob = await canvasToBlob(renderer.domElement);
+        zip.file(`frames/${modelName}_frame_${String(i).padStart(pad, "0")}.png`, blob);
 
-        // Capture outline
-        console.log("📐 Computing occlusion-aware outline...");
-        const mesh = new THREE.Mesh(
-          new THREE.BufferGeometry(),
-          new THREE.MeshBasicMaterial()
-        );
-        mesh.geometry = collectMergedGeometry(modelGroupRef.current);
-
-        const outline = await computeFrontOutlineOccluded(
-          mesh,
-          THREE.MathUtils.degToRad(ui.edgeAngle),
-          ui.svgSize
-        );
-        mesh.geometry.dispose();
-
-        // SVG
-        const svg = outlineToSVG(outline, ui.svgSize, ui.svgSize);
-        zip.file(`${modelName}_outline.svg`, svg);
-
-        // Manifest
-        const manifest = {
-          codex: "artifact_bundle_codex",
-          createdAt: new Date().toISOString(),
-          item: {
-            name: modelName,
-            files: [
-              `${modelName}.png`,
-              `${modelName}_outline.svg`,
-              `frames/${modelName}_frame_*.png`,
-            ],
-            params: {
-              edgeAngle: ui.edgeAngle,
-              svgSize: ui.svgSize,
-              pngSize: ui.pngSize,
-              spinSpeed: ui.spinSpeed,
-              stepDeg: ui.stepDeg,
-              transparency: ui.transparency,
-              preserveRig: ui.preserveRig,
-            },
-            stats: {
-              totalFrames: total,
-              segments: outline.segments.length,
-              camera: snapshotCamera(
-                cameraRef.current,
-                controlsRef.current || undefined
-              ),
-            },
-          },
-        };
-
-        zip.file(`${modelName}.manifest.json`, JSON.stringify(manifest, null, 2));
-
-        // Restore state
-        renderer.setPixelRatio(prevPR);
-        renderer.setSize(prevSize.x, prevSize.y, false);
-        composer.setSize(prevSize.x, prevSize.y);
-        composer.setPixelRatio(
-          Math.min(2, (window as any).devicePixelRatio || 1)
-        );
-        renderer.setClearAlpha(prevAlpha);
-
-        // Optional: reset composer to release render targets
-        composerRef.current?.reset?.();
-
-        // Export
-        const blob = await zip.generateAsync({ type: "blob" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${modelName}-spin-${Date.now()}.zip`;
-        a.click();
-        URL.revokeObjectURL(url);
-
-        console.log("✅ Capture complete");
-        setProgress(100);
-      } catch (e) {
-        console.error("Capture failed:", e);
-        alert(`Capture failed: ${e}`);
-      } finally {
-        capturingRef.current = false;
-        setIsCapturing(false);
-        setProgress(0);
+        if (i % logInterval === 0 || i === total - 1) {
+          setProgress(Math.round((i / total) * 100));
+          console.log(
+            `🎬 Captured frame ${i + 1}/${total} (${Math.round(((i + 1) / total) * 100)}%)`
+          );
+        }
       }
-    };
 
-    return (
-      <div className="space-y-3 p-3 border border-slate-300 rounded bg-slate-50">
-        <div className="font-semibold text-sm">🎬 Spin Capture (Codex)</div>
+      // Save single thumbnail at frame 0
+      modelGroupRef.current.rotation.y = startY;
+      composer.render();
+      await nextFrame();
+      composer.render();
 
-        {/* Parameters */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          {/* Edge Angle */}
-          <div>
-            <label className="block opacity-70 mb-1">Edge Angle (°)</label>
-            <input
-              type="range"
-              min={5}
-              max={60}
-              value={ui.edgeAngle}
-              onChange={(e) => updateUi("edgeAngle", Number(e.target.value))}
-              className="w-full"
-            />
-            <div className="text-center opacity-60">{ui.edgeAngle}°</div>
-          </div>
+      const thumbBlob = await canvasToBlob(renderer.domElement);
+      zip.file(`${modelName}.png`, thumbBlob);
 
-          {/* SVG Size */}
-          <div>
-            <label className="block opacity-70 mb-1">SVG px</label>
-            <input
-              type="range"
-              min={256}
-              max={1024}
-              step={64}
-              value={ui.svgSize}
-              onChange={(e) => updateUi("svgSize", Number(e.target.value))}
-              className="w-full"
-            />
-            <div className="text-center opacity-60">{ui.svgSize}px</div>
-          </div>
+      // Capture outline
+      console.log("📐 Computing occlusion-aware outline...");
+      const mesh = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial());
+      mesh.geometry = collectMergedGeometry(modelGroupRef.current);
 
-          {/* PNG Size */}
-          <div>
-            <label className="block opacity-70 mb-1">PNG px</label>
-            <input
-              type="range"
-              min={256}
-              max={2048}
-              step={64}
-              value={ui.pngSize}
-              onChange={(e) => updateUi("pngSize", Number(e.target.value))}
-              className="w-full"
-            />
-            <div className="text-center opacity-60">{ui.pngSize}px</div>
-          </div>
+      const outline = await computeFrontOutlineOccluded(
+        mesh,
+        THREE.MathUtils.degToRad(ui.edgeAngle),
+        ui.svgSize
+      );
+      mesh.geometry.dispose();
 
-          {/* Spin Speed */}
-          <div>
-            <label className="block opacity-70 mb-1">Speed (°/sec)</label>
-            <input
-              type="range"
-              min={10}
-              max={180}
-              step={10}
-              value={ui.spinSpeed}
-              onChange={(e) => updateUi("spinSpeed", Number(e.target.value))}
-              className="w-full"
-            />
-            <div className="text-center opacity-60">{ui.spinSpeed}°/s</div>
-          </div>
+      // SVG
+      const svg = outlineToSVG(outline, ui.svgSize, ui.svgSize);
+      zip.file(`${modelName}_outline.svg`, svg);
 
-          {/* Step */}
-          <div>
-            <label className="block opacity-70 mb-1">Step (°)</label>
-            <input
-              type="range"
-              min={1}
-              max={10}
-              value={ui.stepDeg}
-              onChange={(e) => updateUi("stepDeg", Number(e.target.value))}
-              className="w-full"
-            />
-            <div className="text-center opacity-60">{ui.stepDeg}° → {Math.round(360 / ui.stepDeg)} frames</div>
-          </div>
+      // Manifest
+      const manifest = {
+        codex: "artifact_bundle_codex",
+        createdAt: new Date().toISOString(),
+        item: {
+          name: modelName,
+          files: [
+            `${modelName}.png`,
+            `${modelName}_outline.svg`,
+            `frames/${modelName}_frame_*.png`,
+          ],
+          params: {
+            edgeAngle: ui.edgeAngle,
+            svgSize: ui.svgSize,
+            pngSize: ui.pngSize,
+            spinSpeed: ui.spinSpeed,
+            stepDeg: ui.stepDeg,
+            transparency: ui.transparency,
+            preserveRig: ui.preserveRig,
+          },
+          stats: {
+            totalFrames: total,
+            segments: outline.segments.length,
+            camera: snapshotCamera(cameraRef.current, controlsRef.current || undefined),
+          },
+        },
+      };
 
-          {/* Transparency */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={ui.transparency}
-              onChange={(e) => updateUi("transparency", e.target.checked)}
-              className="w-4 h-4"
-            />
-            <label className="opacity-70">Transparent BG</label>
-          </div>
+      zip.file(`${modelName}.manifest.json`, JSON.stringify(manifest, null, 2));
 
-          {/* Preserve Rig */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={ui.preserveRig}
-              onChange={(e) => updateUi("preserveRig", e.target.checked)}
-              className="w-4 h-4"
-            />
-            <label className="opacity-70">Preserve Rig/Materials</label>
+      // Restore state
+      renderer.setPixelRatio(prevPR);
+      renderer.setSize(prevSize.x, prevSize.y, false);
+      composer.setSize(prevSize.x, prevSize.y);
+      composer.setPixelRatio(Math.min(2, (window as any).devicePixelRatio || 1));
+      renderer.setClearAlpha(prevAlpha);
+
+      // Optional: reset composer to release render targets
+      composerRef.current?.reset?.();
+
+      // Export
+      const blob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${modelName}-spin-${Date.now()}.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      console.log("✅ Capture complete");
+      setProgress(100);
+    } catch (e) {
+      console.error("Capture failed:", e);
+      alert(`Capture failed: ${e}`);
+    } finally {
+      capturingRef.current = false;
+      setIsCapturing(false);
+      setProgress(0);
+    }
+  };
+
+  return (
+    <div className="space-y-3 p-3 border border-slate-300 rounded bg-slate-50">
+      <div className="font-semibold text-sm">🎬 Spin Capture (Codex)</div>
+
+      {/* Parameters */}
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        {/* Edge Angle */}
+        <div>
+          <label className="block opacity-70 mb-1">Edge Angle (°)</label>
+          <input
+            type="range"
+            min={5}
+            max={60}
+            value={ui.edgeAngle}
+            onChange={(e) => updateUi("edgeAngle", Number(e.target.value))}
+            className="w-full"
+            aria-label="Edge Angle in degrees"
+          />
+          <div className="text-center opacity-60">{ui.edgeAngle}°</div>
+        </div>
+
+        {/* SVG Size */}
+        <div>
+          <label className="block opacity-70 mb-1">SVG px</label>
+          <input
+            type="range"
+            min={256}
+            max={1024}
+            step={64}
+            value={ui.svgSize}
+            onChange={(e) => updateUi("svgSize", Number(e.target.value))}
+            className="w-full"
+            aria-label="SVG size in pixels"
+          />
+          <div className="text-center opacity-60">{ui.svgSize}px</div>
+        </div>
+
+        {/* PNG Size */}
+        <div>
+          <label className="block opacity-70 mb-1">PNG px</label>
+          <input
+            type="range"
+            min={256}
+            max={2048}
+            step={64}
+            value={ui.pngSize}
+            onChange={(e) => updateUi("pngSize", Number(e.target.value))}
+            className="w-full"
+            aria-label="PNG size in pixels"
+          />
+          <div className="text-center opacity-60">{ui.pngSize}px</div>
+        </div>
+
+        {/* Spin Speed */}
+        <div>
+          <label className="block opacity-70 mb-1">Speed (°/sec)</label>
+          <input
+            type="range"
+            min={10}
+            max={180}
+            step={10}
+            value={ui.spinSpeed}
+            onChange={(e) => updateUi("spinSpeed", Number(e.target.value))}
+            className="w-full"
+            aria-label="Spin speed in degrees per second"
+          />
+          <div className="text-center opacity-60">{ui.spinSpeed}°/s</div>
+        </div>
+
+        {/* Step */}
+        <div>
+          <label className="block opacity-70 mb-1">Step (°)</label>
+          <input
+            type="range"
+            min={1}
+            max={10}
+            value={ui.stepDeg}
+            onChange={(e) => updateUi("stepDeg", Number(e.target.value))}
+            className="w-full"
+            aria-label="Step in degrees"
+          />
+          <div className="text-center opacity-60">
+            {ui.stepDeg}° → {Math.round(360 / ui.stepDeg)} frames
           </div>
         </div>
 
-        {/* Progress */}
-        {isCapturing && (
-          <div>
-            <div className="text-xs mb-1">{progress}%</div>
-            <div className="w-full bg-slate-200 rounded h-2 overflow-hidden">
-              <div
-                className="bg-blue-500 h-full transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        )}
+        {/* Transparency */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={ui.transparency}
+            onChange={(e) => updateUi("transparency", e.target.checked)}
+            className="w-4 h-4"
+            aria-label="Enable transparent background"
+          />
+          <label className="opacity-70">Transparent BG</label>
+        </div>
 
-        {/* Button */}
-        <button
-          onClick={captureSpinSequence}
-          disabled={isCapturing}
-          className="w-full py-2 px-3 bg-blue-600 text-white text-sm font-semibold rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isCapturing ? `Capturing... ${progress}%` : "📹 Capture & Export"}
-        </button>
+        {/* Preserve Rig */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={ui.preserveRig}
+            onChange={(e) => updateUi("preserveRig", e.target.checked)}
+            className="w-4 h-4"
+            aria-label="Preserve Rig/Materials"
+          />
+          <label className="opacity-70">Preserve Rig/Materials</label>
+        </div>
       </div>
-    );
-  };
+
+      {/* Progress */}
+      {isCapturing && (
+        <div>
+          <div className="text-xs mb-1">{progress}%</div>
+          <div className="w-full bg-slate-200 rounded h-2 overflow-hidden">
+            <div className="bg-blue-500 h-full transition-all" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+      )}
+
+      {/* Button */}
+      <button
+        onClick={captureSpinSequence}
+        disabled={isCapturing}
+        className="w-full py-2 px-3 bg-blue-600 text-white text-sm font-semibold rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isCapturing ? `Capturing... ${progress}%` : "📹 Capture & Export"}
+      </button>
+    </div>
+  );
+};
 
 export default SpinCaptureCodexButton;

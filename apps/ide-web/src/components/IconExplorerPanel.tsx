@@ -208,7 +208,7 @@ export function IconExplorerPanel() {
 
       {/* Icon Grid - Dynamic columns computed from measured width (cannot be static) */}
       {/* stylelint-disable-next-line */}
-      {/* eslint-disable-next-line react/forbid-component-props */}
+      { }
       <div
         ref={gridRef}
         className="icon-grid icon-grid-container"
