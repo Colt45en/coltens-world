@@ -157,4 +157,16 @@ export { createConceptExtractionPipeline } from "./pipelines/conceptExtraction";
 export { WorldEngineRuntime } from "./world/runtime";
 export type { Pipeline } from "./world/runtime";
 
+// NSG v1.0: Natural Semantic Graphs (deterministic rewrite pipeline)
+export type { ASTNode, Flow, Fuse, Group, Link, Query, RingApply, Seal, Split, Term } from "./nsg/nsg-ast";
+export { infer } from "./nsg/nsg-infer";
+export { normalize } from "./nsg/nsg-normalize";
+export { parseNSG, parseSingleExpression } from "./nsg/nsg-parser";
+export { ProofLedger } from "./nsg/nsg-proof-ledger";
+export type { PassEndEvent, PassStartEvent, ProofEvent, ProofEventKind, RewriteEndEvent, RewriteStartEvent, RewriteStepEvent } from "./nsg/nsg-proof-ledger";
+export { rewriteNsg, rewriteProgram } from "./nsg/nsg-rewrite-engine";
+export type { RewritePolicy, RewriteResult } from "./nsg/nsg-rewrite-engine";
+export { ringEval } from "./nsg/nsg-ring-eval";
+export { proofChainHash, seal } from "./nsg/nsg-seal";
+
 export default ECSEngine;

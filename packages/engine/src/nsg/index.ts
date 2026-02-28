@@ -107,3 +107,37 @@ export {
   scoreCandidate
 } from "./nsg-query-scorer";
 export type { Candidate } from "./nsg-query-scorer";
+
+// Pass 1: Normalize (Canonicalization)
+export { normalize, normalizeProgram } from "./nsg-normalize";
+export type { FocusPath } from "./nsg-normalize";
+
+// Pass 2: Infer (Type Inference + Affix Roles)
+export { infer, inferProgram } from "./nsg-infer";
+
+// Pass 3: RingEval (Ring Application + Evidence)
+export { ringEval, ringEvalProgram } from "./nsg-ring-eval";
+
+// Pass 4: Seal (Verification + Finalization)
+export { proofChainHash, seal, sealProgram } from "./nsg-seal";
+
+// Proof Ledger (NDJSON Emission)
+export {
+  computeRunId,
+  ProofLedger
+} from "./nsg-proof-ledger";
+export type {
+  PassEndEvent, PassStartEvent, ProofEvent,
+  ProofEventKind, RewriteEndEvent, RewriteStartEvent, RewriteStepEvent
+} from "./nsg-proof-ledger";
+
+// Rewrite Engine Orchestrator
+export {
+  DEFAULT_POLICY,
+  policyHash, rewriteNsg,
+  rewriteProgram
+} from "./nsg-rewrite-engine";
+export type {
+  PassResult, RewritePolicy,
+  RewriteResult
+} from "./nsg-rewrite-engine";
