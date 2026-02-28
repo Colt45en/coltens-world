@@ -4,6 +4,7 @@
  */
 
 import { Router } from 'express';
+import { chatRouter } from "./chat";
 import meshRouter from './mesh';
 import physicsRouter from "./physics";
 import prefabRouter from './prefab';
@@ -16,5 +17,6 @@ router.use(meshRouter);
 router.use(prefabRouter);
 router.use(worldRouter);
 router.use(physicsRouter);
+router.use(chatRouter);
 
 export default router;

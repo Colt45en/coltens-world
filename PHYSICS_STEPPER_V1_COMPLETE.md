@@ -1,9 +1,9 @@
 # Physics Stepper v1 — Deterministic Euler Integration
 
-**Commit:** `aa59460`  
-**Status:** ✅ Complete + Type-Safe  
-**Tests:** 8 determinism cases passing  
-**Integration:** Ready for Rapier WASM upgrade  
+**Commit:** `aa59460`
+**Status:** ✅ Complete + Type-Safe
+**Tests:** 8 determinism cases passing
+**Integration:** Ready for Rapier WASM upgrade
 
 ---
 
