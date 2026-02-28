@@ -192,3 +192,65 @@ export const LedgerEventSchema = z.union([
 ]);
 
 export type LedgerEvent = z.infer<typeof LedgerEventSchema>;
+
+/**
+ * Ledger entry (single event record)
+ */
+export const LedgerEntrySchema = z.object({
+  index: z.number(),
+  hash: z.string(),
+  event: LedgerEventSchema,
+});
+
+export type LedgerEntry = z.infer<typeof LedgerEntrySchema>;
+
+/**
+ * Ledger input: batch of events to append
+ */
+export const LedgerEventInputSchema = z.object({
+  events: z.array(LedgerEventSchema),
+});
+
+export type LedgerEventInput = z.infer<typeof LedgerEventInputSchema>;
+
+/**
+ * Range query: fetch events by index range
+ */
+export const LedgerRangeQuerySchema = z.object({
+  start: z.number(),
+  end: z.number(),
+});
+
+export type LedgerRangeQuery = z.infer<typeof LedgerRangeQuerySchema>;
+
+/**
+ * Stream query: continuous log tail
+ */
+export const LedgerStreamQuerySchema = z.object({
+  from_index: z.number(),
+  batch_size: z.number().optional(),
+});
+
+export type LedgerStreamQuery = z.infer<typeof LedgerStreamQuerySchema>;
+
+/**
+ * Ledger status / verification result
+ */
+export const LedgerStatusSchema = z.object({
+  head_hash: z.string(),
+  total_events: z.number(),
+  verified: z.boolean(),
+});
+
+export type LedgerStatus = z.infer<typeof LedgerStatusSchema>;
+
+/**
+ * Verification result for ledger integrity
+ */
+export const LedgerVerifyResultSchema = z.object({
+  valid: z.boolean(),
+  errors: z.array(z.string()).optional(),
+  head_hash: z.string(),
+});
+
+export type LedgerVerifyResult = z.infer<typeof LedgerVerifyResultSchema>;

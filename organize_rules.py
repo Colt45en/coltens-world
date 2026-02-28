@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
-import glob
 import hashlib
 import json
 import os
@@ -79,7 +78,7 @@ def snapshot_items(root: Path) -> List[Path]:
     Deterministic snapshot: sorted walk, no mutation-during-iteration.
     Returns list of (dirpath, dirnames, filenames) sorted for reproducibility.
     """
-    items = []
+    items: List[Path] = []
     try:
         for dirpath, dirnames, filenames in os.walk(str(root)):
             dirpath_obj = Path(dirpath)
@@ -376,7 +375,7 @@ class RulesOrganizer:
 
         try:
             if action == 'move':
-                actual_dest, created = self._resolve_move_target(source, destination)
+                actual_dest, _ = self._resolve_move_target(source, destination)
                 self._log(f"  → move {source.name} → {actual_dest}")
 
                 if not self.dry_run:
@@ -615,7 +614,7 @@ class RulesOrganizer:
 
         # Reverse operations
         for entry in reversed(operations):
-            if isinstance(entry, dict) and 'operation' in entry:
+            if 'operation' in entry:
                 op = entry
             else:
                 op = entry.get('operation', entry)
