@@ -2,6 +2,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { buildCanonicalSortKey, governMultiParagraph, governText } from "@world-engine/world-editor-shared";
 import { useMemo, useState } from "react";
+import styles from "./WorldRichEditor.module.css";
 
 type AiMode = "continue" | "rewrite" | "summarize" | "expand";
 
@@ -31,8 +32,7 @@ export function WorldRichEditor(props: {
     content: props.initialHtml ?? "<p>Write here…</p>",
     editorProps: {
       attributes: {
-        style:
-          "min-height: 280px; padding: 12px; outline: none; border: 1px solid #333; border-radius: 12px; line-height: 1.5;"
+        class: styles.editor,
       },
       handlePaste(view, event) {
         // Auto-govern pasted plain text to keep the document clean.
@@ -44,11 +44,11 @@ export function WorldRichEditor(props: {
           return true;
         }
         return false;
-      }
+      },
     },
     onUpdate({ editor }) {
       emit(editor);
-    }
+    },
   });
 
   const toolbar = useMemo(() => {
@@ -58,30 +58,43 @@ export function WorldRichEditor(props: {
       <button
         type="button"
         onClick={onClick}
-        style={{
-          padding: "6px 10px",
-          borderRadius: 10,
-          border: "1px solid #333",
-          background: active ? "#222" : "transparent",
-          color: "#fff",
-          cursor: "pointer"
-        }}
+        className={`${styles.toolbarBtn} ${active ? styles.toolbarBtnActive : ""}`}
       >
         {label}
       </button>
     );
 
     return (
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+      <div className={styles.toolbar}>
         {btn("B", () => editor.chain().focus().toggleBold().run(), editor.isActive("bold"))}
         {btn("I", () => editor.chain().focus().toggleItalic().run(), editor.isActive("italic"))}
-        {btn("H1", () => editor.chain().focus().toggleHeading({ level: 1 }).run(), editor.isActive("heading", { level: 1 }))}
-        {btn("• List", () => editor.chain().focus().toggleBulletList().run(), editor.isActive("bulletList"))}
-        {btn("1. List", () => editor.chain().focus().toggleOrderedList().run(), editor.isActive("orderedList"))}
-        {btn("Quote", () => editor.chain().focus().toggleBlockquote().run(), editor.isActive("blockquote"))}
-        {btn("Code", () => editor.chain().focus().toggleCodeBlock().run(), editor.isActive("codeBlock"))}
+        {btn(
+          "H1",
+          () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+          editor.isActive("heading", { level: 1 })
+        )}
+        {btn(
+          "• List",
+          () => editor.chain().focus().toggleBulletList().run(),
+          editor.isActive("bulletList")
+        )}
+        {btn(
+          "1. List",
+          () => editor.chain().focus().toggleOrderedList().run(),
+          editor.isActive("orderedList")
+        )}
+        {btn(
+          "Quote",
+          () => editor.chain().focus().toggleBlockquote().run(),
+          editor.isActive("blockquote")
+        )}
+        {btn(
+          "Code",
+          () => editor.chain().focus().toggleCodeBlock().run(),
+          editor.isActive("codeBlock")
+        )}
 
-        <div style={{ width: 12 }} />
+        <div className={styles.toolbarSpacer} />
 
         {btn("Govern Selection", () => governSelection(editor))}
         {btn("Govern Document (safe)", () => governDocumentSafe(editor))}
@@ -146,46 +159,35 @@ export function WorldRichEditor(props: {
   if (!editor) return null;
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 16 }}>
+    <div className={styles.container}>
       <div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10 }}>
-          <label style={{ color: "#bbb", fontSize: 12 }}>Title</label>
+        <div className={styles.titleRow}>
+          <label className={styles.titleLabel}>Title</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "8px 10px",
-              borderRadius: 10,
-              border: "1px solid #333",
-              background: "transparent",
-              color: "#fff"
-            }}
+            className={styles.titleInput}
+            title="Document title"
           />
         </div>
 
         {toolbar}
         <EditorContent editor={editor} />
-        <div style={{ marginTop: 10, color: "#888", fontSize: 12 }}>
-          Paste is auto-governed. "Govern Document (safe)" only normalizes blocks that have no inline marks (so it won't destroy styling).
+        <div className={styles.editorHint}>
+          Paste is auto-governed. "Govern Document (safe)" only normalizes blocks that have no
+          inline marks (so it won't destroy styling).
         </div>
       </div>
 
-      <div style={{ border: "1px solid #333", borderRadius: 12, padding: 12 }}>
-        <div style={{ color: "#bbb", fontSize: 12, marginBottom: 8 }}>AI Writing Panel</div>
+      <div className={styles.aiPanel}>
+        <div className={styles.aiPanelTitle}>AI Writing Panel</div>
 
-        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+        <div className={styles.aiModeRow}>
           <select
             value={aiMode}
             onChange={(e) => setAiMode(e.target.value as AiMode)}
-            style={{
-              flex: 1,
-              padding: "8px 10px",
-              borderRadius: 10,
-              border: "1px solid #333",
-              background: "transparent",
-              color: "#fff"
-            }}
+            className={styles.aiModeSelect}
+            title="AI writing mode selection"
           >
             <option value="continue">Continue</option>
             <option value="rewrite">Rewrite selection/doc</option>
@@ -198,38 +200,21 @@ export function WorldRichEditor(props: {
           value={aiPrompt}
           onChange={(e) => setAiPrompt(e.target.value)}
           placeholder="Tell the AI what to write…"
-          style={{
-            width: "100%",
-            minHeight: 140,
-            resize: "vertical",
-            padding: 10,
-            borderRadius: 10,
-            border: "1px solid #333",
-            background: "transparent",
-            color: "#fff"
-          }}
+          className={styles.aiPromptTextarea}
         />
 
         <button
           type="button"
           disabled={busy}
           onClick={runAiInsert}
-          style={{
-            width: "100%",
-            marginTop: 10,
-            padding: "10px 12px",
-            borderRadius: 12,
-            border: "1px solid #333",
-            background: busy ? "#111" : "#222",
-            color: "#fff",
-            cursor: busy ? "not-allowed" : "pointer"
-          }}
+          className={`${styles.aiButton} ${busy ? styles.aiButtonBusy : ""}`}
         >
           {busy ? "Writing…" : "Insert AI Draft (Governed)"}
         </button>
 
-        <div style={{ marginTop: 10, color: "#777", fontSize: 12 }}>
-          Selection-aware: if you highlight text, AI will use it as context. Otherwise it uses the whole document text.
+        <div className={styles.aiHint}>
+          Selection-aware: if you highlight text, AI will use it as context. Otherwise it uses the
+          whole document text.
         </div>
       </div>
     </div>

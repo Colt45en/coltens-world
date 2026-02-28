@@ -8,20 +8,16 @@
  */
 
 import {
-    MeshAssetValidatedEventSchema,
-    MeshStyleIngestedEventSchema,
-} from '@coltens-world/engine/contracts/ledger';
+  MeshAssetValidatedEventSchema,
+  MeshStyleIngestedEventSchema,
+} from "@world-engine/engine/contracts/ledger";
 import {
-    MeshAssetRefSchema,
-    MeshStyleSpecSchema,
-    MeshValidationReportSchema,
-} from '@coltens-world/engine/contracts/mesh';
-import {
-    hashPayload
-} from '@coltens-world/engine/determinism';
-import {
-    validateMeshAsset
-} from '@coltens-world/engine/mesh';
+  MeshAssetRefSchema,
+  MeshStyleSpecSchema,
+  MeshValidationReportSchema,
+} from "@world-engine/engine/contracts/mesh";
+import { hashPayload } from "@world-engine/engine/determinism";
+import { validateMeshAsset } from "@world-engine/engine/mesh";
 import { Request, Response, Router } from 'express';
 import { z } from 'zod';
 

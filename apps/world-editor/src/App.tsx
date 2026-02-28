@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { WorldRichEditor, WorldRichEditorValue } from "./editor/WorldRichEditor";
+import "./App.css";
 
 type SaveResult = {
   artifact_id: string;
@@ -50,47 +51,34 @@ export default function App() {
   }
 
   return (
-    <div style={{ background: "#0b0b0b", minHeight: "100vh", color: "#fff", padding: 18 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16 }}>
+    <div className="app-container">
+      <div className="app-header">
         <div>
-          <h2 style={{ margin: 0 }}>World Engine Editor</h2>
-          <div style={{ color: "#888", fontSize: 12 }}>
+          <h2 className="app-title">World Engine Editor</h2>
+          <div className="app-subtitle">
             UI: http://localhost:5173 • Server: http://localhost:5174
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <div className="app-controls">
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{
-              width: 280,
-              padding: "8px 10px",
-              borderRadius: 10,
-              border: "1px solid #333",
-              background: "transparent",
-              color: "#fff"
-            }}
+            placeholder="Document title"
+            className="app-input"
           />
           <button
             type="button"
             disabled={saving || !value}
             onClick={saveArtifact}
-            style={{
-              padding: "10px 12px",
-              borderRadius: 12,
-              border: "1px solid #333",
-              background: saving ? "#111" : "#222",
-              color: "#fff",
-              cursor: saving ? "not-allowed" : "pointer"
-            }}
+            className="app-button"
           >
             {saving ? "Saving…" : "Save Artifact + Ledger"}
           </button>
         </div>
       </div>
 
-      <div style={{ marginTop: 14 }}>
+      <div className="app-editor-section">
         <WorldRichEditor
           docId={docId}
           title={title}
@@ -100,23 +88,23 @@ export default function App() {
       </div>
 
       {err && (
-        <div style={{ marginTop: 14, border: "1px solid #633", borderRadius: 12, padding: 12, color: "#fbb" }}>
+        <div className="app-error">
           <b>Error:</b> {err}
         </div>
       )}
 
       {saved && (
-        <div style={{ marginTop: 14, border: "1px solid #333", borderRadius: 12, padding: 12 }}>
-          <div style={{ color: "#bbb", fontSize: 12, marginBottom: 8 }}>Last Saved Artifact</div>
-          <pre style={{ whiteSpace: "pre-wrap", margin: 0, color: "#ddd", fontSize: 12 }}>
+        <div className="app-output-panel">
+          <div className="app-output-label">Last Saved Artifact</div>
+          <pre className="app-output-content">
 {JSON.stringify(saved, null, 2)}
           </pre>
         </div>
       )}
 
-      <div style={{ marginTop: 14, border: "1px solid #333", borderRadius: 12, padding: 12 }}>
-        <div style={{ color: "#bbb", fontSize: 12, marginBottom: 8 }}>Deterministic Live Output</div>
-        <pre style={{ whiteSpace: "pre-wrap", margin: 0, color: "#ddd", fontSize: 12 }}>
+      <div className="app-output-panel">
+        <div className="app-output-label">Deterministic Live Output</div>
+        <pre className="app-output-content">
 {value ? JSON.stringify(value, null, 2) : "Start typing…"}
         </pre>
       </div>

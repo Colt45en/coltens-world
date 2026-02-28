@@ -7,18 +7,16 @@
  */
 
 import {
-    PhysicsSnapshotCreatedEventSchema,
-    PhysicsStepExecutedEventSchema,
-} from '@coltens-world/engine/contracts/ledger';
+  PhysicsSnapshotCreatedEventSchema,
+  PhysicsStepExecutedEventSchema,
+} from "@world-engine/engine/contracts/ledger";
 import {
-    PhysicsSnapshotSchema,
-    PhysicsStepInputSchema,
-    PhysicsStepOutputSchema,
-} from '@coltens-world/engine/contracts/physics';
-import { hashPayload } from '@coltens-world/engine/determinism';
-import {
-    stepPhysics
-} from '@coltens-world/engine/physics';
+  PhysicsSnapshotSchema,
+  PhysicsStepInputSchema,
+  PhysicsStepOutputSchema,
+} from "@world-engine/engine/contracts/physics";
+import { hashPayload } from "@world-engine/engine/determinism";
+import { stepPhysics } from "@world-engine/engine/physics";
 import { Request, Response, Router } from 'express';
 import { z } from 'zod';
 

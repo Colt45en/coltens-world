@@ -15,8 +15,12 @@
       "types": "./dist/engine/src/contracts/index.d.ts"
     },
     "./contracts/ledger": {
-      "import": "./dist/engine/src/contracts/ledger.js",
-      "types": "./dist/engine/src/contracts/ledger.d.ts"
+      "import": "./dist/engine/src/contracts/ledger/index.js",
+      "types": "./dist/engine/src/contracts/ledger/index.d.ts"
+    },
+    "./contracts/mesh": {
+      "import": "./dist/engine/src/contracts/mesh/index.js",
+      "types": "./dist/engine/src/contracts/mesh/index.d.ts"
     },
     "./contracts/artifacts": {
       "import": "./dist/engine/src/contracts/artifacts.js",
@@ -29,6 +33,38 @@
     "./contracts/tool_call": {
       "import": "./dist/engine/src/contracts/tool_call.js",
       "types": "./dist/engine/src/contracts/tool_call.d.ts"
+    },
+    "./contracts/physics": {
+      "import": "./dist/engine/src/contracts/physics/index.js",
+      "types": "./dist/engine/src/contracts/physics/index.d.ts"
+    },
+    "./contracts/prefab": {
+      "import": "./dist/engine/src/contracts/prefab/index.js",
+      "types": "./dist/engine/src/contracts/prefab/index.d.ts"
+    },
+    "./contracts/world": {
+      "import": "./dist/engine/src/contracts/world/index.js",
+      "types": "./dist/engine/src/contracts/world/index.d.ts"
+    },
+    "./determinism": {
+      "import": "./dist/engine/src/determinism/index.js",
+      "types": "./dist/engine/src/determinism/index.d.ts"
+    },
+    "./mesh": {
+      "import": "./dist/engine/src/mesh/index.js",
+      "types": "./dist/engine/src/mesh/index.d.ts"
+    },
+    "./physics": {
+      "import": "./dist/engine/src/physics/index.js",
+      "types": "./dist/engine/src/physics/index.d.ts"
+    },
+    "./prefab": {
+      "import": "./dist/engine/src/prefab/index.js",
+      "types": "./dist/engine/src/prefab/index.d.ts"
+    },
+    "./world": {
+      "import": "./dist/engine/src/world/index.js",
+      "types": "./dist/engine/src/world/index.d.ts"
     }
   },
   "scripts": {

@@ -10,10 +10,10 @@
 import {
   WorldReplayExecutedEventSchema,
   WorldSnapshotWrittenEventSchema,
-} from "@coltens-world/engine/contracts/ledger";
-import { PrefabInstanceSchema, WorldSnapshotSchema } from "@coltens-world/engine/contracts/world";
-import { hashPayload } from "@coltens-world/engine/determinism";
-import { createWorldSnapshot, executeWorldReplay } from "@coltens-world/engine/world";
+} from "@world-engine/engine/contracts/ledger";
+import { PrefabInstanceSchema, WorldSnapshotSchema } from "@world-engine/engine/contracts/world";
+import { hashPayload } from "@world-engine/engine/determinism";
+import { createWorldSnapshot, executeWorldReplay } from "@world-engine/engine/world";
 import { Request, Response, Router } from "express";
 import { z } from "zod";
 

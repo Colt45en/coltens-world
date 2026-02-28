@@ -9,20 +9,16 @@
  */
 
 import {
-    PrefabBakedEventSchema,
-    PrefabIngestedEventSchema,
-} from '@coltens-world/engine/contracts/ledger';
+  PrefabBakedEventSchema,
+  PrefabIngestedEventSchema,
+} from "@world-engine/engine/contracts/ledger";
 import {
-    AvatarPrefabSchema,
-    BuildingPrefabSchema,
-    PrefabBakeManifestSchema
-} from '@coltens-world/engine/contracts/prefab';
-import {
-    hashPayload,
-} from '@coltens-world/engine/determinism';
-import {
-    bakePrefabSpec
-} from '@coltens-world/engine/prefab';
+  AvatarPrefabSchema,
+  BuildingPrefabSchema,
+  PrefabBakeManifestSchema,
+} from "@world-engine/engine/contracts/prefab";
+import { hashPayload } from "@world-engine/engine/determinism";
+import { bakePrefabSpec } from "@world-engine/engine/prefab";
 import { Request, Response, Router } from 'express';
 import { z } from 'zod';
 
