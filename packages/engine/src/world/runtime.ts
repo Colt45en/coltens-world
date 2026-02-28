@@ -12,21 +12,14 @@
  * produces identical snapshot with identical hash.
  */
 
-import type {
-  Belief,
-  Claim,
-  Event,
-  Observation,
-  Seal,
-  Snapshot,
-} from "@world-engine/contracts";
+import type { Belief, Claim, Event, Observation, Seal, Snapshot } from "@we/contracts";
 import {
   EventSchema,
   IsoUtcSchema,
   ObservationSchema,
   SealSchema,
   SnapshotSchema,
-} from "@world-engine/contracts";
+} from "@we/contracts";
 import { contentAddressedId, sha256Hex, stableStringify } from "../determinism/canon";
 
 // ============ Pipeline Interface ============
