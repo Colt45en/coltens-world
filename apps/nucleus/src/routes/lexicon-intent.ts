@@ -1,11 +1,5 @@
-import {
-    LexiconLedgerEventV1,
-    LexiconRequestV1,
-    LexiconToolResultV1
-} from "../contracts/lexicon-intent.v1";
-import {
-    LexiconIntentToolkit,
-} from "../tools/lexicon-intent-tools";
+import { LexiconRequestV1, LexiconToolResultV1 } from "../contracts/lexicon-intent.v1";
+import { LexiconIntentToolkit } from "../tools/lexicon-intent-tools";
 
 /**
  * Lexicon Intent Routes — Nucleus tool registration
@@ -28,7 +22,7 @@ interface ToolRegistry {
 }
 
 interface LedgerAppender {
-  append(event: LexiconLedgerEventV1): Promise<void>;
+  (event: unknown): Promise<void>;
 }
 
 /**
@@ -36,7 +30,7 @@ interface LedgerAppender {
  */
 export function registerLexiconIntentTools(
   registry: ToolRegistry,
-  ledgerAppend: LedgerAppender,
+  ledgerAppend: LedgerAppender
 ): void {
   const toolkit = new LexiconIntentToolkit();
 

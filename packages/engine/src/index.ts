@@ -169,4 +169,9 @@ export type { RewritePolicy, RewriteResult } from "./nsg/nsg-rewrite-engine";
 export { ringEval } from "./nsg/nsg-ring-eval";
 export { proofChainHash, seal } from "./nsg/nsg-seal";
 
+// Intent frameworks (Graphics, Renderer, Lexicon)
+export type { RenderOutput, RendererConfig, RendererRequestV1 } from "./contracts/renderer-intent.v1";
+export { GraphicsIntentToolkit, type ToolResult } from "./tools/graphics-intent-tools";
+export { RendererIntentToolkit, type ToolResult as RendererToolResult } from "./tools/renderer-intent-tools";
+
 export default ECSEngine;

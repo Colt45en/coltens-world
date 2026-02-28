@@ -5,7 +5,7 @@
  * It exports a "register" function: you plug it into your existing tool registry.
  */
 
-import { GraphicsIntentToolkit } from "@world-engine/engine/src/tools/graphics-intent-tools";
+import { GraphicsIntentToolkit } from "@world-engine/engine";
 
 // Minimal shape: adapt to your existing registry.
 export type ToolHandler = (input: unknown) => Promise<{ output: unknown }>;

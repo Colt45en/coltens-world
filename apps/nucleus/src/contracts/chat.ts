@@ -10,15 +10,20 @@ import { z } from 'zod';
  */
 export const ChatLedgerEventSchema = z.union([
   z.object({
-    type: z.literal('message'),
+    type: z.literal("message"),
     channel_id: z.string(),
     user_id: z.string(),
     content: z.string(),
   }),
   z.object({
-    type: z.literal('presence'),
+    type: z.literal("presence"),
     user_id: z.string(),
     status: z.string(),
+  }),
+  z.object({
+    type: z.literal("session"),
+    user_id: z.string(),
+    session_id: z.string(),
   }),
 ]);
 

@@ -192,7 +192,7 @@ router.get('/chat/presence.v1', (req, res) => {
 
     res.status(200).json({
       snapshot,
-      online_count: snapshot.presences.filter((p) => p.status === 'online').length,
+      online_count: snapshot.presences.filter((p: any) => p.status === "online").length,
     });
   } catch (error) {
     res.status(500).json({ error: String(error) });

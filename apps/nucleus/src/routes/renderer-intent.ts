@@ -3,10 +3,8 @@
  * Bridges RenderPackets with Three.js rendering.
  */
 
-import type {
-    RendererRequestV1
-} from "@world-engine/engine/src/contracts/renderer-intent.v1";
-import { RendererIntentToolkit } from "@world-engine/engine/src/tools/renderer-intent-tools";
+import type { RendererRequestV1 } from "@world-engine/engine";
+import { RendererIntentToolkit } from "@world-engine/engine";
 
 export type ToolHandler = (input: unknown) => Promise<{ output: unknown }>;
 export type ToolRegistry = { register: (toolName: string, handler: ToolHandler) => void };
