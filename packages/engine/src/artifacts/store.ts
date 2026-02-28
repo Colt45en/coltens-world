@@ -15,7 +15,7 @@ export class ArtifactStore {
    * Store an artifact from raw bytes
    * Returns the artifact ID (content-addressed)
    */
-  public store(
+  public add(
     data: Buffer | Uint8Array,
     type: string,
     name?: string
@@ -98,10 +98,10 @@ export class ArtifactStore {
    * Extract hash from artifact ID
    */
   private extractHash(artifactId: string): string {
-    if (!artifactId.startsWith('artifact:')) {
+    if (!artifactId.startsWith("artifact:")) {
       throw new Error(`Invalid artifact ID: ${artifactId}`);
     }
-    return artifactId.slice('artifact:'.length);
+    return artifactId.slice("artifact:".length);
   }
 }
 

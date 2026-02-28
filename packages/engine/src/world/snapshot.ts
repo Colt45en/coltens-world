@@ -152,7 +152,7 @@ export function createSnapshotBatch(
   }
 
   const snapshots = ticks.map((tick, i) =>
-    createWorldSnapshot(sceneId, tick, instancesList[i], creatorTool, engineVersion)
+    createWorldSnapshot(sceneId, tick, instancesList[i]!, creatorTool, engineVersion)
   );
 
   // Stable sort by snapshot_id

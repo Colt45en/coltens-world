@@ -1,31 +1,21 @@
 /**
  * Nucleus Routes: World Snapshot + Replay (World Core)
- * 
+ *
  * Tool IDs:
  * - world.snapshot.write.v1
  * - world.snapshot.get.v1
  * - world.replay.v1
  */
 
-import { Router, Request, Response } from 'express';
-import { z } from 'zod';
 import {
-  WorldSnapshotSchema,
-  PrefabInstanceSchema,
-  WorldReplayRequestSchema,
-} from '@coltens-world/engine/contracts/world';
-import {
-  createWorldSnapshot,
-  verifySnapshotHash,
-  executeWorldReplay,
-} from '@coltens-world/engine/world';
-import {
-  hashPayload,
-} from '@coltens-world/engine/determinism';
-import {
-  WorldSnapshotWrittenEventSchema,
   WorldReplayExecutedEventSchema,
-} from '@coltens-world/engine/contracts/ledger';
+  WorldSnapshotWrittenEventSchema,
+} from "@coltens-world/engine/contracts/ledger";
+import { PrefabInstanceSchema, WorldSnapshotSchema } from "@coltens-world/engine/contracts/world";
+import { hashPayload } from "@coltens-world/engine/determinism";
+import { createWorldSnapshot, executeWorldReplay } from "@coltens-world/engine/world";
+import { Request, Response, Router } from "express";
+import { z } from "zod";
 
 const router = Router();
 
