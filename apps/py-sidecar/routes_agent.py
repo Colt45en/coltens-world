@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 # Optional imports (gracefully handle if not installed)
 try:
     from PIL import Image
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
@@ -30,10 +31,12 @@ NUMPY_AVAILABLE = importlib.util.find_spec("numpy") is not None
 # Request/Response Models
 # ============================================================================
 
+
 class AudioTranscribeRequest(BaseModel):
     audio: str  # base64 encoded audio data
     language: str = "en"
     format: str = "webm"
+
 
 class AudioTranscribeResponse(BaseModel):
     text: str
@@ -41,21 +44,25 @@ class AudioTranscribeResponse(BaseModel):
     confidence: float
     duration_ms: int
 
+
 class AudioSynthesizeRequest(BaseModel):
     text: str
     voice: str = "alloy"
     format: str = "mp3"
     speed: float = 1.0
 
+
 class AudioSynthesizeResponse(BaseModel):
     audio: str  # base64 encoded
     format: str
     duration_ms: int
 
+
 class VisualAnalyzeRequest(BaseModel):
     image: str  # base64 encoded image
     prompt: str = "Describe this image in detail"
     max_tokens: int = 300
+
 
 class VisualAnalyzeResponse(BaseModel):
     description: str
@@ -63,9 +70,11 @@ class VisualAnalyzeResponse(BaseModel):
     scene_type: str
     confidence: float
 
+
 # ============================================================================
 # Audio Processing
 # ============================================================================
+
 
 class AudioProcessor:
     """Handles audio transcription and synthesis"""
@@ -84,7 +93,9 @@ class AudioProcessor:
             print(f"Audio processing not available: {e}")
             self.available = False
 
-    async def transcribe(self, audio_data: bytes, language: str = "en") -> AudioTranscribeResponse:
+    async def transcribe(
+        self, audio_data: bytes, language: str = "en"
+    ) -> AudioTranscribeResponse:
         """Transcribe audio to text"""
         if not self.available:
             raise HTTPException(503, "Audio transcription service unavailable")
@@ -95,10 +106,12 @@ class AudioProcessor:
             text="[Audio transcription would appear here - integrate with Whisper/Google STT]",
             language=language,
             confidence=0.95,
-            duration_ms=len(audio_data) // 16  # Rough estimate
+            duration_ms=len(audio_data) // 16,  # Rough estimate
         )
 
-    async def synthesize(self, text: str, voice: str = "alloy", speed: float = 1.0) -> AudioSynthesizeResponse:
+    async def synthesize(
+        self, text: str, voice: str = "alloy", speed: float = 1.0
+    ) -> AudioSynthesizeResponse:
         """Synthesize text to audio"""
         if not self.available:
             raise HTTPException(503, "Audio synthesis service unavailable")
@@ -108,12 +121,14 @@ class AudioProcessor:
         return AudioSynthesizeResponse(
             audio="",  # Would contain base64 encoded audio
             format="mp3",
-            duration_ms=len(text) * 100  # Rough estimate
+            duration_ms=len(text) * 100,  # Rough estimate
         )
+
 
 # ============================================================================
 # Visual Processing
 # ============================================================================
+
 
 class VisualProcessor:
     """Handles image and video analysis"""
@@ -138,7 +153,9 @@ class VisualProcessor:
             print(f"Image decode error: {e}")
             return None
 
-    async def analyze(self, image_b64: str, prompt: str = "Describe this image") -> VisualAnalyzeResponse:
+    async def analyze(
+        self, image_b64: str, prompt: str = "Describe this image"
+    ) -> VisualAnalyzeResponse:
         """Analyze image and return description"""
         if not self.available:
             raise HTTPException(503, "Visual analysis service unavailable")
@@ -155,12 +172,10 @@ class VisualProcessor:
 
         return VisualAnalyzeResponse(
             description=f"Image analysis: {width}x{height} {mode} image. "
-                       f"[In production, this would use GPT-4V/Claude Vision to analyze: {prompt}]",
-            objects=[
-                {"type": "placeholder", "confidence": 0.9}
-            ],
+            f"[In production, this would use GPT-4V/Claude Vision to analyze: {prompt}]",
+            objects=[{"type": "placeholder", "confidence": 0.9}],
             scene_type="general",
-            confidence=0.85
+            confidence=0.85,
         )
 
     async def detect_objects(self, image_b64: str) -> list[Dict[str, Any]]:
@@ -169,13 +184,13 @@ class VisualProcessor:
             raise HTTPException(503, "Object detection service unavailable")
 
         # In production: Use YOLO, Detectron2, or cloud APIs
-        return [
-            {"label": "placeholder", "confidence": 0.9, "bbox": [0, 0, 100, 100]}
-        ]
+        return [{"label": "placeholder", "confidence": 0.9, "bbox": [0, 0, 100, 100]}]
+
 
 # ============================================================================
 # Router Setup
 # ============================================================================
+
 
 def create_agent_routes() -> APIRouter:
     """Create FastAPI router for agent endpoints"""
@@ -193,16 +208,15 @@ def create_agent_routes() -> APIRouter:
                 "audio_transcribe": audio_processor.available,
                 "audio_synthesize": audio_processor.available,
                 "visual_analyze": visual_processor.available,
-                "visual_objects": visual_processor.available
+                "visual_objects": visual_processor.available,
             },
-            "dependencies": {
-                "PIL": PIL_AVAILABLE,
-                "numpy": NUMPY_AVAILABLE
-            }
+            "dependencies": {"PIL": PIL_AVAILABLE, "numpy": NUMPY_AVAILABLE},
         }
 
     @router.post("/audio/transcribe", response_model=AudioTranscribeResponse)
-    async def transcribe_audio(request: AudioTranscribeRequest) -> AudioTranscribeResponse:
+    async def transcribe_audio(
+        request: AudioTranscribeRequest,
+    ) -> AudioTranscribeResponse:
         """Transcribe audio to text"""
         try:
             audio_data = base64.b64decode(request.audio)
@@ -211,10 +225,14 @@ def create_agent_routes() -> APIRouter:
             raise HTTPException(500, f"Transcription failed: {str(e)}")
 
     @router.post("/audio/synthesize", response_model=AudioSynthesizeResponse)
-    async def synthesize_audio(request: AudioSynthesizeRequest) -> AudioSynthesizeResponse:
+    async def synthesize_audio(
+        request: AudioSynthesizeRequest,
+    ) -> AudioSynthesizeResponse:
         """Synthesize text to audio"""
         try:
-            return await audio_processor.synthesize(request.text, request.voice, request.speed)
+            return await audio_processor.synthesize(
+                request.text, request.voice, request.speed
+            )
         except Exception as e:
             raise HTTPException(500, f"Synthesis failed: {str(e)}")
 
@@ -236,9 +254,11 @@ def create_agent_routes() -> APIRouter:
 
     return router
 
+
 # ============================================================================
 # Add to existing FastAPI app
 # ============================================================================
+
 
 def setup_agent_system(app: "FastAPI") -> None:
     """Setup agent system in existing FastAPI app"""

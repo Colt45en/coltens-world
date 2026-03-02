@@ -33,12 +33,16 @@ try:
     from pydicom.uid import generate_uid
     from pydicom import dcmread  # type: ignore[attr-defined]
 except ImportError as e:
-    raise SystemExit("Missing dependency: pydicom. Install with: pip install pydicom") from e
+    raise SystemExit(
+        "Missing dependency: pydicom. Install with: pip install pydicom"
+    ) from e
 
 try:
     from PIL import Image
 except ImportError as e:
-    raise SystemExit("Missing dependency: pillow. Install with: pip install pillow") from e
+    raise SystemExit(
+        "Missing dependency: pillow. Install with: pip install pillow"
+    ) from e
 
 try:
     import nibabel as nib
@@ -178,7 +182,9 @@ def infer_window(ds: Dataset) -> Tuple[float, float]:
     ww = getattr(ds, "WindowWidth", None)
 
     # DICOM can store these as MultiValue
-    def _first(v: Optional[float | list[float] | tuple[float, ...]], default: float) -> float:
+    def _first(
+        v: Optional[float | list[float] | tuple[float, ...]], default: float
+    ) -> float:
         if v is None:
             return default
         if isinstance(v, (list, tuple)):
@@ -223,18 +229,24 @@ def inspect_folder(root: str) -> None:
     print(f"  SeriesInstanceUID: {sid}")
     print(f"  Slices: {len(slices)}")
     print(f"  Modality: {getattr(ds0, 'Modality', '')}")
-    print(f"  Rows x Cols: {getattr(ds0, 'Rows', '?')} x {getattr(ds0, 'Columns', '?')}")
+    print(
+        f"  Rows x Cols: {getattr(ds0, 'Rows', '?')} x {getattr(ds0, 'Columns', '?')}"
+    )
     print(f"  PixelSpacing: {getattr(ds0, 'PixelSpacing', '')}")
     print(f"  SliceThickness: {getattr(ds0, 'SliceThickness', '')}")
     print(f"  SpacingBetweenSlices: {getattr(ds0, 'SpacingBetweenSlices', '')}")
-    print(f"  TransferSyntaxUID: {ds0.file_meta.TransferSyntaxUID if hasattr(ds0, 'file_meta') else ''}")
+    print(
+        f"  TransferSyntaxUID: {ds0.file_meta.TransferSyntaxUID if hasattr(ds0, 'file_meta') else ''}"
+    )
 
     # Pixel stats from a slice
     arr = ds0.pixel_array
     arr = dicom_to_hu(ds0, arr)
     wc, ww = infer_window(ds0)
     print(f"  WindowCenter/Width (inferred): {wc} / {ww}")
-    print(f"  Pixel stats (HU if CT): min={float(arr.min()):.2f} max={float(arr.max()):.2f} mean={float(arr.mean()):.2f}")
+    print(
+        f"  Pixel stats (HU if CT): min={float(arr.min()):.2f} max={float(arr.max()):.2f} mean={float(arr.mean()):.2f}"
+    )
 
 
 def export_png(root: str, out_dir: str, window: Optional[Tuple[float, float]]) -> None:
@@ -322,7 +334,9 @@ def build_affine(ds0: Dataset, ds1: Optional[Dataset]) -> np.ndarray:
 
 def export_nifti(root: str, out_path: str) -> None:
     if nib is None or Nifti1Image is None or nib_save is None:
-        raise SystemExit("Missing dependency: nibabel. Install with: pip install nibabel")
+        raise SystemExit(
+            "Missing dependency: nibabel. Install with: pip install nibabel"
+        )
 
     paths = find_dicom_files(root)
     groups = get_series_groups(paths)
@@ -430,28 +444,48 @@ def anonymize_folder(root: str, out_dir: str) -> None:
         ds.save_as(out_path)
 
     print(f"Done. Removed/blanked approx {removed} PHI fields (plus private tags).")
-    print("Reminder: This does NOT remove burned-in pixel text. That requires image-based redaction.")
+    print(
+        "Reminder: This does NOT remove burned-in pixel text. That requires image-based redaction."
+    )
 
 
 def main(argv: List[str]) -> int:
-    ap = argparse.ArgumentParser(prog="dicom_toolkit", description="Inspect / convert / anonymize DICOM data.")
+    ap = argparse.ArgumentParser(
+        prog="dicom_toolkit", description="Inspect / convert / anonymize DICOM data."
+    )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    p_ins = sub.add_parser("inspect", help="Inspect DICOM folder (series summary + pixel stats).")
+    p_ins = sub.add_parser(
+        "inspect", help="Inspect DICOM folder (series summary + pixel stats)."
+    )
     p_ins.add_argument("root", help="Folder containing DICOM files")
 
-    p_png = sub.add_parser("to-png", help="Convert the largest series in folder to PNG slices.")
+    p_png = sub.add_parser(
+        "to-png", help="Convert the largest series in folder to PNG slices."
+    )
     p_png.add_argument("root", help="Folder containing DICOM files")
     p_png.add_argument("--out", required=True, help="Output folder for PNGs")
-    p_png.add_argument("--window", nargs=2, type=float, metavar=("CENTER", "WIDTH"), help="Window center and width")
+    p_png.add_argument(
+        "--window",
+        nargs=2,
+        type=float,
+        metavar=("CENTER", "WIDTH"),
+        help="Window center and width",
+    )
 
-    p_nii = sub.add_parser("to-nifti", help="Convert the largest series in folder to a NIfTI volume.")
+    p_nii = sub.add_parser(
+        "to-nifti", help="Convert the largest series in folder to a NIfTI volume."
+    )
     p_nii.add_argument("root", help="Folder containing DICOM files")
     p_nii.add_argument("--out", required=True, help="Output .nii or .nii.gz path")
 
-    p_anon = sub.add_parser("anonymize", help="Anonymize DICOM folder into a new output folder.")
+    p_anon = sub.add_parser(
+        "anonymize", help="Anonymize DICOM folder into a new output folder."
+    )
     p_anon.add_argument("root", help="Folder containing DICOM files")
-    p_anon.add_argument("--out", required=True, help="Output folder for anonymized DICOMs")
+    p_anon.add_argument(
+        "--out", required=True, help="Output folder for anonymized DICOMs"
+    )
 
     args = ap.parse_args(argv)
 

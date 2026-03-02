@@ -10,15 +10,19 @@ Covers:
   - Minimal autodiff
   - Minimal MLP
 """
+
 from __future__ import annotations
 from pathlib import Path
+
 
 class LabGenerator:
     """
     Generates starter code and test scaffolds for curriculum labs.
     """
+
     def __init__(self):
         self.labs = self._define_labs()
+
     def _define_labs(self) -> dict[str, dict]:
         """Define all lab scaffolding by lab_id."""
         return {
@@ -31,6 +35,7 @@ class LabGenerator:
             "geo01_knn_metrics": self._lab_knn_metrics,
             "info01_softmax_ce": self._lab_softmax,
         }
+
     def generate_lab(self, lab_id: str) -> dict[str, str]:
         """
         Generate starter code and tests for a lab.
@@ -43,6 +48,7 @@ class LabGenerator:
             raise ValueError(f"Unknown lab: {lab_id}")
         generator_func = self.labs[lab_id]
         return generator_func()
+
     # ========== Individual Lab Generators ==========
     @staticmethod
     def _lab_linear_regression() -> dict[str, str]:
@@ -240,6 +246,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_pca() -> dict[str, str]:
         """PCA from scratch using covariance or SVD."""
@@ -431,6 +438,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_autodiff() -> dict[str, str]:
         """Minimal reverse-mode autodiff."""
@@ -639,6 +647,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_logistic() -> dict[str, str]:
         """Logistic regression with Adam optimizer."""
@@ -842,6 +851,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_naive_bayes() -> dict[str, str]:
         """Naive Bayes classifier."""
@@ -1010,6 +1020,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_bootstrap() -> dict[str, str]:
         """Bootstrap confidence intervals."""
@@ -1146,6 +1157,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_knn_metrics() -> dict[str, str]:
         """kNN metric comparison."""
@@ -1312,6 +1324,7 @@ if __name__ == "__main__":
             "test_code": test_code,
             "readme": readme,
         }
+
     @staticmethod
     def _lab_softmax() -> dict[str, str]:
         """Softmax classifier with cross-entropy."""
@@ -1481,6 +1494,7 @@ if __name__ == "__main__":
             "readme": readme,
         }
 
+
 def write_lab_files(lab_id: str, output_dir: str | Path = ".") -> None:
     """
     Write lab files to disk.
@@ -1512,6 +1526,7 @@ def write_lab_files(lab_id: str, output_dir: str | Path = ".") -> None:
     with open(readme_file, "w") as f:
         f.write(lab_files["readme"])
     print(f"Wrote: {readme_file}")
+
 
 if __name__ == "__main__":
     # Example: generate all labs

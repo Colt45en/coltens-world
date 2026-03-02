@@ -90,5 +90,6 @@ class ActionPlan(BaseModel):
     summary: str = Field(..., description="Human-readable plan summary")
     actions: List[Action] = Field(default_factory=list)
 
+
 # Back-compat alias
 UIAction = Action

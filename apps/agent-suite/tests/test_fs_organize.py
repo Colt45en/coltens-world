@@ -2,8 +2,15 @@ from pathlib import Path
 
 from packages.core.policy import default_policy
 from packages.drivers.fs_local.organize import (
-    mkdir, list_dir, find_by_name, find_by_content, read_text_file,
-    move_path, copy_path, rename_path, organize_by_extension
+    mkdir,
+    list_dir,
+    find_by_name,
+    find_by_content,
+    read_text_file,
+    move_path,
+    copy_path,
+    rename_path,
+    organize_by_extension,
 )
 
 
@@ -55,5 +62,10 @@ def test_fs_organize_by_extension_dryrun(tmp_path):
     (dl / "y.md").write_text("y", encoding="utf-8")
 
     rep = organize_by_extension(cfg, dl, recursive=False, dry_run=True)
-    assert any(dst.endswith("\\txt\\x.txt") or dst.endswith("/txt/x.txt") for _, dst in rep.moves)
-    assert any(dst.endswith("\\md\\y.md") or dst.endswith("/md/y.md") for _, dst in rep.moves)
+    assert any(
+        dst.endswith("\\txt\\x.txt") or dst.endswith("/txt/x.txt")
+        for _, dst in rep.moves
+    )
+    assert any(
+        dst.endswith("\\md\\y.md") or dst.endswith("/md/y.md") for _, dst in rep.moves
+    )

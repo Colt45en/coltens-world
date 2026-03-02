@@ -20,7 +20,11 @@ from ..contracts_v1_types import V1EventEnvelope
 
 
 class DeterministicEventLog:
-    def __init__(self, log_path: str = "./runtime/events.v1.ndjson", chain_path: str = "./runtime/events.v1.chain") -> None:
+    def __init__(
+        self,
+        log_path: str = "./runtime/events.v1.ndjson",
+        chain_path: str = "./runtime/events.v1.chain",
+    ) -> None:
         self.log_path = Path(log_path)
         self.chain_path = Path(chain_path)
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -50,7 +54,12 @@ class DeterministicEventLog:
             "chain_curr": next_hash,
         }
         with self.log_path.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps(
+                    rec, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+                )
+                + "\n"
+            )
         self._prev_hash = next_hash
         self.chain_path.write_text(self._prev_hash, encoding="utf-8")
         return next_hash

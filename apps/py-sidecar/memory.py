@@ -97,7 +97,9 @@ class BrainMemoryService:
             ttl_seconds=ttl_seconds,
         )
 
-    def write_summary(self, key: str, summary: str, ttl_seconds: Optional[int] = None) -> None:
+    def write_summary(
+        self, key: str, summary: str, ttl_seconds: Optional[int] = None
+    ) -> None:
         """Write or update a working summary."""
         self.summaries[key] = MemoryEntry(
             key=key, value=summary, created_at=time.time(), ttl_seconds=ttl_seconds
@@ -138,7 +140,9 @@ class BrainMemoryService:
             return None
         return entry.value
 
-    def list_facts(self, prefix: Optional[str] = None, limit: int = 100) -> List[Dict[str, Any]]:
+    def list_facts(
+        self, prefix: Optional[str] = None, limit: int = 100
+    ) -> List[Dict[str, Any]]:
         """List facts (optionally by prefix)."""
         result = []
         for key, entry in sorted(self.facts.items()):

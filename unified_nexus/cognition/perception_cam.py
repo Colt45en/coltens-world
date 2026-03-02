@@ -30,7 +30,9 @@ class PerceptionIngestionLayer:
         self._records: list[PerceptionEmbeddingRecord] = []
         self._max = max_records
 
-    def ingest(self, modality: Modality, payload: Dict[str, Any], agent_id: str, trust: float) -> PerceptionEmbeddingRecord:
+    def ingest(
+        self, modality: Modality, payload: Dict[str, Any], agent_id: str, trust: float
+    ) -> PerceptionEmbeddingRecord:
         if modality == Modality.VISION:
             emb = self.ingest_vision(payload)
         else:
@@ -77,7 +79,9 @@ class PerceptionIngestionLayer:
             return PerceptionHealth(avg_trust=0.0, quality=0.0, count=0)
         avg_trust = sum(r.trust_weight for r in self._records) / len(self._records)
         quality = avg_trust * min(1.0, len(self._records) / 64.0)
-        return PerceptionHealth(avg_trust=avg_trust, quality=quality, count=len(self._records))
+        return PerceptionHealth(
+            avg_trust=avg_trust, quality=quality, count=len(self._records)
+        )
 
     def last_records(self, n: int = 8) -> list[PerceptionEmbeddingRecord]:
         return self._records[-n:]

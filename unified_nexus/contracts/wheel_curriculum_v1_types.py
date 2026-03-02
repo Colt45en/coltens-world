@@ -20,6 +20,7 @@ from enum import Enum
 
 class ToolContractVersion(str, Enum):
     """Tool contract version marker"""
+
     CURRICULUM_STOP_EXECUTE_V1 = "curriculum.stop.execute.v1"
 
 

@@ -19,8 +19,14 @@ def _iter_jsonl(path: Path) -> Iterator[Dict[str, Any]]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Evaluate step-level action predictions (TM/EM + optional point-in-box).")
-    ap.add_argument("--pairs", required=True, help="JSONL file where each line has {pred, gold, optional: screen, bbox}.")
+    ap = argparse.ArgumentParser(
+        description="Evaluate step-level action predictions (TM/EM + optional point-in-box)."
+    )
+    ap.add_argument(
+        "--pairs",
+        required=True,
+        help="JSONL file where each line has {pred, gold, optional: screen, bbox}.",
+    )
     args = ap.parse_args()
 
     pairs_path = Path(args.pairs)
@@ -37,7 +43,9 @@ def main() -> None:
         screen = None
         bbox = None
         if "screen" in rec and isinstance(rec["screen"], dict):
-            screen = ScreenSize(width=int(rec["screen"]["width"]), height=int(rec["screen"]["height"]))
+            screen = ScreenSize(
+                width=int(rec["screen"]["width"]), height=int(rec["screen"]["height"])
+            )
         if "bbox" in rec and isinstance(rec["bbox"], dict):
             bbox = BBox(
                 xmin=int(rec["bbox"]["xmin"]),

@@ -18,13 +18,14 @@
 import React from "react";
 import { validateAxisCodexSimV1Config } from "../lib/axis-codex-sim-v1/schema";
 import {
-    asUInt32,
-    type AxisCodexSimV1Config,
-    type TimelineEvent,
+  asUInt32,
+  type AxisCodexSimV1Config,
+  type TimelineEvent,
 } from "../lib/axis-codex-sim-v1/types";
 import { AxisCodexSimDemo } from "./AxisCodexSimDemo";
 import { ChatStreamDemo } from "./ChatStreamDemo";
 import { ConfigEditorForm } from "./ConfigEditorForm";
+import "./StreamingSimIntegratedDemo.css";
 
 const DEFAULT_CONFIG: AxisCodexSimV1Config = {
   schema: "axis-codex-sim/v1",
@@ -121,83 +122,47 @@ export function StreamingSimIntegratedDemo() {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "1400px", margin: "0 auto" }}>
-      <h2 style={{ marginTop: 0 }}>
-        🔗 P0 Stream → Live Stimulus → Simulation
-      </h2>
-      <p style={{ color: "#666", marginBottom: "2rem" }}>
-        Connect a real P0 chat stream. Events feed as stimulus pulses into the
-        simulation canvas in real-time. Tweak Heart params while streaming.
+    <div className="streaming-sim-container">
+      <h2 className="streaming-sim-title">🔗 P0 Stream → Live Stimulus → Simulation</h2>
+      <p className="streaming-sim-description">
+        Connect a real P0 chat stream. Events feed as stimulus pulses into the simulation canvas in
+        real-time. Tweak Heart params while streaming.
       </p>
 
       {/* Config Editor (top) */}
-      <div style={{ marginBottom: "2rem" }}>
+      <div className="streaming-sim-config-section">
         <ConfigEditorForm initial={config} onConfigChange={handleConfigChange} />
       </div>
 
       {/* Two-column layout: Stream (left) + Sim (right) */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "400px 1fr",
-          gap: "2rem",
-          minHeight: "600px",
-        }}
-      >
+      <div className="streaming-sim-layout">
         {/* LEFT: Stream Controls + Event List */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div className="streaming-sim-stream-panel">
           {/* URL input */}
           <div>
-            <label style={{ display: "block", marginBottom: "0.5rem" }}>
+            <label className="streaming-sim-label">
               <strong>Stream URL</strong>
             </label>
             <input
               type="text"
+              placeholder="Enter stream URL"
               value={streamUrl}
               onChange={(e) => setStreamUrl(e.target.value)}
-              style={{
-                display: "block",
-                width: "100%",
-                padding: "0.75rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                fontFamily: "monospace",
-                fontSize: "0.85rem",
-              }}
+              className="streaming-sim-input"
             />
           </div>
 
           {/* Reset button */}
-          <button
-            onClick={resetStream}
-            style={{
-              padding: "0.75rem",
-              background: "#dc3545",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "0.875rem",
-              fontWeight: "bold",
-            }}
-          >
+          <button onClick={resetStream} className="streaming-sim-reset-button">
             Reset Stream
           </button>
 
           {/* Stream status */}
-          <div
-            style={{
-              padding: "1rem",
-              background: "#f5f5f5",
-              borderRadius: "4px",
-              fontSize: "0.85rem",
-              fontFamily: "monospace",
-            }}
-          >
+          <div className="streaming-sim-status">
             <div>
               <strong>Stream Status</strong>
             </div>
-            <div style={{ marginTop: "0.5rem", color: "#666" }}>
+            <div className="streaming-sim-status-content">
               Events: {streamEvents.length}
               <br />
               Stimulus Pulses: {stimulusTimeline.length}
@@ -207,65 +172,30 @@ export function StreamingSimIntegratedDemo() {
           </div>
 
           {/* Chat Stream Demo */}
-          <div
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              padding: "1rem",
-              flex: 1,
-              minHeight: "300px",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-              background: "white",
-            }}
-          >
+          <div className="streaming-sim-chat-container">
             <ChatStreamDemo url={streamUrl} />
           </div>
         </div>
 
         {/* RIGHT: Simulation Canvas + Meters */}
-        <div
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            padding: "1rem",
-            background: "white",
-            overflow: "auto",
-          }}
-        >
-          <AxisCodexSimDemo
-            config={liveConfig}
-            title="Live Simulation (stimulus from stream)"
-          />
+        <div className="streaming-sim-canvas-panel">
+          <AxisCodexSimDemo config={liveConfig} title="Live Simulation (stimulus from stream)" />
         </div>
       </div>
 
       {/* Event Detail Log (bottom, collapsible context) */}
-      <div
-        style={{
-          marginTop: "2rem",
-          padding: "1rem",
-          background: "#f9f9f9",
-          borderRadius: "4px",
-          fontSize: "0.8rem",
-          fontFamily: "monospace",
-          maxHeight: "200px",
-          overflow: "auto",
-          border: "1px solid #eee",
-        }}
-      >
+      <div className="streaming-sim-event-log">
         <strong>Recent P0 Events</strong>
-        <div style={{ margin: "0.5rem 0" }}>
+        <div className="streaming-sim-event-list">
           {streamEvents.length === 0 ? (
-            <span style={{ color: "#999" }}>
+            <span className="streaming-sim-event-empty">
               Waiting for stream events... Open stream and start chatting.
             </span>
           ) : (
             streamEvents.slice(-10).map((ev, i) => (
-              <div key={i} style={{ padding: "0.25rem 0", color: "#333" }}>
+              <div key={i} className="streaming-sim-event-item">
                 [{ev.turnId?.slice(0, 8)}] seq={ev.seq} type={ev.type}{" "}
-                <span style={{ color: "#999" }}>({ev.timestamp})</span>
+                <span className="streaming-sim-event-timestamp">({ev.timestamp})</span>
               </div>
             ))
           )}

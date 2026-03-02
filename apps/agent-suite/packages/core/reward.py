@@ -23,7 +23,11 @@ def compute_reward(sample: Dict[str, Any]) -> Dict[str, Any]:
         pred_obj = sample.get("pred_action", sample.get("pred", sample.get("action")))
         if pred_obj is None:
             raise ValueError("missing pred_action")
-        pred = AgentAction.from_dict(pred_obj) if isinstance(pred_obj, dict) else AgentAction.from_json(pred_obj)
+        pred = (
+            AgentAction.from_dict(pred_obj)
+            if isinstance(pred_obj, dict)
+            else AgentAction.from_json(pred_obj)
+        )
     except Exception as e:
         out["reward"] = -1
         out["reason"] = "format_invalid"
@@ -36,7 +40,11 @@ def compute_reward(sample: Dict[str, Any]) -> Dict[str, Any]:
     gold_obj = sample.get("gold_action")
     if gold_obj is not None:
         try:
-            gold = AgentAction.from_dict(gold_obj) if isinstance(gold_obj, dict) else AgentAction.from_json(gold_obj)
+            gold = (
+                AgentAction.from_dict(gold_obj)
+                if isinstance(gold_obj, dict)
+                else AgentAction.from_json(gold_obj)
+            )
         except Exception as e:
             out["reward"] = -1
             out["reason"] = "schema_invalid"

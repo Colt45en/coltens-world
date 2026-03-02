@@ -74,6 +74,7 @@ class LabSpec:
 
 # ============= Extension Base Classes =============
 
+
 class CustomLabGenerator(LabGenerator):
     """
     Extended LabGenerator with hooks for custom extensions.
@@ -186,6 +187,7 @@ class CustomLabGenerator(LabGenerator):
 
 # ============= Lab Template Mixins =============
 
+
 class LabTemplateMixin:
     """
     Mixin providing reusable lab template generators.
@@ -279,7 +281,9 @@ pytest {lab_id}_test.py -v
 4. All tests should pass
 """
 
-        return LabSpec(metadata=meta, main_code=main_code, test_code=test_code, readme=readme)
+        return LabSpec(
+            metadata=meta, main_code=main_code, test_code=test_code, readme=readme
+        )
 
     @staticmethod
     def template_class_implementation(
@@ -309,7 +313,7 @@ pytest {lab_id}_test.py -v
 
         methods_code = "\n\n    ".join(
             [
-                f"def {name}(self):\n        \"\"\"{doc}\"\"\"\n        # TODO: Implement\n        raise NotImplementedError\n"
+                f'def {name}(self):\n        """{doc}"""\n        # TODO: Implement\n        raise NotImplementedError\n'
                 for name, doc in methods
             ]
         )
@@ -318,7 +322,7 @@ pytest {lab_id}_test.py -v
 {title}
 
 Implement the {class_name} class with the following methods:
-{', '.join([name for name, _ in methods])}
+{", ".join([name for name, _ in methods])}
 """
 
 
@@ -357,7 +361,7 @@ Implement the `{class_name}` class.
 
 ## Methods required
 
-{', '.join([name for name, _ in methods])}
+{", ".join([name for name, _ in methods])}
 
 ## Run tests
 
@@ -366,10 +370,13 @@ pytest {lab_id}_test.py -v
 ```
 """
 
-        return LabSpec(metadata=meta, main_code=main_code, test_code=test_code, readme=readme)
+        return LabSpec(
+            metadata=meta, main_code=main_code, test_code=test_code, readme=readme
+        )
 
 
 # ============= Registry-Based Generator =============
+
 
 class RegistryLabGenerator(CustomLabGenerator, LabTemplateMixin):
     """
@@ -407,6 +414,7 @@ class RegistryLabGenerator(CustomLabGenerator, LabTemplateMixin):
 
     def register_template_lab(self, lab_id: str, spec: LabSpec) -> None:
         """Register a lab from a LabSpec (template-generated)."""
+
         def gen_fn() -> LabFiles:
             return spec.to_dict()
 
@@ -463,6 +471,7 @@ class RegistryLabGenerator(CustomLabGenerator, LabTemplateMixin):
 
 
 # ============= Converters & Utilities =============
+
 
 def spec_to_files(spec: LabSpec, output_dir: Path) -> None:
     """Convert a LabSpec to files on disk."""

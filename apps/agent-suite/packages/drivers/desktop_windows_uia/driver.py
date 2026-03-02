@@ -41,4 +41,6 @@ def notepad_demo() -> NotepadDemoResult:
         with_spaces=True,
     )
 
-    return NotepadDemoResult(ok=True, detail="Notepad automated successfully (safe, non-destructive)")
+    return NotepadDemoResult(
+        ok=True, detail="Notepad automated successfully (safe, non-destructive)"
+    )

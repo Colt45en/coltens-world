@@ -44,8 +44,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 
 
@@ -70,23 +69,21 @@ def sha256_file(p: Path) -> Tuple[str, int]:
 
 class LabsGenerateRequest(BaseModel):
     """Request to generate lab(s). All fields optional."""
+
     lab_id: Optional[str] = Field(
-        default=None,
-        description="If omitted, generate all labs"
+        default=None, description="If omitted, generate all labs"
     )
     output_dir: str = Field(
-        default="labs",
-        min_length=1,
-        description="Output directory for generated labs"
+        default="labs", min_length=1, description="Output directory for generated labs"
     )
     write_manifest: bool = Field(
-        default=True,
-        description="Write manifest.json per lab"
+        default=True, description="Write manifest.json per lab"
     )
 
 
 class FileHash(BaseModel):
     """File hash + metadata."""
+
     path: str
     sha256: str
     bytes: int
@@ -94,6 +91,7 @@ class FileHash(BaseModel):
 
 class GeneratedLab(BaseModel):
     """One generated lab with files + hashes."""
+
     lab_id: str
     dir: str
     files: List[FileHash]
@@ -101,6 +99,7 @@ class GeneratedLab(BaseModel):
 
 class LabsGenerateResponse(BaseModel):
     """Response from generation."""
+
     ok: bool
     generated: List[GeneratedLab]
     catalog_path: str
@@ -108,6 +107,7 @@ class LabsGenerateResponse(BaseModel):
 
 class LabsListResponse(BaseModel):
     """List of available labs."""
+
     labs: List[str]
 
 
@@ -119,7 +119,7 @@ class LabsListResponse(BaseModel):
 app = FastAPI(
     title="World Engine Labs API",
     version="1.0.0",
-    description="Deterministic lab generation with SHA256 hashing + manifests"
+    description="Deterministic lab generation with SHA256 hashing + manifests",
 )
 
 
@@ -173,7 +173,7 @@ def generate(req: LabsGenerateRequest) -> LabsGenerateResponse:
             if lab_id not in gen.labs:
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Unknown lab_id: {lab_id}. Available: {list(gen.labs.keys())}"
+                    detail=f"Unknown lab_id: {lab_id}. Available: {list(gen.labs.keys())}",
                 )
 
             logger.info(f"Generating lab: {lab_id}")
@@ -205,31 +205,26 @@ def generate(req: LabsGenerateRequest) -> LabsGenerateResponse:
                     "lab_id": lab_id,
                     "generated_at_utc": now,
                     "files": [
-                        {
-                            "path": f.path,
-                            "sha256": f.sha256,
-                            "bytes": f.bytes
-                        }
+                        {"path": f.path, "sha256": f.sha256, "bytes": f.bytes}
                         for f in files
-                    ]
+                    ],
                 }
                 manifest_path = lab_dir / "manifest.json"
                 manifest_path.write_text(
-                    json.dumps(manifest, indent=2),
-                    encoding="utf-8"
+                    json.dumps(manifest, indent=2), encoding="utf-8"
                 )
-                logger.debug(f"  manifest.json written")
+                logger.debug("  manifest.json written")
 
             # Record in response + catalog
-            generated.append(
-                GeneratedLab(lab_id=lab_id, dir=str(lab_dir), files=files)
-            )
+            generated.append(GeneratedLab(lab_id=lab_id, dir=str(lab_dir), files=files))
             catalog[lab_id] = {
                 "dir": str(lab_dir),
                 "readme": str(readme),
                 "starter": str(starter),
                 "test": str(test),
-                "manifest": str(lab_dir / "manifest.json") if req.write_manifest else ""
+                "manifest": str(lab_dir / "manifest.json")
+                if req.write_manifest
+                else "",
             }
 
         # Write global catalog
@@ -237,18 +232,13 @@ def generate(req: LabsGenerateRequest) -> LabsGenerateResponse:
         catalog_data = {
             "generated_at_utc": now,
             "lab_count": len(generated),
-            "labs": catalog
+            "labs": catalog,
         }
-        catalog_path.write_text(
-            json.dumps(catalog_data, indent=2),
-            encoding="utf-8"
-        )
+        catalog_path.write_text(json.dumps(catalog_data, indent=2), encoding="utf-8")
         logger.info(f"Catalog written: {catalog_path}")
 
         return LabsGenerateResponse(
-            ok=True,
-            generated=generated,
-            catalog_path=str(catalog_path)
+            ok=True, generated=generated, catalog_path=str(catalog_path)
         )
 
     except HTTPException:

@@ -43,6 +43,8 @@ class BBox:
         return self.xmin <= x <= self.xmax and self.ymin <= y <= self.ymax
 
 
-def point_in_norm_bbox(point_norm: Tuple[int, int], bbox_px: BBox, size: ScreenSize) -> bool:
+def point_in_norm_bbox(
+    point_norm: Tuple[int, int], bbox_px: BBox, size: ScreenSize
+) -> bool:
     x, y = norm_to_pixel(point_norm[0], point_norm[1], size)
     return bbox_px.contains_pixel(x, y)

@@ -33,29 +33,30 @@ from routes_agent import setup_agent_system
 # Pydantic Models (Request/Response)
 # ============================================================================
 
+
 class PipelineRequest(BaseModel):
     """Request to run the autonomy loop pipeline."""
+
     input_file: str = Field(..., description="Path to source file to ingest")
     language: str = Field(default="TypeScript", description="Programming language")
     objective: str = Field(
         default="extract and analyze code structure",
-        description="Ingestion objective for knowledge refinery"
+        description="Ingestion objective for knowledge refinery",
     )
     output_dir: str = Field(
-        default="pipeline_results",
-        description="Directory to write artifacts"
+        default="pipeline_results", description="Directory to write artifacts"
     )
     narrative_mode: str = Field(
-        default="slice_of_life",
-        description="Weekly report narrative mode"
+        default="slice_of_life", description="Weekly report narrative mode"
     )
     min_confidence: float = Field(
-        default=0.80,
-        description="Minimum confidence threshold for approval"
+        default=0.80, description="Minimum confidence threshold for approval"
     )
+
 
 class PipelineResponse(BaseModel):
     """Response from pipeline execution."""
+
     success: bool
     batch_id: str
     decision: str  # APPROVED, APPROVED_WITH_WARNINGS, or BLOCKED
@@ -64,13 +65,16 @@ class PipelineResponse(BaseModel):
     governance: dict
     timestamp: str
 
+
 class QueryRequest(BaseModel):
     """Request to query lexicon."""
+
     term: Optional[str] = None
     language: str = "TypeScript"
     namespace: Optional[str] = None
     min_confidence: float = 0.80
     limit: int = 50
+
 
 # ============================================================================
 # FastAPI App Setup
@@ -79,7 +83,7 @@ class QueryRequest(BaseModel):
 app = FastAPI(
     title="Autonomy Loop Pipeline",
     description="Deterministic knowledge refinery for code understanding",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Register flowstate enrichment routes
@@ -91,6 +95,7 @@ db_path = os.path.join(os.path.dirname(__file__), "world.db")
 # ============================================================================
 # Endpoints
 # ============================================================================
+
 
 @app.post("/pipeline/run", response_model=PipelineResponse)
 async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
@@ -116,7 +121,7 @@ async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
             source_file=req.input_file,
             language=req.language,
             objective=req.objective,
-            text=source_text
+            text=source_text,
         )
 
         # Write evidence artifact
@@ -126,41 +131,49 @@ async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
 
         # ===== STAGE 2: ALCHEMIST (Transform) =====
         lexicon_rows, rune_rows = run_transform(
-            packet=evidence,
-            source_text=source_text
+            packet=evidence, source_text=source_text
         )
 
         # Write lexicon and rune artifacts
         lex_path = Path(req.output_dir) / "lexicon_entries.json"
         with open(lex_path, "w") as f:
-            json.dump([row.model_dump() for row in lexicon_rows], f, indent=2, sort_keys=True)
+            json.dump(
+                [row.model_dump() for row in lexicon_rows], f, indent=2, sort_keys=True
+            )
 
         rune_path = Path(req.output_dir) / "rune_rows.json"
         with open(rune_path, "w") as f:
-            json.dump([row.model_dump() for row in rune_rows], f, indent=2, sort_keys=True)
+            json.dump(
+                [row.model_dump() for row in rune_rows], f, indent=2, sort_keys=True
+            )
 
         # ===== STAGE 3: ANALYST (Gates) =====
         gates, overall_status = run_gates(
             lexicon_rows=lexicon_rows,
             rune_rows=rune_rows,
             expected_lex_hash=evidence.get("lexicon_determinism_key"),
-            expected_rune_hash=evidence.get("rune_process_determinism_key")
+            expected_rune_hash=evidence.get("rune_process_determinism_key"),
         )
 
         # Write validated plan
         plan_path = Path(req.output_dir) / "validated_plan.json"
         with open(plan_path, "w") as f:
-            json.dump({
-                "gates": [g.model_dump() for g in gates],
-                "overall_status": overall_status,
-            }, f, indent=2, sort_keys=True)
+            json.dump(
+                {
+                    "gates": [g.model_dump() for g in gates],
+                    "overall_status": overall_status,
+                },
+                f,
+                indent=2,
+                sort_keys=True,
+            )
 
         # ===== STAGE 4: PM (Decision + Report) =====
         decision_record = make_decision_record(
             overall_status=overall_status,
             lex_count=len(lexicon_rows),
             rune_count=len(rune_rows),
-            gates=[g.model_dump() for g in gates]
+            gates=[g.model_dump() for g in gates],
         )
 
         decision_path = Path(req.output_dir) / "decision_record.json"
@@ -172,8 +185,10 @@ async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
             mode=req.narrative_mode,
             lex_count=len(lexicon_rows),
             rune_count=len(rune_rows),
-            review_count=sum(1 for e in lexicon_rows if getattr(e, "review_required", False)),
-            gates=[g.model_dump() for g in gates]
+            review_count=sum(
+                1 for e in lexicon_rows if getattr(e, "review_required", False)
+            ),
+            gates=[g.model_dump() for g in gates],
         )
 
         report_path = Path(req.output_dir) / "weekly_ops_report.json"
@@ -195,22 +210,18 @@ async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
                     language=req.language,
                     objective=req.objective,
                     source_file=req.input_file,
-                    status="approved" if overall_status == "passed" else "approved_with_warnings"
+                    status="approved"
+                    if overall_status == "passed"
+                    else "approved_with_warnings",
                 )
 
                 # Upsert lexicon entries
                 enqueued_count = upsert_lexicon_entries(
-                    conn=db_conn,
-                    batch_id=batch_id,
-                    entries=lexicon_rows
+                    conn=db_conn, batch_id=batch_id, entries=lexicon_rows
                 )
 
                 # Upsert rune rows
-                upsert_rune_rows(
-                    conn=db_conn,
-                    batch_id=batch_id,
-                    runes=rune_rows
-                )
+                upsert_rune_rows(conn=db_conn, batch_id=batch_id, runes=rune_rows)
 
                 db_conn.commit()
 
@@ -220,7 +231,7 @@ async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
                     "runes_upserted": len(rune_rows),
                     "entries_enqueued_for_review": enqueued_count,
                     "merge_policy": "v2.0",
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.utcnow().isoformat(),
                 }
             finally:
                 db_conn.close()
@@ -249,11 +260,12 @@ async def run_pipeline(req: PipelineRequest) -> PipelineResponse:
                 "approved_for_release": approved_for_release,
                 "batch_id": batch_id,
             },
-            timestamp=datetime.utcnow().isoformat()
+            timestamp=datetime.utcnow().isoformat(),
         )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {str(e)}")
+
 
 @app.get("/pipeline/health")
 async def health_check():
@@ -263,8 +275,9 @@ async def health_check():
         "service": "autonomy-loop-pipeline",
         "version": "1.0.0",
         "db_path": db_path,
-        "db_exists": os.path.exists(db_path)
+        "db_exists": os.path.exists(db_path),
     }
+
 
 # ============================================================================
 # Setup Agent System
@@ -273,4 +286,5 @@ setup_agent_system(app)
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=3002)

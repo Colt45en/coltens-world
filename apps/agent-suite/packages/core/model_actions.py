@@ -33,6 +33,7 @@ class ActionData(BaseModel):
     Canonical compact model action payload (stable keys, strict schema).
     This is what we want models/tools to emit and what Stage II/III evaluate.
     """
+
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     POINT: Optional[Point] = None
@@ -48,7 +49,9 @@ class ActionData(BaseModel):
         return json.dumps(self.compact_dict(), **CANONICAL_JSON_KWARGS)
 
     def pretty_json(self, indent: int = 2) -> str:
-        return json.dumps(self.compact_dict(), indent=indent, sort_keys=True, ensure_ascii=False)
+        return json.dumps(
+            self.compact_dict(), indent=indent, sort_keys=True, ensure_ascii=False
+        )
 
 
 class AgentAction(BaseModel):
@@ -63,6 +66,7 @@ class AgentAction(BaseModel):
     - Canonical compact representation is ActionData.compact_dict()
     - Canonical compact JSON uses CANONICAL_JSON_KWARGS
     """
+
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Lock this if you can. If you truly need multiple types, widen this Literal set.
@@ -89,7 +93,9 @@ class AgentAction(BaseModel):
             # Compact form → wrap
             return {"type": "agent_action", "data": v}
 
-        raise TypeError(f"AgentAction expects dict or AgentAction, got: {type(v).__name__}")
+        raise TypeError(
+            f"AgentAction expects dict or AgentAction, got: {type(v).__name__}"
+        )
 
     # ---- Parsing helpers ----
     @classmethod
@@ -131,7 +137,9 @@ class AgentAction(BaseModel):
         return self.to_json()
 
     def to_string_pretty(self) -> str:
-        return json.dumps(self.envelope_dict(), indent=2, sort_keys=True, ensure_ascii=False)
+        return json.dumps(
+            self.envelope_dict(), indent=2, sort_keys=True, ensure_ascii=False
+        )
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, AgentAction):

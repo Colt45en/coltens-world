@@ -26,7 +26,13 @@ class ImprintArchive:
         self._imprints: List[Imprint] = []
 
     def write(self, kind: str, trace_id: str, data: Dict[str, Any]) -> Imprint:
-        imp = Imprint(imprint_id=new_id("imp"), ts_ms=utc_ms(), kind=kind, trace_id=trace_id, data=data)
+        imp = Imprint(
+            imprint_id=new_id("imp"),
+            ts_ms=utc_ms(),
+            kind=kind,
+            trace_id=trace_id,
+            data=data,
+        )
         self._imprints.append(imp)
         if len(self._imprints) > self._max:
             self._imprints = self._imprints[-self._max :]
@@ -41,11 +47,16 @@ class ImprintArchive:
     def export_ndjson(self) -> str:
         lines = []
         for i in self._imprints:
-            lines.append(json.dumps({
-                "imprint_id": i.imprint_id,
-                "ts_ms": i.ts_ms,
-                "kind": i.kind,
-                "trace_id": i.trace_id,
-                "data": i.data,
-            }, sort_keys=True))
+            lines.append(
+                json.dumps(
+                    {
+                        "imprint_id": i.imprint_id,
+                        "ts_ms": i.ts_ms,
+                        "kind": i.kind,
+                        "trace_id": i.trace_id,
+                        "data": i.data,
+                    },
+                    sort_keys=True,
+                )
+            )
         return "\n".join(lines) + ("\n" if lines else "")

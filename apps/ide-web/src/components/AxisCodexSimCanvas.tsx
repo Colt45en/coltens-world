@@ -16,6 +16,7 @@
 
 import React from "react";
 import type { Frame } from "../lib/axis-codex-sim-v1/types";
+import styles from "./AxisCodexSimCanvas.module.css";
 
 export interface AxisCodexSimCanvasProps {
   frame: Frame | null;
@@ -136,18 +137,7 @@ export const AxisCodexSimCanvas = React.forwardRef<
       ctx.fillText("time →", width / 2, height - 5);
     }, [frame, frames, currentIndex, width, height, ref]);
 
-    return (
-      <canvas
-        ref={ref}
-        width={width}
-        height={height}
-        style={{
-          border: "1px solid #ddd",
-          borderRadius: "4px",
-          backgroundColor: "#fafafa",
-        }}
-      />
-    );
+    return <canvas ref={ref} width={width} height={height} className={styles.canvas} />;
   }
 );
 
@@ -167,129 +157,60 @@ export interface AxisCodexSimMetersProps {
 
 export function AxisCodexSimMeters({ frame }: AxisCodexSimMetersProps) {
   if (!frame) {
-    return <div style={{ color: "#999" }}>No frame</div>;
+    return <div className={styles.noFrame}>No frame</div>;
   }
 
   const { fill, capacity, resonance, coherence } = frame.heart;
   const fillPct = capacity > 0 ? (fill / capacity) * 100 : 0;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "16px",
-        padding: "12px",
-        backgroundColor: "#f9f9f9",
-        borderRadius: "4px",
-        fontSize: "12px",
-        fontFamily: "monospace",
-      }}
-    >
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: "4px", fontWeight: "bold" }}>Fill</div>
-        <div
-          style={{
-            width: "100%",
-            height: "20px",
-            backgroundColor: "#e0e0e0",
-            borderRadius: "3px",
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
+    <div className={styles.metersContainer}>
+      <div className={styles.meterItem}>
+        <div className={styles.meterLabel}>Fill</div>
+        <div className={styles.meterBarContainer}>
           <div
-            style={{
-              width: `${fillPct}%`,
-              height: "100%",
-              backgroundColor: "#4CAF50",
-              transition: "width 100ms ease-out",
-            }}
+            className={`${styles.meterBarFill} ${styles.meterBarFillGreen}`}
+            style={{ "--bar-width": `${fillPct}%` } as React.CSSProperties}
           />
-          <div
-            style={{
-              position: "absolute",
-              top: "2px",
-              left: "4px",
-              fontSize: "10px",
-              color: "#333",
-            }}
-          >
-            {fillPct.toFixed(0)}%
-          </div>
+          <div className={styles.meterBarLabel}>{fillPct.toFixed(0)}%</div>
         </div>
       </div>
 
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: "4px", fontWeight: "bold" }}>Resonance</div>
-        <div
-          style={{
-            width: "100%",
-            height: "20px",
-            backgroundColor: "#e0e0e0",
-            borderRadius: "3px",
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
+      <div className={styles.meterItem}>
+        <div className={styles.meterLabel}>Resonance</div>
+        <div className={styles.meterBarContainer}>
           <div
-            style={{
-              width: `${Math.min(resonance / 10, 1) * 100}%`,
-              height: "100%",
-              backgroundColor: "#FF9800",
-              transition: "width 100ms ease-out",
-            }}
+            className={`${styles.meterBarFill} ${styles.meterBarFillOrange}`}
+            style={
+              { "--bar-width": `${Math.min(resonance / 10, 1) * 100}%` } as React.CSSProperties
+            }
           />
-          <div
-            style={{
-              position: "absolute",
-              top: "2px",
-              left: "4px",
-              fontSize: "10px",
-              color: "#333",
-            }}
-          >
-            {resonance.toFixed(2)}
-          </div>
+          <div className={styles.meterBarLabel}>{resonance.toFixed(2)}</div>
         </div>
       </div>
 
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: "4px", fontWeight: "bold" }}>Coherence</div>
-        <div
-          style={{
-            width: "100%",
-            height: "20px",
-            backgroundColor: "#e0e0e0",
-            borderRadius: "3px",
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
+      <div className={styles.meterItem}>
+        <div className={styles.meterLabel}>Coherence</div>
+        <div className={styles.meterBarContainer}>
           <div
-            style={{
-              width: `${coherence * 100}%`,
-              height: "100%",
-              backgroundColor: coherence > 0.7 ? "#4CAF50" : coherence > 0.4 ? "#FF9800" : "#f44336",
-              transition: "width 100ms ease-out",
-            }}
+            className={`${styles.meterBarFill} ${
+              coherence > 0.7
+                ? styles.meterBarFillGreen
+                : coherence > 0.4
+                  ? styles.meterBarFillOrange
+                  : styles.meterBarFillRed
+            }`}
+            style={{ "--bar-width": `${coherence * 100}%` } as React.CSSProperties}
           />
-          <div
-            style={{
-              position: "absolute",
-              top: "2px",
-              left: "4px",
-              fontSize: "10px",
-              color: "#fff",
-            }}
-          >
+          <div className={`${styles.meterBarLabel} ${styles.meterBarLabelLight}`}>
             {(coherence * 100).toFixed(0)}%
           </div>
         </div>
       </div>
 
-      <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+      <div className={styles.meterStats}>
         <div>t = {frame.t_ms}ms</div>
-        <div style={{ color: "#666" }}>
+        <div className={styles.meterStatsSecondary}>
           cap = {capacity.toFixed(2)} / {fill.toFixed(2)}
         </div>
       </div>

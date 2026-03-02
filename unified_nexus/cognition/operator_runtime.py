@@ -26,7 +26,9 @@ class ToolRuntime:
             return {"ok": False, "error": f"unknown_tool:{name}"}
         spec, fn = self._tools[name]
         try:
-            return await asyncio.wait_for(asyncio.to_thread(fn, args), timeout=spec.timeout_s)
+            return await asyncio.wait_for(
+                asyncio.to_thread(fn, args), timeout=spec.timeout_s
+            )
         except asyncio.TimeoutError:
             return {"ok": False, "error": "tool_timeout"}
         except Exception as e:

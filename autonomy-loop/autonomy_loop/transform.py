@@ -32,34 +32,40 @@ def build_lexicon_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     for term in unique_terms:
         entry_id = stable_id("lex", lang, term.lower(), prefix="lex")
 
-        out.append({
-            "schema_version": "1.0.0",
-            "lexicon_id": entry_id,
-            "language": lang,
-            "term": term,
-            "morphology": {
-                "prefixes": [],
-                "roots": [],
-                "suffixes": [],
-                "methodology": [
-                    "Rule-based segmentation (MVP stub).",
-                    "Later: dictionary + affix tables + ML fallback."
-                ],
-            },
-            "semantics": {
-                "meaning_claims": [c for c in evidence["claims"]["meaning_claims"] if c["term"] == term],
-                "synonyms": [],
-                "antonyms": [],
-                "hypernyms": [],
-                "hyponyms": [],
-                "collocations": [],
-                "conceptual_metaphors": [],
-            },
-            "trace": {
-                "batch_id": evidence["batch_id"],
-                "source_id": evidence["source"]["source_id"],
-            },
-        })
+        out.append(
+            {
+                "schema_version": "1.0.0",
+                "lexicon_id": entry_id,
+                "language": lang,
+                "term": term,
+                "morphology": {
+                    "prefixes": [],
+                    "roots": [],
+                    "suffixes": [],
+                    "methodology": [
+                        "Rule-based segmentation (MVP stub).",
+                        "Later: dictionary + affix tables + ML fallback.",
+                    ],
+                },
+                "semantics": {
+                    "meaning_claims": [
+                        c
+                        for c in evidence["claims"]["meaning_claims"]
+                        if c["term"] == term
+                    ],
+                    "synonyms": [],
+                    "antonyms": [],
+                    "hypernyms": [],
+                    "hyponyms": [],
+                    "collocations": [],
+                    "conceptual_metaphors": [],
+                },
+                "trace": {
+                    "batch_id": evidence["batch_id"],
+                    "source_id": evidence["source"]["source_id"],
+                },
+            }
+        )
     return out
 
 
@@ -72,8 +78,11 @@ def normalize_process_tag(tag: str) -> tuple[str, bool]:
         return "unknown_tag", True
     return "unknown_tag", True
 
+
 def taxonomy_seed_rows() -> list[tuple[str, str]]:
-    return [(k, v) for k, v in sorted(CONTROLLED_PROCESS_TAGS.items(), key=lambda kv: kv[0])]
+    return [
+        (k, v) for k, v in sorted(CONTROLLED_PROCESS_TAGS.items(), key=lambda kv: kv[0])
+    ]
 
 
 def build_rune_rows(evidence: dict[str, Any]) -> list[dict[str, Any]]:
@@ -97,37 +106,43 @@ def build_rune_rows(evidence: dict[str, Any]) -> list[dict[str, Any]]:
 
         rune_id = stable_id("rune", language, sym, process_tag, prefix="rune")
 
-        out.append({
-            "schema_version": "1.0.0",
-            "rune_id": rune_id,
-            "code_language": language,
-            "symbol": sym,
-            "symbol_type": sym_type,
-            "process_tag": process_tag,
-            "meaning": {
-                "meaning_claims": [{
-                    "claim_id": stable_id("rune-meaning", sym, process_tag, prefix="claim"),
-                    "claim": f"Symbol '{sym}' meaning depends on language/grammar; decode by parser rules.",
-                    "confidence": 0.40 if sym_type != "identifier" else 0.20,
-                    "review_required": unknown or (sym_type == "identifier"),
-                    "evidence_links": [],
-                    "falsification_tests": [
-                        "Validate symbol role via AST parsing in target language.",
-                        "Confirm usage in nearby code context."
+        out.append(
+            {
+                "schema_version": "1.0.0",
+                "rune_id": rune_id,
+                "code_language": language,
+                "symbol": sym,
+                "symbol_type": sym_type,
+                "process_tag": process_tag,
+                "meaning": {
+                    "meaning_claims": [
+                        {
+                            "claim_id": stable_id(
+                                "rune-meaning", sym, process_tag, prefix="claim"
+                            ),
+                            "claim": f"Symbol '{sym}' meaning depends on language/grammar; decode by parser rules.",
+                            "confidence": 0.40 if sym_type != "identifier" else 0.20,
+                            "review_required": unknown or (sym_type == "identifier"),
+                            "evidence_links": [],
+                            "falsification_tests": [
+                                "Validate symbol role via AST parsing in target language.",
+                                "Confirm usage in nearby code context.",
+                            ],
+                        }
                     ],
-                }],
-            },
-            "use": {
-                "what_it_does": "Decodes the symbol role for code understanding and documentation.",
-                "where_used": ["parser", "lexer", "syntax rules"],
-            },
-            "methodology": [
-                "MVP: regex tokenization + symbol classification.",
-                "Later: AST extraction + scope analysis + type inference."
-            ],
-            "trace": {
-                "batch_id": evidence["batch_id"],
-                "source_id": evidence["source"]["source_id"],
-            },
-        })
+                },
+                "use": {
+                    "what_it_does": "Decodes the symbol role for code understanding and documentation.",
+                    "where_used": ["parser", "lexer", "syntax rules"],
+                },
+                "methodology": [
+                    "MVP: regex tokenization + symbol classification.",
+                    "Later: AST extraction + scope analysis + type inference.",
+                ],
+                "trace": {
+                    "batch_id": evidence["batch_id"],
+                    "source_id": evidence["source"]["source_id"],
+                },
+            }
+        )
     return out

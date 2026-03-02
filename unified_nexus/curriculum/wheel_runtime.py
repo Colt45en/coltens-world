@@ -115,7 +115,7 @@ def mulberry32(seed: int) -> Callable[[], float]:
         t = a
         t = (t ^ (t >> 15)) * (t | 1) & 0xFFFFFFFF
         t ^= (t + ((t ^ (t >> 7)) * (t | 61) & 0xFFFFFFFF)) & 0xFFFFFFFF
-        t ^= (t >> 14)
+        t ^= t >> 14
         return (t & 0xFFFFFFFF) / 4294967296.0
 
     return rnd
@@ -142,10 +142,14 @@ def _pick_pool_items(plan: WheelPlan, state: WheelState, stop_id: str) -> List[s
     no_rep_k = pol["no_repeat_within_last_rotations"]
 
     stop = plan["stops"][stop_id]
-    rng = mulberry32(seed_base ^ fnv1a_32(f"{plan['wheel_id']}:{stop_id}:{state['rotation']}"))
+    rng = mulberry32(
+        seed_base ^ fnv1a_32(f"{plan['wheel_id']}:{stop_id}:{state['rotation']}")
+    )
 
     recent = state["recent_pool_picks"].get(stop_id, [])
-    blocked = {r["item"] for r in recent if (state["rotation"] - r["rotation"]) <= no_rep_k}
+    blocked = {
+        r["item"] for r in recent if (state["rotation"] - r["rotation"]) <= no_rep_k
+    }
 
     candidates = [x for x in stop["lesson_pool"] if x not in blocked]
     source = candidates if candidates else list(stop["lesson_pool"])
@@ -167,7 +171,9 @@ def _compile_points(plan: WheelPlan, state: WheelState, stop_id: str) -> List[st
     return _pick_pool_items(plan, state, stop_id)
 
 
-def _compile_prompt(plan: WheelPlan, state: WheelState, stop_id: str, points: List[str]) -> str:
+def _compile_prompt(
+    plan: WheelPlan, state: WheelState, stop_id: str, points: List[str]
+) -> str:
     """Build agent prompt payload for a stop"""
     stop = plan["stops"][stop_id]
     lines = [
@@ -207,18 +213,36 @@ class WheelRuntime:
 
     def _validate_plan(self) -> None:
         """Check plan invariants"""
-        _guardian_assert(self.plan["version"] == "wheel.plan.v1", "plan.version must be wheel.plan.v1")
-        _guardian_assert(self.plan["total_rotations"] >= 1, "total_rotations must be >= 1")
-        _guardian_assert(len(self.plan["stop_order"]) > 0, "stop_order must not be empty")
+        _guardian_assert(
+            self.plan["version"] == "wheel.plan.v1",
+            "plan.version must be wheel.plan.v1",
+        )
+        _guardian_assert(
+            self.plan["total_rotations"] >= 1, "total_rotations must be >= 1"
+        )
+        _guardian_assert(
+            len(self.plan["stop_order"]) > 0, "stop_order must not be empty"
+        )
         for sid in self.plan["stop_order"]:
-            _guardian_assert(sid in self.plan["stops"], f"stop_order references missing stop '{sid}'")
+            _guardian_assert(
+                sid in self.plan["stops"], f"stop_order references missing stop '{sid}'"
+            )
 
     def _validate_state(self) -> None:
         """Check state invariants"""
-        _guardian_assert(self.state["version"] == "wheel.state.v1", "state.version must be wheel.state.v1")
-        _guardian_assert(self.state["wheel_id"] == self.plan["wheel_id"], "state.wheel_id must match plan.wheel_id")
+        _guardian_assert(
+            self.state["version"] == "wheel.state.v1",
+            "state.version must be wheel.state.v1",
+        )
+        _guardian_assert(
+            self.state["wheel_id"] == self.plan["wheel_id"],
+            "state.wheel_id must match plan.wheel_id",
+        )
         _guardian_assert(self.state["rotation"] >= 1, "rotation must be >= 1")
-        _guardian_assert(0 <= self.state["stop_index"] < len(self.plan["stop_order"]), "stop_index out of range")
+        _guardian_assert(
+            0 <= self.state["stop_index"] < len(self.plan["stop_order"]),
+            "stop_index out of range",
+        )
 
     def _next_seq(self) -> int:
         """Increment and return next sequence number"""
@@ -236,7 +260,10 @@ class WheelRuntime:
             await self._emit_event(
                 event_type="brain.curriculum.completed",
                 ts_ms=ts_ms,
-                payload={"wheel_id": self.plan["wheel_id"], "trace_id": self.state["trace_id"]},
+                payload={
+                    "wheel_id": self.plan["wheel_id"],
+                    "trace_id": self.state["trace_id"],
+                },
             )
             return
 
@@ -291,7 +318,9 @@ class WheelRuntime:
             "args": cast(JsonValue, args),
         }
 
-        await self._emit_event(event_type="nucleus.tool_call", ts_ms=ts_ms, payload=payload)
+        await self._emit_event(
+            event_type="nucleus.tool_call", ts_ms=ts_ms, payload=payload
+        )
 
     async def on_command(self, cmd: V1CommandEnvelope) -> None:
         """
@@ -360,7 +389,9 @@ class WheelRuntime:
             self.state["stop_index"] = 0
             self.state["rotation"] += 1
 
-    async def _emit_event(self, *, event_type: str, ts_ms: int, payload: Dict[str, JsonValue]) -> None:
+    async def _emit_event(
+        self, *, event_type: str, ts_ms: int, payload: Dict[str, JsonValue]
+    ) -> None:
         """Emit a V1EventEnvelope"""
         env = make_v1_event(
             event_type=event_type,
@@ -371,10 +402,15 @@ class WheelRuntime:
         )
         await self.bus.emit_event_nucleus_only(env, caller="brain")
 
-    async def emit_command(self, *, command_type: str, ts_ms: int, payload: Dict[str, JsonValue]) -> None:
+    async def emit_command(
+        self, *, command_type: str, ts_ms: int, payload: Dict[str, JsonValue]
+    ) -> None:
         """Emit a V1CommandEnvelope"""
         env = make_v1_command(
-            command_type=command_type, ts_ms=ts_ms, trace_id=self.state["trace_id"], payload=payload
+            command_type=command_type,
+            ts_ms=ts_ms,
+            trace_id=self.state["trace_id"],
+            payload=payload,
         )
         await self.bus.send_command(env)
 

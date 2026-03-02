@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 EnvelopeV = Literal["1.0"]
 
+
 class Envelope(BaseModel):
     v: EnvelopeV = "1.0"
     id: str
@@ -15,15 +16,18 @@ class Envelope(BaseModel):
     kind: str
     payload: Dict[str, Any]
 
+
 class ChatRequestPayload(BaseModel):
     convoId: str
     userId: str
     persona: str
     text: str
 
+
 class ToolCall(BaseModel):
     name: str
     args: Dict[str, Any] = Field(default_factory=dict)
+
 
 class ChatResponsePayload(BaseModel):
     convoId: str
@@ -31,11 +35,13 @@ class ChatResponsePayload(BaseModel):
     evidence: Optional[Dict[str, Any]] = None
     toolCalls: List[ToolCall] = Field(default_factory=list)
 
+
 # Tool server request
 class ToolExecuteRequest(BaseModel):
     action: Dict[str, Any]
     trace_id: str
     session_id: str
+
 
 class ToolExecuteResponse(BaseModel):
     success: bool

@@ -24,9 +24,11 @@ from packages.core.contracts import Observation
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class BusEnvelope:
     """Bus envelope format for nucleus communication"""
+
     v: str = "1.0"
     id: str = ""
     ts: str = ""
@@ -34,6 +36,7 @@ class BusEnvelope:
     source: str = "agent-suite"
     kind: str = ""
     payload: Dict[str, Any] = field(default_factory=dict)
+
 
 class NucleusClient:
     """WebSocket client for communicating with Nucleus"""
@@ -45,7 +48,9 @@ class NucleusClient:
         self.welcomed = False
         self.session_id = ""
         self.token = ""
-        self.message_handlers: Dict[str, Callable[[Dict[str, Any], str], Awaitable[None]]] = {}
+        self.message_handlers: Dict[
+            str, Callable[[Dict[str, Any], str], Awaitable[None]]
+        ] = {}
 
     async def connect(self) -> None:
         """Connect to nucleus WebSocket hub"""
@@ -73,15 +78,19 @@ class NucleusClient:
     async def _send_handshake(self) -> None:
         """Send initial handshake to establish role"""
         import uuid
+
         handshake = {
             "v": 2,
             "id": f"hello-{uuid.uuid4().hex[:8]}",
             "type": "system.hello",
             "ts": int(time.time() * 1000),
-            "from": {"role": "preview", "instanceId": f"agent-suite-{uuid.uuid4().hex[:8]}"},
+            "from": {
+                "role": "preview",
+                "instanceId": f"agent-suite-{uuid.uuid4().hex[:8]}",
+            },
             "sessionId": "pending",  # Will be assigned by server
             "client_seq": 1,
-            "payload": {"requestedRole": "preview"}
+            "payload": {"requestedRole": "preview"},
         }
         await self.websocket.send(json.dumps(handshake))
         logger.info("Sent handshake to nucleus")
@@ -101,7 +110,11 @@ class NucleusClient:
             self.connected = False
             logger.info("Disconnected from nucleus")
 
-    def register_handler(self, message_type: str, handler: Callable[[Dict[str, Any], str], Awaitable[None]]) -> None:
+    def register_handler(
+        self,
+        message_type: str,
+        handler: Callable[[Dict[str, Any], str], Awaitable[None]],
+    ) -> None:
         """Register a handler for a specific message type"""
         self.message_handlers[message_type] = handler
 
@@ -117,6 +130,7 @@ class NucleusClient:
         # Generate ID if not provided
         if not envelope.id:
             import uuid
+
             envelope.id = f"env-{uuid.uuid4().hex[:8]}"
 
         message = {
@@ -127,7 +141,7 @@ class NucleusClient:
             "from": {"role": "preview", "instanceId": f"agent-suite-{id(self)}"},
             "sessionId": self.session_id,
             "auth": {"kind": "session", "token": self.token},
-            "payload": envelope.payload
+            "payload": envelope.payload,
         }
 
         await self.websocket.send(json.dumps(message))
@@ -167,7 +181,9 @@ class NucleusClient:
         except Exception as e:
             logger.error(f"Error processing message: {e}")
 
-    async def _handle_tool_execute(self, payload: Dict[str, Any], trace_id: str) -> None:
+    async def _handle_tool_execute(
+        self, payload: Dict[str, Any], trace_id: str
+    ) -> None:
         """Handle tool execution request from nucleus"""
         action_data: Dict[str, Any] = {}
         try:
@@ -181,11 +197,7 @@ class NucleusClient:
             response = BusEnvelope(
                 traceId=trace_id,
                 kind="tool.result",
-                payload={
-                    "action": action_data,
-                    "result": result,
-                    "success": True
-                }
+                payload={"action": action_data, "result": result, "success": True},
             )
             await self.send_message(response)
 
@@ -195,15 +207,13 @@ class NucleusClient:
             response = BusEnvelope(
                 traceId=trace_id,
                 kind="tool.result",
-                payload={
-                    "action": action_data,
-                    "error": str(e),
-                    "success": False
-                }
+                payload={"action": action_data, "error": str(e), "success": False},
             )
             await self.send_message(response)
 
-    async def _handle_observe_request(self, _payload: Dict[str, Any], trace_id: str) -> None:
+    async def _handle_observe_request(
+        self, _payload: Dict[str, Any], trace_id: str
+    ) -> None:
         """Handle observation request from nucleus"""
         try:
             observation = await self._get_observation()
@@ -211,9 +221,7 @@ class NucleusClient:
             response = BusEnvelope(
                 traceId=trace_id,
                 kind="agent.observation",
-                payload={
-                    "observation": observation.__dict__ if observation else None
-                }
+                payload={"observation": observation.__dict__ if observation else None},
             )
             await self.send_message(response)
 
@@ -230,6 +238,7 @@ class NucleusClient:
         if action.kind in ["click", "type", "press"]:
             # Use desktop driver
             from packages.drivers.desktop_windows_uia.driver import DesktopDriver
+
             driver = DesktopDriver()
             result = await driver.execute_action(action)
         elif action.kind in ["launch", "focus"]:
@@ -244,19 +253,24 @@ class NucleusClient:
         """Get current observation from the environment"""
         # This should be implemented to use the appropriate observation driver
         from packages.drivers.desktop_windows_uia.driver import DesktopDriver
+
         driver = DesktopDriver()
         return await driver.get_observation()
 
+
 # Global client instance
 nucleus_client = NucleusClient()
+
 
 async def start_nucleus_client() -> None:
     """Start the nucleus client connection"""
     await nucleus_client.connect()
 
+
 async def stop_nucleus_client() -> None:
     """Stop the nucleus client connection"""
     await nucleus_client.disconnect()
+
 
 if __name__ == "__main__":
     # Test the client

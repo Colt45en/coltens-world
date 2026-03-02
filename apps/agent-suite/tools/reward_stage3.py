@@ -7,12 +7,16 @@ from tools._common import ensure_agent_suite_on_path, iter_jsonl, write_jsonl
 
 ensure_agent_suite_on_path()
 
-from packages.core import compute_reward
+from packages.core import compute_reward  # noqa: E402
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", required=True, help="Stage III samples JSONL (must include pred_action)")
+    ap.add_argument(
+        "--input",
+        required=True,
+        help="Stage III samples JSONL (must include pred_action)",
+    )
     ap.add_argument("--out", required=True, help="Output rewards JSONL")
     args = ap.parse_args()
 
@@ -29,13 +33,17 @@ def main() -> None:
         total += 1
         counts[int(r["reward"])] += 1
 
-    out.append({
-        "summary": {
-            "total": total,
-            "counts": counts,
-            "rates": {str(k): (counts[k] / total) if total else 0.0 for k in counts},
+    out.append(
+        {
+            "summary": {
+                "total": total,
+                "counts": counts,
+                "rates": {
+                    str(k): (counts[k] / total) if total else 0.0 for k in counts
+                },
+            }
         }
-    })
+    )
 
     write_jsonl(args.out, out)
 

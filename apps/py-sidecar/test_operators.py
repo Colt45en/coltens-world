@@ -20,9 +20,9 @@ from operators import (
 
 async def test_patch_operator():
     """Test prompt.operator.patch"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("TEST 1: Patch Operator (Code Generation)")
-    print("="*70)
+    print("=" * 70)
 
     registry = get_registry()
 
@@ -32,7 +32,7 @@ async def test_patch_operator():
         print(f"⚠️  Example payload not found: {payload_path}")
         return
 
-    with open(payload_path, 'r') as f:
+    with open(payload_path, "r") as f:
         payload = json.load(f)
 
     print(f"📋 Payload: file_path={payload['file_path']}")
@@ -62,9 +62,9 @@ async def test_patch_operator():
 
 async def test_simulate_world_tick_operator():
     """Test prompt.operator.simulate_world_tick"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("TEST 2: Simulate World Tick Operator")
-    print("="*70)
+    print("=" * 70)
 
     registry = get_registry()
 
@@ -74,10 +74,12 @@ async def test_simulate_world_tick_operator():
         print(f"⚠️  Example payload not found: {payload_path}")
         return
 
-    with open(payload_path, 'r') as f:
+    with open(payload_path, "r") as f:
         payload = json.load(f)
 
-    print(f"📋 Payload: tick_number={payload['tick_number']}, entities={len(payload['world_state']['entities'])}")
+    print(
+        f"📋 Payload: tick_number={payload['tick_number']}, entities={len(payload['world_state']['entities'])}"
+    )
     print(f"   Instruction: {payload['instruction'][:60]}...")
 
     response = await registry.execute(
@@ -96,7 +98,9 @@ async def test_simulate_world_tick_operator():
         deltas = response.result.get("entity_deltas", [])
         print(f"✅ Generated {len(deltas)} entity deltas")
         for delta in deltas[:2]:  # Show first 2
-            print(f"   - {delta.get('entity_id')}: dx={delta.get('dx'):.3f}, dy={delta.get('dy'):.3f}")
+            print(
+                f"   - {delta.get('entity_id')}: dx={delta.get('dx'):.3f}, dy={delta.get('dy'):.3f}"
+            )
 
         if response.deterministic_hash:
             print(f"\n🔐 Hash: {response.deterministic_hash[:16]}...")
@@ -106,9 +110,9 @@ async def test_simulate_world_tick_operator():
 
 def test_list_operators():
     """Test listing operators"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("TEST 0: List Operators")
-    print("="*70)
+    print("=" * 70)
 
     registry = get_registry()
     operators = registry.list_operators()
@@ -120,9 +124,9 @@ def test_list_operators():
 
 def test_validate_request():
     """Test request validation"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("TEST 1b: Validate Request")
-    print("="*70)
+    print("=" * 70)
 
     registry = get_registry()
 
@@ -147,9 +151,9 @@ def test_validate_request():
 
 def test_execution_logs():
     """Test accessing execution logs"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("TEST 3: Execution Logs")
-    print("="*70)
+    print("=" * 70)
 
     registry = get_registry()
 
@@ -159,14 +163,16 @@ def test_execution_logs():
         recent = registry.execution_log[-3:]
         print(f"📜 Recent executions (last {len(recent)}):")
         for log in recent:
-            print(f"   - {log['operator_name']}: {log['status']} ({log['execution_time_ms']}ms)")
+            print(
+                f"   - {log['operator_name']}: {log['status']} ({log['execution_time_ms']}ms)"
+            )
 
 
 async def main():
     """Run all tests"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("BRAIN OPERATOR SYSTEM - INTEGRATION TEST")
-    print("="*70)
+    print("=" * 70)
 
     # Test listing
     test_list_operators()
@@ -183,9 +189,9 @@ async def main():
     # Test logs
     test_execution_logs()
 
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("✅ INTEGRATION TEST COMPLETE")
-    print("="*70)
+    print("=" * 70)
 
 
 if __name__ == "__main__":

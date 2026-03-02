@@ -1,6 +1,12 @@
 import { z } from "zod";
-import { SourceRecordSchema } from "./sourceRecord";
-import { CanonicalIdSchema, LcidSchema, SemverSchema, Sha256HexSchema, StyleSpecSchema } from "./styleSpec";
+import { SourceRecordSchema } from "./sourceRecord.js";
+import {
+  CanonicalIdSchema,
+  LcidSchema,
+  SemverSchema,
+  Sha256HexSchema,
+  StyleSpecSchema,
+} from "./styleSpec.js";
 
 /** Common envelope used by Nucleus tool-call lane */
 export const ToolNameSchema = z.enum([

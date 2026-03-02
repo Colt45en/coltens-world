@@ -7,8 +7,8 @@ from tools._common import ensure_agent_suite_on_path, iter_jsonl, write_jsonl
 
 ensure_agent_suite_on_path()
 
-from packages.core.model_actions import AgentAction
-from packages.core import stage2_metrics
+from packages.core import stage2_metrics  # noqa: E402
+from packages.core.model_actions import AgentAction  # noqa: E402
 
 
 def _parse_action_maybe(obj: Any) -> Optional[AgentAction]:
@@ -26,17 +26,29 @@ def _parse_action_maybe(obj: Any) -> Optional[AgentAction]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", required=True, help="Stage II episodes JSONL (must include gold_action)")
-    ap.add_argument("--pred", required=False, help="Predictions JSONL (line-aligned). If omitted, assumes input contains pred_action.")
+    ap.add_argument(
+        "--input",
+        required=True,
+        help="Stage II episodes JSONL (must include gold_action)",
+    )
+    ap.add_argument(
+        "--pred",
+        required=False,
+        help="Predictions JSONL (line-aligned). If omitted, assumes input contains pred_action.",
+    )
     ap.add_argument("--out", required=True, help="Output metrics JSONL")
-    ap.add_argument("--point-tol", type=int, default=25, help="Fuzzy POINT tolerance in norm units")
+    ap.add_argument(
+        "--point-tol", type=int, default=25, help="Fuzzy POINT tolerance in norm units"
+    )
     args = ap.parse_args()
 
     episodes = list(iter_jsonl(args.input))
     preds = list(iter_jsonl(args.pred)) if args.pred else episodes
 
     if len(preds) < len(episodes):
-        raise SystemExit(f"pred has {len(preds)} lines but input has {len(episodes)} episodes")
+        raise SystemExit(
+            f"pred has {len(preds)} lines but input has {len(episodes)} episodes"
+        )
 
     reports: List[Dict[str, Any]] = []
 
@@ -55,7 +67,9 @@ def main() -> None:
         if gold is None:
             raise SystemExit(f"Invalid gold_action schema on line {i} of --input")
 
-        pred_obj = preds[i].get("pred_action", preds[i].get("pred", preds[i].get("action")))
+        pred_obj = preds[i].get(
+            "pred_action", preds[i].get("pred", preds[i].get("action"))
+        )
         pred = _parse_action_maybe(pred_obj) if pred_obj is not None else None
 
         m = stage2_metrics(gold, pred, point_tol=args.point_tol)
@@ -75,15 +89,19 @@ def main() -> None:
             if per.get(k):
                 field_hits[k] += 1
 
-    reports.append({
-        "summary": {
-            "total": total,
-            "format_valid_rate": (valid / total) if total else 0.0,
-            "strict_match_rate": (strict / total) if total else 0.0,
-            "fuzzy_match_rate": (fuzzy / total) if total else 0.0,
-            "per_field_accuracy": {k: (field_hits[k] / total) if total else 0.0 for k in field_hits},
+    reports.append(
+        {
+            "summary": {
+                "total": total,
+                "format_valid_rate": (valid / total) if total else 0.0,
+                "strict_match_rate": (strict / total) if total else 0.0,
+                "fuzzy_match_rate": (fuzzy / total) if total else 0.0,
+                "per_field_accuracy": {
+                    k: (field_hits[k] / total) if total else 0.0 for k in field_hits
+                },
+            }
         }
-    })
+    )
 
     write_jsonl(args.out, reports)
 

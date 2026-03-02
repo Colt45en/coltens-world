@@ -4,13 +4,18 @@ import re
 from typing import Any, Dict, List, Literal, Optional, Tuple
 
 from pydantic import BaseModel, Field
-
 from utils import clamp01, content_hash_for, stable_id
 
-
 ProcessTag = Literal[
-    "define", "call", "import", "export", "assign", "type_decl",
-    "control_flow", "literal", "unknown"
+    "define",
+    "call",
+    "import",
+    "export",
+    "assign",
+    "type_decl",
+    "control_flow",
+    "literal",
+    "unknown",
 ]
 
 
@@ -50,8 +55,53 @@ class RuneDecoderRow(BaseModel):
     evidence_links: List[str] = Field(default_factory=list)
 
 
-_PREFIXES = ["un", "re", "pre", "post", "anti", "de", "dis", "mis", "non", "over", "under", "sub", "super", "inter", "intra", "trans", "auto", "semi", "multi", "poly", "micro", "macro"]
-_SUFFIXES = ["ing", "ed", "er", "or", "ion", "tion", "sion", "ment", "ness", "ity", "able", "ible", "al", "ial", "ous", "ive", "ize", "ise", "ship", "less", "ful"]
+_PREFIXES = [
+    "un",
+    "re",
+    "pre",
+    "post",
+    "anti",
+    "de",
+    "dis",
+    "mis",
+    "non",
+    "over",
+    "under",
+    "sub",
+    "super",
+    "inter",
+    "intra",
+    "trans",
+    "auto",
+    "semi",
+    "multi",
+    "poly",
+    "micro",
+    "macro",
+]
+_SUFFIXES = [
+    "ing",
+    "ed",
+    "er",
+    "or",
+    "ion",
+    "tion",
+    "sion",
+    "ment",
+    "ness",
+    "ity",
+    "able",
+    "ible",
+    "al",
+    "ial",
+    "ous",
+    "ive",
+    "ize",
+    "ise",
+    "ship",
+    "less",
+    "ful",
+]
 
 # Common TS/React patterns for rune decoding
 _RE_IMPORT = re.compile(r"^\s*import\s+.*\s+from\s+['\"].+['\"];?\s*$")
@@ -76,7 +126,7 @@ def _morphology(term: str) -> Morphology:
             break
     if pref:
         aff.append(pref + "-")
-        t = t[len(pref):]
+        t = t[len(pref) :]
 
     # suffix peel (longest-first)
     suf = ""
@@ -89,7 +139,18 @@ def _morphology(term: str) -> Morphology:
         t = t[: -len(suf)]
 
     pos = "identifier"
-    if term in {"async", "await", "import", "export", "return", "type", "interface", "class", "const", "let"}:
+    if term in {
+        "async",
+        "await",
+        "import",
+        "export",
+        "return",
+        "type",
+        "interface",
+        "class",
+        "const",
+        "let",
+    }:
         pos = "keyword"
 
     return Morphology(root=t, affixes=aff, pos=pos)
@@ -98,7 +159,14 @@ def _morphology(term: str) -> Morphology:
 def _namespace_for(term: str, language: str) -> str:
     # Simple deterministic routing for MVP
     if language.lower() in ("typescript", "javascript", "ts", "js"):
-        if term.lower() in {"useeffect", "usestate", "usememo", "usecallback", "useref", "uselayouteffect"}:
+        if term.lower() in {
+            "useeffect",
+            "usestate",
+            "usememo",
+            "usecallback",
+            "useref",
+            "uselayouteffect",
+        }:
             return "react"
         if term.lower() in {"three", "mesh", "scene", "camera", "vector3"}:
             return "graphics"
@@ -127,7 +195,10 @@ def _classify_process_tag(line: str) -> Tuple[ProcessTag, float, Optional[str]]:
         return "define", 0.88, f"const {m.group(1)} = ("
 
     # control flow
-    if any(s.startswith(k) for k in ("if ", "for ", "while ", "switch ", "try", "catch", "return ")):
+    if any(
+        s.startswith(k)
+        for k in ("if ", "for ", "while ", "switch ", "try", "catch", "return ")
+    ):
         return "control_flow", 0.85, "control keyword"
 
     # assignment
@@ -201,21 +272,25 @@ def run_transform(*, packet: Dict[str, Any], source_text: str) -> Dict[str, Any]
 
         evidence = [f"{source_file}:L{i}"]
         content_key = f"{language}|{namespace}|{symbol}|{evidence[0]}"
-        rune_rows.append({
-            "rune_id": stable_id("rune", content_key, length=10),
-            "symbol": symbol,
-            "language": language,
-            "namespace": namespace,
-            "process_tag": tag,
-            "tag_confidence": clamp01(tag_conf),
-            "meaning": meaning,
-            "methodologies": methodologies,
-            "evidence_links": evidence,
-        })
+        rune_rows.append(
+            {
+                "rune_id": stable_id("rune", content_key, length=10),
+                "symbol": symbol,
+                "language": language,
+                "namespace": namespace,
+                "process_tag": tag,
+                "tag_confidence": clamp01(tag_conf),
+                "meaning": meaning,
+                "methodologies": methodologies,
+                "evidence_links": evidence,
+            }
+        )
 
     # Lexicon entries from tokens + claims
     # Use the token list, only word tokens, deterministic unique
-    word_tokens = sorted({t["token"] for t in packet["tokens"] if t["token_type"] == "word"})
+    word_tokens = sorted(
+        {t["token"] for t in packet["tokens"] if t["token_type"] == "word"}
+    )
     lex_entries: List[Dict[str, Any]] = []
 
     # Build a small evidence map from packet meaning claims
@@ -233,41 +308,58 @@ def run_transform(*, packet: Dict[str, Any], source_text: str) -> Dict[str, Any]
         lenses: List[Dict[str, Any]] = []
         # If we have a direct claim, use it as a strong lens
         if term in claim_map:
-            for c in sorted(claim_map[term], key=lambda x: (x["confidence"], x["claim"]), reverse=True):
-                lenses.append({
-                    "lens_name": "linguistic",
-                    "meaning": c["claim"],
-                    "confidence": clamp01(float(c["confidence"])),
-                    "evidence_links": [c["source_ref"]],
-                })
+            for c in sorted(
+                claim_map[term],
+                key=lambda x: (x["confidence"], x["claim"]),
+                reverse=True,
+            ):
+                lenses.append(
+                    {
+                        "lens_name": "linguistic",
+                        "meaning": c["claim"],
+                        "confidence": clamp01(float(c["confidence"])),
+                        "evidence_links": [c["source_ref"]],
+                    }
+                )
         else:
             # generic lens
-            lenses.append({
-                "lens_name": "code_symbol",
-                "meaning": f"Identifier '{term}' appears in source and may represent a symbol",
-                "confidence": 0.7,
-                "evidence_links": [source_file],
-            })
+            lenses.append(
+                {
+                    "lens_name": "code_symbol",
+                    "meaning": f"Identifier '{term}' appears in source and may represent a symbol",
+                    "confidence": 0.7,
+                    "evidence_links": [source_file],
+                }
+            )
 
-        overall = min(l["confidence"] for l in lenses) if lenses else 0.0
+        overall = min(lens["confidence"] for lens in lenses) if lenses else 0.0
         review_required = overall < 0.8
 
-        content_key = f"{language}|{namespace}|{term}|{morph.root}|{','.join(morph.affixes)}"
-        lex_entries.append({
-            "entry_id": stable_id("lex", content_key, length=10),
-            "term": term,
-            "language": language,
-            "namespace": namespace,
-            "morphology": morph.model_dump(),
-            "semantic_lenses": lenses,
-            "overall_confidence": clamp01(float(overall)),
-            "review_required": bool(review_required),
-        })
+        content_key = (
+            f"{language}|{namespace}|{term}|{morph.root}|{','.join(morph.affixes)}"
+        )
+        lex_entries.append(
+            {
+                "entry_id": stable_id("lex", content_key, length=10),
+                "term": term,
+                "language": language,
+                "namespace": namespace,
+                "morphology": morph.model_dump(),
+                "semantic_lenses": lenses,
+                "overall_confidence": clamp01(float(overall)),
+                "review_required": bool(review_required),
+            }
+        )
 
     out = {
         "batch_id": packet["batch_id"],
-        "lexicon_entries": sorted(lex_entries, key=lambda x: (x["language"], x["namespace"], x["term"])),
-        "rune_rows": sorted(rune_rows, key=lambda x: (x["language"], x["namespace"], x["symbol"], x["rune_id"])),
+        "lexicon_entries": sorted(
+            lex_entries, key=lambda x: (x["language"], x["namespace"], x["term"])
+        ),
+        "rune_rows": sorted(
+            rune_rows,
+            key=lambda x: (x["language"], x["namespace"], x["symbol"], x["rune_id"]),
+        ),
     }
 
     # Validate shapes

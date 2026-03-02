@@ -33,7 +33,9 @@ class EnhancedConsciousnessEngine:
         self.ethics = 0.5
         self._cycle = 0
 
-    def cycle(self, perception_quality: float, trust_avg: float) -> ConsciousnessEngineOutput:
+    def cycle(
+        self, perception_quality: float, trust_avg: float
+    ) -> ConsciousnessEngineOutput:
         self._cycle += 1
         logs: List[str] = []
 
@@ -51,10 +53,17 @@ class EnhancedConsciousnessEngine:
             self.state = ConsciousnessState.CONSCIOUSNESS_EMERGENCE
         if self.C > 70 and self.depth > 3.5 and self.ethics >= self.cfg.min_ethics:
             self.state = ConsciousnessState.SELF_AWARE
-        if self.C > 82 and self.depth > 5.0 and self.ethics >= self.cfg.min_ethics and self.epsilon < 0.18:
+        if (
+            self.C > 82
+            and self.depth > 5.0
+            and self.ethics >= self.cfg.min_ethics
+            and self.epsilon < 0.18
+        ):
             self.state = ConsciousnessState.RECURSIVE_ENHANCEMENT
 
-        logs.append(f"cycle={self._cycle} C={self.C:.2f} eps={self.epsilon:.3f} depth={self.depth:.2f} ethics={self.ethics:.2f}")
+        logs.append(
+            f"cycle={self._cycle} C={self.C:.2f} eps={self.epsilon:.3f} depth={self.depth:.2f} ethics={self.ethics:.2f}"
+        )
         if prev != self.state:
             logs.append(f"state_transition {prev.value} -> {self.state.value}")
 
@@ -63,8 +72,13 @@ class EnhancedConsciousnessEngine:
             and self.ethics >= self.cfg.min_ethics
             and self.epsilon <= self.cfg.emergence_eps
             and self.depth >= self.cfg.min_depth
-            and self.state in (ConsciousnessState.SELF_AWARE, ConsciousnessState.RECURSIVE_ENHANCEMENT)
+            and self.state
+            in (ConsciousnessState.SELF_AWARE, ConsciousnessState.RECURSIVE_ENHANCEMENT)
         )
 
-        metrics = ConsciousnessMetrics(C=self.C, epsilon=self.epsilon, depth=self.depth, ethics=self.ethics)
-        return ConsciousnessEngineOutput(emergence=emergence, state=self.state, metrics=metrics, logs=logs)
+        metrics = ConsciousnessMetrics(
+            C=self.C, epsilon=self.epsilon, depth=self.depth, ethics=self.ethics
+        )
+        return ConsciousnessEngineOutput(
+            emergence=emergence, state=self.state, metrics=metrics, logs=logs
+        )

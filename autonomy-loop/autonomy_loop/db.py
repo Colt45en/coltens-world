@@ -82,10 +82,12 @@ def migrate(con: sqlite3.Connection) -> None:
     con.commit()
 
 
-def insert_batch(con: sqlite3.Connection,
-                 evidence: dict[str, Any],
-                 validated_plan: dict[str, Any],
-                 decision_record: dict[str, Any]) -> None:
+def insert_batch(
+    con: sqlite3.Connection,
+    evidence: dict[str, Any],
+    validated_plan: dict[str, Any],
+    decision_record: dict[str, Any],
+) -> None:
     """Insert batch and all artifacts in one transaction."""
     con.execute(
         "INSERT OR REPLACE INTO batches"
@@ -96,17 +98,33 @@ def insert_batch(con: sqlite3.Connection,
             evidence["created_at"],
             evidence["source"]["source_id"],
             evidence["source"]["kind"],
-            json.dumps(evidence, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
-            json.dumps(validated_plan, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
-            json.dumps(decision_record, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
-        )
+            json.dumps(
+                evidence, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ),
+            json.dumps(
+                validated_plan,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ),
+            json.dumps(
+                decision_record,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ),
+        ),
     )
     con.commit()
+
 
 def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
-def seed_taxonomy_process_tags(con: sqlite3.Connection, tags: list[tuple[str, str]]) -> None:
+
+def seed_taxonomy_process_tags(
+    con: sqlite3.Connection, tags: list[tuple[str, str]]
+) -> None:
     """
     Ensure the controlled vocabulary exists in DB (idempotent).
     tags: [(tag, description)]
@@ -118,11 +136,16 @@ def seed_taxonomy_process_tags(con: sqlite3.Connection, tags: list[tuple[str, st
     )
     con.commit()
 
+
 def is_process_tag_allowed(con: sqlite3.Connection, tag: str) -> bool:
     if tag == "unknown_tag":
         return True
-    cur = con.execute("SELECT 1 FROM taxonomy_process_tags WHERE tag = ? AND active = 1 LIMIT 1", (tag,))
+    cur = con.execute(
+        "SELECT 1 FROM taxonomy_process_tags WHERE tag = ? AND active = 1 LIMIT 1",
+        (tag,),
+    )
     return cur.fetchone() is not None
+
 
 def insert_review_item(
     con: sqlite3.Connection,

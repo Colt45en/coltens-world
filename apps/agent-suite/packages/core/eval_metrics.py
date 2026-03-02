@@ -52,7 +52,9 @@ def step_metrics(
             if act.POINT is None:
                 pib = False
             else:
-                pib = point_in_norm_bbox((act.POINT[0], act.POINT[1]), gold_bbox_px, screen)
+                pib = point_in_norm_bbox(
+                    (act.POINT[0], act.POINT[1]), gold_bbox_px, screen
+                )
         except Exception:
             pib = False
 

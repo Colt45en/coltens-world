@@ -6,7 +6,14 @@ from typing import Any, Dict, Literal
 from utils import content_hash_for, stable_id, utc_now_iso
 
 
-NarrativeMode = Literal["slice_of_life", "rising_action", "conflict", "climax", "falling_action", "resolution"]
+NarrativeMode = Literal[
+    "slice_of_life",
+    "rising_action",
+    "conflict",
+    "climax",
+    "falling_action",
+    "resolution",
+]
 
 
 def make_decision_record(plan: Dict[str, Any]) -> Dict[str, Any]:
@@ -19,14 +26,18 @@ def make_decision_record(plan: Dict[str, Any]) -> Dict[str, Any]:
         approved = True
     elif status == "warning":
         choice = "APPROVED_WITH_WARNINGS"
-        rationale = "Critical gates passed but warnings present; review queue may be growing."
+        rationale = (
+            "Critical gates passed but warnings present; review queue may be growing."
+        )
         approved = True
     else:
         choice = "BLOCKED"
         rationale = "One or more critical gates failed; batch is not safe to persist as baseline."
         approved = False
 
-    decision_id = stable_id("DECIDE", f"{batch_id}|{choice}|{plan['content_hash']}", length=14)
+    decision_id = stable_id(
+        "DECIDE", f"{batch_id}|{choice}|{plan['content_hash']}", length=14
+    )
 
     out = {
         "batch_id": batch_id,
@@ -63,7 +74,7 @@ def make_weekly_ops_report(
 
     # Proxy metrics for health
     # - review ratio indicates confidence issues
-    review_ratio = (review_count / max(1, lex_count))
+    review_ratio = review_count / max(1, lex_count)
     # health score: 1.0 is best, degrade as review ratio rises
     health_score = max(0.0, 1.0 - min(1.0, review_ratio * 2.0))
 
@@ -94,11 +105,36 @@ def make_weekly_ops_report(
         "narrative_mode": narrative_mode,
         "what_changed": what_changed,
         "metrics": [
-            {"metric_name": "lexicon_entry_count", "current_value": lex_count, "trend": "stable", "status": status},
-            {"metric_name": "rune_row_count", "current_value": rune_count, "trend": "stable", "status": status},
-            {"metric_name": "review_queue_count", "current_value": review_count, "trend": "unknown", "status": status},
-            {"metric_name": "review_ratio", "current_value": round(review_ratio, 4), "trend": "unknown", "status": status},
-            {"metric_name": "health_score", "current_value": round(health_score, 4), "trend": "unknown", "status": status},
+            {
+                "metric_name": "lexicon_entry_count",
+                "current_value": lex_count,
+                "trend": "stable",
+                "status": status,
+            },
+            {
+                "metric_name": "rune_row_count",
+                "current_value": rune_count,
+                "trend": "stable",
+                "status": status,
+            },
+            {
+                "metric_name": "review_queue_count",
+                "current_value": review_count,
+                "trend": "unknown",
+                "status": status,
+            },
+            {
+                "metric_name": "review_ratio",
+                "current_value": round(review_ratio, 4),
+                "trend": "unknown",
+                "status": status,
+            },
+            {
+                "metric_name": "health_score",
+                "current_value": round(health_score, 4),
+                "trend": "unknown",
+                "status": status,
+            },
         ],
         "unknowns": [],
         "health_score": round(health_score, 4),

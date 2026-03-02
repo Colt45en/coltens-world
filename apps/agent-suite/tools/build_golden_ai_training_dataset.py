@@ -36,14 +36,55 @@ SPEC: dict[str, Any] = {
         "Govern: safety, privacy, security, compliance",
     ],
     "knowledge_map": {
-        "math_spine": ["linear_algebra", "calculus_gradients", "probability_bayes", "optimization_sgd_adam", "information_theory_kl_entropy"],
-        "ml_core": ["bias_variance", "regularization", "train_val_test_leakage", "metrics_and_calibration"],
-        "deep_learning": ["backprop", "normalization", "cnn_rnn_attention", "stability_init_clipping_amp"],
-        "llms": ["tokenization_bpe", "transformers_attention", "pretrain_vs_finetune", "sft_dpo_rlhf_concepts"],
-        "data_engineering": ["labeling_strategy", "dedupe_filtering", "dataset_versioning", "sampling"],
-        "evaluation_reliability": ["stress_tests", "ood_thinking", "human_eval_rubrics", "error_analysis"],
-        "mlops_production": ["experiment_tracking", "model_registry", "deployment_canary", "monitoring_drift_cost_latency"],
-        "safety_security": ["privacy_pii", "prompt_injection_if_agents", "bias_audits", "governance"],
+        "math_spine": [
+            "linear_algebra",
+            "calculus_gradients",
+            "probability_bayes",
+            "optimization_sgd_adam",
+            "information_theory_kl_entropy",
+        ],
+        "ml_core": [
+            "bias_variance",
+            "regularization",
+            "train_val_test_leakage",
+            "metrics_and_calibration",
+        ],
+        "deep_learning": [
+            "backprop",
+            "normalization",
+            "cnn_rnn_attention",
+            "stability_init_clipping_amp",
+        ],
+        "llms": [
+            "tokenization_bpe",
+            "transformers_attention",
+            "pretrain_vs_finetune",
+            "sft_dpo_rlhf_concepts",
+        ],
+        "data_engineering": [
+            "labeling_strategy",
+            "dedupe_filtering",
+            "dataset_versioning",
+            "sampling",
+        ],
+        "evaluation_reliability": [
+            "stress_tests",
+            "ood_thinking",
+            "human_eval_rubrics",
+            "error_analysis",
+        ],
+        "mlops_production": [
+            "experiment_tracking",
+            "model_registry",
+            "deployment_canary",
+            "monitoring_drift_cost_latency",
+        ],
+        "safety_security": [
+            "privacy_pii",
+            "prompt_injection_if_agents",
+            "bias_audits",
+            "governance",
+        ],
     },
     "gating_checklist": {
         "gate_1_baseline": [
@@ -76,17 +117,32 @@ SPEC: dict[str, Any] = {
         {
             "name": "From-Scratch ML (No Frameworks)",
             "goal": "Implement logistic regression + MLP with backprop, train on a small dataset, and prove correctness with gradient checks.",
-            "deliverables": ["gradient_check_report", "training_curves", "ablation_notes", "reproducible_run_script"],
+            "deliverables": [
+                "gradient_check_report",
+                "training_curves",
+                "ablation_notes",
+                "reproducible_run_script",
+            ],
         },
         {
             "name": "Mini-Transformer Language Model",
             "goal": "Train a small decoder-only transformer on a tiny corpus; evaluate perplexity; run failure analysis on generations.",
-            "deliverables": ["tokenizer_spec", "model_config", "perplexity_eval", "generation_failure_catalog"],
+            "deliverables": [
+                "tokenizer_spec",
+                "model_config",
+                "perplexity_eval",
+                "generation_failure_catalog",
+            ],
         },
         {
             "name": "Preference Tuning Toy (DPO-style)",
             "goal": "Create synthetic preference pairs; train a small model to prefer better outputs; evaluate win-rate vs baseline.",
-            "deliverables": ["pair_generation_script", "training_logs", "win_rate_eval", "safety_constraints_notes"],
+            "deliverables": [
+                "pair_generation_script",
+                "training_logs",
+                "win_rate_eval",
+                "safety_constraints_notes",
+            ],
         },
     ],
     "mastery_quiz": {
@@ -95,73 +151,133 @@ SPEC: dict[str, Any] = {
             {
                 "question_number": 1,
                 "question_text": "What is the single most important reason to lock train/val/test splits early?",
-                "options": {"a": "To make training faster", "b": "To prevent data leakage and maintain comparable evaluations", "c": "To reduce model size", "d": "To improve GPU utilization"},
+                "options": {
+                    "a": "To make training faster",
+                    "b": "To prevent data leakage and maintain comparable evaluations",
+                    "c": "To reduce model size",
+                    "d": "To improve GPU utilization",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 2,
                 "question_text": "Which metric best captures probabilistic prediction quality when outputs are probabilities?",
-                "options": {"a": "Accuracy only", "b": "F1 score only", "c": "Log loss / cross-entropy", "d": "Number of parameters"},
+                "options": {
+                    "a": "Accuracy only",
+                    "b": "F1 score only",
+                    "c": "Log loss / cross-entropy",
+                    "d": "Number of parameters",
+                },
                 "correct_answer": "c",
             },
             {
                 "question_number": 3,
                 "question_text": "What does an 'overfit test' (tiny subset fit) primarily verify?",
-                "options": {"a": "The model is unbiased", "b": "The pipeline + optimization are implemented correctly", "c": "The dataset is perfectly clean", "d": "The model will generalize"},
+                "options": {
+                    "a": "The model is unbiased",
+                    "b": "The pipeline + optimization are implemented correctly",
+                    "c": "The dataset is perfectly clean",
+                    "d": "The model will generalize",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 4,
                 "question_text": "Why are ablations mandatory for serious model improvement work?",
-                "options": {"a": "They reduce compute cost", "b": "They prove which change caused the gain (causality evidence)", "c": "They make charts prettier", "d": "They eliminate the need for test sets"},
+                "options": {
+                    "a": "They reduce compute cost",
+                    "b": "They prove which change caused the gain (causality evidence)",
+                    "c": "They make charts prettier",
+                    "d": "They eliminate the need for test sets",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 5,
                 "question_text": "In a transformer block, what is the purpose of residual connections?",
-                "options": {"a": "To increase token count", "b": "To stabilize optimization and preserve information flow", "c": "To remove attention", "d": "To reduce dataset size"},
+                "options": {
+                    "a": "To increase token count",
+                    "b": "To stabilize optimization and preserve information flow",
+                    "c": "To remove attention",
+                    "d": "To reduce dataset size",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 6,
                 "question_text": "What is the correct interpretation of KL divergence in training objectives?",
-                "options": {"a": "A distance metric that is always symmetric", "b": "A measure of how one distribution differs from another (asymmetric)", "c": "A measure of GPU speed", "d": "A measure of model size"},
+                "options": {
+                    "a": "A distance metric that is always symmetric",
+                    "b": "A measure of how one distribution differs from another (asymmetric)",
+                    "c": "A measure of GPU speed",
+                    "d": "A measure of model size",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 7,
                 "question_text": "What is the most common failure mode if you tune hyperparameters on the test set?",
-                "options": {"a": "Better generalization", "b": "Test set becomes a training signal (leakage), inflating reported performance", "c": "Lower variance", "d": "Faster inference"},
+                "options": {
+                    "a": "Better generalization",
+                    "b": "Test set becomes a training signal (leakage), inflating reported performance",
+                    "c": "Lower variance",
+                    "d": "Faster inference",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 8,
                 "question_text": "Which practice most directly improves training reproducibility?",
-                "options": {"a": "Changing model architecture every run", "b": "Pinning seeds, recording configs, and versioning data/code", "c": "Using more GPUs", "d": "Using larger batch sizes only"},
+                "options": {
+                    "a": "Changing model architecture every run",
+                    "b": "Pinning seeds, recording configs, and versioning data/code",
+                    "c": "Using more GPUs",
+                    "d": "Using larger batch sizes only",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 9,
                 "question_text": "What does 'calibration' refer to in classification models producing probabilities?",
-                "options": {"a": "Whether the model uses GPUs", "b": "Whether predicted probabilities match true outcome frequencies", "c": "Whether the dataset is balanced", "d": "Whether the model is small"},
+                "options": {
+                    "a": "Whether the model uses GPUs",
+                    "b": "Whether predicted probabilities match true outcome frequencies",
+                    "c": "Whether the dataset is balanced",
+                    "d": "Whether the model is small",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 10,
                 "question_text": "What is the best definition of 'data leakage'?",
-                "options": {"a": "A corrupted CSV file", "b": "Information from validation/test influences training or model selection improperly", "c": "Slow training speed", "d": "Low GPU memory"},
+                "options": {
+                    "a": "A corrupted CSV file",
+                    "b": "Information from validation/test influences training or model selection improperly",
+                    "c": "Slow training speed",
+                    "d": "Low GPU memory",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 11,
                 "question_text": "Why is 'baseline first' a golden rule?",
-                "options": {"a": "Baselines always win", "b": "It gives a reference point and prevents wasting complexity on unsolved basics", "c": "It eliminates evaluation", "d": "It makes models smaller"},
+                "options": {
+                    "a": "Baselines always win",
+                    "b": "It gives a reference point and prevents wasting complexity on unsolved basics",
+                    "c": "It eliminates evaluation",
+                    "d": "It makes models smaller",
+                },
                 "correct_answer": "b",
             },
             {
                 "question_number": 12,
                 "question_text": "What is the core reason mixed precision (AMP) is used?",
-                "options": {"a": "To change the dataset", "b": "To speed up training and reduce memory while keeping stability (with scaling)", "c": "To remove gradients", "d": "To make outputs discrete"},
+                "options": {
+                    "a": "To change the dataset",
+                    "b": "To speed up training and reduce memory while keeping stability (with scaling)",
+                    "c": "To remove gradients",
+                    "d": "To make outputs discrete",
+                },
                 "correct_answer": "b",
             },
         ],
@@ -209,7 +325,9 @@ def _mcq_bad(q: dict[str, Any]) -> str:
     return f"Correct answer: {wrong}. {q['options'][wrong]}. This does not address the central concept as directly."
 
 
-def _make_mcq(question_number: int, question_text: str, correct_text: str, distractors: list[str]) -> dict[str, Any]:
+def _make_mcq(
+    question_number: int, question_text: str, correct_text: str, distractors: list[str]
+) -> dict[str, Any]:
     letters = ("a", "b", "c", "d")
     correct_slot = letters[(question_number - 1) % 4]
     options_list = [None, None, None, None]
@@ -227,7 +345,9 @@ def _make_mcq(question_number: int, question_text: str, correct_text: str, distr
     }
 
 
-def build_quiz_bank(spec: dict[str, Any], target_count: int = 84) -> list[dict[str, Any]]:
+def build_quiz_bank(
+    spec: dict[str, Any], target_count: int = 84
+) -> list[dict[str, Any]]:
     questions = [dict(q) for q in spec["mastery_quiz"]["questions"]]
     next_num = max((int(q["question_number"]) for q in questions), default=0) + 1
 
@@ -275,9 +395,15 @@ def build_quiz_bank(spec: dict[str, Any], target_count: int = 84) -> list[dict[s
             [name for j, name in enumerate(step_names, start=1) if j != i][:3],
         )
         add(
-            f"In the Golden Loop order, what comes immediately after '{step_names[i - 1]}'?" if i < len(step_names) else f"What is the final stage in the Golden Loop?",
+            f"In the Golden Loop order, what comes immediately after '{step_names[i - 1]}'?"
+            if i < len(step_names)
+            else "What is the final stage in the Golden Loop?",
             step_names[i] if i < len(step_names) else step_names[-1],
-            [n for n in step_names if n != (step_names[i] if i < len(step_names) else step_names[-1])][:3],
+            [
+                n
+                for n in step_names
+                if n != (step_names[i] if i < len(step_names) else step_names[-1])
+            ][:3],
         )
 
     for idx, p in enumerate(principle_list, start=1):
@@ -361,29 +487,110 @@ def build_sft(spec: dict[str, Any]) -> list[dict[str, Any]]:
         }
     )
     for i, step in enumerate(spec["golden_loop"], start=1):
-        rows.append({"id": f"golden_loop_step_{i}", "task": "step_explanation", "instruction": f"Explain Golden Loop step {i}: {step}", "response": f"This step enforces discipline in the workflow: {step}. It should produce documented artifacts and clear pass/fail criteria.", "source": "golden_loop"})
+        rows.append(
+            {
+                "id": f"golden_loop_step_{i}",
+                "task": "step_explanation",
+                "instruction": f"Explain Golden Loop step {i}: {step}",
+                "response": f"This step enforces discipline in the workflow: {step}. It should produce documented artifacts and clear pass/fail criteria.",
+                "source": "golden_loop",
+            }
+        )
     for i, p in enumerate(spec["core_principles"], start=1):
-        rows.append({"id": f"principle_{i}", "task": "principle_explanation", "instruction": f"Why does this principle matter in production AI work: {p}", "response": f"It matters because {p.lower()} helps teams produce reproducible and auditable improvements instead of chasing noisy results.", "source": "core_principles"})
+        rows.append(
+            {
+                "id": f"principle_{i}",
+                "task": "principle_explanation",
+                "instruction": f"Why does this principle matter in production AI work: {p}",
+                "response": f"It matters because {p.lower()} helps teams produce reproducible and auditable improvements instead of chasing noisy results.",
+                "source": "core_principles",
+            }
+        )
     for section, topics in spec["knowledge_map"].items():
-        rows.append({"id": f"km_section_{section}", "task": "knowledge_section", "instruction": f"What topics belong in the '{_pretty_label(section)}' section of the Crystal AI knowledge map?", "response": ", ".join(_pretty_label(t) for t in topics), "source": "knowledge_map"})
+        rows.append(
+            {
+                "id": f"km_section_{section}",
+                "task": "knowledge_section",
+                "instruction": f"What topics belong in the '{_pretty_label(section)}' section of the Crystal AI knowledge map?",
+                "response": ", ".join(_pretty_label(t) for t in topics),
+                "source": "knowledge_map",
+            }
+        )
         for t in topics:
-            rows.append({"id": f"km_topic_{section}_{t}", "task": "topic_reason", "instruction": f"Why is '{_pretty_label(t)}' important in a golden-standard AI training foundation?", "response": f"{_pretty_label(t)} affects model quality, evaluation integrity, or operational reliability, so it must be part of the foundation.", "source": "knowledge_map"})
+            rows.append(
+                {
+                    "id": f"km_topic_{section}_{t}",
+                    "task": "topic_reason",
+                    "instruction": f"Why is '{_pretty_label(t)}' important in a golden-standard AI training foundation?",
+                    "response": f"{_pretty_label(t)} affects model quality, evaluation integrity, or operational reliability, so it must be part of the foundation.",
+                    "source": "knowledge_map",
+                }
+            )
     for gate, checks in spec["gating_checklist"].items():
-        rows.append({"id": f"gate_{gate}_purpose", "task": "gate_purpose", "instruction": f"What is the purpose of { _pretty_label(gate) } in the Golden AI Training method?", "response": f"{_pretty_label(gate)} defines a required checkpoint before moving to the next stage of the pipeline.", "source": "gating_checklist"})
-        rows.append({"id": f"gate_{gate}_checks", "task": "gate_checklist", "instruction": f"List the checks required to pass { _pretty_label(gate) }.", "response": "; ".join(checks), "source": "gating_checklist"})
+        rows.append(
+            {
+                "id": f"gate_{gate}_purpose",
+                "task": "gate_purpose",
+                "instruction": f"What is the purpose of {_pretty_label(gate)} in the Golden AI Training method?",
+                "response": f"{_pretty_label(gate)} defines a required checkpoint before moving to the next stage of the pipeline.",
+                "source": "gating_checklist",
+            }
+        )
+        rows.append(
+            {
+                "id": f"gate_{gate}_checks",
+                "task": "gate_checklist",
+                "instruction": f"List the checks required to pass {_pretty_label(gate)}.",
+                "response": "; ".join(checks),
+                "source": "gating_checklist",
+            }
+        )
     for proj in spec["capstone_projects"]:
         pid = _slug(proj["name"])
-        rows.append({"id": f"capstone_{pid}_goal", "task": "capstone_goal", "instruction": f"What is the goal of the capstone project '{proj['name']}'?", "response": proj["goal"], "source": "capstone_projects"})
-        rows.append({"id": f"capstone_{pid}_deliverables", "task": "capstone_deliverables", "instruction": f"List the deliverables for '{proj['name']}'.", "response": ", ".join(proj["deliverables"]), "source": "capstone_projects"})
+        rows.append(
+            {
+                "id": f"capstone_{pid}_goal",
+                "task": "capstone_goal",
+                "instruction": f"What is the goal of the capstone project '{proj['name']}'?",
+                "response": proj["goal"],
+                "source": "capstone_projects",
+            }
+        )
+        rows.append(
+            {
+                "id": f"capstone_{pid}_deliverables",
+                "task": "capstone_deliverables",
+                "instruction": f"List the deliverables for '{proj['name']}'.",
+                "response": ", ".join(proj["deliverables"]),
+                "source": "capstone_projects",
+            }
+        )
     for q in quiz_bank:
-        rows.append({"id": f"quiz_{q['question_number']:02d}", "task": "mcq_reasoning", "instruction": _mcq_prompt(q), "response": _mcq_good(q), "source": "mastery_quiz"})
+        rows.append(
+            {
+                "id": f"quiz_{q['question_number']:02d}",
+                "task": "mcq_reasoning",
+                "instruction": _mcq_prompt(q),
+                "response": _mcq_good(q),
+                "source": "mastery_quiz",
+            }
+        )
     return rows
 
 
 def build_preference(spec: dict[str, Any]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for q in build_quiz_bank(spec):
-        rows.append({"id": f"pref_quiz_{q['question_number']:02d}", "prompt": _mcq_prompt(q), "chosen": _mcq_good(q), "rejected": _mcq_bad(q), "domain": "mastery_quiz", "label_source": "synthetic_from_spec"})
+        rows.append(
+            {
+                "id": f"pref_quiz_{q['question_number']:02d}",
+                "prompt": _mcq_prompt(q),
+                "chosen": _mcq_good(q),
+                "rejected": _mcq_bad(q),
+                "domain": "mastery_quiz",
+                "label_source": "synthetic_from_spec",
+            }
+        )
     for i, p in enumerate(spec["core_principles"], start=1):
         rows.append(
             {
@@ -399,8 +606,10 @@ def build_preference(spec: dict[str, Any]) -> list[dict[str, Any]]:
         rows.append(
             {
                 "id": f"pref_{gate}",
-                "prompt": f"What should a reviewer verify before passing { _pretty_label(gate) }?",
-                "chosen": "Verify evidence for all gate checks: " + "; ".join(checks) + ".",
+                "prompt": f"What should a reviewer verify before passing {_pretty_label(gate)}?",
+                "chosen": "Verify evidence for all gate checks: "
+                + "; ".join(checks)
+                + ".",
                 "rejected": "Pass the gate if the latest experiment looks promising, even if checks are incomplete.",
                 "domain": "gating_checklist",
                 "label_source": "synthetic_from_spec",
@@ -428,7 +637,12 @@ def build_quiz_eval(spec: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
-def build_manifest(sft: list[dict[str, Any]], pref: list[dict[str, Any]], quiz_eval: list[dict[str, Any]], quiz_bank: list[dict[str, Any]]) -> dict[str, Any]:
+def build_manifest(
+    sft: list[dict[str, Any]],
+    pref: list[dict[str, Any]],
+    quiz_eval: list[dict[str, Any]],
+    quiz_bank: list[dict[str, Any]],
+) -> dict[str, Any]:
     return {
         "program_title": SPEC["program_title"],
         "track": SPEC["track"],
@@ -439,7 +653,10 @@ def build_manifest(sft: list[dict[str, Any]], pref: list[dict[str, Any]], quiz_e
             "preference_pairs.jsonl": {"type": "preference", "rows": len(pref)},
             "quiz_eval.jsonl": {"type": "eval", "rows": len(quiz_eval)},
         },
-        "generation": {"script": "tools/build_golden_ai_training_dataset.py", "deterministic": True},
+        "generation": {
+            "script": "tools/build_golden_ai_training_dataset.py",
+            "deterministic": True,
+        },
     }
 
 
@@ -471,14 +688,24 @@ def main() -> None:
     pref = build_preference(SPEC)
     quiz_eval = build_quiz_eval(SPEC)
     _dump_json(OUT_DIR / "golden_ai_training.spec.json", SPEC)
-    _dump_json(OUT_DIR / "mastery_quiz_bank.json", {"quiz_title": "Golden Standard AI Mastery Quiz Bank (Expanded)", "questions": quiz_bank})
+    _dump_json(
+        OUT_DIR / "mastery_quiz_bank.json",
+        {
+            "quiz_title": "Golden Standard AI Mastery Quiz Bank (Expanded)",
+            "questions": quiz_bank,
+        },
+    )
     write_jsonl(str(OUT_DIR / "sft_train.jsonl"), sft)
     write_jsonl(str(OUT_DIR / "preference_pairs.jsonl"), pref)
     write_jsonl(str(OUT_DIR / "quiz_eval.jsonl"), quiz_eval)
-    _dump_json(OUT_DIR / "manifest.json", build_manifest(sft, pref, quiz_eval, quiz_bank))
+    _dump_json(
+        OUT_DIR / "manifest.json", build_manifest(sft, pref, quiz_eval, quiz_bank)
+    )
     (OUT_DIR / "README.md").write_text(build_readme(), encoding="utf-8", newline="\n")
     print(f"Wrote {OUT_DIR}")
-    print(f"quiz_bank={len(quiz_bank)} sft={len(sft)} pref={len(pref)} quiz_eval={len(quiz_eval)}")
+    print(
+        f"quiz_bank={len(quiz_bank)} sft={len(sft)} pref={len(pref)} quiz_eval={len(quiz_eval)}"
+    )
 
 
 if __name__ == "__main__":

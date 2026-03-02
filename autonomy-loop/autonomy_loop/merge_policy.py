@@ -14,6 +14,7 @@ class MergePolicy:
     - merge_if_same_trace: merge if from same batch/source
     - override_never: never allow overrides (strict)
     """
+
     version: str = "1.0.0"
     strategy: str = "fork_on_collision"
 

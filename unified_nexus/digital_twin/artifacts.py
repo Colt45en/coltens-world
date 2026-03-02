@@ -41,9 +41,10 @@ def sha256_bytes(b: bytes) -> str:
 @dataclass(frozen=True)
 class ArtifactRef:
     """Reference to a stored artifact."""
+
     artifact: str  # Artifact type (e.g., "case.volume", "vascular.graph")
-    hash: str      # Content hash (sha256:...)
-    path: str      # Relative path from artifacts root
+    hash: str  # Content hash (sha256:...)
+    path: str  # Relative path from artifacts root
 
 
 class ArtifactStore:
@@ -76,7 +77,9 @@ class ArtifactStore:
         p.write_bytes(b)
         return ArtifactRef(artifact=artifact, hash=h, path=str(rel).replace("\\", "/"))
 
-    def put_text(self, case_id: str, artifact: str, text: str, ext: str = "txt") -> ArtifactRef:
+    def put_text(
+        self, case_id: str, artifact: str, text: str, ext: str = "txt"
+    ) -> ArtifactRef:
         """
         Store text artifact (SVG, CSV, etc.).
 
@@ -97,7 +100,9 @@ class ArtifactStore:
         p.write_bytes(b)
         return ArtifactRef(artifact=artifact, hash=h, path=str(rel).replace("\\", "/"))
 
-    def put_bytes(self, case_id: str, artifact: str, data: bytes, ext: str = "bin") -> ArtifactRef:
+    def put_bytes(
+        self, case_id: str, artifact: str, data: bytes, ext: str = "bin"
+    ) -> ArtifactRef:
         """
         Store binary artifact (PNG, ZIP, etc.).
 

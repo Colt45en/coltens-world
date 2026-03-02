@@ -48,10 +48,14 @@ class ToolRuntime:
     - Returns results via nucleus.tool_result commands
     """
 
-    def __init__(self, bus: EventBus, tools: Dict[str, ToolFn], *, max_queue: int = 1000) -> None:
+    def __init__(
+        self, bus: EventBus, tools: Dict[str, ToolFn], *, max_queue: int = 1000
+    ) -> None:
         self.bus = bus
         self.tools = tools
-        self._q: "asyncio.PriorityQueue[ToolCall]" = asyncio.PriorityQueue(maxsize=max_queue)
+        self._q: "asyncio.PriorityQueue[ToolCall]" = asyncio.PriorityQueue(
+            maxsize=max_queue
+        )
         self._max_queue = max_queue
 
         self.bus.subscribe_event(TOOL_CALL_EVENT, self._on_tool_call_event)
@@ -60,7 +64,9 @@ class ToolRuntime:
         p = dict(evt.payload or {})
 
         # Fallback chain for call_id: payload.call_id OR command_id OR evt_seq
-        call_id = str(p.get("call_id") or p.get("command_id") or f"evt_{evt.seq}").strip()
+        call_id = str(
+            p.get("call_id") or p.get("command_id") or f"evt_{evt.seq}"
+        ).strip()
 
         tool = str(p.get("tool") or "").strip()
         args = dict(p.get("args") or {})
@@ -75,23 +81,27 @@ class ToolRuntime:
             await self._emit_error_result(
                 call_id,
                 evt.trace_id,
-                f"Tool queue overflow: {self._q.qsize()}/{self._max_queue}"
+                f"Tool queue overflow: {self._q.qsize()}/{self._max_queue}",
             )
             return
 
         # Enqueue with seq for deterministic ordering
         try:
-            await self._q.put(ToolCall(
-                seq=evt.seq,
-                call_id=call_id,
-                tool=tool,
-                args=args,
-                trace_id=evt.trace_id
-            ))
+            await self._q.put(
+                ToolCall(
+                    seq=evt.seq,
+                    call_id=call_id,
+                    tool=tool,
+                    args=args,
+                    trace_id=evt.trace_id,
+                )
+            )
         except asyncio.QueueFull:
             await self._emit_error_result(call_id, evt.trace_id, "Queue full")
 
-    async def _emit_error_result(self, call_id: str, trace_id: str, error_msg: str) -> None:
+    async def _emit_error_result(
+        self, call_id: str, trace_id: str, error_msg: str
+    ) -> None:
         """Emit error result command for dropped/invalid tool calls."""
         cmd = make_v1_command(
             command_type=TOOL_RESULT_COMMAND,
@@ -128,7 +138,11 @@ class ToolRuntime:
                     command_type=TOOL_RESULT_COMMAND,
                     ts_ms=self._now_ms(),
                     trace_id=call.trace_id,
-                    payload={"call_id": call.call_id, "ok": False, "error": f"{type(exc).__name__}: {exc}"},
+                    payload={
+                        "call_id": call.call_id,
+                        "ok": False,
+                        "error": f"{type(exc).__name__}: {exc}",
+                    },
                 )
                 await self.bus.send_command(cmd)
 
@@ -138,4 +152,5 @@ class ToolRuntime:
     @staticmethod
     def _now_ms() -> int:
         import time
+
         return int(time.time() * 1000)

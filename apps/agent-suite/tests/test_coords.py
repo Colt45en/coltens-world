@@ -1,4 +1,10 @@
-from packages.core.coords import normalize_point, denormalize_point, normalize_box, denormalize_box
+from packages.core.coords import (
+    normalize_point,
+    denormalize_point,
+    normalize_box,
+    denormalize_box,
+)
+
 
 def test_normalize_denormalize_identity_midpoint():
     w, h = 1920, 1080
@@ -10,6 +16,7 @@ def test_normalize_denormalize_identity_midpoint():
     # Should land very close to original midpoint (exact with our rounding)
     assert abs(x2 - x_px) <= 1
     assert abs(y2 - y_px) <= 1
+
 
 def test_box_order_is_stable():
     w, h = 100, 100

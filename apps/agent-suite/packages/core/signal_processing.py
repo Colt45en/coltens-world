@@ -146,8 +146,9 @@ class SignalProcessing:
         return [cmath.phase(x) for x in spectrum]
 
     @staticmethod
-    def convolution(signal1: List[float], signal2: List[float],
-                    mode: str = 'full') -> List[float]:
+    def convolution(
+        signal1: List[float], signal2: List[float], mode: str = "full"
+    ) -> List[float]:
         """
         Discrete convolution: (f * g)[n] = Σ f[m]g[n-m]
 
@@ -176,7 +177,7 @@ class SignalProcessing:
 
         m, n = len(signal1), len(signal2)
 
-        if mode == 'full':
+        if mode == "full":
             result_length = m + n - 1
             result = [0.0] * result_length
 
@@ -184,7 +185,7 @@ class SignalProcessing:
                 for j in range(max(0, i - n + 1), min(i + 1, m)):
                     result[i] += signal1[j] * signal2[i - j]
 
-        elif mode == 'same':
+        elif mode == "same":
             result_length = m
             result = [0.0] * result_length
 
@@ -197,7 +198,7 @@ class SignalProcessing:
                     if 0 <= i_sig1 < m:
                         result[i] += signal1[i_sig1] * signal2[j_sig2]
 
-        elif mode == 'valid':
+        elif mode == "valid":
             if n > m:
                 return []
             result_length = m - n + 1
@@ -231,7 +232,7 @@ class SignalProcessing:
         @returns Full cross-correlation sequence for all lags
         """
         signal2_reversed = signal2[::-1]
-        return SignalProcessing.convolution(signal1, signal2_reversed, mode='full')
+        return SignalProcessing.convolution(signal1, signal2_reversed, mode="full")
 
     @staticmethod
     def autocorrelation(signal: List[float]) -> List[float]:
@@ -293,8 +294,9 @@ class Filters:
         return result
 
     @staticmethod
-    def low_pass_butterworth(cutoff_freq: float, sample_rate: float,
-                             order: int = 2) -> Tuple[List[float], List[float]]:
+    def low_pass_butterworth(
+        cutoff_freq: float, sample_rate: float, order: int = 2
+    ) -> Tuple[List[float], List[float]]:
         """
         Butterworth low-pass filter design
         Returns (numerator_coeffs, denominator_coeffs)
@@ -314,8 +316,9 @@ class Filters:
             return Filters.low_pass_butterworth(cutoff_freq, sample_rate, 1)
 
     @staticmethod
-    def high_pass_butterworth(cutoff_freq: float, sample_rate: float,
-                              order: int = 2) -> Tuple[List[float], List[float]]:
+    def high_pass_butterworth(
+        cutoff_freq: float, sample_rate: float, order: int = 2
+    ) -> Tuple[List[float], List[float]]:
         """
         Butterworth high-pass filter design
         """
@@ -335,8 +338,9 @@ class Filters:
             return Filters.high_pass_butterworth(cutoff_freq, sample_rate, 1)
 
     @staticmethod
-    def band_pass_butterworth(low_freq: float, high_freq: float,
-                              sample_rate: float, order: int = 2) -> Tuple[List[float], List[float]]:
+    def band_pass_butterworth(
+        low_freq: float, high_freq: float, sample_rate: float, order: int = 2
+    ) -> Tuple[List[float], List[float]]:
         """
         Butterworth band-pass filter design via cascade
 
@@ -372,8 +376,9 @@ class Filters:
         return (cascaded_num, cascaded_den)
 
     @staticmethod
-    def apply_filter(signal: List[float], numerator: List[float],
-                     denominator: List[float]) -> List[float]:
+    def apply_filter(
+        signal: List[float], numerator: List[float], denominator: List[float]
+    ) -> List[float]:
         """
         Apply IIR filter to signal using difference equation
         y[n] = (1/a0) * (Σ(bk * x[n-k]) - Σ(ak * y[n-k]))
@@ -476,8 +481,8 @@ class Wavelets:
         detail = []
 
         for i in range(0, n, 2):
-            approx.append((signal[i] + signal[i+1]) / math.sqrt(2))
-            detail.append((signal[i] - signal[i+1]) / math.sqrt(2))
+            approx.append((signal[i] + signal[i + 1]) / math.sqrt(2))
+            detail.append((signal[i] - signal[i + 1]) / math.sqrt(2))
 
         return (approx, detail)
 
@@ -487,7 +492,9 @@ class Wavelets:
         Inverse Haar wavelet transform
         """
         if len(approx) != len(detail):
-            raise ValueError("Approximation and detail coefficients must have same length")
+            raise ValueError(
+                "Approximation and detail coefficients must have same length"
+            )
 
         signal = []
 
@@ -533,19 +540,15 @@ class Wavelets:
         s3 = math.sqrt(3.0)
         den = 4.0 * math.sqrt(2.0)
 
-        h = [
-            (1.0 + s3) / den,
-            (3.0 + s3) / den,
-            (3.0 - s3) / den,
-            (1.0 - s3) / den
-        ]
+        h = [(1.0 + s3) / den, (3.0 + s3) / den, (3.0 - s3) / den, (1.0 - s3) / den]
 
         g = [h[3], -h[2], h[1], -h[0]]
         return h, g
 
     @staticmethod
-    def daubechies_4_transform(signal: List[float], levels: int = 1) \
-            -> Tuple[List[float], List[List[float]], int]:
+    def daubechies_4_transform(
+        signal: List[float], levels: int = 1
+    ) -> Tuple[List[float], List[List[float]], int]:
         """
         Multi-level Daubechies-4 discrete wavelet transform (DWT).
 
@@ -592,8 +595,9 @@ class Wavelets:
         return (a, details, orig_len)
 
     @staticmethod
-    def daubechies_4_inverse(approx: List[float], details: List[List[float]],
-                             orig_len: int) -> List[float]:
+    def daubechies_4_inverse(
+        approx: List[float], details: List[List[float]], orig_len: int
+    ) -> List[float]:
         """
         Invert the multi-level db4 DWT produced by daubechies_4_transform.
 

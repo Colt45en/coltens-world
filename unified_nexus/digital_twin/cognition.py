@@ -50,7 +50,9 @@ class DigitalTwinCognition:
         if fut is not None and not fut.done():
             fut.set_result(p)
 
-    async def _await_call(self, call_id: str, timeout_s: float = 120.0) -> Dict[str, Any]:
+    async def _await_call(
+        self, call_id: str, timeout_s: float = 120.0
+    ) -> Dict[str, Any]:
         """Wait for tool result by call_id."""
         loop = asyncio.get_running_loop()
         fut = loop.create_future()
@@ -65,7 +67,7 @@ class DigitalTwinCognition:
         trace_id: str,
         event_type: str,
         payload: Dict[str, Any],
-        priority: str = "normal"
+        priority: str = "normal",
     ) -> None:
         """Request Nucleus to emit event."""
         cmd = make_v1_command(
@@ -75,7 +77,7 @@ class DigitalTwinCognition:
             payload={
                 "priority": priority,
                 "event_type": event_type,
-                "event_payload": payload
+                "event_payload": payload,
             },
         )
         await self.bus.send_command(cmd)
@@ -102,14 +104,16 @@ class DigitalTwinCognition:
         fps = int(payload.get("fps", 30))
 
         # Launch pipeline in background
-        asyncio.create_task(self._run_pipeline(
-            trace_id=cmd.trace_id,
-            case_id=case_id,
-            dicom_path=dicom_path,
-            systems=systems,
-            duration_ms=duration_ms,
-            fps=fps,
-        ))
+        asyncio.create_task(
+            self._run_pipeline(
+                trace_id=cmd.trace_id,
+                case_id=case_id,
+                dicom_path=dicom_path,
+                systems=systems,
+                duration_ms=duration_ms,
+                fps=fps,
+            )
+        )
 
         return {"accepted": True, "case_id": case_id}
 
@@ -121,7 +125,7 @@ class DigitalTwinCognition:
         dicom_path: str,
         systems: list[str],
         duration_ms: int,
-        fps: int
+        fps: int,
     ) -> None:
         """
         Execute complete Digital Twin pipeline.
@@ -134,10 +138,11 @@ class DigitalTwinCognition:
         5. Render frames (hash chained)
         6. Export → bundle.zip
         """
-        await self._emit(trace_id, "dt.scenario.started", {
-            "case_id": case_id,
-            "scenario": "reconstruct_v1"
-        })
+        await self._emit(
+            trace_id,
+            "dt.scenario.started",
+            {"case_id": case_id, "scenario": "reconstruct_v1"},
+        )
 
         # 1) RETINA: Ingest
         call_ingest = f"{case_id}:ingest"
@@ -150,27 +155,30 @@ class DigitalTwinCognition:
                 "args": {
                     "case_id": case_id,
                     "dicom_path": dicom_path,
-                    "call_id": call_ingest
-                }
-            }
+                    "call_id": call_ingest,
+                },
+            },
         )
         await self.bus.send_command(cmd)
 
         r_ingest = await self._await_call(call_ingest)
         if not r_ingest.get("ok"):
-            await self._emit(trace_id, "dt.health.failed", {
-                "case_id": case_id,
-                "stage": "ingest",
-                "error": r_ingest.get("error", "")
-            })
+            await self._emit(
+                trace_id,
+                "dt.health.failed",
+                {
+                    "case_id": case_id,
+                    "stage": "ingest",
+                    "error": r_ingest.get("error", ""),
+                },
+            )
             return
 
         volume_ref = r_ingest["result"]["artifact_ref"]
         volume_hash = volume_ref["hash"]
-        await self._emit(trace_id, "dt.case.ingested", {
-            "case_id": case_id,
-            "volume_ref": volume_ref
-        })
+        await self._emit(
+            trace_id, "dt.case.ingested", {"case_id": case_id, "volume_ref": volume_ref}
+        )
 
         # 2) V-CORTEX: Segment
         call_seg = f"{case_id}:segment"
@@ -184,27 +192,37 @@ class DigitalTwinCognition:
                     "case_id": case_id,
                     "call_id": call_seg,
                     "volume_hash": volume_hash,
-                    "target_labels": ["aorta", "carotid_left", "carotid_right", "heart_lv"],
-                }
-            }
+                    "target_labels": [
+                        "aorta",
+                        "carotid_left",
+                        "carotid_right",
+                        "heart_lv",
+                    ],
+                },
+            },
         )
         await self.bus.send_command(cmd)
 
         r_seg = await self._await_call(call_seg)
         if not r_seg.get("ok"):
-            await self._emit(trace_id, "dt.health.failed", {
-                "case_id": case_id,
-                "stage": "segment",
-                "error": r_seg.get("error", "")
-            })
+            await self._emit(
+                trace_id,
+                "dt.health.failed",
+                {
+                    "case_id": case_id,
+                    "stage": "segment",
+                    "error": r_seg.get("error", ""),
+                },
+            )
             return
 
         labels_ref = r_seg["result"]["artifact_ref"]
         labels_hash = labels_ref["hash"]
-        await self._emit(trace_id, "dt.segmentation.completed", {
-            "case_id": case_id,
-            "labels_ref": labels_ref
-        })
+        await self._emit(
+            trace_id,
+            "dt.segmentation.completed",
+            {"case_id": case_id, "labels_ref": labels_ref},
+        )
 
         # 3) CONNECTOME: Build graph
         call_graph = f"{case_id}:connectome"
@@ -220,25 +238,30 @@ class DigitalTwinCognition:
                     "labels_hash": labels_hash,
                     "system": systems[0] if systems else "vascular",
                     "nodes": 96,
-                }
-            }
+                },
+            },
         )
         await self.bus.send_command(cmd)
 
         r_graph = await self._await_call(call_graph)
         if not r_graph.get("ok"):
-            await self._emit(trace_id, "dt.health.failed", {
-                "case_id": case_id,
-                "stage": "connectome",
-                "error": r_graph.get("error", "")
-            })
+            await self._emit(
+                trace_id,
+                "dt.health.failed",
+                {
+                    "case_id": case_id,
+                    "stage": "connectome",
+                    "error": r_graph.get("error", ""),
+                },
+            )
             return
 
         graph_ref = r_graph["result"]["artifact_ref"]
-        await self._emit(trace_id, "dt.connectome.completed", {
-            "case_id": case_id,
-            "graph_ref": graph_ref
-        })
+        await self._emit(
+            trace_id,
+            "dt.connectome.completed",
+            {"case_id": case_id, "graph_ref": graph_ref},
+        )
 
         # 4) BRAINSTEM: Simulate
         call_sim = f"{case_id}:simulate"
@@ -255,27 +278,31 @@ class DigitalTwinCognition:
                     "duration_ms": duration_ms,
                     "dt_ms": 16,
                     "heart_rate_bpm": 72,
-                }
-            }
+                },
+            },
         )
         await self.bus.send_command(cmd)
 
         r_sim = await self._await_call(call_sim)
         if not r_sim.get("ok"):
-            await self._emit(trace_id, "dt.health.failed", {
-                "case_id": case_id,
-                "stage": "simulate",
-                "error": r_sim.get("error", "")
-            })
+            await self._emit(
+                trace_id,
+                "dt.health.failed",
+                {
+                    "case_id": case_id,
+                    "stage": "simulate",
+                    "error": r_sim.get("error", ""),
+                },
+            )
             return
 
         sim_ref = r_sim["result"]["artifact_ref"]
         frames = int(r_sim["result"].get("frames", 0))
-        await self._emit(trace_id, "dt.sim.completed", {
-            "case_id": case_id,
-            "sim_ref": sim_ref,
-            "frames": frames
-        })
+        await self._emit(
+            trace_id,
+            "dt.sim.completed",
+            {"case_id": case_id, "sim_ref": sim_ref, "frames": frames},
+        )
 
         # 5) OCCIPITAL: Render timeline (hash chained)
         prev_hash = ""
@@ -301,26 +328,31 @@ class DigitalTwinCognition:
                         "overlays": ["vessels", "flow_arrows", "pressure_heatmap"],
                         "width": 1280,
                         "height": 720,
-                    }
-                }
+                    },
+                },
             )
             await self.bus.send_command(cmd)
 
             r_frame = await self._await_call(call_render, timeout_s=60.0)
             if not r_frame.get("ok"):
-                await self._emit(trace_id, "dt.health.failed", {
-                    "case_id": case_id,
-                    "stage": "render",
-                    "frame": i,
-                    "error": r_frame.get("error", "")
-                })
+                await self._emit(
+                    trace_id,
+                    "dt.health.failed",
+                    {
+                        "case_id": case_id,
+                        "stage": "render",
+                        "frame": i,
+                        "error": r_frame.get("error", ""),
+                    },
+                )
                 return
 
             prev_hash = r_frame["result"]["hash"]
-            await self._emit(trace_id, "dt.render.frame_completed", {
-                "case_id": case_id,
-                **r_frame["result"]
-            })
+            await self._emit(
+                trace_id,
+                "dt.render.frame_completed",
+                {"case_id": case_id, **r_frame["result"]},
+            )
 
         # 6) Export bundle
         call_export = f"{case_id}:export"
@@ -330,26 +362,33 @@ class DigitalTwinCognition:
             trace_id=trace_id,
             payload={
                 "tool": "digital_twin.export",
-                "args": {"case_id": case_id, "call_id": call_export}
-            }
+                "args": {"case_id": case_id, "call_id": call_export},
+            },
         )
         await self.bus.send_command(cmd)
 
         r_exp = await self._await_call(call_export, timeout_s=60.0)
         if not r_exp.get("ok"):
-            await self._emit(trace_id, "dt.health.failed", {
-                "case_id": case_id,
-                "stage": "export",
-                "error": r_exp.get("error", "")
-            })
+            await self._emit(
+                trace_id,
+                "dt.health.failed",
+                {
+                    "case_id": case_id,
+                    "stage": "export",
+                    "error": r_exp.get("error", ""),
+                },
+            )
             return
 
-        await self._emit(trace_id, "dt.export.completed", {
-            "case_id": case_id,
-            **r_exp["result"]
-        })
-        await self._emit(trace_id, "dt.scenario.completed", {
-            "case_id": case_id,
-            "scenario": "reconstruct_v1",
-            "bundle": r_exp["result"]
-        })
+        await self._emit(
+            trace_id, "dt.export.completed", {"case_id": case_id, **r_exp["result"]}
+        )
+        await self._emit(
+            trace_id,
+            "dt.scenario.completed",
+            {
+                "case_id": case_id,
+                "scenario": "reconstruct_v1",
+                "bundle": r_exp["result"],
+            },
+        )

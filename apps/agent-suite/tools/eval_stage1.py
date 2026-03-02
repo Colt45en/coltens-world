@@ -7,8 +7,8 @@ from tools._common import ensure_agent_suite_on_path, iter_jsonl, write_jsonl
 
 ensure_agent_suite_on_path()
 
-from packages.core import GroundingTask, stage1_metrics
-from packages.core.model_actions import AgentAction
+from packages.core import GroundingTask, stage1_metrics  # noqa: E402
+from packages.core.model_actions import AgentAction  # noqa: E402
 
 
 def _extract_pred_point(obj: Dict[str, Any]) -> Optional[Tuple[int, int]]:
@@ -38,7 +38,11 @@ def _extract_pred_point(obj: Dict[str, Any]) -> Optional[Tuple[int, int]]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", required=True, help="Stage I grounding tasks JSONL")
-    ap.add_argument("--pred", required=False, help="Predictions JSONL (line-aligned). If omitted, assumes input contains predictions.")
+    ap.add_argument(
+        "--pred",
+        required=False,
+        help="Predictions JSONL (line-aligned). If omitted, assumes input contains predictions.",
+    )
     ap.add_argument("--out", required=True, help="Output report JSONL")
     args = ap.parse_args()
 
@@ -49,7 +53,9 @@ def main() -> None:
     if args.pred:
         preds_raw = list(iter_jsonl(args.pred))
         if len(preds_raw) < len(tasks):
-            raise SystemExit(f"pred has {len(preds_raw)} lines but input has {len(tasks)} tasks")
+            raise SystemExit(
+                f"pred has {len(preds_raw)} lines but input has {len(tasks)} tasks"
+            )
     else:
         preds_raw = tasks_raw  # input carries predictions
 
@@ -69,13 +75,15 @@ def main() -> None:
             ok_count += 1
 
     # Append summary record as last line
-    reports.append({
-        "summary": {
-            "total": total,
-            "ok": ok_count,
-            "ok_rate": (ok_count / total) if total else 0.0,
+    reports.append(
+        {
+            "summary": {
+                "total": total,
+                "ok": ok_count,
+                "ok_rate": (ok_count / total) if total else 0.0,
+            }
         }
-    })
+    )
 
     write_jsonl(args.out, reports)
 

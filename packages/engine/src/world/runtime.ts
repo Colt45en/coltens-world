@@ -1,4 +1,4 @@
-/**
+﻿/**
  * World Engine Runtime
  *
  * Core deterministic simulation engine:
@@ -12,14 +12,14 @@
  * produces identical snapshot with identical hash.
  */
 
-import type { Belief, Claim, Event, Observation, Seal, Snapshot } from "@we/contracts";
+import type { Belief, Claim, Event, Observation, Seal, Snapshot } from "@world-engine/contracts";
 import {
   EventSchema,
   IsoUtcSchema,
   ObservationSchema,
   SealSchema,
   SnapshotSchema,
-} from "@we/contracts";
+} from "@world-engine/contracts";
 import { contentAddressedId, sha256Hex, stableStringify } from "../determinism/canon";
 
 // ============ Pipeline Interface ============

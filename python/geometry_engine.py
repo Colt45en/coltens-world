@@ -38,6 +38,7 @@ EPS = 1e-9  # Global epsilon for all comparisons
 @dataclass(frozen=True, slots=True)
 class Vector3:
     """Immutable 3D vector."""
+
     x: float
     y: float
     z: float
@@ -52,7 +53,9 @@ class Vector3:
     def __mul__(self, scalar: float) -> "Vector3":
         if not isinstance(scalar, (int, float)):
             raise TypeError("Vector3 can only be multiplied by a scalar.")
-        return Vector3(self.x * float(scalar), self.y * float(scalar), self.z * float(scalar))
+        return Vector3(
+            self.x * float(scalar), self.y * float(scalar), self.z * float(scalar)
+        )
 
     def __rmul__(self, scalar: float) -> "Vector3":
         return self.__mul__(scalar)
@@ -117,6 +120,7 @@ class Vector3:
 @dataclass(frozen=True, slots=True)
 class Triangle:
     """Three vertices defining a triangle in 3D."""
+
     a: Vector3
     b: Vector3
     c: Vector3
@@ -151,6 +155,7 @@ class Triangle:
 @dataclass(frozen=True, slots=True)
 class Plane:
     """Plane defined by a point and normal vector."""
+
     point: Vector3
     normal: Vector3
     normal_unit: Vector3 = field(init=False)
@@ -179,6 +184,7 @@ class Plane:
 @dataclass(frozen=True, slots=True)
 class Ray:
     """Ray defined by origin and direction."""
+
     origin: Vector3
     direction: Vector3
     direction_unit: Vector3 = field(init=False)
@@ -322,7 +328,8 @@ class SpatialTransforms:
 @dataclass
 class RayHit:
     """Single hit from raycast query."""
-    kind: str               # 'ground' | 'plane_i' | 'triangle_i'
+
+    kind: str  # 'ground' | 'plane_i' | 'triangle_i'
     point: Vector3
     t: float
 
@@ -395,13 +402,17 @@ class GeometryEngine:
 
     # ---- Collision Tests ----
 
-    def sphere_sphere_collision(self, c1: Vector3, r1: float, c2: Vector3, r2: float) -> bool:
+    def sphere_sphere_collision(
+        self, c1: Vector3, r1: float, c2: Vector3, r2: float
+    ) -> bool:
         """Check if two spheres overlap."""
         d2 = (c1 - c2).magnitude_sq()
-        rr = (r1 + r2)
+        rr = r1 + r2
         return d2 < rr * rr
 
-    def resolve_sphere_collision(self, pos1: Vector3, r1: float, pos2: Vector3, r2: float) -> Vector3:
+    def resolve_sphere_collision(
+        self, pos1: Vector3, r1: float, pos2: Vector3, r2: float
+    ) -> Vector3:
         """
         Resolve penetration: push pos1 fully out of pos2.
         Returns corrected position for sphere 1.
@@ -425,12 +436,7 @@ class GeometryEngine:
         return pos1 + normal * penetration
 
     def resolve_sphere_sphere(
-        self,
-        pos1: Vector3,
-        r1: float,
-        pos2: Vector3,
-        r2: float,
-        split: float = 0.5
+        self, pos1: Vector3, r1: float, pos2: Vector3, r2: float, split: float = 0.5
     ) -> Tuple[Vector3, Vector3]:
         """
         Resolve penetration by splitting correction between both spheres.
@@ -504,7 +510,7 @@ class GeometryEngine:
         ray: Ray,
         include_ground: bool = True,
         include_planes: bool = True,
-        include_triangles: bool = True
+        include_triangles: bool = True,
     ) -> List[RayHit]:
         """
         Cast ray against all geometry, return sorted hits.
@@ -620,8 +626,12 @@ if __name__ == "__main__":
     print("\n--- Point-in-Triangle Test (XZ projection) ---")
     p_inside = Vector3(1, 0, 1)
     p_outside = Vector3(10, 0, 10)
-    print(f"Point {p_inside.as_tuple()} in triangle: {eng.point_in_triangle_2d(p_inside, tri)}")
-    print(f"Point {p_outside.as_tuple()} in triangle: {eng.point_in_triangle_2d(p_outside, tri)}")
+    print(
+        f"Point {p_inside.as_tuple()} in triangle: {eng.point_in_triangle_2d(p_inside, tri)}"
+    )
+    print(
+        f"Point {p_outside.as_tuple()} in triangle: {eng.point_in_triangle_2d(p_outside, tri)}"
+    )
 
     # Collision test
     print("\n--- Sphere-Sphere Collision ---")

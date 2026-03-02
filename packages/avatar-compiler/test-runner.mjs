@@ -5,7 +5,7 @@
  * Runs determinism + functional tests without vitest dependency
  */
 
-import { compileAvatar, compileBatch, DEFAULT_DNA } from './dist/index.js';
+import { compileAvatar, compileBatch, DEFAULT_DNA } from "@world-engine/avatar-compiler";
 
 let passed = 0;
 let failed = 0;

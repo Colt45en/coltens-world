@@ -1,7 +1,8 @@
 {
-  "name": "@we/contracts",
+  "name": "@world-engine/contracts",
   "version": "0.1.0",
   "description": "Type-safe API contracts for Autonomy Loop (OpenAPI-generated)",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

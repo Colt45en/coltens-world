@@ -20,5 +20,7 @@ class AuditLogger:
         with self.audit_file.open("a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
-    def log_action(self, action: Dict[str, Any], ok: bool, detail: Optional[Dict[str, Any]] = None) -> None:
+    def log_action(
+        self, action: Dict[str, Any], ok: bool, detail: Optional[Dict[str, Any]] = None
+    ) -> None:
         self.log("action", {"action": action, "ok": ok, "detail": detail or {}})

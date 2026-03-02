@@ -34,7 +34,9 @@ async def _inner_text_safe(page: Page, selector: str, timeout_ms: int = 1500) ->
     return ""
 
 
-async def duckduckgo_search(policy: PolicyConfig, query: str, headless: bool = True, timeout_ms: int = 25_000) -> WebSearchResult:
+async def duckduckgo_search(
+    policy: PolicyConfig, query: str, headless: bool = True, timeout_ms: int = 25_000
+) -> WebSearchResult:
     base = "https://duckduckgo.com/"
     assert_domain_allowed(policy, domain_of(base))
     url = base + "?q=" + quote_plus(query)
@@ -64,7 +66,11 @@ async def duckduckgo_search(policy: PolicyConfig, query: str, headless: bool = T
                     card = a.locator("xpath=ancestor::article[1]")
                     snippet = ""
                     try:
-                        snippet = (await card.locator('div[data-testid="result-snippet"]').first.inner_text()).strip()
+                        snippet = (
+                            await card.locator(
+                                'div[data-testid="result-snippet"]'
+                            ).first.inner_text()
+                        ).strip()
                     except Exception:
                         snippet = ""
                     hits.append(SearchHit(title=title, url=href, snippet=snippet))
@@ -82,7 +88,13 @@ async def duckduckgo_search(policy: PolicyConfig, query: str, headless: bool = T
                     href = (await a.get_attribute("href")) or ""
                     snippet = ""
                     try:
-                        snippet = (await a.locator("xpath=ancestor::div[contains(@class,'result')]").locator(".result__snippet").first.inner_text()).strip()
+                        snippet = (
+                            await a.locator(
+                                "xpath=ancestor::div[contains(@class,'result')]"
+                            )
+                            .locator(".result__snippet")
+                            .first.inner_text()
+                        ).strip()
                     except Exception:
                         snippet = ""
                     hits.append(SearchHit(title=title, url=href, snippet=snippet))

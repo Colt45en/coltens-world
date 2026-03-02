@@ -75,12 +75,28 @@ def _extract_raw_payload_text(rec: Dict[str, Any], fmt: str) -> str | None:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Convert model generation JSONL into normalized quiz prediction JSONL for quiz_eval_cli.py.")
-    ap.add_argument("--in", dest="in_path", required=True, help="Input generations JSONL")
+    ap = argparse.ArgumentParser(
+        description="Convert model generation JSONL into normalized quiz prediction JSONL for quiz_eval_cli.py."
+    )
+    ap.add_argument(
+        "--in", dest="in_path", required=True, help="Input generations JSONL"
+    )
     ap.add_argument("--out", required=True, help="Output normalized predictions JSONL")
-    ap.add_argument("--format", choices=("auto", "openai", "raw-text"), default="auto", help="Input generation format for answer extraction")
-    ap.add_argument("--gold", help="Optional gold quiz_eval.jsonl used to fill missing id/question_number by row order")
-    ap.add_argument("--skip-unparsed", action="store_true", help="Drop rows where a choice cannot be parsed")
+    ap.add_argument(
+        "--format",
+        choices=("auto", "openai", "raw-text"),
+        default="auto",
+        help="Input generation format for answer extraction",
+    )
+    ap.add_argument(
+        "--gold",
+        help="Optional gold quiz_eval.jsonl used to fill missing id/question_number by row order",
+    )
+    ap.add_argument(
+        "--skip-unparsed",
+        action="store_true",
+        help="Drop rows where a choice cannot be parsed",
+    )
     args = ap.parse_args()
 
     in_path = Path(args.in_path)

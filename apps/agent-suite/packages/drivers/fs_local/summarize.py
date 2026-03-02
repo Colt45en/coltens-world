@@ -13,7 +13,9 @@ class FileSummary:
     preview: str
 
 
-def read_text_preview(policy: PolicyConfig, path: Path, max_chars: int = 4000) -> FileSummary:
+def read_text_preview(
+    policy: PolicyConfig, path: Path, max_chars: int = 4000
+) -> FileSummary:
     path = assert_path_allowed(policy, path)
     if not path.exists() or not path.is_file():
         raise FileNotFoundError(f"File not found: {path}")

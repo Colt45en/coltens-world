@@ -33,7 +33,7 @@ import json
 import os
 import re
 import sys
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, TextIO, Tuple, cast
 
 SARIF_SCHEMA = "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json"
 SARIF_VERSION = "2.1.0"
@@ -42,6 +42,7 @@ TOOL_VERSION_DEFAULT = "1.0.0"
 
 
 # -------------------- Core models --------------------
+
 
 @dataclasses.dataclass
 class StackFrame:
@@ -59,8 +60,10 @@ class Diagnostic:
     code: Optional[str]
     message: str
     raw: str
-    related: List[str] = dataclasses.field(default_factory=list)
-    stack: List[StackFrame] = dataclasses.field(default_factory=list)
+    related: List[str] = dataclasses.field(default_factory=lambda: cast(List[str], []))
+    stack: List[StackFrame] = dataclasses.field(
+        default_factory=lambda: cast(List[StackFrame], [])
+    )
 
     def to_normalized(self) -> Dict[str, Any]:
         return {
@@ -72,7 +75,9 @@ class Diagnostic:
             "message": self.message,
             "raw": self.raw,
             "related": self.related,
-            "stack": [{"path": f.path, "line": f.line, "func": f.func} for f in self.stack],
+            "stack": [
+                {"path": f.path, "line": f.line, "func": f.func} for f in self.stack
+            ],
         }
 
 
@@ -140,7 +145,12 @@ MSVC_RE = re.compile(
 INDENTED_CONTINUATION_RE = re.compile(r"^\s+.+$")
 
 
-def parse_cpp(text: str) -> List[Diagnostic]:
+def _append_related(diag: Diagnostic, line: str, max_related: Optional[int]) -> None:
+    if max_related is None or max_related < 0 or len(diag.related) < max_related:
+        diag.related.append(line.rstrip())
+
+
+def parse_cpp(text: str, max_related: Optional[int] = None) -> List[Diagnostic]:
     diags: List[Diagnostic] = []
     current: Optional[Diagnostic] = None
 
@@ -173,13 +183,15 @@ def parse_cpp(text: str) -> List[Diagnostic]:
             diags.append(current)
             continue
 
-        if current and (INDENTED_CONTINUATION_RE.match(line) or line.strip().startswith(("^", "~"))):
-            current.related.append(line.rstrip())
+        if current and (
+            INDENTED_CONTINUATION_RE.match(line) or line.strip().startswith(("^", "~"))
+        ):
+            _append_related(current, line, max_related)
             continue
 
         if current and line.strip():
             if line.startswith(("In file included from", "                 from")):
-                current.related.append(line.rstrip())
+                _append_related(current, line, max_related)
 
     return diags
 
@@ -188,11 +200,13 @@ def parse_cpp(text: str) -> List[Diagnostic]:
 
 PY_TRACEBACK_START_RE = re.compile(r"^Traceback \(most recent call last\):\s*$")
 PY_FRAME_RE = re.compile(r'^\s*File "([^"]+)", line (\d+)(?:, in (.+))?\s*$')
-PY_EXCEPTION_RE = re.compile(r"^(?P<etype>[A-Za-z_][A-Za-z0-9_]*)(?::\s*(?P<msg>.*))?\s*$")
+PY_EXCEPTION_RE = re.compile(
+    r"^(?P<etype>[A-Za-z_][A-Za-z0-9_]*)(?::\s*(?P<msg>.*))?\s*$"
+)
 PY_SYNTAXERROR_FILE_RE = re.compile(r'^\s*File "([^"]+)", line (\d+)\s*$')
 
 
-def parse_python(text: str) -> List[Diagnostic]:
+def parse_python(text: str, max_related: Optional[int] = None) -> List[Diagnostic]:
     lines = text.splitlines()
     diags: List[Diagnostic] = []
 
@@ -209,7 +223,11 @@ def parse_python(text: str) -> List[Diagnostic]:
                     func = fm.group(3).strip() if fm.group(3) else None
                     frames.append(StackFrame(path=path, line=line_no, func=func))
                     # skip source context line if present
-                    if i + 1 < len(lines) and lines[i + 1].strip() and not PY_FRAME_RE.match(lines[i + 1]):
+                    if (
+                        i + 1 < len(lines)
+                        and lines[i + 1].strip()
+                        and not PY_FRAME_RE.match(lines[i + 1])
+                    ):
                         i += 2
                         continue
                     i += 1
@@ -253,11 +271,20 @@ def parse_python(text: str) -> List[Diagnostic]:
 
         exc_line = None
         for j in range(last_file_idx + 1, len(lines)):
-            if lines[j].strip().startswith(("SyntaxError:", "IndentationError:", "TabError:")):
+            if (
+                lines[j]
+                .strip()
+                .startswith(("SyntaxError:", "IndentationError:", "TabError:"))
+            ):
                 exc_line = lines[j].strip()
 
         if exc_line:
             etype, _ = exc_line.split(":", 1)
+            syntax_related = [
+                ln.rstrip() for ln in lines[last_file_idx + 1 :] if ln.strip()
+            ]
+            if max_related is not None and max_related >= 0:
+                syntax_related = syntax_related[:max_related]
             diags.append(
                 Diagnostic(
                     severity="error",
@@ -267,14 +294,23 @@ def parse_python(text: str) -> List[Diagnostic]:
                     code=etype.strip(),
                     message=exc_line,
                     raw=exc_line,
-                    related=[ln.rstrip() for ln in lines[last_file_idx + 1 :] if ln.strip()],
+                    related=syntax_related,
                     stack=[],
                 )
             )
 
     # Dedup
     uniq: List[Diagnostic] = []
-    seen = set()
+    seen: Set[
+        Tuple[
+            Optional[str],
+            Optional[str],
+            Optional[int],
+            Optional[int],
+            Optional[str],
+            str,
+        ]
+    ] = set()
     for d in diags:
         key = (d.severity, d.path, d.line, d.col, d.code, d.message)
         if key not in seen:
@@ -285,18 +321,22 @@ def parse_python(text: str) -> List[Diagnostic]:
 
 # -------------------- Auto-detect --------------------
 
-def parse_auto(text: str) -> Tuple[str, List[Diagnostic]]:
+
+def parse_auto(
+    text: str, max_related: Optional[int] = None
+) -> Tuple[str, List[Diagnostic]]:
     if "Traceback (most recent call last):" in text:
-        return "python", parse_python(text)
+        return "python", parse_python(text, max_related=max_related)
     for ln in text.splitlines():
         if GCC_CLANG_RE.match(ln) or MSVC_RE.match(ln):
-            return "cpp", parse_cpp(text)
+            return "cpp", parse_cpp(text, max_related=max_related)
     if any(PY_SYNTAXERROR_FILE_RE.match(ln) for ln in text.splitlines()):
-        return "python", parse_python(text)
+        return "python", parse_python(text, max_related=max_related)
     return "auto", []
 
 
 # -------------------- Normalized schema helpers --------------------
+
 
 def summarize(diags: List[Diagnostic]) -> Dict[str, int]:
     s = {"errors": 0, "warnings": 0, "notes": 0}
@@ -312,19 +352,41 @@ def summarize(diags: List[Diagnostic]) -> Dict[str, int]:
 
 def canonical_json_bytes(obj: Any) -> bytes:
     # Deterministic canonicalization: sorted keys, UTF-8, no whitespace
-    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return json.dumps(
+        obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+    ).encode("utf-8")
 
 
 def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def compute_run_id_from_input(text: str) -> str:
+def _write_stdout_json(obj: Any, pretty: bool) -> None:
+    if pretty:
+        text = json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
+    else:
+        text = json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n"
+    sys.stdout.buffer.write(text.encode("utf-8", errors="replace"))
+
+
+def compute_run_id_from_input(text: str, normalize_newlines: bool = False) -> str:
     # Stable run id derived from input content (deterministic)
-    return sha256_hex(text.encode("utf-8", errors="replace"))[:16]
+    t = text.replace("\r\n", "\n") if normalize_newlines else text
+    return sha256_hex(t.encode("utf-8", errors="replace"))[:16]
+
+
+def _should_fail(diags: List[Diagnostic], fail_on: str) -> bool:
+    if fail_on == "never":
+        return False
+
+    rank = {"info": 0, "note": 1, "warning": 2, "error": 3}
+    threshold = rank[fail_on]
+    highest = max((rank.get(d.severity, 0) for d in diags), default=0)
+    return highest >= threshold
 
 
 # -------------------- SARIF emission --------------------
+
 
 def _relativize_path(path: str, srcroot: Optional[str]) -> str:
     if not srcroot:
@@ -349,7 +411,7 @@ def diag_rule_id(d: Diagnostic) -> str:
 def diag_fingerprint(d: Diagnostic, srcroot: Optional[str]) -> str:
     # Stable fingerprint used for de-dup / alert tracking.
     path = _relativize_path(d.path, srcroot) if d.path else ""
-    core = {
+    core: Dict[str, Any] = {
         "path": path,
         "line": d.line or 0,
         "col": d.col or 0,
@@ -380,7 +442,9 @@ def to_sarif(
             "id": rule_id,
             "name": rule_id,
             "shortDescription": {"text": f"{tool_name} diagnostic rule {rule_id}"},
-            "fullDescription": {"text": f"Diagnostics parsed by {tool_name} (source={detected_kind})."},
+            "fullDescription": {
+                "text": f"Diagnostics parsed by {tool_name} (source={detected_kind})."
+            },
             "defaultConfiguration": {"level": default_level},
         }
 
@@ -399,7 +463,11 @@ def to_sarif(
                 {
                     "level": level,
                     "message": {"text": d.message},
-                    "properties": {"raw": d.raw, "code": d.code, "sourceKind": detected_kind},
+                    "properties": {
+                        "raw": d.raw,
+                        "code": d.code,
+                        "sourceKind": detected_kind,
+                    },
                 }
             )
             continue
@@ -449,7 +517,7 @@ def to_sarif(
                         "name": tool_name,
                         "version": tool_version,
                         "informationUri": "https://github.com/Colt45en/coltens-world",
-                        "rules": list(rules_by_id.values()),
+                        "rules": [rules_by_id[k] for k in sorted(rules_by_id.keys())],
                     }
                 },
                 # Category/run identity (helps when uploading multiple analyses)
@@ -477,7 +545,14 @@ def to_sarif(
 
 # -------------------- Ledger emission --------------------
 
-def ledger_record_from_diag(d: Diagnostic, detected_kind: str, sarif_fp: Optional[str], sarif_rule_id: Optional[str], srcroot: Optional[str]) -> Dict[str, Any]:
+
+def ledger_record_from_diag(
+    d: Diagnostic,
+    detected_kind: str,
+    sarif_fp: Optional[str],
+    sarif_rule_id: Optional[str],
+    srcroot: Optional[str],
+) -> Dict[str, Any]:
     path_rel = _relativize_path(d.path, srcroot) if d.path else None
     return {
         "type": "diagnostic",
@@ -490,7 +565,10 @@ def ledger_record_from_diag(d: Diagnostic, detected_kind: str, sarif_fp: Optiona
         "message": d.message,
         "raw": d.raw,
         "related": d.related,
-        "stack": [{"path": _relativize_path(f.path, srcroot), "line": f.line, "func": f.func} for f in d.stack],
+        "stack": [
+            {"path": _relativize_path(f.path, srcroot), "line": f.line, "func": f.func}
+            for f in d.stack
+        ],
         "sarif": {"ruleId": sarif_rule_id, "fingerprint": sarif_fp},
     }
 
@@ -498,7 +576,7 @@ def ledger_record_from_diag(d: Diagnostic, detected_kind: str, sarif_fp: Optiona
 def write_ledger_ndjson(
     diags: List[Diagnostic],
     detected_kind: str,
-    out_fp,
+    out_fp: TextIO,
     run_id: str,
     chain: bool,
     tool_name: str,
@@ -510,16 +588,15 @@ def write_ledger_ndjson(
     prev_cid: Optional[str] = None
 
     # Run-start event (anchors the stream)
-    run_record = {
+    run_record: Dict[str, Any] = {
         "type": "run_start",
         "tool": {"name": tool_name, "version": tool_version},
         "sourceKind": detected_kind,
         "runId": run_id,
-        "createdAtUtc": now,
         "summary": summarize(diags),
     }
     run_cid = sha256_hex(canonical_json_bytes(run_record))
-    run_event = {
+    run_event: Dict[str, Any] = {
         "schema": "we.ledger.event@1",
         "cid": run_cid,
         "prev": None,
@@ -527,7 +604,9 @@ def write_ledger_ndjson(
         "observedAtUtc": now,
         "record": run_record,
     }
-    out_fp.write(json.dumps(run_event, ensure_ascii=False, separators=(",", ":")) + "\n")
+    out_fp.write(
+        json.dumps(run_event, ensure_ascii=False, separators=(",", ":")) + "\n"
+    )
     prev_cid = run_cid if chain else None
 
     # Diagnostic events
@@ -535,9 +614,11 @@ def write_ledger_ndjson(
         sarif_rule_id = diag_rule_id(d)
         sarif_fp = diag_fingerprint(d, srcroot) if d.path and d.line else None
 
-        record = ledger_record_from_diag(d, detected_kind, sarif_fp, sarif_rule_id, srcroot)
+        record = ledger_record_from_diag(
+            d, detected_kind, sarif_fp, sarif_rule_id, srcroot
+        )
         cid = sha256_hex(canonical_json_bytes(record))
-        event = {
+        event: Dict[str, Any] = {
             "schema": "we.ledger.event@1",
             "cid": cid,
             "prev": prev_cid if chain else None,
@@ -545,31 +626,92 @@ def write_ledger_ndjson(
             "observedAtUtc": now,
             "record": record,
         }
-        out_fp.write(json.dumps(event, ensure_ascii=False, separators=(",", ":")) + "\n")
+        out_fp.write(
+            json.dumps(event, ensure_ascii=False, separators=(",", ":")) + "\n"
+        )
         if chain:
             prev_cid = cid
 
 
 # -------------------- CLI --------------------
 
+
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--kind", choices=["auto", "cpp", "python"], default="auto")
-    ap.add_argument("--in", dest="infile", default="-", help="Input file or '-' for stdin.")
-    ap.add_argument("--emit", action="append", choices=["normalized", "sarif", "ledger"], required=True,
-                    help="What to emit. Can be repeated.")
-    ap.add_argument("--pretty", action="store_true", help="Pretty JSON (normalized/SARIF only).")
+    ap.add_argument(
+        "--in", dest="infile", default="-", help="Input file or '-' for stdin."
+    )
+    ap.add_argument(
+        "--emit",
+        action="append",
+        choices=["normalized", "sarif", "ledger"],
+        required=True,
+        help="What to emit. Can be repeated.",
+    )
+    ap.add_argument(
+        "--pretty", action="store_true", help="Pretty JSON (normalized/SARIF only)."
+    )
     ap.add_argument("--tool-name", default=TOOL_NAME_DEFAULT)
     ap.add_argument("--tool-version", default=TOOL_VERSION_DEFAULT)
-    ap.add_argument("--srcroot", default=None, help="Repo root for making paths relative (recommended in CI).")
+    ap.add_argument(
+        "--srcroot",
+        default=None,
+        help="Repo root for making paths relative (recommended in CI).",
+    )
 
-    ap.add_argument("--sarif-out", default=None, help="Where to write SARIF. Default: results.sarif.json")
-    ap.add_argument("--sarif-category", default=None, help="Category/run id for SARIF. Default: runId")
-    ap.add_argument("--max-results", type=int, default=None, help="Cap SARIF results count (helps size limits).")
+    ap.add_argument(
+        "--sarif-out",
+        default=None,
+        help="Where to write SARIF. Default: results.sarif.json",
+    )
+    ap.add_argument(
+        "--sarif-category",
+        default=None,
+        help="Category/run id for SARIF. Default: runId",
+    )
+    ap.add_argument(
+        "--max-results",
+        type=int,
+        default=None,
+        help="Cap SARIF results count (helps size limits).",
+    )
+    ap.add_argument(
+        "--max-related",
+        type=int,
+        default=None,
+        help="Cap related/context lines per diagnostic (helps SARIF size stability).",
+    )
 
-    ap.add_argument("--ledger-out", default=None, help="Where to write ledger NDJSON. Default: ledger.ndjson")
-    ap.add_argument("--ledger-chain", action="store_true", help="Hash-chain events with prev CID.")
-    ap.add_argument("--run-id", default=None, help="Override run id (default derived from input hash).")
+    ap.add_argument(
+        "--ledger-out",
+        default=None,
+        help="Where to write ledger NDJSON. Default: ledger.ndjson",
+    )
+    ap.add_argument(
+        "--ledger-chain", action="store_true", help="Hash-chain events with prev CID."
+    )
+    ap.add_argument(
+        "--ledger-append",
+        action="store_true",
+        help="Append to ledger NDJSON instead of overwrite.",
+    )
+    ap.add_argument(
+        "--run-id",
+        default=None,
+        help="Override run id (default derived from input hash).",
+    )
+    ap.add_argument(
+        "--normalize-newlines",
+        action="store_true",
+        help="Normalize CRLF to LF when deriving run-id hash.",
+    )
+    ap.add_argument(
+        "--fail-on",
+        choices=["error", "warning", "note", "never"],
+        default="never",
+        help="Exit non-zero if diagnostics at/above this severity are present.",
+    )
 
     args = ap.parse_args(argv)
 
@@ -581,15 +723,17 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     detected = args.kind
     if args.kind == "cpp":
-        diags = parse_cpp(text)
+        diags = parse_cpp(text, max_related=args.max_related)
         detected = "cpp"
     elif args.kind == "python":
-        diags = parse_python(text)
+        diags = parse_python(text, max_related=args.max_related)
         detected = "python"
     else:
-        detected, diags = parse_auto(text)
+        detected, diags = parse_auto(text, max_related=args.max_related)
 
-    run_id = args.run_id or compute_run_id_from_input(text)
+    run_id = args.run_id or compute_run_id_from_input(
+        text, normalize_newlines=args.normalize_newlines
+    )
     category = args.sarif_category or run_id
 
     if args.srcroot:
@@ -597,17 +741,14 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     # Emit normalized
     if "normalized" in args.emit:
-        out = {
+        out: Dict[str, Any] = {
             "schema_version": "1.0",
             "tool": args.tool_name,
             "source_kind": detected,
             "summary": summarize(diags),
             "diagnostics": [d.to_normalized() for d in diags],
         }
-        if args.pretty:
-            sys.stdout.write(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
-        else:
-            sys.stdout.write(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
+        _write_stdout_json(out, pretty=args.pretty)
 
     # Emit SARIF
     if "sarif" in args.emit:
@@ -625,12 +766,16 @@ def main(argv: Optional[List[str]] = None) -> int:
             if args.pretty:
                 f.write(json.dumps(sarif_obj, indent=2, ensure_ascii=False) + "\n")
             else:
-                f.write(json.dumps(sarif_obj, ensure_ascii=False, separators=(",", ":")) + "\n")
+                f.write(
+                    json.dumps(sarif_obj, ensure_ascii=False, separators=(",", ":"))
+                    + "\n"
+                )
 
     # Emit ledger
     if "ledger" in args.emit:
         ledger_path = args.ledger_out or "ledger.ndjson"
-        with open(ledger_path, "w", encoding="utf-8") as f:
+        ledger_mode = "a" if args.ledger_append else "w"
+        with open(ledger_path, ledger_mode, encoding="utf-8") as f:
             write_ledger_ndjson(
                 diags=diags,
                 detected_kind=detected,
@@ -642,7 +787,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 srcroot=args.srcroot,
             )
 
-    return 0
+    return 1 if _should_fail(diags, args.fail_on) else 0
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ def cmd_validate(args):
         return
 
     try:
-        with open(args.payload, 'r') as f:
+        with open(args.payload, "r") as f:
             payload = json.load(f)
     except Exception as e:
         print(f"❌ Failed to load payload: {e}")
@@ -63,7 +63,7 @@ def cmd_run(args):
 
     # Load payload
     try:
-        with open(args.payload, 'r') as f:
+        with open(args.payload, "r") as f:
             payload = json.load(f)
     except Exception as e:
         print(f"❌ Failed to load payload: {e}")
@@ -73,7 +73,7 @@ def cmd_run(args):
     memory_context = None
     if args.memory:
         try:
-            with open(args.memory, 'r') as f:
+            with open(args.memory, "r") as f:
                 mem_data = json.load(f)
                 memory_context = MemoryContext(
                     facts=mem_data.get("facts", []),
@@ -93,14 +93,16 @@ def cmd_run(args):
 
     # Run async context
     try:
-        response = asyncio.run(registry.execute(
-            operator_name=args.operator,
-            trace_id=args.trace_id or f"{args.operator}:cli",
-            payload=payload,
-            memory_context=memory_context,
-            timeout_ms=timeout_ms,
-            deterministic=True,
-        ))
+        response = asyncio.run(
+            registry.execute(
+                operator_name=args.operator,
+                trace_id=args.trace_id or f"{args.operator}:cli",
+                payload=payload,
+                memory_context=memory_context,
+                timeout_ms=timeout_ms,
+                deterministic=True,
+            )
+        )
 
         print("\n📊 Result:")
         print(f"   Status: {response.status}")
@@ -136,7 +138,13 @@ def cmd_logs(args):
     print()
 
     for i, log in enumerate(logs, 1):
-        status_icon = "✅" if log["status"] == "success" else "❌" if log["status"] == "execution_error" else "⏱️"
+        status_icon = (
+            "✅"
+            if log["status"] == "success"
+            else "❌"
+            if log["status"] == "execution_error"
+            else "⏱️"
+        )
         print(f"{i}. {status_icon} {log['operator_name']}")
         print(f"   Status: {log['status']} ({log['execution_time_ms']}ms)")
         print(f"   Trace: {log['trace_id'][:16]}...")
@@ -156,7 +164,9 @@ def main():
     ops_parser.set_defaults(func=cmd_list_operators)
 
     # brain:validate
-    validate_parser = subparsers.add_parser("validate", help="Validate operator request")
+    validate_parser = subparsers.add_parser(
+        "validate", help="Validate operator request"
+    )
     validate_parser.add_argument("operator", help="Operator name")
     validate_parser.add_argument("payload", help="Payload JSON file")
     validate_parser.set_defaults(func=cmd_validate)
@@ -167,12 +177,16 @@ def main():
     run_parser.add_argument("payload", help="Payload JSON file")
     run_parser.add_argument("--trace-id", help="Trace ID (optional)")
     run_parser.add_argument("--memory", help="Memory context JSON file (optional)")
-    run_parser.add_argument("--timeout", type=int, help="Timeout in milliseconds (default 30000)")
+    run_parser.add_argument(
+        "--timeout", type=int, help="Timeout in milliseconds (default 30000)"
+    )
     run_parser.set_defaults(func=cmd_run)
 
     # brain:logs
     logs_parser = subparsers.add_parser("logs", help="View execution logs")
-    logs_parser.add_argument("--limit", type=int, default=20, help="Number of logs to show")
+    logs_parser.add_argument(
+        "--limit", type=int, default=20, help="Number of logs to show"
+    )
     logs_parser.set_defaults(func=cmd_logs)
 
     args = parser.parse_args()

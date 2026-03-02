@@ -15,11 +15,12 @@ sys.path.insert(0, str(Path(__file__).parent / "packages"))
 
 from packages.core.nucleus_server import start_agent_server
 
+
 async def main():
     """Main entry point"""
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     logger = logging.getLogger(__name__)
@@ -35,6 +36,7 @@ async def main():
     except Exception as e:
         logger.error(f"Error running Agent Suite: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

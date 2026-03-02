@@ -40,6 +40,7 @@ logger = logging.getLogger("test_runner")
 
 class ProgressDict(TypedDict):
     """Type definition for progress tracking dictionary"""
+
     case_ingested: bool
     segmentation_completed: bool
     connectome_completed: bool
@@ -121,16 +122,22 @@ async def run_reconstruction_test(
 
         if event_type == "dt.case.ingested":
             progress["case_ingested"] = True
-            logger.info(f"✅ Ingest complete: {payload.get('quality', {}).get('confidence', 0):.2f} confidence")
+            logger.info(
+                f"✅ Ingest complete: {payload.get('quality', {}).get('confidence', 0):.2f} confidence"
+            )
 
         elif event_type == "dt.segmentation.completed":
             progress["segmentation_completed"] = True
-            logger.info(f"✅ Segmentation complete: {len(payload.get('label_map', {}) or {})} organs")
+            logger.info(
+                f"✅ Segmentation complete: {len(payload.get('label_map', {}) or {})} organs"
+            )
 
         elif event_type == "dt.connectome.completed":
             progress["connectome_completed"] = True
             stats: dict = payload.get("stats", {}) or {}
-            logger.info(f"✅ Connectome complete: {stats.get('nodes', 0)} nodes, {stats.get('edges', 0)} edges")
+            logger.info(
+                f"✅ Connectome complete: {stats.get('nodes', 0)} nodes, {stats.get('edges', 0)} edges"
+            )
 
         elif event_type == "dt.simulation.completed":
             progress["simulation_completed"] = True
@@ -185,10 +192,7 @@ async def run_reconstruction_test(
     )
 
     try:
-        result = await asyncio.wait_for(
-            brain.bus.send_command(cmd),
-            timeout=5.0
-        )
+        result = await asyncio.wait_for(brain.bus.send_command(cmd), timeout=5.0)
         logger.info(f"Command accepted: {result}")
     except asyncio.TimeoutError:
         logger.error("Command timed out")
@@ -223,7 +227,9 @@ async def run_reconstruction_test(
     logger.info("=" * 80)
     logger.info("Test Summary:")
     logger.info(f"  Case Ingested: {'✅' if progress['case_ingested'] else '❌'}")
-    logger.info(f"  Segmentation: {'✅' if progress['segmentation_completed'] else '❌'}")
+    logger.info(
+        f"  Segmentation: {'✅' if progress['segmentation_completed'] else '❌'}"
+    )
     logger.info(f"  Connectome: {'✅' if progress['connectome_completed'] else '❌'}")
     logger.info(f"  Simulation: {'✅' if progress['simulation_completed'] else '❌'}")
     logger.info(f"  Render Frames: {progress['render_frames']}")
@@ -237,6 +243,7 @@ async def run_reconstruction_test(
         logger.info("Exporting PNG slices...")
         try:
             from . import dicom_toolkit as dcm
+
             png_dir = runtime_dir / f"{case_id}_png"
             dcm.export_png(dicom_path, str(png_dir), None)
             logger.info(f"✅ PNG slices exported: {png_dir}")
@@ -247,6 +254,7 @@ async def run_reconstruction_test(
         logger.info("Exporting NIfTI volume...")
         try:
             from . import dicom_toolkit as dcm
+
             dcm.export_nifti(dicom_path, export_nifti)
             logger.info(f"✅ NIfTI volume exported: {export_nifti}")
         except Exception as e:

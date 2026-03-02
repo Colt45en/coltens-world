@@ -34,16 +34,19 @@ Usage:
 from __future__ import annotations
 
 import json
+from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 try:
-    import pydicom
+    _pydicom_module: Any = import_module("pydicom")
+    dcmread: Any = _pydicom_module.dcmread
 except ImportError:
-    pydicom = None
+    dcmread = None
 
 # DICOMweb server implementation
 # In production: use FastAPI or Flask-RESTX
+
 
 class DICOMwebServer:
     """
@@ -56,10 +59,7 @@ class DICOMwebServer:
     """
 
     def __init__(
-        self,
-        storage_root: Path,
-        cors: str = "*",
-        auth_required: bool = False
+        self, storage_root: Path, cors: str = "*", auth_required: bool = False
     ):
         self.storage_root = Path(storage_root)
         self.cors = cors
@@ -96,11 +96,11 @@ class DICOMwebServer:
         dicom_files = list(self.storage_root.rglob("*.dcm"))
 
         for dcm_path in dicom_files:
-            if pydicom is None:
+            if dcmread is None:
                 continue
 
             try:
-                ds = pydicom.dcmread(dcm_path, stop_before_pixels=True)  # type: ignore[attr-defined]
+                ds = dcmread(dcm_path, stop_before_pixels=True)
 
                 study_uid = str(ds.StudyInstanceUID)
                 series_uid = str(ds.SeriesInstanceUID)
@@ -114,7 +114,7 @@ class DICOMwebServer:
                         "PatientID": str(ds.get("PatientID", "UNKNOWN")),
                         "StudyDate": str(ds.get("StudyDate", "")),
                         "StudyDescription": str(ds.get("StudyDescription", "")),
-                        "series": []
+                        "series": [],
                     }
 
                 # Index series
@@ -126,7 +126,7 @@ class DICOMwebServer:
                         "SeriesNumber": int(ds.get("SeriesNumber", 0)),
                         "Modality": str(ds.get("Modality", "OT")),
                         "SeriesDescription": str(ds.get("SeriesDescription", "")),
-                        "instances": []
+                        "instances": [],
                     }
                     self._series[series_key] = series_info
                     self._studies[study_uid]["series"].append(series_uid)
@@ -141,7 +141,7 @@ class DICOMwebServer:
                     "Rows": int(ds.get("Rows", 0)),
                     "Columns": int(ds.get("Columns", 0)),
                     "NumberOfFrames": int(ds.get("NumberOfFrames", 1)),
-                    "filepath": str(dcm_path)
+                    "filepath": str(dcm_path),
                 }
 
                 self._series[series_key]["instances"].append(instance_uid)
@@ -151,9 +151,7 @@ class DICOMwebServer:
 
     # QIDO-RS: Search for studies
     def qido_search_studies(
-        self,
-        patient_id: Optional[str] = None,
-        study_date: Optional[str] = None
+        self, patient_id: Optional[str] = None, study_date: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Search for studies.
@@ -172,21 +170,24 @@ class DICOMwebServer:
                 continue
 
             # Return metadata (DICOM JSON model)
-            results.append({
-                "0020000D": {"vr": "UI", "Value": [study["StudyInstanceUID"]]},
-                "00100010": {"vr": "PN", "Value": [{"Alphabetic": study["PatientName"]}]},
-                "00100020": {"vr": "LO", "Value": [study["PatientID"]]},
-                "00080020": {"vr": "DA", "Value": [study["StudyDate"]]},
-                "00081030": {"vr": "LO", "Value": [study["StudyDescription"]]},
-            })
+            results.append(
+                {
+                    "0020000D": {"vr": "UI", "Value": [study["StudyInstanceUID"]]},
+                    "00100010": {
+                        "vr": "PN",
+                        "Value": [{"Alphabetic": study["PatientName"]}],
+                    },
+                    "00100020": {"vr": "LO", "Value": [study["PatientID"]]},
+                    "00080020": {"vr": "DA", "Value": [study["StudyDate"]]},
+                    "00081030": {"vr": "LO", "Value": [study["StudyDescription"]]},
+                }
+            )
 
         return results
 
     # QIDO-RS: Search for series
     def qido_search_series(
-        self,
-        study_uid: Optional[str] = None,
-        modality: Optional[str] = None
+        self, study_uid: Optional[str] = None, modality: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Search for series.
@@ -205,21 +206,21 @@ class DICOMwebServer:
             if modality and series["Modality"] != modality:
                 continue
 
-            results.append({
-                "0020000E": {"vr": "UI", "Value": [series["SeriesInstanceUID"]]},
-                "0020000D": {"vr": "UI", "Value": [series["StudyInstanceUID"]]},
-                "00200011": {"vr": "IS", "Value": [str(series["SeriesNumber"])]},
-                "00080060": {"vr": "CS", "Value": [series["Modality"]]},
-                "0008103E": {"vr": "LO", "Value": [series["SeriesDescription"]]},
-            })
+            results.append(
+                {
+                    "0020000E": {"vr": "UI", "Value": [series["SeriesInstanceUID"]]},
+                    "0020000D": {"vr": "UI", "Value": [series["StudyInstanceUID"]]},
+                    "00200011": {"vr": "IS", "Value": [str(series["SeriesNumber"])]},
+                    "00080060": {"vr": "CS", "Value": [series["Modality"]]},
+                    "0008103E": {"vr": "LO", "Value": [series["SeriesDescription"]]},
+                }
+            )
 
         return results
 
     # QIDO-RS: Search for instances
     def qido_search_instances(
-        self,
-        study_uid: Optional[str] = None,
-        series_uid: Optional[str] = None
+        self, study_uid: Optional[str] = None, series_uid: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Search for instances.
@@ -237,24 +238,29 @@ class DICOMwebServer:
             if series_uid and instance["SeriesInstanceUID"] != series_uid:
                 continue
 
-            results.append({
-                "00080018": {"vr": "UI", "Value": [instance["SOPInstanceUID"]]},
-                "0020000E": {"vr": "UI", "Value": [instance["SeriesInstanceUID"]]},
-                "0020000D": {"vr": "UI", "Value": [instance["StudyInstanceUID"]]},
-                "00200013": {"vr": "IS", "Value": [str(instance["InstanceNumber"])]},
-                "00280010": {"vr": "US", "Value": [instance["Rows"]]},
-                "00280011": {"vr": "US", "Value": [instance["Columns"]]},
-                "00280008": {"vr": "IS", "Value": [str(instance["NumberOfFrames"])]},
-            })
+            results.append(
+                {
+                    "00080018": {"vr": "UI", "Value": [instance["SOPInstanceUID"]]},
+                    "0020000E": {"vr": "UI", "Value": [instance["SeriesInstanceUID"]]},
+                    "0020000D": {"vr": "UI", "Value": [instance["StudyInstanceUID"]]},
+                    "00200013": {
+                        "vr": "IS",
+                        "Value": [str(instance["InstanceNumber"])],
+                    },
+                    "00280010": {"vr": "US", "Value": [instance["Rows"]]},
+                    "00280011": {"vr": "US", "Value": [instance["Columns"]]},
+                    "00280008": {
+                        "vr": "IS",
+                        "Value": [str(instance["NumberOfFrames"])],
+                    },
+                }
+            )
 
         return results
 
     # WADO-RS: Retrieve instance
     def wado_retrieve_instance(
-        self,
-        study_uid: str,
-        series_uid: str,
-        instance_uid: str
+        self, study_uid: str, series_uid: str, instance_uid: str
     ) -> Optional[bytes]:
         """
         Retrieve DICOM instance.
@@ -277,11 +283,7 @@ class DICOMwebServer:
 
     # WADO-RS: Retrieve frame
     def wado_retrieve_frame(
-        self,
-        study_uid: str,
-        series_uid: str,
-        instance_uid: str,
-        frame_number: int
+        self, study_uid: str, series_uid: str, instance_uid: str, frame_number: int
     ) -> Optional[bytes]:
         """
         Retrieve single frame from multi-frame instance.
@@ -290,7 +292,7 @@ class DICOMwebServer:
 
         Returns frame pixels (image/jpeg or application/octet-stream).
         """
-        if pydicom is None:
+        if dcmread is None:
             return None
 
         instance_key = f"{study_uid}/{series_uid}/{instance_uid}"
@@ -304,7 +306,7 @@ class DICOMwebServer:
             return None
 
         try:
-            ds = pydicom.dcmread(filepath)
+            ds = dcmread(filepath)
 
             # Extract frame
             if hasattr(ds, "pixel_array"):
@@ -332,7 +334,7 @@ def start_server(
     port: int = 8080,
     storage_root: str = "runtime/artifacts",
     cors: str = "*",
-    auth_required: bool = False
+    auth_required: bool = False,
 ) -> None:
     """
     Start DICOMweb server.
@@ -344,9 +346,7 @@ def start_server(
         auth_required: Require JWT authentication (default: False)
     """
     server = DICOMwebServer(
-        storage_root=Path(storage_root),
-        cors=cors,
-        auth_required=auth_required
+        storage_root=Path(storage_root), cors=cors, auth_required=auth_required
     )
 
     print("[DICOMweb Server]")
@@ -361,16 +361,23 @@ def start_server(
     print("Endpoints:")
     print(f"  QIDO-RS: http://localhost:{port}/dicomweb/studies")
     print(f"  QIDO-RS: http://localhost:{port}/dicomweb/series")
-    print(f"  WADO-RS: http://localhost:{port}/dicomweb/studies/{{study}}/series/{{series}}/instances/{{instance}}")
+    print(
+        f"  WADO-RS: http://localhost:{port}/dicomweb/studies/{{study}}/series/{{series}}/instances/{{instance}}"
+    )
     print()
 
     # In production: use FastAPI or Flask
     # For now, print config
     print("Example viewer config:")
-    print(json.dumps({
-        "wadoRsRoot": f"http://localhost:{port}/dicomweb",
-        "qidoRoot": f"http://localhost:{port}/dicomweb"
-    }, indent=2))
+    print(
+        json.dumps(
+            {
+                "wadoRsRoot": f"http://localhost:{port}/dicomweb",
+                "qidoRoot": f"http://localhost:{port}/dicomweb",
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":
@@ -378,7 +385,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="DICOMweb Streaming Server")
     parser.add_argument("--port", type=int, default=8080, help="HTTP port")
-    parser.add_argument("--storage", default="runtime/artifacts", help="Artifact storage root")
+    parser.add_argument(
+        "--storage", default="runtime/artifacts", help="Artifact storage root"
+    )
     parser.add_argument("--cors", default="*", help="CORS origin")
     parser.add_argument("--auth", action="store_true", help="Require authentication")
 
@@ -388,5 +397,5 @@ if __name__ == "__main__":
         port=args.port,
         storage_root=args.storage,
         cors=args.cors,
-        auth_required=args.auth
+        auth_required=args.auth,
     )

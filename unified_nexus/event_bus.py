@@ -44,9 +44,13 @@ class EventBus:
 
     def __init__(self, *, max_event_q: int = 10_000, max_cmd_q: int = 2_000) -> None:
         self._event_subs: Dict[str, List[EventHandler]] = {}
-        self._event_q: "asyncio.Queue[V1EventEnvelope]" = asyncio.Queue(maxsize=max_event_q)
+        self._event_q: "asyncio.Queue[V1EventEnvelope]" = asyncio.Queue(
+            maxsize=max_event_q
+        )
         self._command_handlers: Dict[str, CommandHandler] = {}
-        self._command_q: "asyncio.Queue[V1CommandEnvelope]" = asyncio.Queue(maxsize=max_cmd_q)
+        self._command_q: "asyncio.Queue[V1CommandEnvelope]" = asyncio.Queue(
+            maxsize=max_cmd_q
+        )
         self._pending_acks: Dict[str, asyncio.Future[Dict[str, object]]] = {}
         self._max_event_q = max_event_q
         self._max_cmd_q = max_cmd_q
@@ -54,10 +58,14 @@ class EventBus:
     def subscribe_event(self, event_type: str, handler: EventHandler) -> None:
         self._event_subs.setdefault(event_type, []).append(handler)
 
-    def register_command_handler(self, command_type: str, handler: CommandHandler) -> None:
+    def register_command_handler(
+        self, command_type: str, handler: CommandHandler
+    ) -> None:
         self._command_handlers[command_type] = handler
 
-    async def emit_event_nucleus_only(self, evt: V1EventEnvelope, *, caller: str) -> None:
+    async def emit_event_nucleus_only(
+        self, evt: V1EventEnvelope, *, caller: str
+    ) -> None:
         if caller != "nucleus":
             raise PermissionError("Only nucleus may emit events")
         await self._event_q.put(evt)
@@ -73,12 +81,16 @@ class EventBus:
             cmd_q_max=self._max_cmd_q,
         )
 
-    async def send_command_await_acks(self, cmd: V1CommandEnvelope, timeout_s: float = 2.0) -> Dict[str, object]:
+    async def send_command_await_acks(
+        self, cmd: V1CommandEnvelope, timeout_s: float = 2.0
+    ) -> Dict[str, object]:
         loop = asyncio.get_running_loop()
 
         # Guard against duplicate command_id collisions
         if cmd.command_id in self._pending_acks:
-            raise RuntimeError(f"duplicate command_id already pending: {cmd.command_id}")
+            raise RuntimeError(
+                f"duplicate command_id already pending: {cmd.command_id}"
+            )
 
         fut = loop.create_future()
         self._pending_acks[cmd.command_id] = fut
@@ -149,7 +161,9 @@ class EventBus:
                         "error": f"{type(exc).__name__}: {exc}",
                     }
 
-            fut: Optional[asyncio.Future[Dict[str, object]]] = self._pending_acks.get(cmd.command_id)
+            fut: Optional[asyncio.Future[Dict[str, object]]] = self._pending_acks.get(
+                cmd.command_id
+            )
             if fut is not None and not fut.done():
                 fut.set_result(response)
             self._command_q.task_done()

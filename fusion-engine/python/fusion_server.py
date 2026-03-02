@@ -25,21 +25,26 @@ RENDER_DIR = DATA_DIR / "renders"
 MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 RENDER_DIR.mkdir(parents=True, exist_ok=True)
 
+
 def uid(prefix: str = "id") -> str:
-    return f"{prefix}-{int(time.time()*1000)}-{uuid.uuid4().hex[:10]}"
+    return f"{prefix}-{int(time.time() * 1000)}-{uuid.uuid4().hex[:10]}"
+
 
 def now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()) + "Z"
+
 
 @dataclass
 class ToolAction:
     name: str
     args: Dict[str, Any]
 
+
 class ToolRunner:
     """
     Runs the C++ recorder tool as a subprocess and returns a /media URL.
     """
+
     def __init__(self) -> None:
         self._lock = asyncio.Lock()
 
@@ -62,20 +67,35 @@ class ToolRunner:
         # Fallback to PATH
         return "fusion_recorder.exe"
 
-    async def record_screen(self, duration_s: int, width: int, height: int, fps: int, bitrate: int,
-                            mic: str = "", sys: str = "") -> Dict[str, Any]:
+    async def record_screen(
+        self,
+        duration_s: int,
+        width: int,
+        height: int,
+        fps: int,
+        bitrate: int,
+        mic: str = "",
+        sys: str = "",
+    ) -> Dict[str, Any]:
         out_name = f"screen_{int(time.time())}_{uuid.uuid4().hex[:6]}.mp4"
         out_path = MEDIA_DIR / out_name
 
         exe = self._find_recorder_exe()
         cmd = [
-            exe, "record-screen",
-            "--duration", str(duration_s),
-            "--out", str(out_path),
-            "--width", str(width),
-            "--height", str(height),
-            "--fps", str(fps),
-            "--bitrate", str(bitrate),
+            exe,
+            "record-screen",
+            "--duration",
+            str(duration_s),
+            "--out",
+            str(out_path),
+            "--width",
+            str(width),
+            "--height",
+            str(height),
+            "--fps",
+            str(fps),
+            "--bitrate",
+            str(bitrate),
         ]
         if mic:
             cmd += ["--mic", mic]
@@ -90,9 +110,12 @@ class ToolRunner:
 
         exe = self._find_recorder_exe()
         cmd = [
-            exe, "record-audio",
-            "--duration", str(duration_s),
-            "--out", str(out_path),
+            exe,
+            "record-audio",
+            "--duration",
+            str(duration_s),
+            "--out",
+            str(out_path),
         ]
         if mic:
             cmd += ["--mic", mic]
@@ -116,7 +139,11 @@ class ToolRunner:
                 except Exception:
                     tool_json = None
 
-            ok = (proc.returncode == 0) and (tool_json is not None) and bool(tool_json.get("ok", False))
+            ok = (
+                (proc.returncode == 0)
+                and (tool_json is not None)
+                and bool(tool_json.get("ok", False))
+            )
             if not ok:
                 return {
                     "ok": False,
@@ -125,7 +152,7 @@ class ToolRunner:
                         "stdout": stdout[:4000],
                         "stderr": stderr[:4000],
                         "cmd": cmd,
-                    }
+                    },
                 }
 
             return {
@@ -135,8 +162,9 @@ class ToolRunner:
                     "out": tool_json.get("out") if tool_json else None,
                     "duration_s": tool_json.get("duration_s") if tool_json else None,
                     "exit_code": tool_json.get("exit_code") if tool_json else None,
-                }
+                },
             }
+
 
 tool_runner = ToolRunner()
 app = FastAPI()
@@ -145,7 +173,10 @@ app = FastAPI()
 app.mount("/media", StaticFiles(directory=str(MEDIA_DIR)), name="media")
 app.mount("/renders", StaticFiles(directory=str(RENDER_DIR)), name="renders")
 
-async def ws_send(ws: WebSocket, trace_id: str, kind: str, payload: Dict[str, Any]) -> None:
+
+async def ws_send(
+    ws: WebSocket, trace_id: str, kind: str, payload: Dict[str, Any]
+) -> None:
     msg: Dict[str, Any] = {
         "v": ENVELOPE_VERSION,
         "id": uid("env"),
@@ -156,6 +187,7 @@ async def ws_send(ws: WebSocket, trace_id: str, kind: str, payload: Dict[str, An
         "payload": payload,
     }
     await ws.send_text(json.dumps(msg))
+
 
 def detect_action(text: str) -> Optional[ToolAction]:
     """
@@ -171,7 +203,16 @@ def detect_action(text: str) -> Optional[ToolAction]:
     m = re.search(r"\brecord\s+screen\s+(\d+)\b", t)
     if m:
         dur = int(m.group(1))
-        return ToolAction("record_screen", {"duration_s": dur, "width": 1920, "height": 1080, "fps": 30, "bitrate": 2500})
+        return ToolAction(
+            "record_screen",
+            {
+                "duration_s": dur,
+                "width": 1920,
+                "height": 1080,
+                "fps": 30,
+                "bitrate": 2500,
+            },
+        )
 
     m = re.search(r"\brecord\s+audio\s+(\d+)\b", t)
     if m:
@@ -188,13 +229,17 @@ def detect_action(text: str) -> Optional[ToolAction]:
 
     return None
 
+
 async def stream_text(ws: WebSocket, trace_id: str, convo_id: str, text: str) -> None:
     await ws_send(ws, trace_id, "chat.start", {"convoId": convo_id})
     # stream in chunks for UI feel
     for i in range(0, len(text), 32):
-        await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": text[i:i+32]})
+        await ws_send(
+            ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": text[i : i + 32]}
+        )
         await asyncio.sleep(0.01)
     await ws_send(ws, trace_id, "chat.response", {"convoId": convo_id, "evidence": {}})
+
 
 @app.websocket("/ws/chat")
 async def ws_chat(ws: WebSocket):
@@ -227,22 +272,31 @@ async def ws_chat(ws: WebSocket):
             if not action:
                 # default assistant response (replace with your model)
                 await stream_text(
-                    ws, trace_id, convo_id,
-                    "✅ Connected to Fusion Python core. Say: 'record screen 10' or 'record audio 5'."
+                    ws,
+                    trace_id,
+                    convo_id,
+                    "✅ Connected to Fusion Python core. Say: 'record screen 10' or 'record audio 5'.",
                 )
                 continue
 
             # Show action evidence + run tool
             evidence: Dict[str, Any] = {
-                "actions": [{
-                    "name": action.name,
-                    "argsPreview": json.dumps(action.args),
-                }],
-                "grounding": []
+                "actions": [
+                    {
+                        "name": action.name,
+                        "argsPreview": json.dumps(action.args),
+                    }
+                ],
+                "grounding": [],
             }
 
             await ws_send(ws, trace_id, "chat.start", {"convoId": convo_id})
-            await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": f"🛠 Running tool: {action.name}...\n"})
+            await ws_send(
+                ws,
+                trace_id,
+                "chat.delta",
+                {"convoId": convo_id, "delta": f"🛠 Running tool: {action.name}...\n"},
+            )
 
             res: Dict[str, Any]
             if action.name == "record_screen":
@@ -260,25 +314,66 @@ async def ws_chat(ws: WebSocket):
 
             if not res["ok"]:
                 err: Any = res["error"]
-                await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": "❌ Tool failed.\n"})
-                await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": f"stderr:\n{err.get('stderr','')[:1200]}\n"})
-                await ws_send(ws, trace_id, "chat.response", {"convoId": convo_id, "evidence": evidence})
+                await ws_send(
+                    ws,
+                    trace_id,
+                    "chat.delta",
+                    {"convoId": convo_id, "delta": "❌ Tool failed.\n"},
+                )
+                await ws_send(
+                    ws,
+                    trace_id,
+                    "chat.delta",
+                    {
+                        "convoId": convo_id,
+                        "delta": f"stderr:\n{err.get('stderr', '')[:1200]}\n",
+                    },
+                )
+                await ws_send(
+                    ws,
+                    trace_id,
+                    "chat.response",
+                    {"convoId": convo_id, "evidence": evidence},
+                )
                 continue
 
             if "media_url" in res.get("result", {}):
                 media_url = res["result"]["media_url"]
-                await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": f"✅ Done. Download: {media_url}\n"})
+                await ws_send(
+                    ws,
+                    trace_id,
+                    "chat.delta",
+                    {"convoId": convo_id, "delta": f"✅ Done. Download: {media_url}\n"},
+                )
             elif "data" in res:
                 # Render result
                 render_url = f"/renders/{uid('render')}.{res['format']}"
                 render_path = RENDER_DIR / f"{uid('render')}.{res['format']}"
-                with open(render_path, 'wb') as f:
-                    f.write(base64.b64decode(res['data']))
-                await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": f"✅ Rendered. View: {render_url}\n"})
+                with open(render_path, "wb") as f:
+                    f.write(base64.b64decode(res["data"]))
+                await ws_send(
+                    ws,
+                    trace_id,
+                    "chat.delta",
+                    {
+                        "convoId": convo_id,
+                        "delta": f"✅ Rendered. View: {render_url}\n",
+                    },
+                )
             else:
-                await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": "✅ Tool completed.\n"})
+                await ws_send(
+                    ws,
+                    trace_id,
+                    "chat.delta",
+                    {"convoId": convo_id, "delta": "✅ Tool completed.\n"},
+                )
 
-            await ws_send(ws, trace_id, "chat.response", {"convoId": convo_id, "evidence": evidence})
+            await ws_send(
+                ws,
+                trace_id,
+                "chat.response",
+                {"convoId": convo_id, "evidence": evidence},
+            )
 
     except WebSocketDisconnect:
         return

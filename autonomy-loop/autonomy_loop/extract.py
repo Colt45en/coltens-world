@@ -15,7 +15,9 @@ class ExtractConfig:
     language_hint: str | None = None
 
 
-def build_evidence_packet(raw_text: str, source_id: str, cfg: ExtractConfig) -> dict[str, Any]:
+def build_evidence_packet(
+    raw_text: str, source_id: str, cfg: ExtractConfig
+) -> dict[str, Any]:
     """
     Detective output: EvidencePacket with tokens, raw claims, unknowns.
     All hashes and IDs are deterministic.
@@ -35,18 +37,20 @@ def build_evidence_packet(raw_text: str, source_id: str, cfg: ExtractConfig) -> 
     # Meaning is CLAIMS, not asserted facts (key insight!)
     meaning_claims = []
     for w in stable_sorted(set(words_s)):
-        meaning_claims.append({
-            "claim_id": stable_id("meaning", w.lower(), prefix="claim"),
-            "term": w,
-            "claim": f"Meaning unknown yet for '{w}' (placeholder claim must be reviewed).",
-            "confidence": 0.15,
-            "falsification_tests": [
-                "Check dictionary definition and etymology references.",
-                "Check usage examples in authoritative corpora."
-            ],
-            "evidence_links": [],
-            "review_required": True,
-        })
+        meaning_claims.append(
+            {
+                "claim_id": stable_id("meaning", w.lower(), prefix="claim"),
+                "term": w,
+                "claim": f"Meaning unknown yet for '{w}' (placeholder claim must be reviewed).",
+                "confidence": 0.15,
+                "falsification_tests": [
+                    "Check dictionary definition and etymology references.",
+                    "Check usage examples in authoritative corpora.",
+                ],
+                "evidence_links": [],
+                "review_required": True,
+            }
+        )
 
     return {
         "schema_version": "1.0.0",
@@ -70,13 +74,27 @@ def build_evidence_packet(raw_text: str, source_id: str, cfg: ExtractConfig) -> 
             "unknowns": [],
         },
         "objective": {
-            "metrics": ["coverage", "precision", "latency_ms", "dedupe_collision_rate", "confidence_mean"],
-            "constraints": ["schema_valid", "deterministic", "traceable", "no_placeholder_leaks"],
+            "metrics": [
+                "coverage",
+                "precision",
+                "latency_ms",
+                "dedupe_collision_rate",
+                "confidence_mean",
+            ],
+            "constraints": [
+                "schema_valid",
+                "deterministic",
+                "traceable",
+                "no_placeholder_leaks",
+            ],
             "acceptance_tests": [
                 {"gate": "schema", "threshold": "pass"},
                 {"gate": "determinism", "threshold": "pass"},
                 {"gate": "traceability", "threshold": "pass"},
-                {"gate": "confidence", "threshold": "mean>=0.30 OR review_queue_populated"},
+                {
+                    "gate": "confidence",
+                    "threshold": "mean>=0.30 OR review_queue_populated",
+                },
             ],
         },
     }

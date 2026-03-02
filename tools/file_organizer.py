@@ -12,20 +12,22 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import jsonschema
-
 
 # ----------------------------
 # Tamper-evident audit (hash chain)
 # ----------------------------
 
+
 def canonical_json(obj: Dict[str, Any]) -> str:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
+
 def sha256_hex(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
+
 
 class AuditChain:
     def __init__(self, log_path: Path):
@@ -71,24 +73,29 @@ class AuditChain:
 # Helpers
 # ----------------------------
 
+
 def is_abs_path(p: str) -> bool:
     try:
         return Path(p).is_absolute()
     except Exception:
         return False
 
+
 def within(root: Path, target: Path) -> bool:
     root = root.resolve()
     target = target.resolve()
     return root == target or root in target.parents
+
 
 def file_age_days(p: Path) -> float:
     st = p.stat()
     age_s = time.time() - st.st_mtime
     return age_s / 86400.0
 
+
 def file_size_kb(p: Path) -> float:
     return p.stat().st_size / 1024.0
+
 
 def read_text_safe(p: Path, max_bytes: int = 2_000_000) -> Optional[str]:
     # Only for "text-ish" files; keep bounded
@@ -98,6 +105,7 @@ def read_text_safe(p: Path, max_bytes: int = 2_000_000) -> Optional[str]:
         return p.read_text(encoding="utf-8", errors="ignore")
     except Exception:
         return None
+
 
 def render_template(tpl: str, src: Path) -> str:
     name = src.stem
@@ -111,6 +119,7 @@ def render_template(tpl: str, src: Path) -> str:
 # Rule evaluation
 # ----------------------------
 
+
 @dataclass
 class Rule:
     pattern: str
@@ -119,6 +128,7 @@ class Rule:
     template: Optional[str]
     create_folders: bool
     condition: Dict[str, Any]
+
 
 def rule_matches(rule: Rule, path: Path) -> Tuple[bool, str]:
     # Glob match against file name (common expectation)
@@ -159,14 +169,17 @@ def rule_matches(rule: Rule, path: Path) -> Tuple[bool, str]:
 # Actions
 # ----------------------------
 
+
 def ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
+
 
 def do_move(src: Path, dest_dir: Path, create: bool) -> Path:
     if create:
         ensure_dir(dest_dir)
     dest = dest_dir / src.name
     return Path(shutil.move(str(src), str(dest)))
+
 
 def do_copy(src: Path, dest_dir: Path, create: bool) -> Path:
     if create:
@@ -175,8 +188,10 @@ def do_copy(src: Path, dest_dir: Path, create: bool) -> Path:
     shutil.copy2(str(src), str(dest))
     return dest
 
+
 def do_delete(src: Path) -> None:
     src.unlink()
+
 
 def do_rename(src: Path, new_name: str) -> Path:
     dest = src.with_name(new_name)
@@ -187,14 +202,29 @@ def do_rename(src: Path, new_name: str) -> Path:
 # Main
 # ----------------------------
 
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--schema", required=True, help="Path to JSON schema (draft-07)")
     ap.add_argument("--ruleset", required=True, help="Path to ruleset JSON")
-    ap.add_argument("--sandbox-root", required=True, help="Absolute root allowed to be touched")
-    ap.add_argument("--apply", action="store_true", help="Actually perform actions (otherwise dry-run)")
-    ap.add_argument("--approve", action="store_true", help="Approve destructive/out-of-sandbox operations")
-    ap.add_argument("--audit", default=".audit/file-organizer.ndjson", help="Audit log path (NDJSON chained)")
+    ap.add_argument(
+        "--sandbox-root", required=True, help="Absolute root allowed to be touched"
+    )
+    ap.add_argument(
+        "--apply",
+        action="store_true",
+        help="Actually perform actions (otherwise dry-run)",
+    )
+    ap.add_argument(
+        "--approve",
+        action="store_true",
+        help="Approve destructive/out-of-sandbox operations",
+    )
+    ap.add_argument(
+        "--audit",
+        default=".audit/file-organizer.ndjson",
+        help="Audit log path (NDJSON chained)",
+    )
     args = ap.parse_args()
 
     schema_path = Path(args.schema).resolve()
@@ -207,8 +237,8 @@ def main() -> int:
         return 2
 
     # Load schema + ruleset
-    schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    ruleset = json.loads(ruleset_path.read_text(encoding="utf-8"))
+    schema: Dict[str, Any] = json.loads(schema_path.read_text(encoding="utf-8"))
+    ruleset: Dict[str, Any] = json.loads(ruleset_path.read_text(encoding="utf-8"))
 
     # Validate
     jsonschema.validate(instance=ruleset, schema=schema)
@@ -219,17 +249,21 @@ def main() -> int:
 
     # Sandbox enforcement
     if not within(sandbox_root, target_folder):
-        raise SystemExit(f"target_folder {target_folder} is outside sandbox_root {sandbox_root}")
+        raise SystemExit(
+            f"target_folder {target_folder} is outside sandbox_root {sandbox_root}"
+        )
 
     audit = AuditChain(audit_path)
-    audit.append({
-        "kind": "run.start",
-        "apply": bool(args.apply),
-        "approve": bool(args.approve),
-        "sandbox_root": str(sandbox_root),
-        "target_folder": str(target_folder),
-        "ruleset_name": ruleset.get("name"),
-    })
+    audit.append(
+        {
+            "kind": "run.start",
+            "apply": bool(args.apply),
+            "approve": bool(args.approve),
+            "sandbox_root": str(sandbox_root),
+            "target_folder": str(target_folder),
+            "ruleset_name": ruleset.get("name"),
+        }
+    )
 
     # Compile rules
     compiled: List[Rule] = []
@@ -304,19 +338,21 @@ def main() -> int:
                 why = "destination_outside_sandbox"
 
         # Write audit intent
-        audit.append({
-            "kind": "rule.match",
-            "file": str(src),
-            "file_rel": rel,
-            "pattern": rule.pattern,
-            "action": action,
-            "match_reason": match_reason,
-            "destination": str(dest_path) if dest_path else None,
-            "rename_to": rename_to,
-            "needs_approval": needs_approval,
-            "approval_reason": why,
-            "dry_run": not args.apply,
-        })
+        audit.append(
+            {
+                "kind": "rule.match",
+                "file": str(src),
+                "file_rel": rel,
+                "pattern": rule.pattern,
+                "action": action,
+                "match_reason": match_reason,
+                "destination": str(dest_path) if dest_path else None,
+                "rename_to": rename_to,
+                "needs_approval": needs_approval,
+                "approval_reason": why,
+                "dry_run": not args.apply,
+            }
+        )
 
         if needs_approval and not args.approve:
             continue
@@ -328,12 +364,26 @@ def main() -> int:
         try:
             if action == "move" and dest_path is not None:
                 out = do_move(src, dest_path.parent, rule.create_folders)
-                audit.append({"kind": "action.move", "src": str(src), "dst": str(out), "ok": True})
+                audit.append(
+                    {
+                        "kind": "action.move",
+                        "src": str(src),
+                        "dst": str(out),
+                        "ok": True,
+                    }
+                )
                 changes += 1
 
             elif action == "copy" and dest_path is not None:
                 out = do_copy(src, dest_path.parent, rule.create_folders)
-                audit.append({"kind": "action.copy", "src": str(src), "dst": str(out), "ok": True})
+                audit.append(
+                    {
+                        "kind": "action.copy",
+                        "src": str(src),
+                        "dst": str(out),
+                        "ok": True,
+                    }
+                )
                 changes += 1
 
             elif action == "delete":
@@ -343,21 +393,30 @@ def main() -> int:
 
             elif action == "rename" and rename_to is not None:
                 out = do_rename(src, rename_to)
-                audit.append({"kind": "action.rename", "src": str(src), "dst": str(out), "ok": True})
+                audit.append(
+                    {
+                        "kind": "action.rename",
+                        "src": str(src),
+                        "dst": str(out),
+                        "ok": True,
+                    }
+                )
                 changes += 1
 
         except Exception as e:
-            audit.append({
-                "kind": f"action.{action}.error",
-                "src": str(src),
-                "dst": str(dest_path) if dest_path else None,
-                "error": f"{type(e).__name__}: {e}",
-                "ok": False
-            })
+            audit.append(
+                {
+                    "kind": f"action.{action}.error",
+                    "src": str(src),
+                    "dst": str(dest_path) if dest_path else None,
+                    "error": f"{type(e).__name__}: {e}",
+                    "ok": False,
+                }
+            )
 
     # Post actions (run at end)
-    for pa in ruleset.get("post_actions", []) or []:
-        t = pa["type"]
+    for pa in cast(List[Dict[str, Any]], ruleset.get("post_actions", []) or []):
+        t = cast(str, pa["type"])
         audit.append({"kind": "post_action.begin", "type": t, "payload": pa})
 
         if not args.apply:
@@ -373,7 +432,14 @@ def main() -> int:
                 if not within(sandbox_root, out_path):
                     # never write outside sandbox unless approved
                     if not args.approve:
-                        audit.append({"kind": "post_action.blocked", "type": t, "reason": "out_of_sandbox", "path": str(out_path)})
+                        audit.append(
+                            {
+                                "kind": "post_action.blocked",
+                                "type": t,
+                                "reason": "out_of_sandbox",
+                                "path": str(out_path),
+                            }
+                        )
                         continue
 
                 ensure_dir(out_path.parent)
@@ -385,27 +451,50 @@ def main() -> int:
                     body = content
 
                 out_path.write_text(body, encoding="utf-8")
-                audit.append({"kind": "post_action.write", "type": t, "path": str(out_path), "ok": True})
+                audit.append(
+                    {
+                        "kind": "post_action.write",
+                        "type": t,
+                        "path": str(out_path),
+                        "ok": True,
+                    }
+                )
 
             elif t == "run_command":
                 cmd = pa["command"]
                 # Safe by default: only run if approved (commands can be dangerous)
                 if not args.approve:
-                    audit.append({"kind": "post_action.blocked", "type": t, "reason": "command_requires_approval", "command": cmd})
+                    audit.append(
+                        {
+                            "kind": "post_action.blocked",
+                            "type": t,
+                            "reason": "command_requires_approval",
+                            "command": cmd,
+                        }
+                    )
                     continue
 
                 cp = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-                audit.append({
-                    "kind": "post_action.command",
-                    "type": t,
-                    "command": cmd,
-                    "returncode": cp.returncode,
-                    "stdout": cp.stdout[-2000:],
-                    "stderr": cp.stderr[-2000:],
-                    "ok": cp.returncode == 0
-                })
+                audit.append(
+                    {
+                        "kind": "post_action.command",
+                        "type": t,
+                        "command": cmd,
+                        "returncode": cp.returncode,
+                        "stdout": cp.stdout[-2000:],
+                        "stderr": cp.stderr[-2000:],
+                        "ok": cp.returncode == 0,
+                    }
+                )
         except Exception as e:
-            audit.append({"kind": "post_action.error", "type": t, "error": f"{type(e).__name__}: {e}", "ok": False})
+            audit.append(
+                {
+                    "kind": "post_action.error",
+                    "type": t,
+                    "error": f"{type(e).__name__}: {e}",
+                    "ok": False,
+                }
+            )
 
     audit.append({"kind": "run.done", "changes": changes})
     print(f"OK. changes={changes} dry_run={not args.apply} audit={audit_path}")

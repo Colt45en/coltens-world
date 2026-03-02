@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@world-engine/world-editor-shared": "workspace:*",
     "cors": "^2.8.5",
     "express": "^4.19.2"
   },

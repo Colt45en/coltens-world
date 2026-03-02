@@ -9,6 +9,7 @@ from typing import Any, Dict, Tuple
 try:
     import pyautogui
     from PIL import Image
+
     PYAUTOGUI_AVAILABLE = True
     pyautogui.FAILSAFE = True
     pyautogui.PAUSE = 0.05
@@ -23,10 +24,12 @@ from .audit import audit_desktop_action
 
 app = FastAPI(title="World Engine Desktop Host", version="1.0")
 
+
 class DesktopExecute(BaseModel):
     action: Dict[str, Any]
     trace_id: str
     session_id: str
+
 
 def _screen_size() -> Tuple[int, int]:
     if PYAUTOGUI_AVAILABLE:
@@ -34,20 +37,24 @@ def _screen_size() -> Tuple[int, int]:
         return int(w), int(h)
     return 1920, 1080  # Default fallback
 
-def _png_b64(img: 'Image.Image') -> str:
+
+def _png_b64(img: "Image.Image") -> str:
     if not PYAUTOGUI_AVAILABLE:
         return ""  # Empty for now
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
+
 def _clamp(x: int, y: int) -> Tuple[int, int]:
     w, h = _screen_size()
     return max(0, min(x, w - 1)), max(0, min(y, h - 1))
 
+
 @app.get("/health")
 def health():
     return {"ok": True, "ts": time.time()}
+
 
 @app.post("/desktop/execute")
 def desktop_execute(req: DesktopExecute):
@@ -60,14 +67,19 @@ def desktop_execute(req: DesktopExecute):
         return {
             "success": False,
             "result": {},
-            "error": "PyAutoGUI not available - install with: pip install pyautogui pillow"
+            "error": "PyAutoGUI not available - install with: pip install pyautogui pillow",
         }
 
     try:
         if kind == "screenshot":
             img = pyautogui.screenshot()
             w, h = _screen_size()
-            audit_desktop_action("desktop.result", req.trace_id, req.session_id, {"ok": True, "kind": kind})
+            audit_desktop_action(
+                "desktop.result",
+                req.trace_id,
+                req.session_id,
+                {"ok": True, "kind": kind},
+            )
             return {
                 "success": True,
                 "result": {
@@ -92,20 +104,39 @@ def desktop_execute(req: DesktopExecute):
             elif kind == "double_click":
                 pyautogui.doubleClick(x, y, button="left")
 
-            audit_desktop_action("desktop.result", req.trace_id, req.session_id, {"ok": True, "kind": kind})
-            return {"success": True, "result": {"kind": kind, "x": x, "y": y}, "error": None}
+            audit_desktop_action(
+                "desktop.result",
+                req.trace_id,
+                req.session_id,
+                {"ok": True, "kind": kind},
+            )
+            return {
+                "success": True,
+                "result": {"kind": kind, "x": x, "y": y},
+                "error": None,
+            }
 
         if kind == "type":
             text = str(a.get("text", ""))
             pyautogui.typewrite(text, interval=0.01)
-            audit_desktop_action("desktop.result", req.trace_id, req.session_id, {"ok": True, "kind": kind})
+            audit_desktop_action(
+                "desktop.result",
+                req.trace_id,
+                req.session_id,
+                {"ok": True, "kind": kind},
+            )
             return {"success": True, "result": {"typed": len(text)}, "error": None}
 
         if kind == "key":
             combo = str(a.get("key", "")).lower().strip()
             keys = [k.strip() for k in combo.split("+") if k.strip()]
             pyautogui.hotkey(*keys)
-            audit_desktop_action("desktop.result", req.trace_id, req.session_id, {"ok": True, "kind": kind})
+            audit_desktop_action(
+                "desktop.result",
+                req.trace_id,
+                req.session_id,
+                {"ok": True, "kind": kind},
+            )
             return {"success": True, "result": {"key": combo}, "error": None}
 
         if kind == "scroll":
@@ -116,12 +147,31 @@ def desktop_execute(req: DesktopExecute):
             if direction == "down":
                 delta = -delta
             pyautogui.scroll(delta)
-            audit_desktop_action("desktop.result", req.trace_id, req.session_id, {"ok": True, "kind": kind})
-            return {"success": True, "result": {"direction": direction, "amount": amount}, "error": None}
+            audit_desktop_action(
+                "desktop.result",
+                req.trace_id,
+                req.session_id,
+                {"ok": True, "kind": kind},
+            )
+            return {
+                "success": True,
+                "result": {"direction": direction, "amount": amount},
+                "error": None,
+            }
 
-        audit_desktop_action("desktop.result", req.trace_id, req.session_id, {"ok": False, "kind": kind, "error": f"Unknown kind: {kind}"})
+        audit_desktop_action(
+            "desktop.result",
+            req.trace_id,
+            req.session_id,
+            {"ok": False, "kind": kind, "error": f"Unknown kind: {kind}"},
+        )
         return {"success": False, "result": {}, "error": f"Unknown kind: {kind}"}
 
     except Exception as e:
-        audit_desktop_action("desktop.error", req.trace_id, req.session_id, {"ok": False, "error": str(e), "kind": kind})
+        audit_desktop_action(
+            "desktop.error",
+            req.trace_id,
+            req.session_id,
+            {"ok": False, "error": str(e), "kind": kind},
+        )
         return {"success": False, "result": {}, "error": f"{type(e).__name__}: {e}"}

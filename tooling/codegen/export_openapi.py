@@ -11,20 +11,23 @@ Usage: python tooling/codegen/export_openapi.py
 """
 
 from __future__ import annotations
-import os
+
 import json
+import os
 import sys
 from pathlib import Path
+from typing import Any
 
 # Force UTF-8 output on Windows consoles (Python 3.7+)
 os.environ.setdefault("PYTHONUTF8", "1")
 
 if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-if hasattr(sys.stderr, "reconfigure"):
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    # Type: reconfigure is a runtime method; cast to Any to satisfy type checker
+    sys.stdout = type(sys.stdout)(sys.stdout.buffer, encoding="utf-8", errors="replace")  # type: ignore
 
+# Ensure repo root is on sys.path for imports (if needed in future)
 repo_root = Path(__file__).parent.parent.parent
+
 
 def main():
     """Export OpenAPI spec deterministically (stub mode)."""
@@ -41,12 +44,12 @@ def main():
             return 0
 
     # Generate stub OpenAPI (deterministic: same output every run)
-    spec = {
+    spec: dict[str, Any] = {
         "openapi": "3.0.0",
         "info": {
             "title": "World Engine: Autonomy Loop API (Stub)",
             "version": "0.1.0",
-            "description": "Stub OpenAPI spec for early development"
+            "description": "Stub OpenAPI spec for early development",
         },
         "servers": [
             {"url": "http://localhost:8000", "description": "Local development"},

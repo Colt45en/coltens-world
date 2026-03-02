@@ -21,7 +21,9 @@ class ValidatedPlan(BaseModel):
     content_hash: str
 
 
-def _gate_schema_validation(packet: Dict[str, Any], transform_out: Dict[str, Any]) -> GateResult:
+def _gate_schema_validation(
+    packet: Dict[str, Any], transform_out: Dict[str, Any]
+) -> GateResult:
     # If previous pydantic validations did not raise, we consider schema valid.
     return GateResult(
         gate_name="schema_validation",
@@ -32,13 +34,15 @@ def _gate_schema_validation(packet: Dict[str, Any], transform_out: Dict[str, Any
 
 
 def _gate_determinism(transform_out: Dict[str, Any]) -> GateResult:
-    expected = content_hash_for({
-        "batch_id": transform_out["batch_id"],
-        "lexicon_entries": transform_out["lexicon_entries"],
-        "rune_rows": transform_out["rune_rows"],
-    })
+    expected = content_hash_for(
+        {
+            "batch_id": transform_out["batch_id"],
+            "lexicon_entries": transform_out["lexicon_entries"],
+            "rune_rows": transform_out["rune_rows"],
+        }
+    )
     actual = transform_out.get("content_hash")
-    passed = (expected == actual)
+    passed = expected == actual
     return GateResult(
         gate_name="determinism",
         passed=passed,
@@ -63,7 +67,7 @@ def _gate_dedupe_audit(transform_out: Dict[str, Any]) -> GateResult:
 
     c1 = collisions(entry_ids)
     c2 = collisions(rune_ids)
-    passed = (len(c1) == 0 and len(c2) == 0)
+    passed = len(c1) == 0 and len(c2) == 0
 
     return GateResult(
         gate_name="dedupe_audit",
@@ -73,23 +77,37 @@ def _gate_dedupe_audit(transform_out: Dict[str, Any]) -> GateResult:
     )
 
 
-def _gate_confidence_threshold(transform_out: Dict[str, Any], min_conf: float) -> GateResult:
+def _gate_confidence_threshold(
+    transform_out: Dict[str, Any], min_conf: float
+) -> GateResult:
     lows = []
     for e in transform_out["lexicon_entries"]:
         if float(e["overall_confidence"]) < min_conf:
-            lows.append({"entry_id": e["entry_id"], "term": e["term"], "confidence": e["overall_confidence"]})
+            lows.append(
+                {
+                    "entry_id": e["entry_id"],
+                    "term": e["term"],
+                    "confidence": e["overall_confidence"],
+                }
+            )
 
-    passed = (len(lows) == 0)
+    passed = len(lows) == 0
     # This is typically warning in governance, but you can flip to critical if you want hard failure.
     return GateResult(
         gate_name="confidence_threshold",
         passed=passed,
         severity="warning",
-        details={"min_confidence": min_conf, "low_confidence_entries": lows[:200], "low_count": len(lows)},
+        details={
+            "min_confidence": min_conf,
+            "low_confidence_entries": lows[:200],
+            "low_count": len(lows),
+        },
     )
 
 
-def _gate_traceability(packet: Dict[str, Any], transform_out: Dict[str, Any]) -> GateResult:
+def _gate_traceability(
+    packet: Dict[str, Any], transform_out: Dict[str, Any]
+) -> GateResult:
     # Ensure batch_id exists and evidence/source refs present
     ok = True
     missing = []
@@ -104,11 +122,13 @@ def _gate_traceability(packet: Dict[str, Any], transform_out: Dict[str, Any]) ->
     for e in transform_out["lexicon_entries"][:500]:
         if not e.get("entry_id") or not e.get("term") or not e.get("language"):
             ok = False
-            missing.append(f"lexicon_entry_missing_fields:{e.get('entry_id','<none>')}")
+            missing.append(
+                f"lexicon_entry_missing_fields:{e.get('entry_id', '<none>')}"
+            )
     for r in transform_out["rune_rows"][:500]:
         if not r.get("rune_id") or not r.get("symbol") or not r.get("evidence_links"):
             ok = False
-            missing.append(f"rune_row_missing_fields:{r.get('rune_id','<none>')}")
+            missing.append(f"rune_row_missing_fields:{r.get('rune_id', '<none>')}")
 
     return GateResult(
         gate_name="traceability",
@@ -118,7 +138,12 @@ def _gate_traceability(packet: Dict[str, Any], transform_out: Dict[str, Any]) ->
     )
 
 
-def run_gates(*, packet: Dict[str, Any], transform_out: Dict[str, Any], min_confidence: float = 0.80) -> Dict[str, Any]:
+def run_gates(
+    *,
+    packet: Dict[str, Any],
+    transform_out: Dict[str, Any],
+    min_confidence: float = 0.80,
+) -> Dict[str, Any]:
     gates = [
         _gate_schema_validation(packet, transform_out),
         _gate_determinism(transform_out),

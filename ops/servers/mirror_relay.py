@@ -1,4 +1,7 @@
-import asyncio, json, os, uuid
+import asyncio
+import json
+import os
+import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Set
 
@@ -8,7 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from psycopg_pool import AsyncConnectionPool
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@127.0.0.1:5432/keeper")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgresql://postgres:postgres@127.0.0.1:5432/keeper"
+)
 
 app = FastAPI()
 
@@ -23,8 +28,10 @@ app.add_middleware(
 
 pool = AsyncConnectionPool(conninfo=DATABASE_URL, min_size=1, max_size=10, timeout=10)
 
+
 def iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
 
 def normalize(env: Dict[str, Any]) -> Dict[str, Any]:
     # Accept legacy envelope: { v, kind, payload, ts, id, source }
@@ -45,6 +52,7 @@ def normalize(env: Dict[str, Any]) -> Dict[str, Any]:
         "data": env.get("data") or env.get("payload") or {},
     }
 
+
 def topic_match(topic: str, patterns: Set[str]) -> bool:
     if not patterns:
         return True
@@ -57,6 +65,7 @@ def topic_match(topic: str, patterns: Set[str]) -> bool:
         if topic == p:
             return True
     return False
+
 
 class Hub:
     def __init__(self):
@@ -110,13 +119,21 @@ class Hub:
                 except asyncio.QueueFull:
                     pass
 
+
 hub = Hub()
+
 
 async def db_insert_events(tenant_id: str, envs: List[Dict[str, Any]]):
     if not envs:
         return
     rows = [
-        (tenant_id, e["topic"], e.get("category"), e["timestamp"], json.dumps(e["data"]))
+        (
+            tenant_id,
+            e["topic"],
+            e.get("category"),
+            e["timestamp"],
+            json.dumps(e["data"]),
+        )
         for e in envs
     ]
     sql = """
@@ -126,6 +143,7 @@ async def db_insert_events(tenant_id: str, envs: List[Dict[str, Any]]):
     async with pool.connection() as conn:
         async with conn.cursor() as cur:
             await cur.executemany(sql, rows)
+
 
 async def db_poll(tenant_id: str, since: int, limit: int, topics: Optional[List[str]]):
     where = ["tenant_id = %s", "seq > %s"]
@@ -158,17 +176,20 @@ async def db_poll(tenant_id: str, since: int, limit: int, topics: Optional[List[
             rows = await cur.fetchall()
 
     out = []
-    for (seq, event_id, topic, category, ts, payload) in rows:
-        out.append({
-            "seq": seq,
-            "id": str(event_id),
-            "topic": topic,
-            "category": category,
-            "timestamp": ts.isoformat(),
-            "data": payload,
-        })
+    for seq, event_id, topic, category, ts, payload in rows:
+        out.append(
+            {
+                "seq": seq,
+                "id": str(event_id),
+                "topic": topic,
+                "category": category,
+                "timestamp": ts.isoformat(),
+                "data": payload,
+            }
+        )
     next_since = out[-1]["seq"] if out else since
     return out, next_since
+
 
 @app.post("/ingest")
 async def ingest(
@@ -179,6 +200,7 @@ async def ingest(
     await db_insert_events(tenant_id, [e])
     await hub.broadcast(e)
     return {"ok": True}
+
 
 @app.post("/ingest/batch")
 async def ingest_batch(
@@ -192,6 +214,7 @@ async def ingest_batch(
     for e in norm:
         await hub.broadcast(e)
     return {"ok": True, "count": len(norm)}
+
 
 @app.websocket("/ws/telemetry")
 async def ws_telemetry(ws: WebSocket):
@@ -208,6 +231,7 @@ async def ws_telemetry(ws: WebSocket):
         pass
     finally:
         await hub.unregister_ws(ws)
+
 
 @app.get("/sse/telemetry")
 async def sse_telemetry(topics: str = Query("diamond.*,mirror.*,recorder.*")):
@@ -227,6 +251,7 @@ async def sse_telemetry(topics: str = Query("diamond.*,mirror.*,recorder.*")):
 
     return StreamingResponse(gen(), media_type="text/event-stream")
 
+
 @app.get("/api/telemetry/poll")
 async def poll(
     since: int = Query(0),
@@ -237,6 +262,7 @@ async def poll(
     tlist = [t.strip() for t in topics.split(",") if t.strip()]
     events, next_since = await db_poll(tenant_id, since, limit, tlist)
     return {"events": events, "next_since": next_since}
+
 
 @app.get("/export/ndjson")
 async def export_ndjson(
@@ -254,12 +280,15 @@ async def export_ndjson(
 
     return StreamingResponse(gen(), media_type="application/x-ndjson")
 
+
 # ---- DB brain (hybrid retrieval) hook ----
 def fake_embed_1536(_text: str) -> List[float]:
     # Replace with real embedder (OpenAI/local/etc). Must return length 1536.
     import random
+
     random.seed(hash(_text) % (2**32))
     return [random.random() for _ in range(1536)]
+
 
 @app.post("/retrieve")
 async def retrieve(payload: Dict[str, Any] = Body(...)):
@@ -283,12 +312,14 @@ async def retrieve(payload: Dict[str, Any] = Body(...)):
 
     results = []
     for chunk_id, doc_id, content, score, vec_rank, fts_rank in rows:
-        results.append({
-            "chunk_id": chunk_id,
-            "doc_id": str(doc_id),
-            "content": content,
-            "score": float(score),
-            "vec_rank": vec_rank,
-            "fts_rank": fts_rank,
-        })
+        results.append(
+            {
+                "chunk_id": chunk_id,
+                "doc_id": str(doc_id),
+                "content": content,
+                "score": float(score),
+                "vec_rank": vec_rank,
+                "fts_rank": fts_rank,
+            }
+        )
     return JSONResponse({"ok": True, "results": results})

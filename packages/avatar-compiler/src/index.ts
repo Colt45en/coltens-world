@@ -13,8 +13,6 @@ export * from './presets.js';
 export { DEFAULT_DNA } from './types.js';
 export type {
   AssetRegistry,
-  CompileAvatarOptions,
-  CompileAvatarResult,
   CompileOptions,
   CompiledAsset,
   RegistryEntry,

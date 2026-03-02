@@ -18,8 +18,9 @@ import {
   hasRequiredInputs,
   narrowByTaskType,
   parseUEE,
-  shouldIncludeField
+  shouldIncludeField,
 } from "@world-engine/protocol";
+import { analyzeLinguisticStructure, analyzeSentiment, getSentenceComplexity } from "../nlp";
 import handleBrainControl from "./handlers/brainControl";
 import handleBrainTrain from "./handlers/brainTrain";
 
@@ -312,15 +313,44 @@ export class UEERouter {
       return this.errorResponse(context, "Missing analyze_sentence inputs");
     }
 
-    // Stub: real sentence analysis logic will be added
+    const sentence = (analyze_sentence.sentence as string) || "";
+    if (!sentence) {
+      return this.errorResponse(context, "analyze_sentence.sentence is required");
+    }
+
+    // Perform analysis
+    const sentiment = analyzeSentiment(sentence);
+    const linguistic = analyzeLinguisticStructure(sentence);
+    const complexity = getSentenceComplexity(sentence);
+
     const outputs = {
-      sentence: (analyze_sentence.sentence as string) || "",
-      structure: "TODO: linguistic parse",
-      semantics: "TODO: semantic analysis",
-      sentiment: "TODO: sentiment score",
+      sentence,
+      analysis: {
+        linguistic: {
+          sentenceType: linguistic.sentenceType,
+          subject: linguistic.subject,
+          predicate: linguistic.predicate,
+          wordCount: linguistic.wordCount,
+          clauseCount: linguistic.clauseCount,
+          complexity,
+          posTags: linguistic.posTags,
+        },
+        sentiment: {
+          score: sentiment.score,
+          classification: sentiment.classification,
+          label: sentiment.label,
+          confidence: sentiment.confidence,
+        },
+      },
     };
 
-    return this.successResponse(context, { analyze_sentence: outputs });
+    const audit = {
+      analyzer: "nucleus-nlp",
+      version: "1.0.0",
+      timestamp: context.timestamp,
+    };
+
+    return this.successResponse(context, { analyze_sentence: outputs }, audit);
   }
 
   // ========================================================================

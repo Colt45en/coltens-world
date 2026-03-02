@@ -2,11 +2,13 @@
 """
 Comprehensive fix script for telemetry system issues
 """
+
 import os
 import subprocess
 import time
 import importlib.util
 from typing import Optional, Any
+
 
 def run_cmd(cmd: str, cwd: Optional[str] = None, check: bool = True) -> bool:
     """Run a command and return the result"""
@@ -24,6 +26,7 @@ def run_cmd(cmd: str, cwd: Optional[str] = None, check: bool = True) -> bool:
     except Exception as e:
         print(f"Exception running {cmd}: {e}")
         return False
+
 
 def main():
     workspace = r"c:\Users\colte\colten projects\coltens world"
@@ -48,6 +51,7 @@ def main():
     print("\n2. Running database migration...")
     try:
         import psycopg  # type: ignore
+
         conn: Any = psycopg.connect(
             "postgresql://postgres:postgres@127.0.0.1:5432/keeper"
         )  # type: ignore[assignment]
@@ -65,13 +69,15 @@ def main():
 
     # 3. Check C++ build
     print("\n3. Building C++ telemetry emitter...")
-    cpp_dir = os.path.join(workspace, 'ops/cpp')
-    build_dir = os.path.join(cpp_dir, 'build')
+    cpp_dir = os.path.join(workspace, "ops/cpp")
+    build_dir = os.path.join(cpp_dir, "build")
 
     if not os.path.exists(build_dir):
         os.makedirs(build_dir)
 
-    if run_cmd("cmake -B build -S .", cwd=cpp_dir) and run_cmd("cmake --build build", cwd=cpp_dir):
+    if run_cmd("cmake -B build -S .", cwd=cpp_dir) and run_cmd(
+        "cmake --build build", cwd=cpp_dir
+    ):
         print("✓ C++ build successful")
     else:
         print("✗ C++ build failed")
@@ -80,7 +86,7 @@ def main():
     # 4. Test relay server startup
     print("\n4. Testing relay server...")
     # Kill any existing processes on port 3000
-    run_cmd("taskkill /F /IM python.exe /FI \"WINDOWTITLE eq uvicorn*\"")
+    run_cmd('taskkill /F /IM python.exe /FI "WINDOWTITLE eq uvicorn*"')
 
     # Start server in background
     import threading
@@ -88,7 +94,9 @@ def main():
 
     def start_server():
         os.chdir(workspace)
-        os.system('python -m uvicorn ops.servers.mirror_relay:app --host 0.0.0.0 --port 3000')
+        os.system(
+            "python -m uvicorn ops.servers.mirror_relay:app --host 0.0.0.0 --port 3000"
+        )
 
     server_thread = threading.Thread(target=start_server, daemon=True)
     server_thread.start()
@@ -98,9 +106,11 @@ def main():
 
     # Test endpoint
     try:
-        resp = requests.post('http://localhost:3000/ingest',
-                           json={'topic': 'test.topic', 'data': {'message': 'hello world'}},
-                           timeout=5)
+        resp = requests.post(
+            "http://localhost:3000/ingest",
+            json={"topic": "test.topic", "data": {"message": "hello world"}},
+            timeout=5,
+        )
         if resp.status_code == 200:
             print("✓ Relay server working")
         else:
@@ -110,7 +120,7 @@ def main():
 
     # 5. Test C++ emitter
     print("\n5. Testing C++ emitter...")
-    exe_path = os.path.join(build_dir, 'engine.exe')
+    exe_path = os.path.join(build_dir, "engine.exe")
     if os.path.exists(exe_path):
         # Run for a short time
         proc = subprocess.Popen([exe_path], cwd=build_dir)
@@ -124,6 +134,7 @@ def main():
     print("All components should now be working. Run the relay server with:")
     print("cd 'c:\\Users\\colte\\colten projects\\coltens world'")
     print("python -m uvicorn ops.servers.mirror_relay:app --host 0.0.0.0 --port 3000")
+
 
 if __name__ == "__main__":
     main()

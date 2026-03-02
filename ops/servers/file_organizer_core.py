@@ -17,20 +17,25 @@ import jsonschema
 # Utilities
 # ----------------------------
 
+
 def canonical_json(obj: Dict[str, Any]) -> str:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
 
 def within(root: Path, target: Path) -> bool:
     root = root.resolve()
     target = target.resolve()
     return root == target or root in target.parents
 
+
 def file_age_days(p: Path) -> float:
     st = p.stat()
     return (time.time() - st.st_mtime) / 86400.0
 
+
 def file_size_kb(p: Path) -> float:
     return p.stat().st_size / 1024.0
+
 
 def read_text_safe(p: Path, max_bytes: int = 2_000_000) -> Optional[str]:
     try:
@@ -40,12 +45,14 @@ def read_text_safe(p: Path, max_bytes: int = 2_000_000) -> Optional[str]:
     except Exception:
         return None
 
+
 def render_template(tpl: str, src: Path) -> str:
     name = src.stem
     ext = src.suffix
     date = datetime.fromtimestamp(src.stat().st_mtime).strftime("%Y-%m-%d")
     size = str(int(src.stat().st_size))
     return tpl.format(name=name, ext=ext, date=date, size=size)
+
 
 def ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
@@ -55,6 +62,7 @@ def ensure_dir(p: Path) -> None:
 # Rule types
 # ----------------------------
 
+
 @dataclass
 class Rule:
     pattern: str
@@ -63,6 +71,7 @@ class Rule:
     template: Optional[str]
     create_folders: bool
     condition: Dict[str, Any]
+
 
 def rule_matches(rule: Rule, path: Path) -> Tuple[bool, str]:
     if not fnmatch.fnmatch(path.name, rule.pattern):
@@ -95,11 +104,13 @@ def rule_matches(rule: Rule, path: Path) -> Tuple[bool, str]:
 # Plan format
 # ----------------------------
 
+
 def _resolve_dest_dir(target_folder: Path, dest_raw: str) -> Path:
     d = Path(dest_raw)
     if not d.is_absolute():
         return (target_folder / d).resolve()
     return d.resolve()
+
 
 def build_plan(
     *,
@@ -116,18 +127,22 @@ def build_plan(
     if not target_folder.is_absolute():
         raise ValueError("ruleset.target_folder must be an absolute path")
     if not within(sandbox_root, target_folder):
-        raise ValueError(f"target_folder outside sandbox_root: {target_folder} !<= {sandbox_root}")
+        raise ValueError(
+            f"target_folder outside sandbox_root: {target_folder} !<= {sandbox_root}"
+        )
 
     rules: List[Rule] = []
     for r in ruleset["rules"]:
-        rules.append(Rule(
-            pattern=r["pattern"],
-            action=r["action"],
-            destination=r.get("destination"),
-            template=r.get("template"),
-            create_folders=bool(r.get("create_folders", True)),
-            condition=r.get("condition") or {},
-        ))
+        rules.append(
+            Rule(
+                pattern=r["pattern"],
+                action=r["action"],
+                destination=r.get("destination"),
+                template=r.get("template"),
+                create_folders=bool(r.get("create_folders", True)),
+                condition=r.get("condition") or {},
+            )
+        )
 
     actions: List[Dict[str, Any]] = []
     total_files = 0
@@ -178,17 +193,19 @@ def build_plan(
                 needs_approval = True
                 approval_reason = "destination_outside_sandbox"
 
-        actions.append({
-            "src": str(p),
-            "action": action_kind,
-            "pattern": rule.pattern,
-            "match_reason": match_reason,
-            "destination": dest,
-            "rename_to": rename_to,
-            "create_folders": rule.create_folders,
-            "needs_approval": needs_approval,
-            "approval_reason": approval_reason,
-        })
+        actions.append(
+            {
+                "src": str(p),
+                "action": action_kind,
+                "pattern": rule.pattern,
+                "match_reason": match_reason,
+                "destination": dest,
+                "rename_to": rename_to,
+                "create_folders": rule.create_folders,
+                "needs_approval": needs_approval,
+                "approval_reason": approval_reason,
+            }
+        )
 
     # Post actions risk (commands always approval; out-of-sandbox writes approval)
     post = ruleset.get("post_actions") or []
@@ -210,14 +227,18 @@ def build_plan(
                 needs_approval = True
                 approval_reason = "post_write_outside_sandbox"
 
-        post_actions.append({
-            "type": t,
-            "payload": pa,
-            "needs_approval": needs_approval,
-            "approval_reason": approval_reason,
-        })
+        post_actions.append(
+            {
+                "type": t,
+                "payload": pa,
+                "needs_approval": needs_approval,
+                "approval_reason": approval_reason,
+            }
+        )
 
-    risky = any(a["needs_approval"] for a in actions) or any(p["needs_approval"] for p in post_actions)
+    risky = any(a["needs_approval"] for a in actions) or any(
+        p["needs_approval"] for p in post_actions
+    )
 
     summary = {
         "ruleset_name": ruleset.get("name"),
@@ -225,7 +246,8 @@ def build_plan(
         "sandbox_root": str(sandbox_root),
         "total_files_scanned": total_files,
         "total_matches": len(actions),
-        "total_risky": sum(1 for a in actions if a["needs_approval"]) + sum(1 for p in post_actions if p["needs_approval"]),
+        "total_risky": sum(1 for a in actions if a["needs_approval"])
+        + sum(1 for p in post_actions if p["needs_approval"]),
         "requires_approval_to_apply": risky,
     }
 
@@ -235,6 +257,7 @@ def build_plan(
         "post_actions": post_actions,
         "ruleset": ruleset,  # useful for apply phase
     }
+
 
 def apply_plan(
     *,
@@ -288,7 +311,9 @@ def apply_plan(
                 skipped += 1
 
         except Exception as e:
-            errors.append({"src": a["src"], "action": kind, "error": f"{type(e).__name__}: {e}"})
+            errors.append(
+                {"src": a["src"], "action": kind, "error": f"{type(e).__name__}: {e}"}
+            )
 
     # Post actions
     for p in plan["post_actions"]:
@@ -325,10 +350,22 @@ def apply_plan(
                     continue
                 cp = subprocess.run(cmd, shell=True, capture_output=True, text=True)
                 if cp.returncode != 0:
-                    errors.append({"action": "run_command", "command": cmd, "error": cp.stderr[-2000:]})
+                    errors.append(
+                        {
+                            "action": "run_command",
+                            "command": cmd,
+                            "error": cp.stderr[-2000:],
+                        }
+                    )
                 applied += 1
 
         except Exception as e:
-            errors.append({"action": "post_action", "type": t, "error": f"{type(e).__name__}: {e}"})
+            errors.append(
+                {
+                    "action": "post_action",
+                    "type": t,
+                    "error": f"{type(e).__name__}: {e}",
+                }
+            )
 
     return {"applied": applied, "skipped": skipped, "errors": errors}

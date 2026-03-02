@@ -17,7 +17,9 @@ def _point_in_box(pt: Tuple[int, int], box: Tuple[int, int, int, int]) -> bool:
     return (x1 <= x <= x2) and (y1 <= y <= y2)
 
 
-def stage1_metrics(task: GroundingTask, pred_point: Optional[Tuple[int, int]]) -> Dict[str, Any]:
+def stage1_metrics(
+    task: GroundingTask, pred_point: Optional[Tuple[int, int]]
+) -> Dict[str, Any]:
     out: Dict[str, Any] = {
         "task_type": task.task_type,
         "has_target_point": task.target_point is not None,
@@ -38,7 +40,9 @@ def stage1_metrics(task: GroundingTask, pred_point: Optional[Tuple[int, int]]) -
     return out
 
 
-def stage2_metrics(gold: AgentAction, pred: Optional[AgentAction], point_tol: int = 25) -> Dict[str, Any]:
+def stage2_metrics(
+    gold: AgentAction, pred: Optional[AgentAction], point_tol: int = 25
+) -> Dict[str, Any]:
     """
     - format_valid: pred parsed/validated
     - strict_match: compact dict exact match
@@ -52,18 +56,23 @@ def stage2_metrics(gold: AgentAction, pred: Optional[AgentAction], point_tol: in
         out["format_valid"] = False
         out["strict_match"] = False
         out["fuzzy_match"] = False
-        out["per_field_accuracy"] = {"POINT": False, "TYPE": False, "PRESS": False, "STATUS": False}
+        out["per_field_accuracy"] = {
+            "POINT": False,
+            "TYPE": False,
+            "PRESS": False,
+            "STATUS": False,
+        }
         return out
 
     pred_d = pred.compact_dict()
     out["format_valid"] = True
-    out["strict_match"] = (pred_d == gold_d)
+    out["strict_match"] = pred_d == gold_d
 
     # Per-field accuracy (field present in gold must match)
     per = {}
     for key in ("POINT", "TYPE", "PRESS", "STATUS"):
         if key in gold_d:
-            per[key] = (pred_d.get(key) == gold_d.get(key))
+            per[key] = pred_d.get(key) == gold_d.get(key)
         else:
             per[key] = True  # not required by gold
     out["per_field_accuracy"] = per

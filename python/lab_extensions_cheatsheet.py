@@ -17,6 +17,7 @@ from lab_generator import LabGenerator
 
 # Create file: my_labs.py
 
+
 class MyLabGenerator(LabGenerator):
     """Add custom labs via subclassing."""
 
@@ -40,6 +41,7 @@ def test_my_function():
             "readme": "# My Custom Lab\n",
         }
 
+
 # Usage:
 # gen = MyLabGenerator()
 # gen.generate_lab("my_lab")
@@ -49,12 +51,14 @@ def test_my_function():
 
 gen = RegistryLabGenerator()
 
+
 def my_custom_lab():
     return {
         "main_code": "# code",
         "test_code": "# tests",
         "readme": "# readme",
     }
+
 
 metadata = LabMetadata(
     lab_id="custom_01",
@@ -75,6 +79,7 @@ gen.register_custom_lab("custom_01", "My Lab", my_custom_lab, metadata)
 
 # ============= PATTERN 3: Template Generation (2 minutes) =============
 
+
 class TemplateGen(RegistryLabGenerator, LabTemplateMixin):
     def __init__(self):
         super().__init__()
@@ -85,14 +90,15 @@ class TemplateGen(RegistryLabGenerator, LabTemplateMixin):
             title="Sum Function",
             function_signature="def custom_sum(arr):",
             docstring="Compute sum of array elements",
-            unit_tests='''
+            unit_tests="""
 def test_sum():
     assert custom_sum([1, 2, 3]) == 6
-''',
+""",
             success_criteria="All tests pass",
         )
 
         self.register_template_lab("sum_lab", spec)
+
 
 # Usage:
 # gen = TemplateGen()
@@ -100,6 +106,7 @@ def test_sum():
 
 
 # ============= PATTERN 4: Custom Validation (5 minutes) =============
+
 
 class ValidatingGen(CustomLabGenerator):
     """Enforce quality standards."""
@@ -117,6 +124,7 @@ class ValidatingGen(CustomLabGenerator):
 
     def _post_generation_hook(self, lab_id: str, lab_files: dict[str, str]) -> None:
         print(f"✓ Generated {lab_id}")
+
 
 # Usage:
 # gen = ValidatingGen()

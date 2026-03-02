@@ -3,7 +3,8 @@
  * Shows all the hooks and patterns in one component
  */
 
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import {
   useStorageState,
   useStorageSection,
@@ -60,8 +61,9 @@ function AppearanceSettings() {
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {/* Theme Selector */}
       <div>
-        <label>Theme:</label>
+        <label htmlFor="theme-select">Theme:</label>
         <select
+          id="theme-select"
           value={appearance.theme}
           onChange={(e) => updateAppearance({ theme: e.target.value as any })}
           style={{ marginLeft: "8px", padding: "4px" }}
@@ -74,21 +76,24 @@ function AppearanceSettings() {
 
       {/* Font Size Slider */}
       <div>
-        <label>Font Size: {appearance.fontSize}px</label>
+        <label htmlFor="font-size-slider">Font Size: {appearance.fontSize}px</label>
         <input
+          id="font-size-slider"
           type="range"
           min={12}
           max={18}
           value={appearance.fontSize}
           onChange={(e) => updateAppearance({ fontSize: Number(e.target.value) })}
           style={{ marginLeft: "8px", width: "200px" }}
+          aria-label="Font size in pixels"
         />
       </div>
 
       {/* Font Family */}
       <div>
-        <label>Font Family:</label>
+        <label htmlFor="font-family-select">Font Family:</label>
         <select
+          id="font-family-select"
           value={appearance.fontFamily}
           onChange={(e) => updateAppearance({ fontFamily: e.target.value as any })}
           style={{ marginLeft: "8px", padding: "4px" }}
@@ -113,8 +118,9 @@ function AppearanceSettings() {
 
       {/* Sidebar Width */}
       <div>
-        <label>Sidebar Width: {appearance.sidebarWidth}px</label>
+        <label htmlFor="sidebar-width-slider">Sidebar Width: {appearance.sidebarWidth}px</label>
         <input
+          id="sidebar-width-slider"
           type="range"
           min={200}
           max={500}
@@ -122,6 +128,7 @@ function AppearanceSettings() {
           value={appearance.sidebarWidth}
           onChange={(e) => updateAppearance({ sidebarWidth: Number(e.target.value) })}
           style={{ marginLeft: "8px", width: "200px" }}
+          aria-label="Sidebar width in pixels"
         />
       </div>
     </div>
@@ -140,8 +147,9 @@ function EditorSettings() {
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {/* Tab Size (with manual save) */}
       <div>
-        <label>Tab Size (uncommitted):</label>
+        <label htmlFor="tab-size-select">Tab Size (uncommitted):</label>
         <select
+          id="tab-size-select"
           value={tabSize}
           onChange={(e) => setTabSize(Number(e.target.value))}
           style={{ marginLeft: "8px", padding: "4px" }}
@@ -167,8 +175,9 @@ function EditorSettings() {
         </label>
         {editor.autoSave && (
           <div style={{ marginLeft: "20px", marginTop: "8px" }}>
-            <label>Interval (ms):</label>
+            <label htmlFor="auto-save-interval">Interval (ms):</label>
             <input
+              id="auto-save-interval"
               type="number"
               min={1000}
               max={60000}
@@ -207,8 +216,9 @@ function EditorSettings() {
 
       {/* Default Language */}
       <div>
-        <label>Default Language:</label>
+        <label htmlFor="default-language-select">Default Language:</label>
         <select
+          id="default-language-select"
           value={editor.defaultLanguage}
           onChange={(e) => updateEditor({ defaultLanguage: e.target.value as any })}
           style={{ marginLeft: "8px", padding: "4px" }}
@@ -245,8 +255,9 @@ function PerformanceSettings() {
 
       {/* Target FPS */}
       <div>
-        <label>Target FPS:</label>
+        <label htmlFor="target-fps-select">Target FPS:</label>
         <select
+          id="target-fps-select"
           value={performance.targetFPS}
           onChange={(e) => updatePerformance({ targetFPS: Number(e.target.value) as any })}
           style={{ marginLeft: "8px", padding: "4px" }}
@@ -283,8 +294,9 @@ function PerformanceSettings() {
 
       {/* Mesh Detail */}
       <div>
-        <label>Mesh Detail Level:</label>
+        <label htmlFor="mesh-detail-select">Mesh Detail Level:</label>
         <select
+          id="mesh-detail-select"
           value={performance.meshDetailLevel}
           onChange={(e) => updatePerformance({ meshDetailLevel: e.target.value as any })}
           style={{ marginLeft: "8px", padding: "4px" }}

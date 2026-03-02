@@ -61,55 +61,87 @@ class WorldGenesisOrchestrator:
             constraints=constraints,
         )
 
-    def _build_regions(self, rng: random.Random, n: int, chunk: ChunkMetadata | None) -> List[Dict[str, Any]]:
+    def _build_regions(
+        self, rng: random.Random, n: int, chunk: ChunkMetadata | None
+    ) -> List[Dict[str, Any]]:
         biome = chunk.biome if chunk else "mixed"
         base = []
         for i in range(n):
-            base.append({
-                "id": new_id("region"),
-                "name": f"Region-{i}",
-                "biome": biome,
-                "terrain_detail": float(0.3 + 0.7 * rng.random()),
-            })
+            base.append(
+                {
+                    "id": new_id("region"),
+                    "name": f"Region-{i}",
+                    "biome": biome,
+                    "terrain_detail": float(0.3 + 0.7 * rng.random()),
+                }
+            )
         return base
 
-    def _build_factions(self, rng: random.Random, regions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _build_factions(
+        self, rng: random.Random, regions: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         factions = []
         k = max(2, min(5, len(regions)))
         for i in range(k):
-            factions.append({
-                "id": new_id("faction"),
-                "name": f"Faction-{i}",
-                "home_region": regions[i % len(regions)]["id"],
-                "ethos": rng.choice(["order", "freedom", "profit", "mysticism"]),
-            })
+            factions.append(
+                {
+                    "id": new_id("faction"),
+                    "name": f"Faction-{i}",
+                    "home_region": regions[i % len(regions)]["id"],
+                    "ethos": rng.choice(["order", "freedom", "profit", "mysticism"]),
+                }
+            )
         return factions
 
-    def _build_characters(self, rng: random.Random, n: int, factions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _build_characters(
+        self, rng: random.Random, n: int, factions: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         chars = []
         for i in range(n):
             f = factions[i % len(factions)]
-            chars.append({
-                "id": new_id("char"),
-                "name": f"Character-{i}",
-                "faction": f["id"],
-                "role": rng.choice(["scout", "engineer", "seer", "merchant", "guardian"]),
-                "motif": rng.choice(["echo", "ember", "glass", "thorn", "signal"]),
-            })
+            chars.append(
+                {
+                    "id": new_id("char"),
+                    "name": f"Character-{i}",
+                    "faction": f["id"],
+                    "role": rng.choice(
+                        ["scout", "engineer", "seer", "merchant", "guardian"]
+                    ),
+                    "motif": rng.choice(["echo", "ember", "glass", "thorn", "signal"]),
+                }
+            )
         return chars
 
-    def _build_timeline(self, rng: random.Random, factions: List[Dict[str, Any]], characters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _build_timeline(
+        self,
+        rng: random.Random,
+        factions: List[Dict[str, Any]],
+        characters: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
         beats = []
         for i in range(6):
-            beats.append({
-                "t": i,
-                "event": rng.choice(["discovery", "conflict", "treaty", "betrayal", "cataclysm", "revelation"]),
-                "actor": rng.choice(characters)["id"] if characters else None,
-                "faction": rng.choice(factions)["id"] if factions else None,
-            })
+            beats.append(
+                {
+                    "t": i,
+                    "event": rng.choice(
+                        [
+                            "discovery",
+                            "conflict",
+                            "treaty",
+                            "betrayal",
+                            "cataclysm",
+                            "revelation",
+                        ]
+                    ),
+                    "actor": rng.choice(characters)["id"] if characters else None,
+                    "faction": rng.choice(factions)["id"] if factions else None,
+                }
+            )
         return beats
 
-    def _build_magic(self, rng: random.Random, chunk: ChunkMetadata | None) -> Dict[str, Any]:
+    def _build_magic(
+        self, rng: random.Random, chunk: ChunkMetadata | None
+    ) -> Dict[str, Any]:
         density = chunk.magic_density if chunk else 0.12
         return {
             "type": rng.choice(["runes", "fields", "alchemy", "psyche"]),
@@ -117,10 +149,14 @@ class WorldGenesisOrchestrator:
             "rules": ["conservation", "cost", "signal_noise"],
         }
 
-    def _build_economics(self, rng: random.Random, factions: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _build_economics(
+        self, rng: random.Random, factions: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         return {
             "currency": rng.choice(["coins", "credits", "marks"]),
-            "major_goods": rng.sample(["food", "ore", "data", "spice", "artifacts"], k=3),
+            "major_goods": rng.sample(
+                ["food", "ore", "data", "spice", "artifacts"], k=3
+            ),
             "trade_factions": [f["id"] for f in factions[: min(3, len(factions))]],
         }
 
@@ -130,7 +166,9 @@ class WorldGenesisOrchestrator:
             "lexicon_bias": rng.choice(["concrete", "symbolic", "technical"]),
         }
 
-    def _continuity_pass(self, regions, factions, characters, timeline) -> Dict[str, Any]:
+    def _continuity_pass(
+        self, regions, factions, characters, timeline
+    ) -> Dict[str, Any]:
         constraints: List[str] = []
         region_ids = {r["id"] for r in regions}
         for f in factions:

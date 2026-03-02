@@ -77,6 +77,7 @@ class MergePolicy:
     Merge if min(confA, confB) > threshold (default 0.8)
     Keep higher confidence row.
     """
+
     def __init__(self, version: str = "2.0", threshold: float = 0.8):
         self.version = version
         self.threshold = threshold
@@ -116,7 +117,9 @@ def upsert_batch(conn: sqlite3.Connection, packet: Dict[str, Any]) -> None:
     )
 
 
-def _get_existing_lex(conn: sqlite3.Connection, term: str, language: str, namespace: str) -> Optional[Tuple[str, float]]:
+def _get_existing_lex(
+    conn: sqlite3.Connection, term: str, language: str, namespace: str
+) -> Optional[Tuple[str, float]]:
     cur = conn.execute(
         "SELECT entry_id, overall_confidence FROM lexicon_entries WHERE term=? AND language=? AND namespace=?",
         (term, language, namespace),
@@ -125,18 +128,41 @@ def _get_existing_lex(conn: sqlite3.Connection, term: str, language: str, namesp
     return (row[0], float(row[1])) if row else None
 
 
-def _log_merge(conn: sqlite3.Connection, from_ids: List[str], to_id: str, policy_version: str, reason: str) -> None:
-    decision_id = stable_id("merge", "|".join(sorted(from_ids)) + "->" + to_id + "|" + policy_version, length=12)
+def _log_merge(
+    conn: sqlite3.Connection,
+    from_ids: List[str],
+    to_id: str,
+    policy_version: str,
+    reason: str,
+) -> None:
+    decision_id = stable_id(
+        "merge",
+        "|".join(sorted(from_ids)) + "->" + to_id + "|" + policy_version,
+        length=12,
+    )
     conn.execute(
         """
         INSERT OR REPLACE INTO merge_history(decision_id, from_ids_json, to_id, policy_version, reason, decided_at)
         VALUES (?, ?, ?, ?, ?, ?)
         """,
-        (decision_id, _j(sorted(from_ids)), to_id, policy_version, reason, utc_now_iso()),
+        (
+            decision_id,
+            _j(sorted(from_ids)),
+            to_id,
+            policy_version,
+            reason,
+            utc_now_iso(),
+        ),
     )
 
 
-def _enqueue_review(conn: sqlite3.Connection, item_type: str, item_id: str, reason: str, priority: str = "medium") -> None:
+def _enqueue_review(
+    conn: sqlite3.Connection,
+    item_type: str,
+    item_id: str,
+    reason: str,
+    priority: str = "medium",
+) -> None:
     queue_id = stable_id("rq", f"{item_type}|{item_id}|{reason}", length=12)
     conn.execute(
         """
@@ -147,7 +173,9 @@ def _enqueue_review(conn: sqlite3.Connection, item_type: str, item_id: str, reas
     )
 
 
-def upsert_lexicon_entries(conn: sqlite3.Connection, entries: List[Dict[str, Any]], policy: MergePolicy) -> Dict[str, Any]:
+def upsert_lexicon_entries(
+    conn: sqlite3.Connection, entries: List[Dict[str, Any]], policy: MergePolicy
+) -> Dict[str, Any]:
     merges = []
     rejects = []
 
@@ -167,16 +195,24 @@ def upsert_lexicon_entries(conn: sqlite3.Connection, entries: List[Dict[str, Any
                 keep = e if new_conf >= old_conf else None
                 if keep is not None:
                     # Replace record by deleting old primary key if different
-                    conn.execute("DELETE FROM lexicon_entries WHERE entry_id=?", (old_id,))
+                    conn.execute(
+                        "DELETE FROM lexicon_entries WHERE entry_id=?", (old_id,)
+                    )
                     _log_merge(conn, [old_id, new_id], new_id, policy.version, reason)
-                    merges.append({"from": [old_id, new_id], "to": new_id, "reason": reason})
+                    merges.append(
+                        {"from": [old_id, new_id], "to": new_id, "reason": reason}
+                    )
                 else:
                     # Keep old: record merge history pointing to old
                     _log_merge(conn, [old_id, new_id], old_id, policy.version, reason)
-                    merges.append({"from": [old_id, new_id], "to": old_id, "reason": reason})
+                    merges.append(
+                        {"from": [old_id, new_id], "to": old_id, "reason": reason}
+                    )
                     continue
             else:
-                rejects.append({"existing_id": old_id, "new_id": new_id, "reason": reason})
+                rejects.append(
+                    {"existing_id": old_id, "new_id": new_id, "reason": reason}
+                )
                 # Policy v1 behavior would throw; v2 logs and keeps both? You requested governance-driven.
                 # Here we DO NOT create duplicates for same key; we reject the new record.
                 continue
@@ -203,7 +239,13 @@ def upsert_lexicon_entries(conn: sqlite3.Connection, entries: List[Dict[str, Any
         )
 
         if e["review_required"]:
-            _enqueue_review(conn, "lexicon", new_id, f"Low confidence ({new_conf:.2f})", priority="medium")
+            _enqueue_review(
+                conn,
+                "lexicon",
+                new_id,
+                f"Low confidence ({new_conf:.2f})",
+                priority="medium",
+            )
 
     return {"merges": merges, "rejects": rejects, "policy_version": policy.version}
 

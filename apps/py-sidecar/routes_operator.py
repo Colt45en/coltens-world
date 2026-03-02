@@ -25,8 +25,10 @@ router = APIRouter(prefix="/brain/operator", tags=["operator"])
 # Pydantic Models (Request/Response)
 # ============================================================================
 
+
 class OperatorExecuteRequest(BaseModel):
     """Execute operator request."""
+
     operator_name: str
     payload: Dict[str, Any]
     memory_context: Optional[Dict[str, Any]] = None
@@ -36,6 +38,7 @@ class OperatorExecuteRequest(BaseModel):
 
 class OperatorExecuteResponse(BaseModel):
     """Execute operator response."""
+
     operator_id: str
     operator_name: str
     trace_id: str
@@ -49,18 +52,21 @@ class OperatorExecuteResponse(BaseModel):
 
 class OperatorListResponse(BaseModel):
     """List operators response."""
+
     operators: List[str]
     total: int
 
 
 class OperatorValidateRequest(BaseModel):
     """Validate operator request."""
+
     operator_name: str
     payload: Dict[str, Any]
 
 
 class OperatorValidateResponse(BaseModel):
     """Validate operator response."""
+
     valid: bool
     message: Optional[str] = None
 
@@ -68,6 +74,7 @@ class OperatorValidateResponse(BaseModel):
 # ============================================================================
 # Routes
 # ============================================================================
+
 
 @router.post("/execute", response_model=OperatorExecuteResponse)
 async def execute_operator(req: OperatorExecuteRequest) -> OperatorExecuteResponse:

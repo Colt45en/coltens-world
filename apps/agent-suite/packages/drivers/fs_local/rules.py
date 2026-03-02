@@ -49,8 +49,25 @@ class Ruleset:
 
 
 TEXT_EXT_DEFAULT = {
-    ".txt", ".md", ".markdown", ".rst", ".log", ".json", ".yaml", ".yml", ".toml", ".ini",
-    ".py", ".js", ".ts", ".tsx", ".jsx", ".css", ".html", ".htm", ".csv",
+    ".txt",
+    ".md",
+    ".markdown",
+    ".rst",
+    ".log",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".ini",
+    ".py",
+    ".js",
+    ".ts",
+    ".tsx",
+    ".jsx",
+    ".css",
+    ".html",
+    ".htm",
+    ".csv",
 }
 
 
@@ -102,6 +119,7 @@ def _glob_match(root: Path, rel: Path, pattern: str) -> bool:
       - We treat a leading "**/" as optional.
     """
     import fnmatch
+
     s = rel.as_posix()
     if fnmatch.fnmatch(s, pattern):
         return True
@@ -135,6 +153,7 @@ def _read_text_safe(p: Path, max_bytes: int = 512 * 1024) -> Optional[str]:
 def _render_rename(template: str, src: Path) -> str:
     st = src.stat()
     from datetime import datetime
+
     dt = datetime.fromtimestamp(st.st_mtime)
     tokens = {
         "name": src.name,
@@ -233,7 +252,9 @@ def apply_ruleset(
 
             dest_dir = rule.then.move_to or rule.then.copy_to
             if not dest_dir:
-                skipped.append({"path": str(abs_p), "rule": rule.name, "reason": "no_action"})
+                skipped.append(
+                    {"path": str(abs_p), "rule": rule.name, "reason": "no_action"}
+                )
                 applied = True
                 break
 
@@ -243,7 +264,14 @@ def apply_ruleset(
                 new_name = _render_rename(str(rule.then.rename), abs_p)
             dst = dst_folder / new_name
             if rule.then.skip_if_exists and dst.exists():
-                skipped.append({"path": str(abs_p), "rule": rule.name, "reason": "dst_exists", "dst": str(dst)})
+                skipped.append(
+                    {
+                        "path": str(abs_p),
+                        "rule": rule.name,
+                        "reason": "dst_exists",
+                        "dst": str(dst),
+                    }
+                )
                 applied = True
                 break
 
@@ -251,7 +279,14 @@ def apply_ruleset(
             if rule.then.move_to:
                 op = {"op": "move", "src": str(abs_p), "dst": str(dst)}
                 ops.append(op)
-                matched.append({"path": str(abs_p), "rule": rule.name, "action": "move", "dst": str(dst)})
+                matched.append(
+                    {
+                        "path": str(abs_p),
+                        "rule": rule.name,
+                        "action": "move",
+                        "dst": str(dst),
+                    }
+                )
                 if not dry_run:
                     ensure_dir(dst.parent)
                     shutil.move(str(abs_p), str(dst))
@@ -260,7 +295,14 @@ def apply_ruleset(
             else:
                 op = {"op": "copy", "src": str(abs_p), "dst": str(dst)}
                 ops.append(op)
-                matched.append({"path": str(abs_p), "rule": rule.name, "action": "copy", "dst": str(dst)})
+                matched.append(
+                    {
+                        "path": str(abs_p),
+                        "rule": rule.name,
+                        "action": "copy",
+                        "dst": str(dst),
+                    }
+                )
                 if not dry_run:
                     ensure_dir(dst.parent)
                     if abs_p.is_dir():
@@ -280,7 +322,11 @@ def apply_ruleset(
 
     return {
         "ok": True,
-        "ruleset": {"path": str(ruleset_path), "version": ruleset.version, "rules": len(ruleset.rules)},
+        "ruleset": {
+            "path": str(ruleset_path),
+            "version": ruleset.version,
+            "rules": len(ruleset.rules),
+        },
         "root": str(root),
         "dry_run": bool(dry_run),
         "recursive": bool(recursive),

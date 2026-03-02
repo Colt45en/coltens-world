@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 
 def now_iso() -> str:
     from datetime import datetime, timezone
+
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
@@ -27,7 +28,7 @@ def is_subpath(path: Path, root: Path) -> bool:
 
     rp = root_r.parts
     pp = path_r.parts
-    return len(pp) >= len(rp) and pp[:len(rp)] == rp
+    return len(pp) >= len(rp) and pp[: len(rp)] == rp
 
 
 def open_with_default_app(path: Path) -> None:

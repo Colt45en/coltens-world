@@ -15,6 +15,7 @@ from datetime import datetime
 # When integrated with main bus, import from:
 # from apps/py-sidecar/bus_client.py (HTTP client to nucleus)
 
+
 class OperatorBusEmitter:
     """Emits operator results to globalBus."""
 

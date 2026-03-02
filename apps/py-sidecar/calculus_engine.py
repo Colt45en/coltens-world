@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Any, Callable, List, Optional, Tuple, Union
+from typing import Any, Callable, List, Optional, Tuple, Union, cast
 
 Number = Union[float, complex]
 Vec = Union[float, List[float], Tuple[float, ...]]
@@ -92,12 +92,12 @@ class Calculus:
 
     @staticmethod
     def derivative(
-        f: Callable[[Number], Number],
+        f: Callable[[float], Number],
         x: float,
         h: Optional[float] = None,
         method: str = "central",
         *,
-        richardson: bool = True
+        richardson: bool = True,
     ) -> DerivativeResult:
         """
         Numerical first derivative with optional Richardson extrapolation + error estimate.
@@ -113,12 +113,16 @@ class Calculus:
             # Complex-step is cancellation-free for analytic functions
             hh = h if h is not None else 1e-20
             try:
-                val = f(x + 1j * hh)
+                val = cast(Callable[[Number], Number], f)(x + 1j * hh)
             except TypeError as e:
-                raise TypeError("complex_step requires f to accept complex inputs") from e
+                raise TypeError(
+                    "complex_step requires f to accept complex inputs"
+                ) from e
             if not isinstance(val, complex):
                 raise TypeError("complex_step requires f(x + i h) to return complex")
-            return DerivativeResult(value=float(val.imag / hh), error_est=0.0, h_used=hh)
+            return DerivativeResult(
+                value=float(val.imag / hh), error_est=0.0, h_used=hh
+            )
 
         if method in ("forward", "backward"):
             hh = h if h is not None else Calculus._auto_h(x, order=1)
@@ -143,13 +147,19 @@ class Calculus:
             def D(step: float) -> float:
                 fval_plus: Number = f(x + step)
                 fval_minus: Number = f(x - step)
-                fp = float(fval_plus.real if isinstance(fval_plus, complex) else fval_plus)
-                fm = float(fval_minus.real if isinstance(fval_minus, complex) else fval_minus)
+                fp = float(
+                    fval_plus.real if isinstance(fval_plus, complex) else fval_plus
+                )
+                fm = float(
+                    fval_minus.real if isinstance(fval_minus, complex) else fval_minus
+                )
                 return (fp - fm) / (2.0 * step)
 
             d1 = D(hh)
             if not richardson:
-                return DerivativeResult(value=d1, error_est=abs(d1) * hh * hh, h_used=hh)
+                return DerivativeResult(
+                    value=d1, error_est=abs(d1) * hh * hh, h_used=hh
+                )
 
             d2 = D(hh * 0.5)
             # Richardson: eliminate O(h^2) term
@@ -173,7 +183,7 @@ class Calculus:
 
             d1 = D(hh)
             if not richardson:
-                return DerivativeResult(value=d1, error_est=abs(d1) * hh ** 4, h_used=hh)
+                return DerivativeResult(value=d1, error_est=abs(d1) * hh**4, h_used=hh)
 
             d2 = D(hh * 0.5)
             # Richardson: eliminate O(h^4) term
@@ -189,7 +199,7 @@ class Calculus:
         x: float,
         h: Optional[float] = None,
         *,
-        richardson: bool = True
+        richardson: bool = True,
     ) -> DerivativeResult:
         """
         Second derivative using centered 3-point stencil + optional Richardson.
@@ -215,9 +225,7 @@ class Calculus:
 
     @staticmethod
     def gradient(
-        f: Callable[[List[float]], float],
-        x: List[float],
-        h: Optional[float] = None
+        f: Callable[[List[float]], float], x: List[float], h: Optional[float] = None
     ) -> List[float]:
         """
         Gradient via central differences. Uses auto h per component scale if h is None.
@@ -236,9 +244,7 @@ class Calculus:
 
     @staticmethod
     def hessian(
-        f: Callable[[List[float]], float],
-        x: List[float],
-        h: Optional[float] = None
+        f: Callable[[List[float]], float], x: List[float], h: Optional[float] = None
     ) -> List[List[float]]:
         """
         Hessian with symmetry + reuse f(x).
@@ -269,10 +275,14 @@ class Calculus:
                 xmp = x[:]
                 xmm = x[:]
 
-                xpp[i] += hi; xpp[j] += hj
-                xpm[i] += hi; xpm[j] -= hj
-                xmp[i] -= hi; xmp[j] += hj
-                xmm[i] -= hi; xmm[j] -= hj
+                xpp[i] += hi
+                xpp[j] += hj
+                xpm[i] += hi
+                xpm[j] -= hj
+                xmp[i] -= hi
+                xmp[j] += hj
+                xmm[i] -= hi
+                xmm[j] -= hj
 
                 val = (f(xpp) - f(xpm) - f(xmp) + f(xmm)) / (4.0 * hi * hj)
                 H[i][j] = val
@@ -290,7 +300,7 @@ class Calculus:
         x: float,
         n: int,
         h: Optional[float] = None,
-        stencil: int = 9
+        stencil: int = 9,
     ) -> float:
         """
         Stable nth derivative via finite-difference weights (Fornberg).
@@ -355,7 +365,7 @@ class Calculus:
         a: float,
         b: float,
         tol: float = 1e-10,
-        max_depth: int = 20
+        max_depth: int = 20,
     ) -> IntegralResult:
         """
         Adaptive Simpson's rule with error estimate.
@@ -427,7 +437,7 @@ class Calculus:
         h0: Optional[float] = None,
         h_min: float = 1e-12,
         h_max: float = 1.0,
-        max_steps: int = 200000
+        max_steps: int = 200000,
     ) -> ODEResult:
         """
         Adaptive Dormand–Prince RK45 (like scipy RK45 but minimal).
@@ -450,28 +460,47 @@ class Calculus:
 
         # Dormand–Prince coefficients
         # (Butcher tableau for RK45)
-        a2 = 1/5
-        a3 = 3/10
-        a4 = 4/5
-        a5 = 8/9
+        a2 = 1 / 5
+        a3 = 3 / 10
+        a4 = 4 / 5
+        a5 = 8 / 9
         a6 = 1.0
         a7 = 1.0
 
-        b21 = 1/5
+        b21 = 1 / 5
 
-        b31 = 3/40;   b32 = 9/40
+        b31 = 3 / 40
+        b32 = 9 / 40
 
-        b41 = 44/45;  b42 = -56/15;  b43 = 32/9
+        b41 = 44 / 45
+        b42 = -56 / 15
+        b43 = 32 / 9
 
-        b51 = 19372/6561; b52 = -25360/2187; b53 = 64448/6561; b54 = -212/729
+        b51 = 19372 / 6561
+        b52 = -25360 / 2187
+        b53 = 64448 / 6561
+        b54 = -212 / 729
 
-        b61 = 9017/3168; b62 = -355/33; b63 = 46732/5247; b64 = 49/176; b65 = -5103/18656
+        b61 = 9017 / 3168
+        b62 = -355 / 33
+        b63 = 46732 / 5247
+        b64 = 49 / 176
+        b65 = -5103 / 18656
 
         # 5th order solution
-        c1 = 35/384; c3 = 500/1113; c4 = 125/192; c5 = -2187/6784; c6 = 11/84
+        c1 = 35 / 384
+        c3 = 500 / 1113
+        c4 = 125 / 192
+        c5 = -2187 / 6784
+        c6 = 11 / 84
 
         # 4th order solution (error estimate)
-        d1 = 5179/57600; d3 = 7571/16695; d4 = 393/640; d5 = -92097/339200; d6 = 187/2100; d7 = 1/40
+        d1 = 5179 / 57600
+        d3 = 7571 / 16695
+        d4 = 393 / 640
+        d5 = -92097 / 339200
+        d6 = 187 / 2100
+        d7 = 1 / 40
 
         def clamp_step(step: float) -> float:
             return max(h_min, min(h_max, step))
@@ -479,7 +508,9 @@ class Calculus:
         while (t - t1) * direction < 0:
             steps += 1
             if steps > max_steps:
-                raise RuntimeError("RK45 exceeded max_steps; tighten h_max or relax tol.")
+                raise RuntimeError(
+                    "RK45 exceeded max_steps; tighten h_max or relax tol."
+                )
 
             # avoid overshoot
             if (t + direction * h - t1) * direction > 0:
@@ -489,18 +520,60 @@ class Calculus:
 
             k1 = f(t, y)
             k2 = f(t + a2 * hh, _v_add(y, _v_mul(k1, b21 * hh)))
-            k3 = f(t + a3 * hh, _v_add(y, _v_add(_v_mul(k1, b31 * hh), _v_mul(k2, b32 * hh))))
-            k4 = f(t + a4 * hh, _v_add(y, _v_add(_v_add(_v_mul(k1, b41 * hh), _v_mul(k2, b42 * hh)), _v_mul(k3, b43 * hh))))
-            k5 = f(t + a5 * hh, _v_add(y, _v_add(_v_add(_v_add(_v_mul(k1, b51 * hh), _v_mul(k2, b52 * hh)), _v_mul(k3, b53 * hh)), _v_mul(k4, b54 * hh))))
-            k6 = f(t + a6 * hh, _v_add(y, _v_add(_v_add(_v_add(_v_add(_v_mul(k1, b61 * hh), _v_mul(k2, b62 * hh)), _v_mul(k3, b63 * hh)), _v_mul(k4, b64 * hh)), _v_mul(k5, b65 * hh))))
+            k3 = f(
+                t + a3 * hh,
+                _v_add(y, _v_add(_v_mul(k1, b31 * hh), _v_mul(k2, b32 * hh))),
+            )
+            k4 = f(
+                t + a4 * hh,
+                _v_add(
+                    y,
+                    _v_add(
+                        _v_add(_v_mul(k1, b41 * hh), _v_mul(k2, b42 * hh)),
+                        _v_mul(k3, b43 * hh),
+                    ),
+                ),
+            )
+            k5 = f(
+                t + a5 * hh,
+                _v_add(
+                    y,
+                    _v_add(
+                        _v_add(
+                            _v_add(_v_mul(k1, b51 * hh), _v_mul(k2, b52 * hh)),
+                            _v_mul(k3, b53 * hh),
+                        ),
+                        _v_mul(k4, b54 * hh),
+                    ),
+                ),
+            )
+            k6 = f(
+                t + a6 * hh,
+                _v_add(
+                    y,
+                    _v_add(
+                        _v_add(
+                            _v_add(
+                                _v_add(_v_mul(k1, b61 * hh), _v_mul(k2, b62 * hh)),
+                                _v_mul(k3, b63 * hh),
+                            ),
+                            _v_mul(k4, b64 * hh),
+                        ),
+                        _v_mul(k5, b65 * hh),
+                    ),
+                ),
+            )
 
             # 5th order estimate
             y5 = _v_add(
                 y,
                 _v_add(
                     _v_add(_v_mul(k1, c1 * hh), _v_mul(k3, c3 * hh)),
-                    _v_add(_v_add(_v_mul(k4, c4 * hh), _v_mul(k5, c5 * hh)), _v_mul(k6, c6 * hh))
-                )
+                    _v_add(
+                        _v_add(_v_mul(k4, c4 * hh), _v_mul(k5, c5 * hh)),
+                        _v_mul(k6, c6 * hh),
+                    ),
+                ),
             )
 
             k7 = f(t + a7 * hh, y5)
@@ -510,9 +583,11 @@ class Calculus:
                 y,
                 _v_add(
                     _v_add(_v_mul(k1, d1 * hh), _v_mul(k3, d3 * hh)),
-                    _v_add(_v_add(_v_mul(k4, d4 * hh), _v_mul(k5, d5 * hh)),
-                           _v_add(_v_mul(k6, d6 * hh), _v_mul(k7, d7 * hh)))
-                )
+                    _v_add(
+                        _v_add(_v_mul(k4, d4 * hh), _v_mul(k5, d5 * hh)),
+                        _v_add(_v_mul(k6, d6 * hh), _v_mul(k7, d7 * hh)),
+                    ),
+                ),
             )
 
             err = _v_norm_inf(_v_sub(y5, y4))
@@ -546,7 +621,7 @@ class Calculus:
         x0: float,
         bracket: Optional[Tuple[float, float]] = None,
         tol: float = 1e-12,
-        max_iter: int = 100
+        max_iter: int = 100,
     ) -> float:
         """
         Hybrid method:
@@ -567,8 +642,12 @@ class Calculus:
                     return x
 
                 # numerical derivative (central, Richardson)
-                dres = Calculus.derivative(lambda t: f(float(t)), x, method="central")
-                fpx = dres.value
+                def f_wrapper(t: float) -> float:
+                    result = f(t)
+                    return float(result.real if isinstance(result, complex) else result)
+
+                deriv_result = Calculus.derivative(f_wrapper, x, method="central")
+                fpx = deriv_result.value
 
                 # Newton candidate
                 if abs(fpx) > 1e-16:
@@ -604,8 +683,13 @@ class Calculus:
             fx = f(x)
             if abs(fx) <= tol:
                 return x
-            dres = Calculus.derivative(lambda t: f(float(t)), x, method="central")
-            fpx = dres.value
+
+            def f_wrapper(t: float) -> float:
+                result = f(t)
+                return float(result.real if isinstance(result, complex) else result)
+
+            deriv_result = Calculus.derivative(f_wrapper, x, method="central")
+            fpx = deriv_result.value
             if abs(fpx) < 1e-16:
                 raise RuntimeError("Derivative too small; supply a bracket.")
             step = fx / fpx
@@ -628,8 +712,16 @@ if __name__ == "__main__":
     print("d2/dx2 sin(1) ~", d2.value, "true=", -math.sin(1.0))
 
     # Adaptive Simpson test: ∫0^π sin(x) dx = 2
-    I = Calculus.integrate_adaptive_simpson(math.sin, 0.0, math.pi, tol=1e-12)
-    print("Integral sin 0..pi ~", I.value, "err~", I.error_est, "true=2")
+    integral_result = Calculus.integrate_adaptive_simpson(
+        math.sin, 0.0, math.pi, tol=1e-12
+    )
+    print(
+        "Integral sin 0..pi ~",
+        integral_result.value,
+        "err~",
+        integral_result.error_est,
+        "true=2",
+    )
 
     # ODE test: y' = y, y(0)=1 => y(t)=e^t
     def ode(t: float, y: Vec) -> Vec:
@@ -640,4 +732,4 @@ if __name__ == "__main__":
 
     # Root test: cos(x)=0 => x=pi/2
     root = Calculus.find_root_hybrid(math.cos, x0=1.0, bracket=(0.0, 2.0))
-    print("Root cos(x)=0 ~", root, "true=", math.pi/2)
+    print("Root cos(x)=0 ~", root, "true=", math.pi / 2)

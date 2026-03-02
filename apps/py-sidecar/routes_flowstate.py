@@ -21,8 +21,10 @@ from transform import run_transform
 # Pydantic Models
 # ============================================================================
 
+
 class FlowstateMetrics(BaseModel):
     """Flowstate metrics from IDE analysis."""
+
     energy: float = Field(..., description="Energy metric 0-1.5")
     tempo: float = Field(..., description="Tempo metric 0-1")
     tension: int = Field(..., description="Tension metric")
@@ -35,6 +37,7 @@ class FlowstateMetrics(BaseModel):
 
 class FlowstateEnrichmentRequest(BaseModel):
     """Request for flowstate enrichment."""
+
     code: str = Field(..., description="Source code to analyze")
     metrics: FlowstateMetrics = Field(..., description="Flowstate metrics")
     language: str = Field(default="TypeScript", description="Programming language")
@@ -44,27 +47,38 @@ class FlowstateEnrichmentRequest(BaseModel):
 
 class EnrichedLexiconEntry(BaseModel):
     """Enriched lexicon entry from flowstate analysis."""
+
     id: str = Field(..., description="Stable entry ID")
     token: str = Field(..., description="Token/symbol name")
     count: int = Field(..., description="Occurrence count")
     context: str = Field(..., description="First context where found")
     confidence: float = Field(..., description="Confidence 0-1")
-    autonomy_tags: List[str] = Field(default_factory=list, description="Tags for autonomy system")
+    autonomy_tags: List[str] = Field(
+        default_factory=list, description="Tags for autonomy system"
+    )
 
 
 class FlowstateEnrichmentResponse(BaseModel):
     """Response from flowstate enrichment."""
+
     ok: bool = Field(..., description="Success flag")
     sessionId: Optional[str] = Field(None, description="Trace session ID")
-    metrics: Optional[FlowstateMetrics] = Field(None, description="Echo of input metrics")
-    entries: List[EnrichedLexiconEntry] = Field(default_factory=list, description="Enriched lexicon")
-    determinism_hash: Optional[str] = Field(None, description="Deterministic hash for verification")
+    metrics: Optional[FlowstateMetrics] = Field(
+        None, description="Echo of input metrics"
+    )
+    entries: List[EnrichedLexiconEntry] = Field(
+        default_factory=list, description="Enriched lexicon"
+    )
+    determinism_hash: Optional[str] = Field(
+        None, description="Deterministic hash for verification"
+    )
     error: Optional[str] = Field(None, description="Error message if !ok")
 
 
 # ============================================================================
 # Enrichment Logic
 # ============================================================================
+
 
 def enrich_flowstate_code(
     code: str,
@@ -84,14 +98,11 @@ def enrich_flowstate_code(
             source_file="<flowstate-analysis>",
             language=language,
             objective="autonomous lexicon extraction from flowstate metrics",
-            text=code
+            text=code,
         )
 
         # Stage 2: Transform (extract lexicon + runes)
-        lexicon_rows, rune_rows = run_transform(
-            packet=evidence,
-            source_text=code
-        )
+        lexicon_rows, rune_rows = run_transform(packet=evidence, source_text=code)
 
         # Stage 3: Enrich lexicon entries with autonomy tags + metrics context
         enriched = []
@@ -112,7 +123,9 @@ def enrich_flowstate_code(
                 token=lex_row.token,
                 count=getattr(lex_row, "count", 1),
                 context=getattr(lex_row, "first_context", ""),
-                confidence=min(1.0, 0.7 + (0.3 * (i / max(topN, 1)))),  # Decay confidence by rank
+                confidence=min(
+                    1.0, 0.7 + (0.3 * (i / max(topN, 1)))
+                ),  # Decay confidence by rank
                 autonomy_tags=autonomy_tags,
             )
             enriched.append(entry)
@@ -130,11 +143,14 @@ def enrich_flowstate_code(
 # Factory for FastAPI Integration
 # ============================================================================
 
+
 def create_flowstate_routes(app):
     """Register flowstate enrichment routes with FastAPI app."""
 
     @app.post("/flowstate/enrich", response_model=FlowstateEnrichmentResponse)
-    async def enrich_flowstate(req: FlowstateEnrichmentRequest) -> FlowstateEnrichmentResponse:
+    async def enrich_flowstate(
+        req: FlowstateEnrichmentRequest,
+    ) -> FlowstateEnrichmentResponse:
         """
         Enrich flowstate code analysis with lexicon extraction and autonomy tags.
 

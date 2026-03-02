@@ -1,4 +1,4 @@
-import path from "node:path";
+import * as path from "node:path";
 import { defineConfig } from "vite";
 
 /**
@@ -7,26 +7,23 @@ import { defineConfig } from "vite";
  * Principles:
  * - Reproducible builds (sorted imports, deterministic sourcemaps)
  * - Game engine in iframe sandbox: isolated from IDE Web
- * - Contract package integration (@we/contracts for queries)
+ * - Contract package integration (@world-engine/contracts for queries)
  * - Optimized for hot reload during game development
  */
 export default defineConfig({
   // Alias for contract package
   resolve: {
     alias: {
-      "@we/contracts": path.resolve(__dirname, "../../packages/contracts"),
+      "@world-engine/contracts": path.resolve(__dirname, "../../packages/contracts"),
+      "node:crypto": path.resolve(__dirname, "./src/shims/node-crypto.ts"),
     },
   },
 
   // Development server (separate from IDE Web to allow parallel development)
   server: {
-    host: '0.0.0.0', // Listen on all interfaces (IPv4 and IPv6)
+    host: "0.0.0.0", // Listen on all interfaces (IPv4 and IPv6)
     port: 5174,
     strictPort: true,
-    // Watch for contract changes
-    watch: {
-      include: ["src/**", "../../packages/contracts/**"],
-    },
   },
 
   // Production build (reproducible, deterministic)
@@ -49,7 +46,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          "vendor-contracts": ["@we/contracts"],
+          "vendor-contracts": ["@world-engine/contracts"],
         },
       },
     },

@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from ..contracts import GateDecision, GateStatus, ConsciousnessEngineOutput, FederatedHealth
+from ..contracts import (
+    GateDecision,
+    GateStatus,
+    ConsciousnessEngineOutput,
+    FederatedHealth,
+)
 
 
 @dataclass
@@ -59,7 +64,10 @@ class EnforcementLogic:
         if not consciousness.emergence:
             blocked.append("consciousness")
 
-        if consciousness.metrics.ethics < self.cfg.min_ethics or federated.agent_agreement < 0.6:
+        if (
+            consciousness.metrics.ethics < self.cfg.min_ethics
+            or federated.agent_agreement < 0.6
+        ):
             blocked.append("ethics")
 
         stability = bubble_health - branch_penalty
@@ -74,4 +82,6 @@ class EnforcementLogic:
             status = GateStatus.CLOSED
 
         reason = "ok" if allowed else f"blocked_by={blocked}"
-        return GateDecision(allowed=allowed, status=status, blocked_by=blocked, reason=reason)
+        return GateDecision(
+            allowed=allowed, status=status, blocked_by=blocked, reason=reason
+        )

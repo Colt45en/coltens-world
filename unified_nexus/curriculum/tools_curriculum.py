@@ -54,21 +54,25 @@ async def curriculum_stop_execute(args: Dict[str, Any]) -> Dict[str, Any]:
     examples = []
     for i, point in enumerate(teaching_points[:pick_k]):
         examples.append(
-            f"Example {i+1} (rotation {rotation}): {point} → core concept."
+            f"Example {i + 1} (rotation {rotation}): {point} → core concept."
         )
 
     # Quick checks (deterministic)
     quick_checks = []
     if len(teaching_points) > 0:
-        quick_checks.append({
-            "q": f"What is the main focus today?",
-            "a": teaching_points[0],
-        })
+        quick_checks.append(
+            {
+                "q": "What is the main focus today?",
+                "a": teaching_points[0],
+            }
+        )
     if len(teaching_points) > 1:
-        quick_checks.append({
-            "q": f"How many teaching points are we covering?",
-            "a": str(len(teaching_points)),
-        })
+        quick_checks.append(
+            {
+                "q": "How many teaching points are we covering?",
+                "a": str(len(teaching_points)),
+            }
+        )
 
     # Common mistake (relevant to stop type)
     mistake_map = {
@@ -137,7 +141,9 @@ async def curriculum_wheel_checkpoint_save(args: Dict[str, Any]) -> Dict[str, An
     os.makedirs(checkpoint_dir, exist_ok=True)
 
     # Checkpoint filename includes seq to prevent overwrite races
-    checkpoint_file = f"{checkpoint_dir}/rotation_{rotation}_stop_{stop_index}_seq_{seq}.json"
+    checkpoint_file = (
+        f"{checkpoint_dir}/rotation_{rotation}_stop_{stop_index}_seq_{seq}.json"
+    )
 
     try:
         with open(checkpoint_file, "w") as f:
@@ -169,7 +175,9 @@ async def curriculum_wheel_checkpoint_load(args: Dict[str, Any]) -> Dict[str, An
         {"ok": True, "state": Dict} or {"ok": False, "reason": str}
     """
     wheel_id = str(args.get("wheel_id", "unknown"))
-    checkpoint_dir = str(args.get("checkpoint_dir", f"runtime/curriculum/{wheel_id}/checkpoints"))
+    checkpoint_dir = str(
+        args.get("checkpoint_dir", f"runtime/curriculum/{wheel_id}/checkpoints")
+    )
 
     if not os.path.exists(checkpoint_dir):
         return {

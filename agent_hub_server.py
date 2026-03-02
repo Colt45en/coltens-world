@@ -5,13 +5,15 @@ import hashlib
 import json
 import os
 import time
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Any, Awaitable, Callable, Dict, Optional
+from typing import Any, Awaitable, Callable, Dict, Optional, cast
 
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from starlette.responses import JSONResponse, Response
 
 # =========================
 # Config
@@ -33,13 +35,19 @@ TS_RETRY_BACKOFF_MS = int(os.getenv("TS_RETRY_BACKOFF_MS", "120"))
 APPROVAL_TTL_S = int(os.getenv("APPROVAL_TTL_S", "600"))  # 10 min
 MAX_BODY_BYTES = int(os.getenv("MAX_BODY_BYTES", str(1024 * 1024)))  # 1MB
 
+# Shared TS client (initialized in lifespan)
+ts_client: Optional[httpx.AsyncClient] = None
+
 
 # =========================
 # Contract Models
 # =========================
 
+
 class ToolAction(BaseModel):
-    kind: str = Field(..., description='e.g. "py.echo", "ts.uppercase", "hub.self_test"')
+    kind: str = Field(
+        ..., description='e.g. "py.echo", "ts.uppercase", "hub.self_test"'
+    )
     # tool-specific args ride alongside kind
     model_config = {"extra": "allow"}
 
@@ -65,8 +73,15 @@ class ToolResponse(BaseModel):
     code: Optional[str] = None
 
 
-def ok(result: Any, *, requires_approval: bool = False, approval_id: Optional[str] = None) -> ToolResponse:
-    return ToolResponse(success=True, result=result, requires_approval=requires_approval, approval_id=approval_id)
+def ok(
+    result: Any, *, requires_approval: bool = False, approval_id: Optional[str] = None
+) -> ToolResponse:
+    return ToolResponse(
+        success=True,
+        result=result,
+        requires_approval=requires_approval,
+        approval_id=approval_id,
+    )
 
 
 def fail(error: str, code: str) -> ToolResponse:
@@ -77,11 +92,14 @@ def fail(error: str, code: str) -> ToolResponse:
 # Deterministic JSON + IDs
 # =========================
 
+
 def stable_json(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
+
 def sha256_hex(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
+
 
 def normalize_kind(kind: str) -> str:
     # Hardening: accept "agent_py.xxx" forms too
@@ -101,6 +119,7 @@ def normalize_kind(kind: str) -> str:
 # Approval Store
 # =========================
 
+
 @dataclass
 class PendingApproval:
     approval_id: str
@@ -115,17 +134,26 @@ class PendingApproval:
 PENDING: Dict[str, PendingApproval] = {}
 PENDING_LOCK = asyncio.Lock()
 
+
 def now_ms() -> int:
     return int(time.time() * 1000)
+
 
 async def purge_expired() -> None:
     cutoff = now_ms() - (APPROVAL_TTL_S * 1000)
     async with PENDING_LOCK:
-        dead = [k for k, v in PENDING.items() if v.created_at_ms < cutoff or v.status in ("consumed",)]
+        dead = [
+            k
+            for k, v in PENDING.items()
+            if v.created_at_ms < cutoff or v.status in ("consumed",)
+        ]
         for k in dead:
             PENDING.pop(k, None)
 
-def deterministic_approval_id(trace_id: str, session_id: str, pending_action: Dict[str, Any]) -> str:
+
+def deterministic_approval_id(
+    trace_id: str, session_id: str, pending_action: Dict[str, Any]
+) -> str:
     payload = f"{trace_id}|{session_id}|{stable_json(pending_action)}"
     return "appr_" + sha256_hex(payload)[:24]
 
@@ -136,14 +164,23 @@ def deterministic_approval_id(trace_id: str, session_id: str, pending_action: Di
 
 ToolFn = Callable[[Dict[str, Any], Dict[str, Any]], Awaitable[ToolResponse]]
 
+
 async def py_echo(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
     return ok({"action": action, "context": ctx})
+
 
 async def py_health(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
     return ok({"ok": True, "service": "agenthub", "lang": "python"})
 
+
 async def py_time(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
-    return ok({"utc_iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "now_ms": ctx["now_ms"]})
+    return ok(
+        {
+            "utc_iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "now_ms": ctx["now_ms"],
+        }
+    )
+
 
 async def py_sha256(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
     text = action.get("text")
@@ -151,22 +188,36 @@ async def py_sha256(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse
         return fail("Missing required string field: text", "BAD_ARGS")
     return ok({"text": text, "sha256": sha256_hex(text)})
 
-async def py_require_approval(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
+
+async def py_require_approval(
+    action: Dict[str, Any], ctx: Dict[str, Any]
+) -> ToolResponse:
     pending_action = action.get("pending_action")
     if not isinstance(pending_action, dict) or "kind" not in pending_action:
-        return fail("Missing required object field: pending_action (with kind)", "BAD_ARGS")
+        return fail(
+            "Missing required object field: pending_action (with kind)", "BAD_ARGS"
+        )
 
-    pending_action = dict(pending_action)
-    pending_action["kind"] = normalize_kind(str(pending_action["kind"]))
+    raw_pending_action = cast(Dict[object, Any], pending_action)
+    pending_action_typed: Dict[str, Any] = {
+        str(k): v for k, v in raw_pending_action.items()
+    }
+    pending_action_typed["kind"] = normalize_kind(str(pending_action_typed["kind"]))
 
-    approval_id = deterministic_approval_id(ctx["trace_id"], ctx["session_id"], pending_action)
+    approval_id = deterministic_approval_id(
+        ctx["trace_id"], ctx["session_id"], pending_action_typed
+    )
 
     await purge_expired()
     async with PENDING_LOCK:
         existing = PENDING.get(approval_id)
         if existing and existing.status == "waiting":
             # deterministic ID: same request yields same approval_id; return same pending approval
-            return ok({"approval_id": approval_id, "status": "waiting"}, requires_approval=True, approval_id=approval_id)
+            return ok(
+                {"approval_id": approval_id, "status": "waiting"},
+                requires_approval=True,
+                approval_id=approval_id,
+            )
 
         PENDING[approval_id] = PendingApproval(
             approval_id=approval_id,
@@ -174,11 +225,15 @@ async def py_require_approval(action: Dict[str, Any], ctx: Dict[str, Any]) -> To
             session_id=ctx["session_id"],
             created_at_ms=ctx["now_ms"],
             status="waiting",
-            pending_action=pending_action,
+            pending_action=pending_action_typed,
             reason=action.get("reason"),
         )
 
-    return ok({"approval_id": approval_id, "status": "waiting"}, requires_approval=True, approval_id=approval_id)
+    return ok(
+        {"approval_id": approval_id, "status": "waiting"},
+        requires_approval=True,
+        approval_id=approval_id,
+    )
 
 
 async def hub_list_tools(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
@@ -196,11 +251,14 @@ async def hub_list_tools(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolRes
     except Exception as e:
         ts_tools = {"ok": False, "error": str(e), "code": "TS_UNREACHABLE"}
 
-    return ok({
-        "hub_tools": sorted(list(HUB_TOOLS.keys())),
-        "py_tools": sorted(list(PY_TOOLS.keys())),
-        "ts_tools": ts_tools,
-    })
+    return ok(
+        {
+            "hub_tools": sorted(list(HUB_TOOLS.keys())),
+            "py_tools": sorted(list(PY_TOOLS.keys())),
+            "ts_tools": ts_tools,
+        }
+    )
+
 
 async def hub_self_test(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
     # Python ok is simply "py.health"
@@ -216,11 +274,13 @@ async def hub_self_test(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResp
     except Exception as e:
         ts_ok = {"ok": False, "error": str(e), "code": "TS_UNREACHABLE"}
 
-    return ok({
-        "hub": {"ok": True},
-        "python": py_ok.result,
-        "typescript": ts_ok,
-    })
+    return ok(
+        {
+            "hub": {"ok": True},
+            "python": py_ok.result,
+            "typescript": ts_ok,
+        }
+    )
 
 
 PY_TOOLS: Dict[str, ToolFn] = {
@@ -241,9 +301,15 @@ HUB_TOOLS: Dict[str, ToolFn] = {
 # TS Forwarding (retry + normalized errors)
 # =========================
 
+_RETRYABLE_STATUSES = {429, 502, 503, 504}
+
+
 async def forward_to_ts(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResponse:
+    if ts_client is None:
+        return fail("TS client not initialized", "TS_UNREACHABLE")
+
     url = TS_AGENT_URL.rstrip("/") + "/tool/execute"
-    payload = {
+    payload: Dict[str, Any] = {
         "action": action,
         "trace_id": ctx["trace_id"],
         "session_id": ctx["session_id"],
@@ -253,20 +319,26 @@ async def forward_to_ts(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResp
 
     for attempt in range(TS_RETRY_MAX + 1):
         try:
-            async with httpx.AsyncClient(timeout=REQUEST_TIMEOUT_S) as client:
-                r = await client.post(url, json=payload)
+            r = await ts_client.post(url, json=payload, timeout=REQUEST_TIMEOUT_S)
             if r.status_code >= 400:
-                # retry only for 503 per spec suggestion
-                if r.status_code == 503 and attempt < TS_RETRY_MAX:
+                raw = r.text
+                if r.status_code in _RETRYABLE_STATUSES and attempt < TS_RETRY_MAX:
                     await asyncio.sleep((TS_RETRY_BACKOFF_MS * (attempt + 1)) / 1000.0)
                     continue
-                return fail(f"TS agent returned HTTP {r.status_code}", "TS_HTTP_ERROR")
+                return fail(
+                    f"TS agent HTTP {r.status_code}: {raw[:800]}", "TS_HTTP_ERROR"
+                )
 
-            data = r.json()
-            # Validate minimal envelope shape
+            try:
+                data = r.json()
+            except Exception:
+                return fail(
+                    f"TS agent returned non-JSON body: {r.text[:800]}", "TS_HTTP_ERROR"
+                )
+
             if not isinstance(data, dict) or "success" not in data:
                 return fail("TS agent returned malformed response", "TS_HTTP_ERROR")
-            return ToolResponse(**data)
+            return ToolResponse(**cast(Dict[str, Any], data))
 
         except httpx.ConnectError:
             last_err = fail("TS agent unreachable", "TS_UNREACHABLE")
@@ -285,7 +357,21 @@ async def forward_to_ts(action: Dict[str, Any], ctx: Dict[str, Any]) -> ToolResp
 # FastAPI App
 # =========================
 
-app = FastAPI(title="AgentHub", version="1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global ts_client
+    limits = httpx.Limits(max_connections=50, max_keepalive_connections=20)
+    client = httpx.AsyncClient(limits=limits)
+    ts_client = client
+    try:
+        yield
+    finally:
+        await client.aclose()
+        ts_client = None
+
+
+app = FastAPI(title="AgentHub", version="1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -297,12 +383,27 @@ app.add_middleware(
 
 
 @app.middleware("http")
-async def body_size_limit(request: Request, call_next):
-    # Simple body size guard; avoids pathological payloads
+async def body_size_limit(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    # Fast rejection when content-length is known
+    content_length = request.headers.get("content-length")
+    if (
+        content_length
+        and content_length.isdigit()
+        and int(content_length) > MAX_BODY_BYTES
+    ):
+        return JSONResponse(
+            status_code=413, content=fail("Request too large", "BAD_ARGS").model_dump()
+        )
+
+    # Fallback: enforce after reading
     body = await request.body()
     if len(body) > MAX_BODY_BYTES:
-        return ToolResponse(success=False, error="Request too large", code="BAD_ARGS").model_dump()
-    request._body = body  # type: ignore[attr-defined]
+        return JSONResponse(
+            status_code=413, content=fail("Request too large", "BAD_ARGS").model_dump()
+        )
+
     return await call_next(request)
 
 
@@ -340,7 +441,9 @@ async def tool_execute(req: ExecuteRequest) -> Dict[str, Any]:
             # Forward as-is to TS
             return (await forward_to_ts(action, ctx)).model_dump()
 
-        return fail("Unknown tool prefix (expected py./ts./hub.)", "UNKNOWN_TOOL").model_dump()
+        return fail(
+            "Unknown tool prefix (expected py./ts./hub.)", "UNKNOWN_TOOL"
+        ).model_dump()
 
     except Exception as e:
         # Defensive: never leak stack traces in production; here we return message for dev ergonomics.
@@ -361,7 +464,9 @@ async def tool_approve(req: ApproveRequest) -> Dict[str, Any]:
             return fail("approval_id not found", "UNKNOWN_APPROVAL").model_dump()
 
         if pending.status != "waiting":
-            return fail(f"approval already {pending.status}", "UNKNOWN_APPROVAL").model_dump()
+            return fail(
+                f"approval already {pending.status}", "UNKNOWN_APPROVAL"
+            ).model_dump()
 
         pending.status = "approved" if decision == "approve" else "rejected"
         pending.reason = req.reason
@@ -371,15 +476,17 @@ async def tool_approve(req: ApproveRequest) -> Dict[str, Any]:
             pending = PENDING.get(req.approval_id)
             if pending:
                 pending.status = "consumed"
-        return ok({
-            "approval_id": req.approval_id,
-            "decision": "reject",
-            "reason": req.reason,
-        }).model_dump()
+        return ok(
+            {
+                "approval_id": req.approval_id,
+                "decision": "reject",
+                "reason": req.reason,
+            }
+        ).model_dump()
 
     # Approve => replay stored action once
     replay_action = pending.pending_action
-    replay_ctx = {
+    replay_ctx: Dict[str, Any] = {
         "trace_id": pending.trace_id,
         "session_id": pending.session_id,
         "now_ms": now_ms(),
@@ -413,12 +520,14 @@ async def tool_approve(req: ApproveRequest) -> Dict[str, Any]:
         else:
             return fail("Unknown tool prefix", "UNKNOWN_TOOL").model_dump()
 
-        return ok({
-            "approval_id": req.approval_id,
-            "decision": "approve",
-            "approved_action": replay_action,
-            "tool_response": tool_resp.model_dump(),
-        }).model_dump()
+        return ok(
+            {
+                "approval_id": req.approval_id,
+                "decision": "approve",
+                "approved_action": replay_action,
+                "tool_response": tool_resp.model_dump(),
+            }
+        ).model_dump()
 
     except Exception as e:
         return fail(str(e), "PY_TOOL_ERROR").model_dump()
@@ -431,4 +540,5 @@ async def health() -> Dict[str, Any]:
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host=HUB_HOST, port=HUB_PORT, log_level="info")

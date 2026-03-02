@@ -1,6 +1,10 @@
 import pytest
 
-from packages.core.policy import default_policy, assert_path_allowed, assert_domain_allowed
+from packages.core.policy import (
+    default_policy,
+    assert_path_allowed,
+    assert_domain_allowed,
+)
 from packages.core.utils import domain_of
 
 

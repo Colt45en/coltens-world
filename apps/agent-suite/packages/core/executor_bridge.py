@@ -6,7 +6,9 @@ from .coords import denormalize_point
 from .model_actions import AgentAction
 
 
-def model_to_executor(action: Union[AgentAction, Dict[str, Any]], screen_size: Tuple[int, int]) -> List[Dict[str, Any]]:
+def model_to_executor(
+    action: Union[AgentAction, Dict[str, Any]], screen_size: Tuple[int, int]
+) -> List[Dict[str, Any]]:
     """
     Deterministic sequencing:
       1) click (if POINT present and (TYPE or PRESS present))

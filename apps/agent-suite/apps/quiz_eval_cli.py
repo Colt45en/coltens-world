@@ -43,7 +43,11 @@ def _extract_from_text_strict(text: str) -> str | None:
     s = text.strip().lower()
     if s in CHOICES:
         return s
-    m = re.fullmatch(r"(?:correct\s+answer|answer|choice)\s*[:=-]?\s*([abcd])(?:[\.\)\s].*)?", s, flags=re.DOTALL)
+    m = re.fullmatch(
+        r"(?:correct\s+answer|answer|choice)\s*[:=-]?\s*([abcd])(?:[\.\)\s].*)?",
+        s,
+        flags=re.DOTALL,
+    )
     if m:
         return m.group(1)
     m = re.search(r'"(?:answer|choice|label)"\s*:\s*"([abcd])"', s)
@@ -114,7 +118,13 @@ def _extract_openai_text(rec: Dict[str, Any]) -> str | None:
 
 
 def _extract_raw_text(rec: Dict[str, Any]) -> str | None:
-    return _first_str(rec.get("text"), rec.get("raw_text"), rec.get("output"), rec.get("response"), rec.get("prediction"))
+    return _first_str(
+        rec.get("text"),
+        rec.get("raw_text"),
+        rec.get("output"),
+        rec.get("response"),
+        rec.get("prediction"),
+    )
 
 
 def _extract_choice(rec: Dict[str, Any], mode: str = "auto") -> str | None:
@@ -125,7 +135,16 @@ def _extract_choice(rec: Dict[str, Any], mode: str = "auto") -> str | None:
         text = _extract_raw_text(rec)
         return _extract_from_text_strict(text) if text else None
 
-    candidate_keys = ("answer", "pred", "prediction", "response", "output", "text", "choice", "gold_answer")
+    candidate_keys = (
+        "answer",
+        "pred",
+        "prediction",
+        "response",
+        "output",
+        "text",
+        "choice",
+        "gold_answer",
+    )
     value: Any = None
     for k in candidate_keys:
         if k in rec:
@@ -144,10 +163,25 @@ def _extract_choice(rec: Dict[str, Any], mode: str = "auto") -> str | None:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Score predicted multiple-choice answers against quiz_eval.jsonl.")
-    ap.add_argument("--gold", default="datasets/golden_ai_training/quiz_eval.jsonl", help="Gold quiz eval JSONL (default: datasets/golden_ai_training/quiz_eval.jsonl)")
-    ap.add_argument("--pred", required=True, help="Predictions JSONL. Each row should include `id` or `question_number`, plus a predicted answer field.")
-    ap.add_argument("--format", choices=("auto", "openai", "raw-text"), default="auto", help="Prediction parsing mode. `auto` is permissive; `openai` and `raw-text` are stricter.")
+    ap = argparse.ArgumentParser(
+        description="Score predicted multiple-choice answers against quiz_eval.jsonl."
+    )
+    ap.add_argument(
+        "--gold",
+        default="datasets/golden_ai_training/quiz_eval.jsonl",
+        help="Gold quiz eval JSONL (default: datasets/golden_ai_training/quiz_eval.jsonl)",
+    )
+    ap.add_argument(
+        "--pred",
+        required=True,
+        help="Predictions JSONL. Each row should include `id` or `question_number`, plus a predicted answer field.",
+    )
+    ap.add_argument(
+        "--format",
+        choices=("auto", "openai", "raw-text"),
+        default="auto",
+        help="Prediction parsing mode. `auto` is permissive; `openai` and `raw-text` are stricter.",
+    )
     ap.add_argument("--out", help="Optional path to write per-item scored JSONL.")
     args = ap.parse_args()
 

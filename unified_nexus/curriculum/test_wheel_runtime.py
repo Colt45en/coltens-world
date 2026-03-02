@@ -25,7 +25,9 @@ from .wheel_runtime import WheelPlan, WheelRuntime, WheelState
 @pytest.fixture
 def plan() -> WheelPlan:
     """Load test plan"""
-    return cast(WheelPlan, WheelRuntime.load_json("schemas/curriculum/wheel.plan.v1.json"))
+    return cast(
+        WheelPlan, WheelRuntime.load_json("schemas/curriculum/wheel.plan.v1.json")
+    )
 
 
 @pytest.fixture
@@ -49,17 +51,23 @@ def mock_bus() -> MagicMock:
 class TestWheelRuntimeBasics:
     """Basic runtime functionality"""
 
-    def test_init_validates_plan(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_init_validates_plan(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Runtime should validate plan on init"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
         assert runtime.plan["wheel_id"] == plan["wheel_id"]
 
-    def test_init_validates_state(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_init_validates_state(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Runtime should validate state on init"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
         assert runtime.state["wheel_id"] == state["wheel_id"]
 
-    def test_next_seq_increments(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_next_seq_increments(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """next_seq should increment state seq and return new value"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
         assert runtime.state["seq"] == 0
@@ -76,7 +84,9 @@ class TestWheelRuntimeBasics:
 class TestStatePersistence:
     """State save/load"""
 
-    def test_save_and_load_state(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_save_and_load_state(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Should be able to save and load state"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
@@ -99,7 +109,9 @@ class TestStatePersistence:
         finally:
             Path(temp_path).unlink()
 
-    def test_resumption_preserves_seq(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_resumption_preserves_seq(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Resuming from checkpoint should preserve seq counter"""
         runtime1 = WheelRuntime(plan=plan, state=state, bus=mock_bus)
         runtime1.next_seq()
@@ -127,7 +139,9 @@ class TestEventSequencing:
     """Event seq increments"""
 
     @pytest.mark.asyncio
-    async def test_tick_increments_seq(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    async def test_tick_increments_seq(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Each tick should increment seq"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
         initial_seq = runtime.state["seq"]
@@ -138,7 +152,9 @@ class TestEventSequencing:
         assert runtime.state["seq"] > initial_seq
 
     @pytest.mark.asyncio
-    async def test_emitted_events_have_seq(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    async def test_emitted_events_have_seq(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Emitted events should have seq from state"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
@@ -156,19 +172,25 @@ class TestEventSequencing:
 class TestGuardianInvariants:
     """Guardian assertions"""
 
-    def test_guardian_checks_total_rotations(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_guardian_checks_total_rotations(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Runtime should reject if rotation >= total_rotations on init"""
         state["rotation"] = plan["total_rotations"] + 1
         with pytest.raises(AssertionError):
             WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
-    def test_guardian_checks_stop_index(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_guardian_checks_stop_index(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Runtime should reject if stop_index >= len(stop_order)"""
         state["stop_index"] = len(plan["stop_order"]) + 1
         with pytest.raises(AssertionError):
             WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
-    def test_guardian_checks_wheel_id_match(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_guardian_checks_wheel_id_match(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Runtime should reject if wheel_id mismatch"""
         state["wheel_id"] = "different-wheel-id"
         with pytest.raises(AssertionError):
@@ -179,7 +201,9 @@ class TestCommandHandling:
     """on_command processing"""
 
     @pytest.mark.asyncio
-    async def test_on_command_advances_state(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    async def test_on_command_advances_state(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """on_command should advance stop_index when result is ok"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
@@ -209,7 +233,9 @@ class TestCommandHandling:
             assert runtime.state["active_call"] is None
 
     @pytest.mark.asyncio
-    async def test_on_command_marks_completed(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    async def test_on_command_marks_completed(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """on_command should record completed stop"""
         runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
@@ -237,24 +263,33 @@ class TestCommandHandling:
 
             # Verify completed
             assert stop_id in runtime.state["completed"]
-            assert runtime.state["rotation"] in runtime.state["completed"].get(stop_id, [])
+            assert runtime.state["rotation"] in runtime.state["completed"].get(
+                stop_id, []
+            )
 
 
 class TestDeterminismAndRepeat:
     """Deterministic pool selection + anti-repeat"""
 
-    def test_same_seed_same_picks(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_same_seed_same_picks(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Same seed should give same pool picks (determinism)"""
         # Note: This would require exposing pool picks in state or extending the API.
         # For now, this is a specification test.
         runtime1 = WheelRuntime(plan=plan, state=state, bus=mock_bus)
         runtime2 = WheelRuntime(plan=plan, state=state.copy(), bus=mock_bus)
 
-        assert runtime1.plan["mutation_policy"]["seed"] == runtime2.plan["mutation_policy"]["seed"]
+        assert (
+            runtime1.plan["mutation_policy"]["seed"]
+            == runtime2.plan["mutation_policy"]["seed"]
+        )
 
-    def test_anti_repeat_logic(self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock) -> None:
+    def test_anti_repeat_logic(
+        self, plan: WheelPlan, state: WheelState, mock_bus: MagicMock
+    ) -> None:
         """Anti-repeat window should prevent same picks within N rotations"""
-        runtime = WheelRuntime(plan=plan, state=state, bus=mock_bus)
+        WheelRuntime(plan=plan, state=state, bus=mock_bus)
 
         # Build recent history
         no_repeat_window = plan["mutation_policy"]["no_repeat"]

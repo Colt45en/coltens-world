@@ -28,8 +28,8 @@ from .scheduler import JobSpec, Scheduler
 from .retries import RetryPolicy
 
 
-TOOL_CALL_EVENT = "nucleus.tool_call"       # event type
-TOOL_RESULT_COMMAND = "nucleus.tool_result" # command type
+TOOL_CALL_EVENT = "nucleus.tool_call"  # event type
+TOOL_RESULT_COMMAND = "nucleus.tool_result"  # command type
 COGNITION_EMIT_COMMAND = "cognition.request_emit"
 
 
@@ -109,8 +109,13 @@ class Nucleus:
         self.install_jobs()
 
         # If either loop dies with an exception, shut down the system.
-        bus_task = asyncio.create_task(self.bus.run_forever(stop_event=self.stop_event), name="nucleus.bus")
-        sched_task = asyncio.create_task(self.scheduler.run_forever(stop_event=self.stop_event), name="nucleus.scheduler")
+        bus_task = asyncio.create_task(
+            self.bus.run_forever(stop_event=self.stop_event), name="nucleus.bus"
+        )
+        sched_task = asyncio.create_task(
+            self.scheduler.run_forever(stop_event=self.stop_event),
+            name="nucleus.scheduler",
+        )
 
         try:
             done, pending = await asyncio.wait(
@@ -147,15 +152,21 @@ class Nucleus:
         await self._emit("nucleus.tick", {"kind": "tick"}, trace_id="trace_tick")
 
     async def _brain_run(self) -> None:
-        await self._emit("nucleus.brain_run", {"kind": "brain_run"}, trace_id="trace_brain")
+        await self._emit(
+            "nucleus.brain_run", {"kind": "brain_run"}, trace_id="trace_brain"
+        )
 
-    async def call_tool(self, tool_name: str, args: Dict[str, Any], trace_id: str = "trace_tool") -> Dict[str, Any]:
+    async def call_tool(
+        self, tool_name: str, args: Dict[str, Any], trace_id: str = "trace_tool"
+    ) -> Dict[str, Any]:
         tool = str(tool_name or "").strip()
         if not tool:
             raise ValueError("tool_name must be non-empty")
 
         if self.cfg.reject_tool_calls_when_overloaded and self._should_reject("normal"):
-            raise RuntimeError(f"overloaded: level={self._overload_level():.3f}, priority=normal")
+            raise RuntimeError(
+                f"overloaded: level={self._overload_level():.3f}, priority=normal"
+            )
 
         # Deterministic, in-process call id
         loop = asyncio.get_running_loop()
@@ -183,7 +194,9 @@ class Nucleus:
         finally:
             self._pending_tool_results.pop(call_id, None)
 
-    async def _emit(self, event_type: str, payload: Dict[str, Any], trace_id: str) -> V1EventEnvelope:
+    async def _emit(
+        self, event_type: str, payload: Dict[str, Any], trace_id: str
+    ) -> V1EventEnvelope:
         if not event_type:
             raise ValueError("event_type must be non-empty")
 
@@ -213,7 +226,9 @@ class Nucleus:
     async def _cmd_emit_event(self, cmd: V1CommandEnvelope) -> Dict[str, Any]:
         priority = str(cmd.payload.get("priority", "normal"))
         if self._should_reject(priority):
-            raise RuntimeError(f"overloaded: level={self._overload_level():.3f}, priority={priority}")
+            raise RuntimeError(
+                f"overloaded: level={self._overload_level():.3f}, priority={priority}"
+            )
 
         event_type_raw = cmd.payload.get("event_type")
         if not event_type_raw:
@@ -224,7 +239,11 @@ class Nucleus:
         trace_id = cmd.trace_id
 
         evt = await self._emit(event_type, payload, trace_id)
-        return {"emitted_event_id": evt.event_id, "seq": evt.seq, "chain_head": self._event_log.head_hash}
+        return {
+            "emitted_event_id": evt.event_id,
+            "seq": evt.seq,
+            "chain_head": self._event_log.head_hash,
+        }
 
     def _overload_level(self) -> float:
         m = self.bus.metrics()
@@ -267,7 +286,13 @@ class Nucleus:
             if ok:
                 fut.set_result({"ok": True, "call_id": call_id, "result": result})
             else:
-                fut.set_result({"ok": False, "call_id": call_id, "error": str(error or "ToolError")})
+                fut.set_result(
+                    {
+                        "ok": False,
+                        "call_id": call_id,
+                        "error": str(error or "ToolError"),
+                    }
+                )
 
         # Always ACK receipt (even if caller timed out and fut is gone)
         return {"accepted": True, "call_id": call_id}
@@ -275,4 +300,5 @@ class Nucleus:
     @staticmethod
     def _now_ms() -> int:
         import time
+
         return int(time.time() * 1000)

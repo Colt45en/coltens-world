@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Literal, Optional, TypedDict, Union
 # Observations (what the agent sees)
 # ---------------------------
 
+
 @dataclass(frozen=True)
 class WebObservation:
     url: str
@@ -38,6 +39,7 @@ Observation = Union[WebObservation, FileObservation, DesktopObservation]
 
 TargetKind = Literal["role", "text", "selector", "point"]
 
+
 class ActionTarget(TypedDict, total=False):
     kind: TargetKind
 
@@ -66,6 +68,7 @@ ActionType = Literal[
     "open_path",
     "finish",
 ]
+
 
 class Action(TypedDict, total=False):
     type: ActionType
@@ -99,26 +102,34 @@ class Action(TypedDict, total=False):
 def click_role(role: str, name: str) -> Action:
     return {"type": "click", "target": {"kind": "role", "role": role, "name": name}}
 
+
 def click_text(value: str) -> Action:
     return {"type": "click", "target": {"kind": "text", "value": value}}
+
 
 def click_selector(selector: str) -> Action:
     return {"type": "click", "target": {"kind": "selector", "selector": selector}}
 
+
 def click_point(x: int, y: int) -> Action:
     return {"type": "click", "target": {"kind": "point", "x": int(x), "y": int(y)}}
+
 
 def type_text(text: str, submit: bool = False) -> Action:
     return {"type": "type_text", "text": text, "submit": bool(submit)}
 
+
 def press_key(key: str) -> Action:
     return {"type": "press_key", "key": key}
+
 
 def scroll(dx: int = 0, dy: int = 0) -> Action:
     return {"type": "scroll", "dx": int(dx), "dy": int(dy)}
 
+
 def wait(ms: int) -> Action:
     return {"type": "wait", "ms": int(ms)}
+
 
 def finish(result: Optional[Dict[str, Any]] = None) -> Action:
     return {"type": "finish", "status": "finish", "result": result or {}}

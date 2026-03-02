@@ -20,6 +20,7 @@ import React from "react";
 import { useAxisCodexSim } from "../hooks/useAxisCodexSim";
 import type { AxisCodexSimV1Config } from "../lib/axis-codex-sim-v1/types";
 import { AxisCodexSimCanvas, AxisCodexSimMeters } from "./AxisCodexSimCanvas";
+import styles from "./AxisCodexSimDemo.module.css";
 
 export interface AxisCodexSimDemoProps {
   config: AxisCodexSimV1Config;
@@ -35,56 +36,23 @@ export function AxisCodexSimDemo({
 
   if (sim.error) {
     return (
-      <div
-        style={{
-          padding: "16px",
-          backgroundColor: "#ffe0e0",
-          color: "#c00",
-          borderRadius: "4px",
-          fontFamily: "monospace",
-          fontSize: "12px",
-        }}
-      >
+      <div className={styles.errorBox}>
         <strong>Error:</strong> {sim.error.message}
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-        padding: "16px",
-        border: "1px solid #333",
-        borderRadius: "8px",
-        backgroundColor: "#fafafa",
-      }}
-    >
-      <h3 style={{ margin: "0 0 8px 0" }}>{title}</h3>
+    <div className={styles.container}>
+      <h3 className={styles.title}>{title}</h3>
 
       {/* Controls */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "8px",
-          backgroundColor: "#f0f0f0",
-          borderRadius: "4px",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className={styles.controlsBar}>
         <button
           onClick={sim.play}
           disabled={sim.isRunning}
           title="Play simulation"
-          style={{
-            padding: "6px 12px",
-            cursor: sim.isRunning ? "not-allowed" : "pointer",
-            backgroundColor: sim.isRunning ? "#ddd" : "#fff",
-          }}
+          className={`${styles.button} ${sim.isRunning ? styles.buttonDisabled : ""}`}
         >
           ▶ Play
         </button>
@@ -93,11 +61,7 @@ export function AxisCodexSimDemo({
           onClick={sim.pause}
           disabled={!sim.isRunning}
           title="Pause simulation"
-          style={{
-            padding: "6px 12px",
-            cursor: !sim.isRunning ? "not-allowed" : "pointer",
-            backgroundColor: !sim.isRunning ? "#ddd" : "#fff",
-          }}
+          className={`${styles.button} ${!sim.isRunning ? styles.buttonDisabled : ""}`}
         >
           ⏸ Pause
         </button>
@@ -106,36 +70,20 @@ export function AxisCodexSimDemo({
           onClick={sim.step}
           disabled={sim.isRunning}
           title="Step one frame"
-          style={{
-            padding: "6px 12px",
-            cursor: sim.isRunning ? "not-allowed" : "pointer",
-            backgroundColor: sim.isRunning ? "#ddd" : "#fff",
-          }}
+          className={`${styles.button} ${sim.isRunning ? styles.buttonDisabled : ""}`}
         >
           → Step
         </button>
 
-        <button
-          onClick={sim.reset}
-          title="Reset to start"
-          style={{
-            padding: "6px 12px",
-            cursor: "pointer",
-            backgroundColor: "#fff",
-          }}
-        >
+        <button onClick={sim.reset} title="Reset to start" className={styles.button}>
           ⏮ Reset
         </button>
 
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{ fontSize: "12px", color: "#666" }}>
+        <div className={styles.frameInfo}>
+          <span className={styles.frameText}>
             Frame {sim.currentIndex} / {sim.totalFrames}
           </span>
-          {sim.frame && (
-            <span style={{ fontSize: "12px", color: "#666" }}>
-              t={sim.frame.t_ms}ms
-            </span>
-          )}
+          {sim.frame && <span className={styles.frameText}>t={sim.frame.t_ms}ms</span>}
         </div>
       </div>
 
@@ -148,10 +96,8 @@ export function AxisCodexSimDemo({
             max={sim.totalFrames - 1}
             value={sim.currentIndex}
             onChange={(e) => sim.seek(parseInt(e.target.value))}
-            style={{
-              width: "100%",
-              cursor: "pointer",
-            }}
+            className={styles.slider}
+            title="Seek to frame"
           />
         </div>
       )}
@@ -171,24 +117,15 @@ export function AxisCodexSimDemo({
 
       {/* Frame details */}
       {sim.frame && (
-        <div
-          style={{
-            padding: "8px",
-            backgroundColor: "#f5f5f5",
-            borderRadius: "4px",
-            fontSize: "11px",
-            fontFamily: "monospace",
-            color: "#555",
-          }}
-        >
+        <div className={styles.frameDetails}>
           <div>
             <strong>Stimulus:</strong> total={sim.frame.stimulus.total.toFixed(2)} by_channel=
             {JSON.stringify(sim.frame.stimulus.by_channel)}
           </div>
-          <div style={{ marginTop: "4px" }}>
-            <strong>Heart:</strong> resonance={sim.frame.heart.resonance.toFixed(2)}{" "}
-            capacity={sim.frame.heart.capacity.toFixed(2)} fill={sim.frame.heart.fill.toFixed(2)}{" "}
-            coherence={sim.frame.heart.coherence.toFixed(2)}
+          <div className={styles.frameDetailsRow}>
+            <strong>Heart:</strong> resonance={sim.frame.heart.resonance.toFixed(2)} capacity=
+            {sim.frame.heart.capacity.toFixed(2)} fill={sim.frame.heart.fill.toFixed(2)} coherence=
+            {sim.frame.heart.coherence.toFixed(2)}
           </div>
         </div>
       )}

@@ -22,8 +22,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 try:
     from leximorph import (
-        build_registry,
         LexiStore,
+        build_registry,
     )
 
     print("✅ Imports successful")
@@ -101,7 +101,7 @@ def test_storage():
         # Cleanup
         try:
             Path(db_path).unlink()
-        except:
+        except Exception:
             pass
 
 
@@ -113,9 +113,9 @@ def test_fast_api_integration():
     try:
         import main
 
-        if hasattr(main, 'app'):
+        if hasattr(main, "app"):
             print("  ✓ FastAPI app found")
-        if hasattr(main, '_leximorph_registry'):
+        if hasattr(main, "_leximorph_registry"):
             print("  ✓ Registry initialized")
         print()
         return True

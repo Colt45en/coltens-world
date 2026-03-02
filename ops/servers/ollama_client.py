@@ -42,6 +42,8 @@ def ollama_chat_json(
         try:
             return json.loads(content)
         except json.JSONDecodeError as e:
-            raise OllamaError(f"Ollama did not return valid JSON: {e}\nRAW={content[:500]}")
+            raise OllamaError(
+                f"Ollama did not return valid JSON: {e}\nRAW={content[:500]}"
+            )
     except requests.RequestException as e:
         raise OllamaError(f"Ollama request failed: {e}")

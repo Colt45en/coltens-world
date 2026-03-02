@@ -2,7 +2,7 @@ from packages.core.action_codec import loads_and_validate, dumps_compact
 
 
 def test_compact_json_no_spaces():
-    s = dumps_compact({"POINT":[1,2],"STATUS":"continue"})
+    s = dumps_compact({"POINT": [1, 2], "STATUS": "continue"})
     assert " " not in s
     assert "\n" not in s
 

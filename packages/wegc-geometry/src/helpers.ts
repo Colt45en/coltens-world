@@ -3,14 +3,33 @@
  * Common functions for WEGC operations
  */
 
-import { createHash } from "node:crypto";
 import type { Quat as QuatType, Vec3 as Vec3Type } from "./contract.types.js";
 
 /**
  * Compute SHA256 hash of canonical state
  */
 export function hashCanonicalState(state: string): string {
-  return createHash("sha256").update(state).digest("hex");
+  const bytes = new TextEncoder().encode(state);
+
+  let h1 = 0x811c9dc5;
+  let h2 = 0x811c9dc5;
+  let h3 = 0x811c9dc5;
+  let h4 = 0x811c9dc5;
+
+  for (let i = 0; i < bytes.length; i++) {
+    const b = bytes[i]!;
+    h1 = Math.imul(h1 ^ b, 0x01000193) >>> 0;
+    h2 = Math.imul(h2 ^ ((b + i) & 0xff), 0x01000193) >>> 0;
+    h3 = Math.imul(h3 ^ ((b * 3 + i) & 0xff), 0x01000193) >>> 0;
+    h4 = Math.imul(h4 ^ ((b * 7 + i) & 0xff), 0x01000193) >>> 0;
+  }
+
+  const mix = (x: number): string => {
+    const y = (x ^ (x >>> 16)) >>> 0;
+    return y.toString(16).padStart(8, "0");
+  };
+
+  return `${mix(h1)}${mix(h2)}${mix(h3)}${mix(h4)}${mix(h1 ^ h3)}${mix(h2 ^ h4)}${mix(h1 ^ h2)}${mix(h3 ^ h4)}`;
 }
 
 /**
@@ -183,7 +202,12 @@ export const Quat = {
  */
 export const Time = {
   now: (): number => Date.now(),
-  nanoNow: (): number => process.hrtime.bigint().toString().slice(-9) as any, // Platform specific
+  nanoNow: (): number => {
+    if (typeof performance !== "undefined" && typeof performance.now === "function") {
+      return Math.floor(performance.now() * 1e6);
+    }
+    return Date.now() * 1e6;
+  },
   deltaSeconds: (startMs: number, endMs: number = Date.now()): number => (endMs - startMs) / 1000,
 };
 

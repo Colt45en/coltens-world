@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { CanonicalIdSchema, ContributorRoleSchema, LcidSchema, SourceTypeSchema } from "./styleSpec";
+import {
+  CanonicalIdSchema,
+  ContributorRoleSchema,
+  LcidSchema,
+  SourceTypeSchema,
+} from "./styleSpec.js";
 
 /** Person contributor (matches Word b:Person parts) */
 export const PersonSchema = z

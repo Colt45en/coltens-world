@@ -17,18 +17,32 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 PY = sys.executable  # python.exe running the service
 
+
 def spawn_uvicorn(module: str, host: str, port: int, out_name: str):
     out = (LOG_DIR / f"{out_name}.out.log").open("a", encoding="utf-8")
     err = (LOG_DIR / f"{out_name}.err.log").open("a", encoding="utf-8")
     args = [
-        PY, "-m", "uvicorn",
+        PY,
+        "-m",
+        "uvicorn",
         module,
-        "--host", host,
-        "--port", str(port),
-        "--workers", "1",
-        "--log-level", "info",
+        "--host",
+        host,
+        "--port",
+        str(port),
+        "--workers",
+        "1",
+        "--log-level",
+        "info",
     ]
-    return subprocess.Popen(args, cwd=str(ROOT), stdout=out, stderr=err, creationflags=subprocess.CREATE_NO_WINDOW)
+    return subprocess.Popen(
+        args,
+        cwd=str(ROOT),
+        stdout=out,
+        stderr=err,
+        creationflags=subprocess.CREATE_NO_WINDOW,
+    )
+
 
 class WorldEngineCoreSvc(win32serviceutil.ServiceFramework):
     _svc_name_ = "WorldEngineCoreSvc"
@@ -63,12 +77,17 @@ class WorldEngineCoreSvc(win32serviceutil.ServiceFramework):
 
         # Start chat + tool servers
         self.procs = [
-            spawn_uvicorn("ops.servers.chat_server:app", "127.0.0.1", 3000, "chat_3000"),
-            spawn_uvicorn("ops.servers.tool_server:app", "127.0.0.1", 3001, "tools_3001"),
+            spawn_uvicorn(
+                "ops.servers.chat_server:app", "127.0.0.1", 3000, "chat_3000"
+            ),
+            spawn_uvicorn(
+                "ops.servers.tool_server:app", "127.0.0.1", 3001, "tools_3001"
+            ),
         ]
 
         # Wait for stop
         win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
+
 
 if __name__ == "__main__":
     win32serviceutil.HandleCommandLine(WorldEngineCoreSvc)

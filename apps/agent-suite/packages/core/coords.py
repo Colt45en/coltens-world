@@ -11,7 +11,9 @@ def _round_half_up_num_den(num: int, den: int) -> int:
     return (2 * num + den) // (2 * den)
 
 
-def normalize_point(x_px: int, y_px: int, screen_w: int, screen_h: int) -> Tuple[int, int]:
+def normalize_point(
+    x_px: int, y_px: int, screen_w: int, screen_h: int
+) -> Tuple[int, int]:
     if screen_w <= 1:
         x_norm = 0
     else:
@@ -29,7 +31,9 @@ def normalize_point(x_px: int, y_px: int, screen_w: int, screen_h: int) -> Tuple
     return (clamp_norm_int(x_norm), clamp_norm_int(y_norm))
 
 
-def denormalize_point(x_norm: int, y_norm: int, screen_w: int, screen_h: int) -> Tuple[int, int]:
+def denormalize_point(
+    x_norm: int, y_norm: int, screen_w: int, screen_h: int
+) -> Tuple[int, int]:
     x_norm = clamp_norm_int(int(x_norm))
     y_norm = clamp_norm_int(int(y_norm))
 
@@ -50,7 +54,9 @@ def denormalize_point(x_norm: int, y_norm: int, screen_w: int, screen_h: int) ->
     return (x_px, y_px)
 
 
-def normalize_box(x1_px: int, y1_px: int, x2_px: int, y2_px: int, screen_w: int, screen_h: int) -> Tuple[int, int, int, int]:
+def normalize_box(
+    x1_px: int, y1_px: int, x2_px: int, y2_px: int, screen_w: int, screen_h: int
+) -> Tuple[int, int, int, int]:
     x1, y1 = normalize_point(x1_px, y1_px, screen_w, screen_h)
     x2, y2 = normalize_point(x2_px, y2_px, screen_w, screen_h)
     if x1 > x2:
@@ -60,9 +66,13 @@ def normalize_box(x1_px: int, y1_px: int, x2_px: int, y2_px: int, screen_w: int,
     return (x1, y1, x2, y2)
 
 
-def denormalize_box(x1: int, y1: int, x2: int, y2: int, screen_w: int, screen_h: int) -> Tuple[int, int, int, int]:
-    x1 = clamp_norm_int(int(x1)); y1 = clamp_norm_int(int(y1))
-    x2 = clamp_norm_int(int(x2)); y2 = clamp_norm_int(int(y2))
+def denormalize_box(
+    x1: int, y1: int, x2: int, y2: int, screen_w: int, screen_h: int
+) -> Tuple[int, int, int, int]:
+    x1 = clamp_norm_int(int(x1))
+    y1 = clamp_norm_int(int(y1))
+    x2 = clamp_norm_int(int(x2))
+    y2 = clamp_norm_int(int(y2))
     if x1 > x2:
         x1, x2 = x2, x1
     if y1 > y2:

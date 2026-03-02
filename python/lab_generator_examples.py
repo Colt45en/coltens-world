@@ -7,6 +7,7 @@ This demonstrates how to:
 3. Serialize labs to JSON
 4. Customize and extend lab generation
 """
+
 import json
 from pathlib import Path
 from lab_generator import LabGenerator, write_lab_files
@@ -42,7 +43,7 @@ def example_2_list_all_labs():
     print("Available labs:")
     for i, lab_id in enumerate(generator.labs.keys(), 1):
         lab_files = generator.generate_lab(lab_id)
-        lines = len(lab_files['main_code'].split('\n'))
+        lines = len(lab_files["main_code"].split("\n"))
         print(f"  {i:2d}. {lab_id:30s} ({lines} lines of starter code)")
 
     print(f"\nTotal: {len(generator.labs)} labs")
@@ -63,9 +64,9 @@ def example_3_serialize_to_json():
         lab_files = generator.generate_lab(lab_id)
         metadata[lab_id] = {
             "title": lab_id.replace("_", " ").title(),
-            "starter_lines": len(lab_files['main_code'].split('\n')),
-            "test_lines": len(lab_files['test_code'].split('\n')),
-            "readme_lines": len(lab_files['readme'].split('\n')),
+            "starter_lines": len(lab_files["main_code"].split("\n")),
+            "test_lines": len(lab_files["test_code"].split("\n")),
+            "readme_lines": len(lab_files["readme"].split("\n")),
         }
 
     # Save to JSON
@@ -88,23 +89,23 @@ def example_4_access_components():
     lab_files = generator.generate_lab("opt01_autodiff_mini")
 
     # Print first TODO from main code
-    main_code = lab_files['main_code']
-    lines = main_code.split('\n')
+    main_code = lab_files["main_code"]
+    lines = main_code.split("\n")
 
     # Find first TODO
     for i, line in enumerate(lines):
-        if 'TODO' in line:
-            print(f"First TODO at line {i+1}:")
+        if "TODO" in line:
+            print(f"First TODO at line {i + 1}:")
             print(f"  {line.strip()}")
             break
 
     # Find first test function
-    test_code = lab_files['test_code']
-    test_lines = test_code.split('\n')
+    test_code = lab_files["test_code"]
+    test_lines = test_code.split("\n")
 
     for i, line in enumerate(test_lines):
-        if 'def test_' in line:
-            print(f"\nFirst test at line {i+1}:")
+        if "def test_" in line:
+            print(f"\nFirst test at line {i + 1}:")
             print(f"  {line.strip()}")
             break
 
@@ -121,7 +122,7 @@ def example_5_generate_with_custom_output():
     output_dir.mkdir(exist_ok=True)
 
     # Generate just a few labs
-    generator = LabGenerator()
+    LabGenerator()
     labs_to_generate = [
         "la01_regression_from_scratch",
         "la02_pca_scratch",
@@ -149,13 +150,13 @@ def example_6_analyze_coverage():
 
     for lab_id in generator.labs.keys():
         lab_files = generator.generate_lab(lab_id)
-        test_code = lab_files['test_code']
+        test_code = lab_files["test_code"]
 
         # Count test functions
-        test_count = test_code.count('def test_')
+        test_count = test_code.count("def test_")
 
         # Count assertions
-        assert_count = test_code.count('assert ')
+        assert_count = test_code.count("assert ")
 
         coverage_stats[lab_id] = {
             "tests": test_count,
@@ -170,8 +171,8 @@ def example_6_analyze_coverage():
         stats = coverage_stats[lab_id]
         print(f"{lab_id:<30} {stats['tests']:<8} {stats['assertions']:<12}")
 
-    total_tests = sum(s['tests'] for s in coverage_stats.values())
-    total_asserts = sum(s['assertions'] for s in coverage_stats.values())
+    total_tests = sum(s["tests"] for s in coverage_stats.values())
+    total_asserts = sum(s["assertions"] for s in coverage_stats.values())
 
     print("-" * 50)
     print(f"{'TOTAL':<30} {total_tests:<8} {total_asserts:<12}")
@@ -225,7 +226,7 @@ Custom curriculum lab."""
     print(f"Extended generator has {len(gen.labs)} labs")
     print(f"Custom lab available: {'custom_kmeans' in gen.labs}")
 
-    if 'custom_kmeans' in gen.labs:
+    if "custom_kmeans" in gen.labs:
         lab = gen.generate_lab("custom_kmeans")
         print(f"Generated custom_kmeans: {len(lab['main_code'])} chars")
 

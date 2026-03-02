@@ -43,6 +43,7 @@ import {
   initializeArtifactLedger,
 } from "./routes/ledger-artifact-routes.js";
 import { handleOperatorEvent } from "./routes/operatorEvent";
+import { handleToolSigilCompileV1 } from "./routes/tools/sigil.compile.v1";
 import { createToolCallRoutes } from "./routes/tool_call.js";
 import { createWorldEngineRoutes } from "./routes/world_engine.js";
 import { setupBusHttpUpgradeHandler } from "./routes/wsBus";
@@ -120,6 +121,7 @@ const server = http.createServer(async (req: any, res: any) => {
   if (artifactLedgerRoutes && (await artifactLedgerRoutes(req, res))) return;
   if (artifactsRoutes && (await artifactsRoutes(req, res))) return;
   if (toolCallRoutes && (await toolCallRoutes(req, res))) return;
+  if (await handleToolSigilCompileV1(req, res, artifactLedger)) return;
 
   // Ledger routes (append-only event store)
   if (ledgerRoutesHandler && (await ledgerRoutesHandler(req, res))) return;

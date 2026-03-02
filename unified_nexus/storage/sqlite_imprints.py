@@ -64,11 +64,27 @@ class SQLiteImprintStore:
             INSERT OR REPLACE INTO imprints(imprint_id, ts_ms, trace_id, kind, data_json, data_hash)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (imprint.imprint_id, imprint.ts_ms, imprint.trace_id, imprint.kind, data_json, data_hash),
+            (
+                imprint.imprint_id,
+                imprint.ts_ms,
+                imprint.trace_id,
+                imprint.kind,
+                data_json,
+                data_hash,
+            ),
         )
         self.conn.commit()
 
-    def mirror_event(self, *, seq: int, event_id: str, event_type: str, ts_ms: int, trace_id: str, payload: Dict[str, Any]) -> None:
+    def mirror_event(
+        self,
+        *,
+        seq: int,
+        event_id: str,
+        event_type: str,
+        ts_ms: int,
+        trace_id: str,
+        payload: Dict[str, Any],
+    ) -> None:
         payload_json = canonical_json_bytes(payload)
         payload_hash = sha256_hex(payload_json)
         self.conn.execute(
@@ -95,4 +111,11 @@ class SQLiteImprintStore:
             return None
         import json
 
-        return V1Imprint(v=1, imprint_id=row[0], ts_ms=row[1], trace_id=row[2], kind=row[3], data=json.loads(row[4]))
+        return V1Imprint(
+            v=1,
+            imprint_id=row[0],
+            ts_ms=row[1],
+            trace_id=row[2],
+            kind=row[3],
+            data=json.loads(row[4]),
+        )

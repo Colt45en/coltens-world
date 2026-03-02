@@ -2,21 +2,59 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple
 
-DESKTOP_KINDS = {"screenshot", "mouse_move", "left_click", "right_click", "double_click", "type", "key", "scroll"}
+DESKTOP_KINDS = {
+    "screenshot",
+    "mouse_move",
+    "left_click",
+    "right_click",
+    "double_click",
+    "type",
+    "key",
+    "scroll",
+}
 
 BLOCKED_KEY_COMBOS = {
-    "alt+f4", "ctrl+alt+del", "ctrl+shift+esc",
-    "win+r", "win+x", "win+e", "win+i",
-    "super+r", "super+x", "super+e", "super+i",
+    "alt+f4",
+    "ctrl+alt+del",
+    "ctrl+shift+esc",
+    "win+r",
+    "win+x",
+    "win+e",
+    "win+i",
+    "super+r",
+    "super+x",
+    "super+e",
+    "super+i",
 }
 
 RISKY_TEXT_HINTS = [
-    "password", "sign in", "log in", "login", "checkout", "pay", "purchase", "buy",
-    "delete", "remove", "trash", "format", "factory reset",
-    "upload", "post", "send", "email", "message",
-    "accept", "agree", "terms", "cookies", "subscribe",
-    "download", "install",
+    "password",
+    "sign in",
+    "log in",
+    "login",
+    "checkout",
+    "pay",
+    "purchase",
+    "buy",
+    "delete",
+    "remove",
+    "trash",
+    "format",
+    "factory reset",
+    "upload",
+    "post",
+    "send",
+    "email",
+    "message",
+    "accept",
+    "agree",
+    "terms",
+    "cookies",
+    "subscribe",
+    "download",
+    "install",
 ]
+
 
 def classify_action(action: Dict[str, Any]) -> Tuple[bool, str]:
     kind = str(action.get("kind", "")).strip().lower()
@@ -30,8 +68,10 @@ def classify_action(action: Dict[str, Any]) -> Tuple[bool, str]:
 
     return True, "ok"
 
+
 def requires_desktop(action: Dict[str, Any]) -> bool:
     return str(action.get("kind", "")).strip().lower() in DESKTOP_KINDS
+
 
 def requires_user_approval(action: Dict[str, Any]) -> Tuple[bool, str]:
     """

@@ -97,8 +97,7 @@ async def chat_stream(req: ChatRequest) -> StreamingResponse:
         try:
             # Immediate ack event
             ack = StreamEvent(
-                type="start",
-                data={"traceId": req.traceId, "ts": time.time()}
+                type="start", data={"traceId": req.traceId, "ts": time.time()}
             )
             yield (ack.model_dump_json() + "\n").encode("utf-8")
             seq += 1
@@ -117,7 +116,7 @@ async def chat_stream(req: ChatRequest) -> StreamingResponse:
                         "traceId": req.traceId,
                         "seq": seq,
                         "text": chunk,
-                    }
+                    },
                 )
                 yield (ev.model_dump_json() + "\n").encode("utf-8")
                 seq += 1
@@ -131,7 +130,7 @@ async def chat_stream(req: ChatRequest) -> StreamingResponse:
                         "traceId": req.traceId,
                         "seq": seq,
                         "tool": tc,
-                    }
+                    },
                 )
                 yield (ev.model_dump_json() + "\n").encode("utf-8")
                 seq += 1
@@ -143,7 +142,7 @@ async def chat_stream(req: ChatRequest) -> StreamingResponse:
                         "traceId": req.traceId,
                         "seq": seq,
                         "citation": c,
-                    }
+                    },
                 )
                 yield (ev.model_dump_json() + "\n").encode("utf-8")
                 seq += 1
@@ -155,7 +154,7 @@ async def chat_stream(req: ChatRequest) -> StreamingResponse:
                         "traceId": req.traceId,
                         "seq": seq,
                         "write": mw,
-                    }
+                    },
                 )
                 yield (ev.model_dump_json() + "\n").encode("utf-8")
                 seq += 1
@@ -169,17 +168,13 @@ async def chat_stream(req: ChatRequest) -> StreamingResponse:
                     "seq": seq,
                     "stop_reason": result.get("stop_reason", "end_turn"),
                     "latency_ms": latency_ms,
-                }
+                },
             )
             yield (done.model_dump_json() + "\n").encode("utf-8")
 
         except Exception as e:
             err = StreamEvent(
-                type="error",
-                data={
-                    "traceId": req.traceId,
-                    "message": str(e)
-                }
+                type="error", data={"traceId": req.traceId, "message": str(e)}
             )
             yield (err.model_dump_json() + "\n").encode("utf-8")
 

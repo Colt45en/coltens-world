@@ -44,7 +44,9 @@ class Scheduler:
         self._jobs.append(job)
 
     async def run_forever(self, *, stop_event: asyncio.Event) -> None:
-        tasks = [asyncio.create_task(self._run_job(job, stop_event)) for job in self._jobs]
+        tasks = [
+            asyncio.create_task(self._run_job(job, stop_event)) for job in self._jobs
+        ]
         if tasks:
             await asyncio.gather(*tasks)
 
@@ -53,7 +55,9 @@ class Scheduler:
             await asyncio.sleep(job.interval_s)
             await self._execute_with_retries(job, stop_event)
 
-    async def _execute_with_retries(self, job: JobSpec, stop_event: asyncio.Event) -> None:
+    async def _execute_with_retries(
+        self, job: JobSpec, stop_event: asyncio.Event
+    ) -> None:
         for attempt in range(1, job.retry.max_attempts + 1):
             if stop_event.is_set():
                 return

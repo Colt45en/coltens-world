@@ -1,6 +1,6 @@
-/**
+﻿/**
  * World Engine Contracts - Public API
  */
 
-export * from "./citation";
-export * from "./world/foundation";
+export * from "./citation/index.js";
+export * from "./world/foundation.js";

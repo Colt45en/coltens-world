@@ -42,9 +42,8 @@ export async function exportSceneToGLB(
       {
         binary: opts.binary ?? true,
         onlyVisible: opts.onlyVisible ?? true,
-        margin: opts.margin ?? 0,
         maxTextureSize: opts.maxTextureSize ?? 4096,
-      },
+      }
     );
   });
 }

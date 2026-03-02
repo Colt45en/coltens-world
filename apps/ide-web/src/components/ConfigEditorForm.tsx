@@ -18,6 +18,7 @@ import {
     type AxisCodexSimV1Config,
     type HeartParams,
 } from "../lib/axis-codex-sim-v1/types";
+import "./ConfigEditorForm.css";
 
 export interface ConfigEditorFormProps {
   initial: AxisCodexSimV1Config;
@@ -51,43 +52,19 @@ export function ConfigEditorForm({
   };
 
   return (
-    <div
-      style={{
-        padding: "1.5rem",
-        border: "1px solid #ddd",
-        borderRadius: "6px",
-        background: "#fafafa",
-        fontFamily: "monospace",
-        fontSize: "0.875rem",
-      }}
-    >
-      <h3 style={{ marginTop: 0 }}>Config Editor</h3>
+    <div className="config-editor-form">
+      <h3 className="config-editor-form__title">Config Editor</h3>
 
       {error && (
-        <div
-          style={{
-            color: "#dc3545",
-            background: "#fff5f5",
-            padding: "0.75rem",
-            borderRadius: "4px",
-            marginBottom: "1rem",
-            fontSize: "0.8rem",
-          }}
-        >
+        <div className="config-editor-form__error">
           ⚠️ {error}
         </div>
       )}
 
-      <div style={{ display: "grid", gap: "1.2rem" }}>
+      <div className="config-editor-form__grid">
         {/* Seed */}
         <div>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <label className="config-editor-form__label">
             <span>Seed (UInt32)</span>
             <input
               type="number"
@@ -99,25 +76,14 @@ export function ConfigEditorForm({
                   seed: asUInt32(Math.floor(e.target.valueAsNumber)),
                 })
               }
-              style={{
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                width: "160px",
-              }}
+              className="config-editor-form__input config-editor-form__input--wide"
             />
           </label>
         </div>
 
         {/* Timestep */}
         <div>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <label className="config-editor-form__label">
             <span>Timestep (ms)</span>
             <input
               type="number"
@@ -126,25 +92,14 @@ export function ConfigEditorForm({
               onChange={(e) =>
                 updateConfig({ dt_ms: Math.floor(e.target.valueAsNumber) })
               }
-              style={{
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                width: "100px",
-              }}
+              className="config-editor-form__input config-editor-form__input--medium"
             />
           </label>
         </div>
 
         {/* Max Time */}
         <div>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <label className="config-editor-form__label">
             <span>Max Time (ms)</span>
             <input
               type="number"
@@ -153,33 +108,22 @@ export function ConfigEditorForm({
               onChange={(e) =>
                 updateConfig({ t_max_ms: Math.floor(e.target.valueAsNumber) })
               }
-              style={{
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                width: "120px",
-              }}
+              className="config-editor-form__input config-editor-form__input--medium"
             />
           </label>
         </div>
 
-        <hr style={{ margin: "1rem 0", border: "none", borderTop: "1px solid #ddd" }} />
+        <hr className="config-editor-form__divider" />
 
         {/* Heart params */}
         <div>
-          <h4 style={{ margin: "0.5rem 0 1rem 0" }}>Heart Parameters</h4>
+          <h4 className="config-editor-form__subtitle">Heart Parameters</h4>
 
           {/* base_capacity */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+          <div className="config-editor-form__field">
+            <label className="config-editor-form__label">
               <span>Base Capacity</span>
-              <span style={{ color: "#666" }}>
+              <span className="config-editor-form__value">
                 {config.heart.base_capacity.toFixed(2)}
               </span>
             </label>
@@ -194,21 +138,15 @@ export function ConfigEditorForm({
                   base_capacity: parseFloat(e.target.value),
                 })
               }
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              className="config-editor-form__range"
             />
           </div>
 
           {/* capacity_max */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+          <div className="config-editor-form__field">
+            <label className="config-editor-form__label">
               <span>Max Capacity</span>
-              <span style={{ color: "#666" }}>
+              <span className="config-editor-form__value">
                 {config.heart.capacity_max.toFixed(2)}
               </span>
             </label>
@@ -223,21 +161,15 @@ export function ConfigEditorForm({
                   capacity_max: parseFloat(e.target.value),
                 })
               }
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              className="config-editor-form__range"
             />
           </div>
 
           {/* resonance_tau_ms */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+          <div className="config-editor-form__field">
+            <label className="config-editor-form__label">
               <span>Resonance Tau (ms)</span>
-              <span style={{ color: "#666" }}>
+              <span className="config-editor-form__value">
                 {config.heart.resonance_tau_ms.toFixed(0)}
               </span>
             </label>
@@ -252,21 +184,15 @@ export function ConfigEditorForm({
                   resonance_tau_ms: parseFloat(e.target.value),
                 })
               }
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              className="config-editor-form__range"
             />
           </div>
 
           {/* resonance_gain */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+          <div className="config-editor-form__field">
+            <label className="config-editor-form__label">
               <span>Resonance Gain</span>
-              <span style={{ color: "#666" }}>
+              <span className="config-editor-form__value">
                 {config.heart.resonance_gain.toFixed(2)}
               </span>
             </label>
@@ -281,21 +207,15 @@ export function ConfigEditorForm({
                   resonance_gain: parseFloat(e.target.value),
                 })
               }
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              className="config-editor-form__range"
             />
           </div>
 
           {/* capacity_gain */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+          <div className="config-editor-form__field">
+            <label className="config-editor-form__label">
               <span>Capacity Gain</span>
-              <span style={{ color: "#666" }}>
+              <span className="config-editor-form__value">
                 {config.heart.capacity_gain.toFixed(2)}
               </span>
             </label>
@@ -310,21 +230,15 @@ export function ConfigEditorForm({
                   capacity_gain: parseFloat(e.target.value),
                 })
               }
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              className="config-editor-form__range"
             />
           </div>
 
           {/* fill_drain_rate */}
-          <div>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+          <div className="config-editor-form__field">
+            <label className="config-editor-form__label">
               <span>Fill Drain Rate (0–1)</span>
-              <span style={{ color: "#666" }}>
+              <span className="config-editor-form__value">
                 {config.heart.fill_drain_rate.toFixed(3)}
               </span>
             </label>
@@ -339,7 +253,9 @@ export function ConfigEditorForm({
                   fill_drain_rate: parseFloat(e.target.value),
                 })
               }
-              style={{ width: "100%", marginTop: "0.5rem" }}
+              className="config-editor-form__range"
+              title="Fill Drain Rate (0–1)"
+              aria-label="Fill Drain Rate"
             />
           </div>
         </div>

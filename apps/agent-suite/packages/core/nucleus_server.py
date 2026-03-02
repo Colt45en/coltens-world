@@ -17,11 +17,14 @@ from packages.core.action_schema import Action
 
 logger = logging.getLogger(__name__)
 
+
 class ToolExecuteRequest(BaseModel):
     """Tool execution request from nucleus"""
+
     action: Dict[str, Any]
     trace_id: str
     session_id: str
+
 
 class NucleusAgentServer:
     """HTTP server for receiving tool execution requests from nucleus"""
@@ -51,7 +54,7 @@ class NucleusAgentServer:
                     "action": action_data,
                     "result": result,
                     "success": True,
-                    "trace_id": request.trace_id
+                    "trace_id": request.trace_id,
                 }
 
             except Exception as e:
@@ -60,7 +63,7 @@ class NucleusAgentServer:
                     "action": request.action,
                     "error": str(e),
                     "success": False,
-                    "trace_id": request.trace_id
+                    "trace_id": request.trace_id,
                 }
 
         @self.app.get("/health")
@@ -76,10 +79,15 @@ class NucleusAgentServer:
         try:
             if action.kind in ["click", "type", "press"]:
                 # For now, return a mock result since the desktop driver needs implementation
-                result = {"status": "mock_executed", "action": action.kind, "target": action.target}
+                result = {
+                    "status": "mock_executed",
+                    "action": action.kind,
+                    "target": action.target,
+                }
             elif action.kind == "launch":
                 # Use notepad demo as an example
                 from packages.drivers.desktop_windows_uia.driver import notepad_demo
+
                 demo_result = notepad_demo()
                 result = {"status": "demo_executed", "result": demo_result.__dict__}
             elif action.kind == "focus":
@@ -96,20 +104,20 @@ class NucleusAgentServer:
         """Start the HTTP server"""
         logger.info(f"Starting Agent Suite server on {self.host}:{self.port}")
         config = uvicorn.Config(
-            self.app,
-            host=self.host,
-            port=self.port,
-            log_level="info"
+            self.app, host=self.host, port=self.port, log_level="info"
         )
         server = uvicorn.Server(config)
         await server.serve()
 
+
 # Global server instance
 agent_server = NucleusAgentServer()
+
 
 async def start_agent_server() -> None:
     """Start the agent HTTP server"""
     await agent_server.start()
+
 
 if __name__ == "__main__":
     # Test the server

@@ -4,6 +4,7 @@
 
 import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from "lucide-react";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import styles from "./NotificationSystem.module.css";
 
 export type NotificationType = "success" | "error" | "info" | "warning";
 
@@ -91,24 +92,9 @@ interface NotificationContainerProps {
 
 function NotificationContainer({ notifications, onRemove }: NotificationContainerProps) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 80,
-        right: 20,
-        zIndex: 9999,
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
-        maxWidth: 400,
-      }}
-    >
+    <div className={styles.container}>
       {notifications.map((notification) => (
-        <NotificationItem
-          key={notification.id}
-          notification={notification}
-          onRemove={onRemove}
-        />
+        <NotificationItem key={notification.id} notification={notification} onRemove={onRemove} />
       ))}
     </div>
   );
@@ -172,62 +158,35 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
 
   return (
     <div
+      className={styles.notification}
       style={{
-        padding: 16,
         background: style.bg,
         border: `1px solid ${style.border}`,
-        borderRadius: 8,
-        backdropFilter: "blur(10px)",
         boxShadow: `0 4px 12px rgba(0, 0, 0, 0.3), 0 0 20px ${style.border}`,
-        animation: isExiting
-          ? "slideOut 0.3s ease-out forwards"
-          : "slideIn 0.3s ease-out forwards",
+        animation: isExiting ? "slideOut 0.3s ease-out forwards" : "slideIn 0.3s ease-out forwards",
         transform: isExiting ? "translateX(120%)" : "translateX(0)",
         opacity: isExiting ? 0 : 1,
-        transition: "all 0.3s ease",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-        <Icon size={20} style={{ color: style.text, marginTop: 2 }} />
+      <div className={styles.contentWrapper}>
+        <Icon size={20} style={{ color: style.text }} className={styles.icon} />
 
-        <div style={{ flex: 1 }}>
+        <div className={styles.textContent}>
           <div
+            className={styles.title}
             style={{
-              fontSize: 14,
-              fontWeight: "bold",
               color: style.text,
               marginBottom: notification.message ? 4 : 0,
             }}
           >
             {notification.title}
           </div>
-          {notification.message && (
-            <div
-              style={{
-                fontSize: 12,
-                color: "rgba(230, 241, 255, 0.8)",
-                lineHeight: 1.5,
-              }}
-            >
-              {notification.message}
-            </div>
-          )}
+          {notification.message && <div className={styles.message}>{notification.message}</div>}
         </div>
 
         <button
           onClick={handleRemove}
-          style={{
-            background: "transparent",
-            border: "none",
-            color: "rgba(230, 241, 255, 0.6)",
-            cursor: "pointer",
-            padding: 4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 4,
-            transition: "all 0.2s ease",
-          }}
+          className={styles.closeButton}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "rgba(230, 241, 255, 0.1)";
             e.currentTarget.style.color = "#e6f1ff";
@@ -242,33 +201,4 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
       </div>
     </div>
   );
-}
-
-// Inject keyframe animations
-if (typeof document !== "undefined") {
-  const style = document.createElement("style");
-  style.textContent = `
-    @keyframes slideIn {
-      from {
-        transform: translateX(120%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(120%);
-        opacity: 0;
-      }
-    }
-  `;
-  document.head.appendChild(style);
 }

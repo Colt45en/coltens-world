@@ -1,4 +1,5 @@
-import { assert, describe, it } from "node:test";
+import { describe, it } from "node:test";
+import assert from "node:assert";
 import { LexiconIntentToolkit } from "../src/tools/lexicon-intent-tools";
 
 /**
@@ -14,7 +15,8 @@ describe("LexiconIntent Determinism", () => {
   it("hash computation determinism", () => {
     // Test: Same canonical_json → same hash (across 5 runs)
     const toolkit = new LexiconIntentToolkit();
-    const canonical_json = '{"kind":"graphics_intent","nodes":[{"node_id":"n1","node_type":"group"}]}';
+    const canonical_json =
+      '{"kind":"graphics_intent","nodes":[{"node_id":"n1","node_type":"group"}]}';
 
     // Run store 5 times with identical JSON
     const hashes = [];
@@ -46,7 +48,13 @@ describe("LexiconIntent Determinism", () => {
     const actor_id = "actor:test";
 
     // Pre-populate with varied snapshots
-    const snapshots = [
+    const snapshots: Array<{
+      action: "store";
+      actor_id: string;
+      snapshot_kind: "graphics";
+      canonical_json: string;
+      created_at_utc: number;
+    }> = [
       {
         action: "store",
         actor_id,
@@ -143,7 +151,11 @@ describe("LexiconIntent Determinism", () => {
 
     // Assert: Ledger events differ
     assert.strictEqual((result1.ledger_event as any).kind, "stored", "First ledger event = stored");
-    assert.strictEqual((result2.ledger_event as any).kind, "deduplicated", "Second ledger event = deduplicated");
+    assert.strictEqual(
+      (result2.ledger_event as any).kind,
+      "deduplicated",
+      "Second ledger event = deduplicated"
+    );
   });
 
   it("query time-range filtering determinism", () => {
@@ -152,7 +164,13 @@ describe("LexiconIntent Determinism", () => {
     const actor_id = "actor:test";
 
     // Create snapshots at different times
-    const snapshots = [
+    const snapshots: Array<{
+      action: "store";
+      actor_id: string;
+      snapshot_kind: "physics";
+      canonical_json: string;
+      created_at_utc: number;
+    }> = [
       {
         action: "store",
         actor_id,
@@ -202,7 +220,11 @@ describe("LexiconIntent Determinism", () => {
       const filtered_snapshots = (result.data as any).snapshots;
 
       // Assert: Only snapshots in range are returned
-      assert.strictEqual(filtered_snapshots.length, 2, "Expected 2 snapshots in range [1000, 1500]");
+      assert.strictEqual(
+        filtered_snapshots.length,
+        2,
+        "Expected 2 snapshots in range [1000, 1500]"
+      );
 
       // Assert: Times are in range
       for (const snap of filtered_snapshots) {
@@ -213,7 +235,7 @@ describe("LexiconIntent Determinism", () => {
       // Assert: Deterministic order (ascending)
       assert.ok(
         filtered_snapshots[0].created_at_utc <= filtered_snapshots[1].created_at_utc,
-        "Results must be sorted ascending",
+        "Results must be sorted ascending"
       );
     }
   });

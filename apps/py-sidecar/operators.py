@@ -24,9 +24,11 @@ import openai
 # Data Classes (Operator Request/Response)
 # ============================================================================
 
+
 @dataclass
 class MemoryContext:
     """Context from memory system"""
+
     facts: List[Dict[str, Any]] = None
     vectors: List[Dict[str, Any]] = None
     summary: str = ""
@@ -41,6 +43,7 @@ class MemoryContext:
 @dataclass
 class OperatorRequest:
     """Unified operator request"""
+
     operator_name: str
     trace_id: str
     payload: Dict[str, Any]
@@ -53,7 +56,9 @@ class OperatorRequest:
             "operator_name": self.operator_name,
             "trace_id": self.trace_id,
             "payload": self.payload,
-            "memory_context": asdict(self.memory_context) if self.memory_context else {},
+            "memory_context": asdict(self.memory_context)
+            if self.memory_context
+            else {},
             "timeout_ms": self.timeout_ms,
             "deterministic": self.deterministic,
         }
@@ -62,6 +67,7 @@ class OperatorRequest:
 @dataclass
 class MemoryWrite:
     """Memory persistence request"""
+
     key: str
     value: str
     ttl_seconds: Optional[int] = None
@@ -70,6 +76,7 @@ class MemoryWrite:
 @dataclass
 class OperatorResponse:
     """Unified operator response"""
+
     operator_name: str
     trace_id: str
     status: str  # success | validation_error | timeout | execution_error
@@ -92,7 +99,10 @@ class OperatorResponse:
             "status": self.status,
             "result": self.result,
             "error": self.error,
-            "memory_writes": [{"key": w.key, "value": w.value, "ttl_seconds": w.ttl_seconds} for w in self.memory_writes],
+            "memory_writes": [
+                {"key": w.key, "value": w.value, "ttl_seconds": w.ttl_seconds}
+                for w in self.memory_writes
+            ],
             "execution_time_ms": self.execution_time_ms,
             "deterministic_hash": self.deterministic_hash,
         }
@@ -101,6 +111,7 @@ class OperatorResponse:
 # ============================================================================
 # Base Operator (ABC)
 # ============================================================================
+
 
 class BaseOperator(ABC):
     """Abstract base for all operators"""
@@ -145,6 +156,7 @@ class BaseOperator(ABC):
 # Operator: prompt.operator.patch (LLM-powered code generation)
 # ============================================================================
 
+
 class PatchOperator(BaseOperator):
     """
     Code generation operator.
@@ -161,14 +173,16 @@ class PatchOperator(BaseOperator):
         try:
             # Validate payload
             payload = request.payload
-            if not all(k in payload for k in ["file_path", "instruction", "current_content"]):
+            if not all(
+                k in payload for k in ["file_path", "instruction", "current_content"]
+            ):
                 return OperatorResponse(
                     operator_name=self.name,
                     trace_id=request.trace_id,
                     status="validation_error",
                     error={
                         "code": "MISSING_PAYLOAD_FIELDS",
-                        "message": "patch operator requires: file_path, instruction, current_content"
+                        "message": "patch operator requires: file_path, instruction, current_content",
                     },
                     execution_time_ms=int((time.time() - start) * 1000),
                 )
@@ -229,7 +243,7 @@ Generate the unified diff now."""
                     status="execution_error",
                     error={
                         "code": "INVALID_DIFF_FORMAT",
-                        "message": f"OpenAI response did not start with '---'. Got: {diff_text[:100]}"
+                        "message": f"OpenAI response did not start with '---'. Got: {diff_text[:100]}",
                     },
                     execution_time_ms=int((time.time() - start) * 1000),
                 )
@@ -249,7 +263,9 @@ Generate the unified diff now."""
                 status="success",
                 result=result,
                 execution_time_ms=exec_time,
-                deterministic_hash=self.compute_hash(result) if request.deterministic else None,
+                deterministic_hash=self.compute_hash(result)
+                if request.deterministic
+                else None,
                 memory_writes=[
                     MemoryWrite(
                         key=f"patch:{file_path}",
@@ -288,6 +304,7 @@ Generate the unified diff now."""
 # Operator: prompt.operator.simulate_world_tick (Deterministic world deltas)
 # ============================================================================
 
+
 class SimulateWorldTickOperator(BaseOperator):
     """
     World simulation operator.
@@ -313,14 +330,17 @@ class SimulateWorldTickOperator(BaseOperator):
         try:
             # Validate payload
             payload = request.payload
-            if not all(k in payload for k in ["world_state", "tick_number", "seed", "instruction"]):
+            if not all(
+                k in payload
+                for k in ["world_state", "tick_number", "seed", "instruction"]
+            ):
                 return OperatorResponse(
                     operator_name=self.name,
                     trace_id=request.trace_id,
                     status="validation_error",
                     error={
                         "code": "MISSING_PAYLOAD_FIELDS",
-                        "message": "simulate_world_tick requires: world_state, tick_number, seed, instruction"
+                        "message": "simulate_world_tick requires: world_state, tick_number, seed, instruction",
                     },
                     execution_time_ms=int((time.time() - start) * 1000),
                 )
@@ -337,7 +357,9 @@ class SimulateWorldTickOperator(BaseOperator):
 
             # Prepare context for LLM
             entities_summary = f"Entities: {len(world_state.get('entities', []))} total"
-            collisions_summary = f"Active collisions: {len(world_state.get('collisions', []))}"
+            collisions_summary = (
+                f"Active collisions: {len(world_state.get('collisions', []))}"
+            )
 
             system_prompt = """You are a deterministic physics engine operator.
 Generate entity deltas (position, rotation, velocity changes) for a single world tick.
@@ -383,7 +405,7 @@ Generate entity deltas as JSON only:"""
                     error={
                         "code": "INVALID_JSON_RESPONSE",
                         "message": f"Could not parse LLM response as JSON: {str(e)}",
-                        "details": {"response_snippet": delta_json_str[:200]}
+                        "details": {"response_snippet": delta_json_str[:200]},
                     },
                     execution_time_ms=int((time.time() - start) * 1000),
                 )
@@ -461,6 +483,7 @@ Generate entity deltas as JSON only:"""
 # ============================================================================
 # Operator Registry
 # ============================================================================
+
 
 class OperatorRegistry:
     """Central registry for operator registration, validation, and execution."""
@@ -543,13 +566,15 @@ class OperatorRegistry:
             )
 
         # Log execution
-        self.execution_log.append({
-            "timestamp": datetime.utcnow().isoformat(),
-            "operator_name": operator_name,
-            "trace_id": trace_id,
-            "status": response.status,
-            "execution_time_ms": response.execution_time_ms,
-        })
+        self.execution_log.append(
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "operator_name": operator_name,
+                "trace_id": trace_id,
+                "status": response.status,
+                "execution_time_ms": response.execution_time_ms,
+            }
+        )
 
         return response
 
@@ -571,6 +596,7 @@ class OperatorRegistry:
 
 # Global registry instance
 _registry: Optional[OperatorRegistry] = None
+
 
 def get_registry() -> OperatorRegistry:
     """Get or create global operator registry."""

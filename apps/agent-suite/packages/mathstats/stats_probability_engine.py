@@ -16,6 +16,7 @@ from typing import Iterable, List, Sequence, Tuple, Optional, Union, Literal
 # Core numeric helpers
 # =========================
 
+
 def _fsum(xs: Iterable[float]) -> float:
     return math.fsum(xs)
 
@@ -27,6 +28,7 @@ def _clamp_int(v: int, lo: int, hi: int) -> int:
 # =========================
 # Statistics
 # =========================
+
 
 class Statistics:
     """Comprehensive statistics engine for data analysis."""
@@ -102,7 +104,7 @@ class Statistics:
         if sigma == 0:
             return 0.0
         m3 = _fsum((x - mu) ** 3 for x in data) / len(data)
-        return m3 / (sigma ** 3)
+        return m3 / (sigma**3)
 
     @staticmethod
     def kurtosis(data: Sequence[float]) -> float:
@@ -113,7 +115,7 @@ class Statistics:
         if sigma == 0:
             return 0.0
         m4 = _fsum((x - mu) ** 4 for x in data) / len(data)
-        return (m4 / (sigma ** 4)) - 3.0
+        return (m4 / (sigma**4)) - 3.0
 
     @staticmethod
     def percentile(data: Sequence[float], p: float) -> float:
@@ -151,7 +153,9 @@ class Statistics:
         return q3 - q1
 
     @staticmethod
-    def covariance(x: Sequence[float], y: Sequence[float], sample: bool = True) -> float:
+    def covariance(
+        x: Sequence[float], y: Sequence[float], sample: bool = True
+    ) -> float:
         if len(x) != len(y):
             raise ValueError("Arrays must have same length")
         if not x:
@@ -175,7 +179,9 @@ class Statistics:
         return cov / (sx * sy)
 
     @staticmethod
-    def linear_regression(x: Sequence[float], y: Sequence[float]) -> Tuple[float, float, float]:
+    def linear_regression(
+        x: Sequence[float], y: Sequence[float]
+    ) -> Tuple[float, float, float]:
         if len(x) != len(y):
             raise ValueError("Arrays must have same length")
         if len(x) < 2:
@@ -205,6 +211,7 @@ class Statistics:
 # =========================
 # Special functions (correct)
 # =========================
+
 
 class _Special:
     """
@@ -270,8 +277,11 @@ class _Special:
 
         # bt = exp(lgamma(a+b)-lgamma(a)-lgamma(b) + a ln x + b ln(1-x))
         bt = math.exp(
-            math.lgamma(a + b) - math.lgamma(a) - math.lgamma(b)
-            + a * math.log(x) + b * math.log(1.0 - x)
+            math.lgamma(a + b)
+            - math.lgamma(a)
+            - math.lgamma(b)
+            + a * math.log(x)
+            + b * math.log(1.0 - x)
         )
 
         # Use symmetry for stability
@@ -351,6 +361,7 @@ class _Special:
 # Distributions
 # =========================
 
+
 class ProbabilityDistributions:
     @staticmethod
     def normal_pdf(x: float, mu: float = 0.0, sigma: float = 1.0) -> float:
@@ -389,7 +400,7 @@ class ProbabilityDistributions:
             raise ValueError("lambda must be positive")
         if k < 0:
             return 0.0
-        return math.exp(-lambd) * (lambd ** k) / math.factorial(k)
+        return math.exp(-lambd) * (lambd**k) / math.factorial(k)
 
     @staticmethod
     def binomial_pmf(k: int, n: int, p: float) -> float:
@@ -400,7 +411,7 @@ class ProbabilityDistributions:
         if k < 0 or k > n:
             return 0.0
         # Use comb for stability and speed
-        return math.comb(n, k) * (p ** k) * ((1.0 - p) ** (n - k))
+        return math.comb(n, k) * (p**k) * ((1.0 - p) ** (n - k))
 
     @staticmethod
     def uniform_pdf(x: float, a: float = 0.0, b: float = 1.0) -> float:
@@ -414,7 +425,11 @@ class ProbabilityDistributions:
             raise ValueError("alpha and beta must be positive")
         if x < 0:
             return 0.0
-        return (beta ** alpha / math.gamma(alpha)) * (x ** (alpha - 1.0)) * math.exp(-beta * x)
+        return (
+            (beta**alpha / math.gamma(alpha))
+            * (x ** (alpha - 1.0))
+            * math.exp(-beta * x)
+        )
 
     @staticmethod
     def chi_squared_pdf(x: float, df: int) -> float:
@@ -437,6 +452,7 @@ class ProbabilityDistributions:
 # =========================
 # Hypothesis Testing (correct p-values)
 # =========================
+
 
 class HypothesisTesting:
     @staticmethod
@@ -469,9 +485,13 @@ class HypothesisTesting:
         return _Special.reg_upper_gamma(df / 2.0, chi2 / 2.0)
 
     @staticmethod
-    def z_test_one_sample(sample_mean: float, population_mean: float,
-                          population_std: float, n: int,
-                          alternative: Literal["two-sided", "greater", "less"] = "two-sided") -> Tuple[float, float]:
+    def z_test_one_sample(
+        sample_mean: float,
+        population_mean: float,
+        population_std: float,
+        n: int,
+        alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    ) -> Tuple[float, float]:
         if population_std <= 0:
             raise ValueError("population_std must be positive")
         if n <= 0:
@@ -491,8 +511,11 @@ class HypothesisTesting:
         return z, p
 
     @staticmethod
-    def t_test_one_sample(data: Sequence[float], population_mean: float,
-                          alternative: Literal["two-sided", "greater", "less"] = "two-sided") -> Tuple[float, float]:
+    def t_test_one_sample(
+        data: Sequence[float],
+        population_mean: float,
+        alternative: Literal["two-sided", "greater", "less"] = "two-sided",
+    ) -> Tuple[float, float]:
         if len(data) < 2:
             raise ValueError("Need at least 2 points for t-test")
 
@@ -515,7 +538,9 @@ class HypothesisTesting:
         return t, p
 
     @staticmethod
-    def chi_squared_goodness_of_fit(observed: Sequence[int], expected: Sequence[float]) -> Tuple[float, float]:
+    def chi_squared_goodness_of_fit(
+        observed: Sequence[int], expected: Sequence[float]
+    ) -> Tuple[float, float]:
         if len(observed) != len(expected):
             raise ValueError("observed and expected must have same length")
         if len(observed) < 2:
@@ -536,6 +561,7 @@ class HypothesisTesting:
 # Deterministic RNG
 # =========================
 
+
 class RandomGenerator:
     """
     RNG injection for determinism:
@@ -544,8 +570,12 @@ class RandomGenerator:
     """
 
     @staticmethod
-    def normal(mu: float = 0.0, sigma: float = 1.0, size: int = 1,
-               rng: Optional[random.Random] = None) -> Union[float, List[float]]:
+    def normal(
+        mu: float = 0.0,
+        sigma: float = 1.0,
+        size: int = 1,
+        rng: Optional[random.Random] = None,
+    ) -> Union[float, List[float]]:
         if sigma <= 0:
             raise ValueError("sigma must be positive")
         if size <= 0:
@@ -569,8 +599,9 @@ class RandomGenerator:
         return out[0] if size == 1 else out
 
     @staticmethod
-    def exponential(lambd: float = 1.0, size: int = 1,
-                    rng: Optional[random.Random] = None) -> Union[float, List[float]]:
+    def exponential(
+        lambd: float = 1.0, size: int = 1, rng: Optional[random.Random] = None
+    ) -> Union[float, List[float]]:
         if lambd <= 0:
             raise ValueError("lambda must be positive")
         if size <= 0:
@@ -585,8 +616,9 @@ class RandomGenerator:
         return out[0] if size == 1 else out
 
     @staticmethod
-    def poisson(lambd: float, size: int = 1,
-                rng: Optional[random.Random] = None) -> Union[int, List[int]]:
+    def poisson(
+        lambd: float, size: int = 1, rng: Optional[random.Random] = None
+    ) -> Union[int, List[int]]:
         """
         Knuth exact for small lambda; normal approx fallback for larger lambda.
         """
@@ -618,8 +650,9 @@ class RandomGenerator:
         return out[0] if size == 1 else out
 
     @staticmethod
-    def binomial(n: int, p: float, size: int = 1,
-                 rng: Optional[random.Random] = None) -> Union[int, List[int]]:
+    def binomial(
+        n: int, p: float, size: int = 1, rng: Optional[random.Random] = None
+    ) -> Union[int, List[int]]:
         if n < 0:
             raise ValueError("n must be >= 0")
         if not (0.0 <= p <= 1.0):

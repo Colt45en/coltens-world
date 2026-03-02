@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from playwright.async_api import async_playwright, Page
+from playwright.async_api import Page, async_playwright
 
 from ...core.policy import PolicyConfig, assert_domain_allowed
 from ...core.utils import domain_of
@@ -61,16 +61,16 @@ async def google_query_extract_answer(
         assert_domain_allowed(policy, domain_of(final_url))
 
         body = await page.inner_text("body")
-        lines = [l.strip() for l in body.splitlines() if l.strip()]
+        lines = [line.strip() for line in body.splitlines() if line.strip()]
 
         evidence: List[str] = []
         extracted = ""
 
         qlow = query.lower()
         if "capital" in qlow and "paraguay" in qlow:
-            for l in lines:
-                if "Asunción" in l or "Asuncion" in l:
-                    evidence.append(l)
+            for line in lines:
+                if "Asunción" in line or "Asuncion" in line:
+                    evidence.append(line)
                     extracted = "Asunción"
                     break
 

@@ -9,6 +9,7 @@ from typing import Any, Dict, Optional
 
 DB_PATH = Path(__file__).resolve().parents[2] / ".audit" / "approvals.db"
 
+
 def _get_conn():
     conn = sqlite3.connect(str(DB_PATH))
     conn.execute("""
@@ -24,21 +25,25 @@ def _get_conn():
     conn.commit()
     return conn
 
-def create_pending(trace_id: str, session_id: str, action_json: str, reason: str) -> str:
+
+def create_pending(
+    trace_id: str, session_id: str, action_json: str, reason: str
+) -> str:
     approval_id = f"appr-{uuid.uuid4().hex}"
     with _get_conn() as conn:
         conn.execute(
             "INSERT INTO pending_approvals (approval_id, trace_id, session_id, action_json, reason, created_ts) VALUES (?, ?, ?, ?, ?, ?)",
-            (approval_id, trace_id, session_id, action_json, reason, time.time())
+            (approval_id, trace_id, session_id, action_json, reason, time.time()),
         )
         conn.commit()
     return approval_id
+
 
 def get_pending(approval_id: str) -> Optional[Dict[str, Any]]:
     with _get_conn() as conn:
         row = conn.execute(
             "SELECT trace_id, session_id, action_json, reason, created_ts FROM pending_approvals WHERE approval_id = ?",
-            (approval_id,)
+            (approval_id,),
         ).fetchone()
         if row:
             return {
@@ -46,11 +51,14 @@ def get_pending(approval_id: str) -> Optional[Dict[str, Any]]:
                 "session_id": row[1],
                 "action": json.loads(row[2]),
                 "reason": row[3],
-                "created_ts": row[4]
+                "created_ts": row[4],
             }
     return None
 
+
 def delete_pending(approval_id: str) -> None:
     with _get_conn() as conn:
-        conn.execute("DELETE FROM pending_approvals WHERE approval_id = ?", (approval_id,))
+        conn.execute(
+            "DELETE FROM pending_approvals WHERE approval_id = ?", (approval_id,)
+        )
         conn.commit()

@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 // @ts-ignore - three.examples doesn't have proper TS types
-import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils.js";
+import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 // =============================================================
 // DNA Types

@@ -10,7 +10,9 @@ def iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def weekly_report_from_rows(rows: list[dict[str, Any]], mode: str = "operations") -> dict[str, Any]:
+def weekly_report_from_rows(
+    rows: list[dict[str, Any]], mode: str = "operations"
+) -> dict[str, Any]:
     """
     Generate weekly report from batch validation snapshots.
 
@@ -46,7 +48,9 @@ def weekly_report_from_rows(rows: list[dict[str, Any]], mode: str = "operations"
         "conditions": {
             "gates": ["schema", "traceability", "determinism", "confidence"],
         },
-        "status": "green" if reds == 0 and yellows == 0 else ("yellow" if reds == 0 else "red"),
+        "status": "green"
+        if reds == 0 and yellows == 0
+        else ("yellow" if reds == 0 else "red"),
         "actions": [],
         "narrative": {"mode": mode, "lines": []},
     }
@@ -58,20 +62,28 @@ def weekly_report_from_rows(rows: list[dict[str, Any]], mode: str = "operations"
             f"Collision rate is {collision_rate} (improve dedupe audit next).",
         ]
         if reds > 0:
-            base["actions"].append("Investigate schema/traceability failures first (hard gates).")
+            base["actions"].append(
+                "Investigate schema/traceability failures first (hard gates)."
+            )
         if yellows > 0:
-            base["actions"].append("Increase review throughput or raise confidence via evidence links.")
+            base["actions"].append(
+                "Increase review throughput or raise confidence via evidence links."
+            )
     elif mode == "conflict":
         base["narrative"]["lines"] = [
             "Tradeoffs detected (MVP): you can improve speed OR improve precision, but measure both.",
             f"Current status breakdown: green={greens}, yellow={yellows}, red={reds}.",
         ]
-        base["actions"].append("Define objective weights for next week (coverage vs precision vs latency).")
+        base["actions"].append(
+            "Define objective weights for next week (coverage vs precision vs latency)."
+        )
     else:  # operations
         base["narrative"]["lines"] = [
             "Operations summary (facts only):",
             f"Ran {total} batches; {reds} failed hard gates; {yellows} had soft warnings.",
         ]
-        base["actions"].append("Implement regression harness to replay last N batches in CI.")
+        base["actions"].append(
+            "Implement regression harness to replay last N batches in CI."
+        )
 
     return base

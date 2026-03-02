@@ -1,4 +1,9 @@
-from .model_actions import AgentAction, ActionData, compact_action_dumps, compact_action_loads
+from .model_actions import (
+    AgentAction,
+    ActionData,
+    compact_action_dumps,
+    compact_action_loads,
+)
 from .coords import normalize_point, denormalize_point, normalize_box, denormalize_box
 from .grounding_tasks import GroundingTask, load_grounding_jsonl
 from .metrics import stage1_metrics, stage2_metrics

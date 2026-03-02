@@ -1,0 +1,93 @@
+.app-container {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.app-subtitle {
+  font-size: 0.85rem;
+  color: rgba(226, 232, 240, 0.8);
+}
+
+.app-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.app-input {
+  min-width: 220px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e2e8f0;
+}
+
+.app-button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background: rgba(34, 211, 238, 0.15);
+  color: #cffafe;
+  cursor: pointer;
+}
+
+.app-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.app-editor-section {
+  min-height: 360px;
+}
+
+.app-error {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecaca;
+}
+
+.app-output-panel {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.75);
+  overflow: hidden;
+}
+
+.app-output-label {
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  color: #bae6fd;
+}
+
+.app-output-content {
+  margin: 0;
+  padding: 10px;
+  font-size: 0.8rem;
+  overflow: auto;
+  max-height: 240px;
+}

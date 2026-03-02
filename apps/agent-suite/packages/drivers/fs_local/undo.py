@@ -28,7 +28,9 @@ class UndoJournal:
 
     def append(self, op: Dict[str, Any]) -> str:
         rec = {"ts": now_iso(), **op}
-        rec["id"] = rec.get("id") or _stable_id({"ts": rec["ts"], **op, "pid": os.getpid()})
+        rec["id"] = rec.get("id") or _stable_id(
+            {"ts": rec["ts"], **op, "pid": os.getpid()}
+        )
         with self.path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         return str(rec["id"])
@@ -72,7 +74,9 @@ def _conflict_path(p: Path) -> Path:
     return cand
 
 
-def _undo_one(policy: PolicyConfig, op: Dict[str, Any], dry_run: bool) -> Tuple[bool, Dict[str, Any]]:
+def _undo_one(
+    policy: PolicyConfig, op: Dict[str, Any], dry_run: bool
+) -> Tuple[bool, Dict[str, Any]]:
     """Return (ok, detail)."""
     kind = (op.get("op") or "").lower()
 
@@ -118,6 +122,7 @@ def _undo_one(policy: PolicyConfig, op: Dict[str, Any], dry_run: bool) -> Tuple[
         if not dry_run:
             if dst.is_dir():
                 import shutil
+
                 shutil.rmtree(dst)
             else:
                 dst.unlink()
@@ -155,12 +160,19 @@ def _undo_one(policy: PolicyConfig, op: Dict[str, Any], dry_run: bool) -> Tuple[
                 ok_n += 1
             else:
                 skip_n += 1
-        return ok_n > 0, {"op": "batch", "undone_items": ok_n, "skipped_items": skip_n, "items": item_details}
+        return ok_n > 0, {
+            "op": "batch",
+            "undone_items": ok_n,
+            "skipped_items": skip_n,
+            "items": item_details,
+        }
 
     return False, {"op": kind or "unknown", "reason": "unknown_op"}
 
 
-def undo_last(policy: PolicyConfig, journal: UndoJournal, steps: int = 1, dry_run: bool = True) -> UndoResult:
+def undo_last(
+    policy: PolicyConfig, journal: UndoJournal, steps: int = 1, dry_run: bool = True
+) -> UndoResult:
     ops = journal.tail(steps)
     undone = 0
     skipped = 0

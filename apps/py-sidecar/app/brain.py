@@ -32,7 +32,9 @@ def ndjson(obj: dict[str, Any]) -> str:
     return json.dumps(obj, ensure_ascii=False) + "\n"
 
 
-async def simulate_llm_stream(prompt: str, tools: Optional[list[dict]] = None) -> AsyncIterator[dict[str, Any]]:
+async def simulate_llm_stream(
+    prompt: str, tools: Optional[list[dict]] = None
+) -> AsyncIterator[dict[str, Any]]:
     """
     Replace this with real LLM streaming (OpenRouter, Claude, etc.).
 
@@ -42,7 +44,9 @@ async def simulate_llm_stream(prompt: str, tools: Optional[list[dict]] = None) -
     - yields done
     """
     # Simulated response text
-    text = f"Thinking about: {prompt}. Here is a streamed answer with relevant insights. "
+    text = (
+        f"Thinking about: {prompt}. Here is a streamed answer with relevant insights. "
+    )
 
     # Stream tokens with small delays
     for word in text.split():
@@ -94,6 +98,7 @@ async def chat_stream(req: ChatRequest):
 
     Returns StreamingResponse with media_type="application/x-ndjson"
     """
+
     async def generate():
         # Derive stable IDs from request
         trace_id = f"tr-{req.convoId}-{req.messageId}"
@@ -105,44 +110,55 @@ async def chat_stream(req: ChatRequest):
                 kind = chunk.get("kind")
 
                 if kind == "delta":
-                    yield ndjson({
-                        "type": "chat.delta.v1",
-                        "traceId": trace_id,
-                        "messageId": msg_id,
-                        "payload": {"text_delta": chunk["text_delta"]},
-                    })
+                    yield ndjson(
+                        {
+                            "type": "chat.delta.v1",
+                            "traceId": trace_id,
+                            "messageId": msg_id,
+                            "payload": {"text_delta": chunk["text_delta"]},
+                        }
+                    )
 
                 elif kind == "tool_call":
-                    yield ndjson({
-                        "type": "chat.tool_call.v1",
-                        "traceId": trace_id,
-                        "messageId": msg_id,
-                        "payload": {
-                            "name": chunk["name"],
-                            "arguments": chunk["arguments"],
-                        },
-                    })
+                    yield ndjson(
+                        {
+                            "type": "chat.tool_call.v1",
+                            "traceId": trace_id,
+                            "messageId": msg_id,
+                            "payload": {
+                                "name": chunk["name"],
+                                "arguments": chunk["arguments"],
+                            },
+                        }
+                    )
 
                 elif kind == "done":
-                    yield ndjson({
-                        "type": "chat.done.v1",
-                        "traceId": trace_id,
-                        "messageId": msg_id,
-                        "payload": {"stop_reason": chunk.get("stop_reason", "end_turn")},
-                    })
+                    yield ndjson(
+                        {
+                            "type": "chat.done.v1",
+                            "traceId": trace_id,
+                            "messageId": msg_id,
+                            "payload": {
+                                "stop_reason": chunk.get("stop_reason", "end_turn")
+                            },
+                        }
+                    )
 
         except Exception as e:
             # Emit error as final frame (optional)
-            yield ndjson({
-                "type": "chat.error.v1",
-                "traceId": trace_id,
-                "messageId": msg_id,
-                "payload": {"error": str(e)},
-            })
+            yield ndjson(
+                {
+                    "type": "chat.error.v1",
+                    "traceId": trace_id,
+                    "messageId": msg_id,
+                    "payload": {"error": str(e)},
+                }
+            )
 
     return StreamingResponse(generate(), media_type="application/x-ndjson")
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8001)

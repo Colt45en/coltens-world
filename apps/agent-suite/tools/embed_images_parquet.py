@@ -7,9 +7,14 @@ import pandas as pd
 from PIL import Image
 from tqdm import tqdm
 
+
 def main():
-    ap = argparse.ArgumentParser(description="Embed images as PNG bytes into a Parquet file (optional).")
-    ap.add_argument("--input", required=True, help="Input JSONL or Parquet with column image_path")
+    ap = argparse.ArgumentParser(
+        description="Embed images as PNG bytes into a Parquet file (optional)."
+    )
+    ap.add_argument(
+        "--input", required=True, help="Input JSONL or Parquet with column image_path"
+    )
     ap.add_argument("--out", required=True, help="Output Parquet path")
     ap.add_argument("--size", default="1000x1000", help="Resize WxH, default 1000x1000")
     ap.add_argument("--format", default="png", help="png or jpeg")
@@ -47,6 +52,7 @@ def main():
     df["image_embedded_size"] = sizes
     df.to_parquet(args.out, index=False)
     print({"rows": len(df), "out": args.out, "embedded": True})
+
 
 if __name__ == "__main__":
     main()

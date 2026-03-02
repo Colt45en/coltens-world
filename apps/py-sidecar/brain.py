@@ -82,13 +82,19 @@ class StreamEvent(BaseModel):
     data:    Type-specific payload
     ts:      Server-side timestamp (ms)
     """
+
     v: Literal["1.0"] = "1.0"
     traceId: str = Field(..., min_length=1, max_length=256)
     turnId: str = Field(..., min_length=1, max_length=256)
     seq: int = Field(...)  # Set by caller
     type: Literal[
-        "text_chunk", "tool_call", "tool_result",
-        "citation", "memory_write", "done", "error"
+        "text_chunk",
+        "tool_call",
+        "tool_result",
+        "citation",
+        "memory_write",
+        "done",
+        "error",
     ]
     data: dict = Field(default_factory=dict)
     ts: Optional[int] = Field(default=None)  # Will be set if None
@@ -280,6 +286,7 @@ async def chat_stream(req: ChatRequest):
 
         except Exception as e:
             import traceback
+
             error_event = StreamEvent(
                 v="1.0",
                 traceId=req.traceId,

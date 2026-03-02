@@ -8,6 +8,7 @@ Usage:
     python generate_labs.py --list             # List all available labs
     python generate_labs.py --output ./data    # Specify output directory
 """
+
 import argparse
 import sys
 from pathlib import Path
@@ -54,7 +55,9 @@ def main():
         # Generate specific lab
         if args.lab_id not in generator.labs:
             print(f"Error: Unknown lab '{args.lab_id}'", file=sys.stderr)
-            print(f"Available labs: {', '.join(generator.labs.keys())}", file=sys.stderr)
+            print(
+                f"Available labs: {', '.join(generator.labs.keys())}", file=sys.stderr
+            )
             sys.exit(1)
 
         output_dir = output_base / args.lab_id

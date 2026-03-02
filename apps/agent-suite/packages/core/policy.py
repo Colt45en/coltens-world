@@ -35,13 +35,21 @@ def add_allowed_roots(cfg: PolicyConfig, roots: Iterable[Path]) -> PolicyConfig:
         rr = r.expanduser().resolve()
         if rr not in merged:
             merged.append(rr)
-    return PolicyConfig(allowed_roots=merged, allowed_domains=set(cfg.allowed_domains), allow_destructive=cfg.allow_destructive)
+    return PolicyConfig(
+        allowed_roots=merged,
+        allowed_domains=set(cfg.allowed_domains),
+        allow_destructive=cfg.allow_destructive,
+    )
 
 
 def add_allowed_domains(cfg: PolicyConfig, domains: Iterable[str]) -> PolicyConfig:
     merged = set(cfg.allowed_domains)
     merged |= normalize_domains(domains)
-    return PolicyConfig(allowed_roots=list(cfg.allowed_roots), allowed_domains=merged, allow_destructive=cfg.allow_destructive)
+    return PolicyConfig(
+        allowed_roots=list(cfg.allowed_roots),
+        allowed_domains=merged,
+        allow_destructive=cfg.allow_destructive,
+    )
 
 
 def assert_path_allowed(cfg: PolicyConfig, path: Path) -> Path:
@@ -50,7 +58,9 @@ def assert_path_allowed(cfg: PolicyConfig, path: Path) -> Path:
         if is_subpath(path, root):
             return path
     allowed_str = ", ".join(str(r) for r in cfg.allowed_roots)
-    raise PermissionError(f"Path not allowed by policy: {path} (allowed_roots={allowed_str})")
+    raise PermissionError(
+        f"Path not allowed by policy: {path} (allowed_roots={allowed_str})"
+    )
 
 
 def assert_domain_allowed(cfg: PolicyConfig, domain: str) -> None:
@@ -60,4 +70,6 @@ def assert_domain_allowed(cfg: PolicyConfig, domain: str) -> None:
     for allowed in cfg.allowed_domains:
         if domain == allowed or domain.endswith("." + allowed):
             return
-    raise PermissionError(f"Domain not allowed by policy: {domain} (allowed={sorted(cfg.allowed_domains)})")
+    raise PermissionError(
+        f"Domain not allowed by policy: {domain} (allowed={sorted(cfg.allowed_domains)})"
+    )

@@ -14,7 +14,7 @@ from .ollama_client import ollama_chat_json, OllamaError
 app = FastAPI(title="World Engine Chat Server", version="1.1")
 
 DEFAULT_MODEL = "llama3.2:1b"  # Ollama model name
-MAX_HISTORY = 30            # keep it bounded
+MAX_HISTORY = 30  # keep it bounded
 
 SYSTEM_PROMPT = """You are the World Engine chat agent.
 
@@ -45,6 +45,7 @@ Rules:
 
 # In-memory convo history: {convoId: [{"role":"system|user|assistant","content":...}, ...]}
 HIST: Dict[str, List[Dict[str, str]]] = {}
+
 
 @app.get("/health")
 def health():
@@ -145,10 +146,17 @@ async def ws_chat(ws: WebSocket):
                 except OllamaError as e:
                     err_text = f"Ollama error: {e}"
                     for ch in _chunk_text(err_text, 40):
-                        await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": ch})
+                        await ws_send(
+                            ws,
+                            trace_id,
+                            "chat.delta",
+                            {"convoId": convo_id, "delta": ch},
+                        )
                         await asyncio.sleep(0.01)
 
-                    resp = ChatResponsePayload(convoId=convo_id, text=err_text, toolCalls=[])
+                    resp = ChatResponsePayload(
+                        convoId=convo_id, text=err_text, toolCalls=[]
+                    )
                     await ws_send(ws, trace_id, "chat.response", resp.model_dump())
                     convo.append({"role": "assistant", "content": err_text})
                     HIST[convo_id] = _trim_history(convo)
@@ -161,15 +169,24 @@ async def ws_chat(ws: WebSocket):
 
                 # Stream text
                 for ch in _chunk_text(text, 40):
-                    await ws_send(ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": ch})
+                    await ws_send(
+                        ws, trace_id, "chat.delta", {"convoId": convo_id, "delta": ch}
+                    )
                     await asyncio.sleep(0.01)
 
                 # Respond with tool calls
-                resp = ChatResponsePayload(convoId=convo_id, text=text, evidence=evidence, toolCalls=tool_calls)
+                resp = ChatResponsePayload(
+                    convoId=convo_id, text=text, evidence=evidence, toolCalls=tool_calls
+                )
                 await ws_send(ws, trace_id, "chat.response", resp.model_dump())
 
                 # Store assistant message in history (we store full JSON as assistant content to preserve tool intent)
-                convo.append({"role": "assistant", "content": json.dumps(out_json, ensure_ascii=False)})
+                convo.append(
+                    {
+                        "role": "assistant",
+                        "content": json.dumps(out_json, ensure_ascii=False),
+                    }
+                )
                 HIST[convo_id] = _trim_history(convo)
 
             elif env.kind == "tool.result":

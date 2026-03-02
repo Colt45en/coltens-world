@@ -48,9 +48,18 @@ async def curriculum_stop_execute(args: Dict[str, Any]) -> Dict[str, Any]:
     ]
 
     quick_checks = [
-        {"q": "Name the concept in point #1 in your own words.", "a": "A concise paraphrase that preserves meaning."},
-        {"q": "Give one fresh example not listed.", "a": "A valid example that matches the rule."},
-        {"q": "What's a common confusion here?", "a": "A typical mix-up + how to avoid it."},
+        {
+            "q": "Name the concept in point #1 in your own words.",
+            "a": "A concise paraphrase that preserves meaning.",
+        },
+        {
+            "q": "Give one fresh example not listed.",
+            "a": "A valid example that matches the rule.",
+        },
+        {
+            "q": "What's a common confusion here?",
+            "a": "A typical mix-up + how to avoid it.",
+        },
     ]
 
     common_mistake = {
@@ -83,7 +92,9 @@ class LoopbackBus:
         self.runtime = runtime
         self.call_count = 0
 
-    async def emit_event_nucleus_only(self, env: V1EventEnvelope, *, caller: str) -> None:
+    async def emit_event_nucleus_only(
+        self, env: V1EventEnvelope, *, caller: str
+    ) -> None:
         """Handle emitted events (nucleus.tool_call in this case)"""
         if env.event_type == "nucleus.tool_call":
             self.call_count += 1
@@ -106,13 +117,18 @@ class LoopbackBus:
             )
             await self.runtime.on_command(cmd)
 
-        elif env.event_type in ("brain.curriculum.progress", "brain.curriculum.completed"):
+        elif env.event_type in (
+            "brain.curriculum.progress",
+            "brain.curriculum.completed",
+        ):
             # Optional: log progress
             if self.call_count % 10 == 0:
                 state = self.runtime.state
-                print(f"  📊 Rotation {state['rotation']}/{self.runtime.plan['total_rotations']}, "
-                      f"stop {state['stop_index']}/{len(self.runtime.plan['stop_order'])}, "
-                      f"calls: {self.call_count}")
+                print(
+                    f"  📊 Rotation {state['rotation']}/{self.runtime.plan['total_rotations']}, "
+                    f"stop {state['stop_index']}/{len(self.runtime.plan['stop_order'])}, "
+                    f"calls: {self.call_count}"
+                )
 
     async def send_command(self, cmd: Any) -> None:
         """In this demo, commands are not used"""
@@ -125,8 +141,12 @@ async def main() -> None:
     print("=" * 60)
 
     # Load plan and state
-    plan = cast(dict[str, Any], WheelRuntime.load_json("schemas/curriculum/wheel.plan.v1.json"))
-    state = cast(dict[str, Any], WheelRuntime.load_json("schemas/curriculum/wheel.state.v1.json"))
+    plan = cast(
+        dict[str, Any], WheelRuntime.load_json("schemas/curriculum/wheel.plan.v1.json")
+    )
+    state = cast(
+        dict[str, Any], WheelRuntime.load_json("schemas/curriculum/wheel.state.v1.json")
+    )
 
     print(f"\n✅ Loaded plan: {plan['title']}")
     print(f"   Stops: {len(plan['stop_order'])}")
@@ -155,7 +175,9 @@ async def main() -> None:
 
     print("=" * 60)
     print(f"\n✅ Demo complete after {bus.call_count} tool calls")
-    print(f"   Final state: rotation {state['rotation']}, stop_index {state['stop_index']}")
+    print(
+        f"   Final state: rotation {state['rotation']}, stop_index {state['stop_index']}"
+    )
     print(f"   History entries: {len(state['history'])}")
 
     # Save state

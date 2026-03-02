@@ -1,9 +1,9 @@
 packages:
   - 'apps/*'
   - '!apps/env-sandbox'
-  - packages/*
-  - tooling/*
-  - scripts
+  - 'packages/*'
+  - 'tooling/*'
+  - 'scripts'
 
 ignoredBuiltDependencies:
   - esbuild

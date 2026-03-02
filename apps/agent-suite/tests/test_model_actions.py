@@ -1,4 +1,9 @@
-from packages.core.model_actions import AgentAction, compact_action_dumps, compact_action_loads
+from packages.core.model_actions import (
+    AgentAction,
+    compact_action_dumps,
+    compact_action_loads,
+)
+
 
 def test_compact_roundtrip_is_stable():
     a = AgentAction.from_dict({"POINT": [200, 300], "TYPE": "x", "STATUS": "continue"})
@@ -6,6 +11,7 @@ def test_compact_roundtrip_is_stable():
     a2 = compact_action_loads(s1)
     s2 = compact_action_dumps(a2)
     assert s1 == s2
+
 
 def test_envelope_and_compact_parse_same():
     compact = {"POINT": [1, 2], "STATUS": "continue"}

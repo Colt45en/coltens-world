@@ -4,14 +4,17 @@ import websockets
 import json
 from typing import TypedDict
 
+
 class MessagePayload(TypedDict):
     text: str
     convoId: str
+
 
 class Message(TypedDict):
     v: str
     kind: str
     payload: MessagePayload
+
 
 async def test_render_file():
     uri = "ws://127.0.0.1:3000/ws/chat"
@@ -23,8 +26,8 @@ async def test_render_file():
             "kind": "chat.request",
             "payload": {
                 "text": "render file test_file_render.html",
-                "convoId": "test-convo"
-            }
+                "convoId": "test-convo",
+            },
         }
 
         await websocket.send(json.dumps(message))
@@ -36,6 +39,7 @@ async def test_render_file():
             print(f"Received: {response}")
         except asyncio.TimeoutError:
             print("Timeout waiting for response")
+
 
 if __name__ == "__main__":
     asyncio.run(test_render_file())

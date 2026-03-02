@@ -140,6 +140,7 @@ export * from "./formatting/index.js";
 // JSON value types & coercion (engine-owned, Prisma-independent)
 export { coerceJsonValue, requireJsonObject, requireJsonValue } from "./runtime/json.js";
 export type { JsonObject, JsonPrimitive, JsonValue } from "./runtime/json.js";
+export * from "./runtime/sigil/index.js";
 
 // Prediction & Reconciliation
 export * from "./prediction.js";

@@ -31,6 +31,7 @@ router = APIRouter(prefix="/brain/memory", tags=["memory"])
 # Memory Bus Publishing (Session 10: Event-driven UX)
 # ============================================================================
 
+
 async def emit_memory_event(
     event_type: str,
     key: str,
@@ -69,7 +70,9 @@ async def emit_memory_event(
                     logger.debug(f"[memory] emitted {event_type} for key={key}")
                     return True
                 else:
-                    logger.warning(f"[memory] emit failed: {event_type} status={resp.status}")
+                    logger.warning(
+                        f"[memory] emit failed: {event_type} status={resp.status}"
+                    )
                     return False
 
     except Exception as e:
@@ -142,7 +145,9 @@ async def get_fact(key: str) -> Dict[str, Any]:
     value = service.get_fact(key)
 
     if value is None:
-        raise HTTPException(status_code=404, detail=f"Fact '{key}' not found or expired")
+        raise HTTPException(
+            status_code=404, detail=f"Fact '{key}' not found or expired"
+        )
 
     return {"key": key, "value": value, "ok": True}
 

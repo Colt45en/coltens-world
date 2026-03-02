@@ -105,7 +105,9 @@ class LeximorphIngestRequest(BaseModel):
 
 
 def _leximorph_store() -> LexiStore:
-    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "leximorph.sqlite")
+    db_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "leximorph.sqlite"
+    )
     store = LexiStore(db_path)
     store.init()
     return store
@@ -170,7 +172,9 @@ async def leximorph_analyze(req: LeximorphAnalyzeRequest) -> dict[str, Any]:
             detail = store.get_entry_detail(stored_id)
             if detail:
                 status = str(detail.get("status"))
-                review_required = bool(detail.get("meta", {}).get("review_required", review_required))
+                review_required = bool(
+                    detail.get("meta", {}).get("review_required", review_required)
+                )
 
         return {
             **analyzed_payload,
@@ -207,7 +211,9 @@ async def leximorph_query(
     finally:
         store.close()
 
-    return LeximorphQueryResponse(contains=contains, limit=bounded_limit, count=len(rows), results=rows)
+    return LeximorphQueryResponse(
+        contains=contains, limit=bounded_limit, count=len(rows), results=rows
+    )
 
 
 @app.get("/leximorph/search")
@@ -236,7 +242,9 @@ async def leximorph_search(
         )
     finally:
         store.close()
-    return LeximorphSearchResponse(q=q, limit=bounded_limit, count=len(rows), results=rows)
+    return LeximorphSearchResponse(
+        q=q, limit=bounded_limit, count=len(rows), results=rows
+    )
 
 
 @app.get("/leximorph/entry/{entry_id}")
@@ -275,7 +283,9 @@ async def leximorph_review_queue(
 
 
 @app.post("/leximorph/review/{entry_id}")
-async def leximorph_review(entry_id: int, req: LeximorphReviewRequest) -> dict[str, Any]:
+async def leximorph_review(
+    entry_id: int, req: LeximorphReviewRequest
+) -> dict[str, Any]:
     store = _leximorph_store()
     try:
         detail = store.review_entry(

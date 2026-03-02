@@ -24,7 +24,11 @@ def loads_and_validate(s: str) -> Tuple[bool, Dict[str, Any], str]:
             return False, {}, "Action must be a JSON object"
         a = Action.model_validate(obj)
         if not a.is_valid_semantically():
-            return False, obj, "Semantic constraints failed (e.g., 'to' requires 'POINT')"
+            return (
+                False,
+                obj,
+                "Semantic constraints failed (e.g., 'to' requires 'POINT')",
+            )
         return True, a.model_dump(exclude_none=True), ""
     except json.JSONDecodeError as e:
         return False, {}, f"JSON decode error: {e}"

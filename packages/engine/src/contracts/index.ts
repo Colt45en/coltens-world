@@ -7,6 +7,7 @@ export * from "./artifacts";
 export * from "./json";
 export * from "./ledger";
 export * from "./tool_call";
+export * from "./sigil";
 
 
 // Physics world contract (platform-agnostic)

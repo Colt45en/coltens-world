@@ -14,7 +14,7 @@ import {
     type LODConfig,
     type PartKey,
 } from "@world-engine/avatar-core";
-import type * as THREE from "three";
+import * as THREE from "three";
 
 import { exportSceneToGLB } from "./export/exportGLB.js";
 import { hashBuffer } from "./hash.js";

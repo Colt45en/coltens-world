@@ -44,7 +44,9 @@ class EventEnvelope:
     payload: Dict[str, Any]
 
 
-def make_event(event_type: str, payload: Dict[str, Any], trace_id: Optional[str] = None) -> EventEnvelope:
+def make_event(
+    event_type: str, payload: Dict[str, Any], trace_id: Optional[str] = None
+) -> EventEnvelope:
     return EventEnvelope(
         event_id=new_id("evt"),
         event_type=event_type,

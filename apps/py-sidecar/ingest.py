@@ -50,15 +50,45 @@ _COMMENT_LINE = re.compile(r"//.*?$", re.MULTILINE)
 _COMMENT_BLOCK = re.compile(r"/\*.*?\*/", re.DOTALL)
 
 # Rough symbol regex: operators, punctuation, etc.
-_SYMBOL = re.compile(r"==|!=|<=|>=|=>|\+\+|--|\+=|-=|\*=|/=|&&|\|\||[{}()[\].,;:+\-*/%<>=!?|&^~:]")
+_SYMBOL = re.compile(
+    r"==|!=|<=|>=|=>|\+\+|--|\+=|-=|\*=|/=|&&|\|\||[{}()[\].,;:+\-*/%<>=!?|&^~:]"
+)
 
 # Known keywords (extend as you like)
 TS_KEYWORDS = {
-    "async", "await", "import", "export", "from", "type", "interface", "class",
-    "const", "let", "var", "function", "return", "extends", "implements",
-    "new", "throw", "try", "catch", "finally", "if", "else", "switch", "case",
-    "break", "continue", "for", "while", "do", "in", "of",
+    "async",
+    "await",
+    "import",
+    "export",
+    "from",
+    "type",
+    "interface",
+    "class",
+    "const",
+    "let",
+    "var",
+    "function",
+    "return",
+    "extends",
+    "implements",
+    "new",
+    "throw",
+    "try",
+    "catch",
+    "finally",
+    "if",
+    "else",
+    "switch",
+    "case",
+    "break",
+    "continue",
+    "for",
+    "while",
+    "do",
+    "in",
+    "of",
 }
+
 
 def _strip_comments_for_tokenization(text: str) -> str:
     text = _COMMENT_BLOCK.sub(" ", text)
@@ -113,7 +143,9 @@ def tokenize(text: str) -> List[Tuple[str, TokenType]]:
     return tokens
 
 
-def build_meaning_claims(language: str, tokens: List[Tuple[str, TokenType]], source_file: str, text: str) -> Tuple[List[MeaningClaim], List[str]]:
+def build_meaning_claims(
+    language: str, tokens: List[Tuple[str, TokenType]], source_file: str, text: str
+) -> Tuple[List[MeaningClaim], List[str]]:
     claims: List[MeaningClaim] = []
     unknowns: List[str] = []
 
@@ -134,19 +166,23 @@ def build_meaning_claims(language: str, tokens: List[Tuple[str, TokenType]], sou
 
     if language.lower() in ("typescript", "javascript", "ts", "js"):
         for kw in sorted(token_set.intersection(TS_KEYWORDS)):
-            claims.append(MeaningClaim(
-                claim=f"'{kw}' is a JavaScript/TypeScript keyword",
-                confidence=0.95,
-                source_ref=sr(kw),
-            ))
+            claims.append(
+                MeaningClaim(
+                    claim=f"'{kw}' is a JavaScript/TypeScript keyword",
+                    confidence=0.95,
+                    source_ref=sr(kw),
+                )
+            )
 
         # A couple symbol claims
         if "=>" in token_set:
-            claims.append(MeaningClaim(
-                claim="'=>' is an arrow function / lambda syntax in JS/TS",
-                confidence=0.9,
-                source_ref=sr("=>"),
-            ))
+            claims.append(
+                MeaningClaim(
+                    claim="'=>' is an arrow function / lambda syntax in JS/TS",
+                    confidence=0.9,
+                    source_ref=sr("=>"),
+                )
+            )
 
         # Unknowns: words that look like identifiers but aren't keywords (we keep a small list)
         for tok, tt in tokens:
@@ -167,7 +203,9 @@ def build_meaning_claims(language: str, tokens: List[Tuple[str, TokenType]], sou
     return claims, unknowns
 
 
-def run_ingest(*, source_file: str, language: str, objective: str, text: str) -> Dict[str, Any]:
+def run_ingest(
+    *, source_file: str, language: str, objective: str, text: str
+) -> Dict[str, Any]:
     norm_obj = normalize_whitespace(objective)
     toks = tokenize(text)
 
@@ -191,12 +229,14 @@ def run_ingest(*, source_file: str, language: str, objective: str, text: str) ->
 
     token_models: List[Token] = []
     for (token, tt), c in sorted(counts.items(), key=lambda x: (x[0][1], x[0][0])):
-        token_models.append(Token(
-            token=token,
-            token_type=tt,
-            count=c,
-            initial_confidence=clamp01(conf_for(tt, token)),
-        ))
+        token_models.append(
+            Token(
+                token=token,
+                token_type=tt,
+                count=c,
+                initial_confidence=clamp01(conf_for(tt, token)),
+            )
+        )
 
     meaning_claims, unknowns = build_meaning_claims(language, toks, source_file, text)
 

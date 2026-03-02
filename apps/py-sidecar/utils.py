@@ -8,7 +8,12 @@ from typing import Any, List, Tuple
 
 
 def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return (
+        datetime.now(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
 
 
 def sha256_hex(data: bytes) -> str:
@@ -55,6 +60,7 @@ def write_json(path: str, obj: Any) -> None:
 
 def ensure_dir(path: str) -> None:
     import os
+
     os.makedirs(path, exist_ok=True)
 
 

@@ -49,6 +49,7 @@ class Vec2:
 @dataclass(frozen=True)
 class TerrainPoint:
     """Rich terrain analysis at a single point"""
+
     position: Vec2
     height: float
     gradient: Vec2  # ∇h (slope direction and magnitude)
@@ -67,6 +68,7 @@ class TerrainPoint:
 @dataclass(frozen=True)
 class TerrainField:
     """Complete terrain analysis grid"""
+
     width: int
     height: int
     cell_size: float
@@ -96,24 +98,24 @@ class TerrainField:
 
         # Bilinear interpolation for height and key fields
         height = (
-            p00.height * (1 - fx) * (1 - fy) +
-            p10.height * fx * (1 - fy) +
-            p01.height * (1 - fx) * fy +
-            p11.height * fx * fy
+            p00.height * (1 - fx) * (1 - fy)
+            + p10.height * fx * (1 - fy)
+            + p01.height * (1 - fx) * fy
+            + p11.height * fx * fy
         )
 
         # Interpolate gradient
         grad_x = (
-            p00.gradient.x * (1 - fx) * (1 - fy) +
-            p10.gradient.x * fx * (1 - fy) +
-            p01.gradient.x * (1 - fx) * fy +
-            p11.gradient.x * fx * fy
+            p00.gradient.x * (1 - fx) * (1 - fy)
+            + p10.gradient.x * fx * (1 - fy)
+            + p01.gradient.x * (1 - fx) * fy
+            + p11.gradient.x * fx * fy
         )
         grad_y = (
-            p00.gradient.y * (1 - fx) * (1 - fy) +
-            p10.gradient.y * fx * (1 - fy) +
-            p01.gradient.y * (1 - fx) * fy +
-            p11.gradient.y * fx * fy
+            p00.gradient.y * (1 - fx) * (1 - fy)
+            + p10.gradient.y * fx * (1 - fy)
+            + p01.gradient.y * (1 - fx) * fy
+            + p11.gradient.y * fx * fy
         )
 
         gradient = Vec2(grad_x, grad_y)
@@ -134,7 +136,7 @@ class TerrainField:
             flow_direction=gradient * -1.0 if slope_mag > 0 else Vec2(0, 0),
             is_ridge=False,
             is_valley=False,
-            is_saddle=False
+            is_saddle=False,
         )
 
 
@@ -148,7 +150,7 @@ class TerrainFieldCalculus:
         *,
         compute_curvature: bool = True,
         ridge_threshold: float = 0.1,
-        valley_threshold: float = -0.1
+        valley_threshold: float = -0.1,
     ) -> TerrainField:
         """
         Analyze a 2D heightmap grid with production-grade calculus.
@@ -184,10 +186,10 @@ class TerrainFieldCalculus:
             h11 = heightmap[y1][x1]
 
             return (
-                h00 * (1 - fx) * (1 - fy) +
-                h10 * fx * (1 - fy) +
-                h01 * (1 - fx) * fy +
-                h11 * fx * fy
+                h00 * (1 - fx) * (1 - fy)
+                + h10 * fx * (1 - fy)
+                + h01 * (1 - fx) * fy
+                + h11 * fx * fy
             )
 
         points: List[List[TerrainPoint]] = []
@@ -222,14 +224,23 @@ class TerrainFieldCalculus:
                     H = Calculus.hessian(h, [float(x), float(y)])
                     # Scale Hessian by cell_size
                     H_scaled = [
-                        [H[0][0] / (cell_size * cell_size), H[0][1] / (cell_size * cell_size)],
-                        [H[1][0] / (cell_size * cell_size), H[1][1] / (cell_size * cell_size)]
+                        [
+                            H[0][0] / (cell_size * cell_size),
+                            H[0][1] / (cell_size * cell_size),
+                        ],
+                        [
+                            H[1][0] / (cell_size * cell_size),
+                            H[1][1] / (cell_size * cell_size),
+                        ],
                     ]
 
                     # Eigenvalues of Hessian (principal curvatures)
                     # For 2x2: λ = (trace ± sqrt(trace² - 4*det)) / 2
                     trace = H_scaled[0][0] + H_scaled[1][1]
-                    det = H_scaled[0][0] * H_scaled[1][1] - H_scaled[0][1] * H_scaled[1][0]
+                    det = (
+                        H_scaled[0][0] * H_scaled[1][1]
+                        - H_scaled[0][1] * H_scaled[1][0]
+                    )
                     discriminant = trace * trace - 4 * det
 
                     if discriminant >= 0:
@@ -267,16 +278,13 @@ class TerrainFieldCalculus:
                     flow_direction=flow_dir,
                     is_ridge=is_ridge,
                     is_valley=is_valley,
-                    is_saddle=is_saddle
+                    is_saddle=is_saddle,
                 )
                 row.append(point)
             points.append(row)
 
         return TerrainField(
-            width=width,
-            height=height,
-            cell_size=cell_size,
-            points=points
+            width=width, height=height, cell_size=cell_size, points=points
         )
 
     @staticmethod
@@ -323,7 +331,7 @@ class TerrainFieldCalculus:
         start_x: int,
         start_y: int,
         visited: List[List[bool]],
-        predicate: Callable[[TerrainPoint], bool]
+        predicate: Callable[[TerrainPoint], bool],
     ) -> List[Vec2]:
         """Trace a connected feature line (ridge or valley)"""
         line: List[Vec2] = []
@@ -413,35 +421,41 @@ class TerrainFieldCalculus:
             "width": field.width,
             "height": field.height,
             "cell_size": field.cell_size,
-            "points": []
+            "points": [],
         }
 
         for y in range(field.height):
             for x in range(field.width):
                 point = field.get(x, y)
                 if point:
-                    data["points"].append({
-                        "x": x,
-                        "y": y,
-                        "height": point.height,
-                        "gradient": {"x": point.gradient.x, "y": point.gradient.y},
-                        "slope_angle": point.slope_angle,
-                        "slope_magnitude": point.slope_magnitude,
-                        "curvature_mean": point.curvature_mean,
-                        "curvature_gaussian": point.curvature_gaussian,
-                        "flow_direction": {"x": point.flow_direction.x, "y": point.flow_direction.y},
-                        "is_ridge": point.is_ridge,
-                        "is_valley": point.is_valley,
-                        "is_saddle": point.is_saddle
-                    })
+                    data["points"].append(
+                        {
+                            "x": x,
+                            "y": y,
+                            "height": point.height,
+                            "gradient": {"x": point.gradient.x, "y": point.gradient.y},
+                            "slope_angle": point.slope_angle,
+                            "slope_magnitude": point.slope_magnitude,
+                            "curvature_mean": point.curvature_mean,
+                            "curvature_gaussian": point.curvature_gaussian,
+                            "flow_direction": {
+                                "x": point.flow_direction.x,
+                                "y": point.flow_direction.y,
+                            },
+                            "is_ridge": point.is_ridge,
+                            "is_valley": point.is_valley,
+                            "is_saddle": point.is_saddle,
+                        }
+                    )
 
-        with open(path, 'w') as f:
+        with open(path, "w") as f:
             json.dump(data, f, indent=2)
 
 
 # -----------------------------
 # Noise3D Integration Bridge
 # -----------------------------
+
 
 class Noise3DIntegration:
     """Bridge between Noise3D terrain generation and field calculus"""
@@ -454,7 +468,7 @@ class Noise3DIntegration:
         octaves: int = 4,
         persistence: float = 0.5,
         lacunarity: float = 2.0,
-        seed: Optional[int] = None
+        seed: Optional[int] = None,
     ) -> TerrainField:
         """
         Generate terrain using simplex noise (Python implementation) and analyze it.
@@ -465,6 +479,7 @@ class Noise3DIntegration:
         try:
             # Try to use noise library if available
             import noise  # type: ignore
+
             heightmap = []
             for y in range(height):
                 row = []
@@ -476,7 +491,9 @@ class Noise3DIntegration:
                     for _ in range(octaves):
                         nx = x * frequency
                         ny = y * frequency
-                        value += noise.snoise2(nx, ny, octaves=1, base=seed or 0) * amplitude
+                        value += (
+                            noise.snoise2(nx, ny, octaves=1, base=seed or 0) * amplitude
+                        )
                         amplitude *= persistence
                         frequency *= lacunarity
 
@@ -491,10 +508,9 @@ class Noise3DIntegration:
             for y in range(height):
                 row = []
                 for x in range(width):
-                    value = (
-                        math.sin(x * scale) * math.cos(y * scale) +
-                        0.5 * math.sin(x * scale * 2.3) * math.cos(y * scale * 1.7)
-                    )
+                    value = math.sin(x * scale) * math.cos(y * scale) + 0.5 * math.sin(
+                        x * scale * 2.3
+                    ) * math.cos(y * scale * 1.7)
                     row.append(value)
                 heightmap.append(row)
 
@@ -513,7 +529,7 @@ class Noise3DIntegration:
           "cell_size": 1.0
         }
         """
-        with open(json_path, 'r') as f:
+        with open(json_path, "r") as f:
             data = json.load(f)
 
         heightmap = data["heightmap"]
@@ -539,16 +555,14 @@ if __name__ == "__main__":
             dx, dy = x - cx, y - cy
             r = math.sqrt(dx * dx + dy * dy)
             # Crater: high at edges, low in center
-            h = math.exp(-(r - 15) ** 2 / 50) + 0.2 * math.sin(r * 0.5)
+            h = math.exp(-((r - 15) ** 2) / 50) + 0.2 * math.sin(r * 0.5)
             row.append(h)
         heightmap.append(row)
 
     # Analyze terrain
     print("Analyzing 50x50 crater heightmap...")
     field = TerrainFieldCalculus.from_heightmap(
-        heightmap,
-        cell_size=1.0,
-        compute_curvature=True
+        heightmap, cell_size=1.0, compute_curvature=True
     )
 
     # Find ridge/valley features
@@ -563,10 +577,14 @@ if __name__ == "__main__":
     if center_point:
         print("\nCenter point analysis:")
         print(f"  Height: {center_point.height:.3f}")
-        print(f"  Slope: {center_point.slope_magnitude:.3f} ({math.degrees(center_point.slope_angle):.1f}°)")
+        print(
+            f"  Slope: {center_point.slope_magnitude:.3f} ({math.degrees(center_point.slope_angle):.1f}°)"
+        )
         print(f"  Mean curvature: {center_point.curvature_mean:.3f}")
         print(f"  Gaussian curvature: {center_point.curvature_gaussian:.3f}")
-        print(f"  Feature: Ridge={center_point.is_ridge}, Valley={center_point.is_valley}, Saddle={center_point.is_saddle}")
+        print(
+            f"  Feature: Ridge={center_point.is_ridge}, Valley={center_point.is_valley}, Saddle={center_point.is_saddle}"
+        )
 
     # Compute flow accumulation (watershed)
     print("\nComputing flow accumulation...")

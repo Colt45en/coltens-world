@@ -39,7 +39,9 @@ def _notes_root(policy: PolicyConfig, repo_root: Path) -> Path:
     return notes
 
 
-def create_note(policy: PolicyConfig, repo_root: Path, title: str, body_md: str = "") -> NoteMeta:
+def create_note(
+    policy: PolicyConfig, repo_root: Path, title: str, body_md: str = ""
+) -> NoteMeta:
     root = _notes_root(policy, repo_root)
     ts = now_iso().replace(":", "").replace("-", "")
     slug = _slugify(title)
@@ -60,7 +62,9 @@ def create_note(policy: PolicyConfig, repo_root: Path, title: str, body_md: str 
     )
 
 
-def append_note(policy: PolicyConfig, repo_root: Path, note_id: str, body_md: str) -> NoteMeta:
+def append_note(
+    policy: PolicyConfig, repo_root: Path, note_id: str, body_md: str
+) -> NoteMeta:
     root = _notes_root(policy, repo_root)
     path = root / f"{note_id}.md"
     path = assert_path_allowed(policy, path)
@@ -102,17 +106,21 @@ def list_notes(policy: PolicyConfig, repo_root: Path) -> List[NoteMeta]:
                     break
         except Exception:
             pass
-        out.append(NoteMeta(
-            note_id=p.stem,
-            title=title,
-            path=str(p),
-            created_utc="",
-            updated_utc="",
-        ))
+        out.append(
+            NoteMeta(
+                note_id=p.stem,
+                title=title,
+                path=str(p),
+                created_utc="",
+                updated_utc="",
+            )
+        )
     return out
 
 
-def read_note(policy: PolicyConfig, repo_root: Path, note_id: str) -> Tuple[NoteMeta, str]:
+def read_note(
+    policy: PolicyConfig, repo_root: Path, note_id: str
+) -> Tuple[NoteMeta, str]:
     root = _notes_root(policy, repo_root)
     path = root / f"{note_id}.md"
     path = assert_path_allowed(policy, path)
@@ -126,5 +134,7 @@ def read_note(policy: PolicyConfig, repo_root: Path, note_id: str) -> Tuple[Note
             title = line[2:].strip() or title
             break
 
-    meta = NoteMeta(note_id=note_id, title=title, path=str(path), created_utc="", updated_utc="")
+    meta = NoteMeta(
+        note_id=note_id, title=title, path=str(path), created_utc="", updated_utc=""
+    )
     return meta, txt

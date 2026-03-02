@@ -3,12 +3,14 @@ import os
 
 router = APIRouter()
 
+
 def _version() -> str:
     # Prefer an explicit env var so you can pin it in launch scripts or CI.
     v = os.getenv("WORLD_ENGINE_SIDECAR_VERSION")
     if v and v.strip():
         return v.strip()
     return "dev"
+
 
 @router.get("/health")
 def health():
@@ -21,5 +23,5 @@ def health():
         "status": "ok",
         "state": "up",
         "service": "sidecar",
-        "version": _version()
+        "version": _version(),
     }

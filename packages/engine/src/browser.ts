@@ -15,3 +15,5 @@ export * from "./index.js";
 
 // Browser-specific exports that require DOM APIs
 export { RendererIntentToolkit, type ToolResult as RendererToolResult } from "./tools/renderer-intent-tools";
+// Renderer intent state schema
+export { RendererStateSchema, type RendererState } from "./contracts/renderer-intent.v1.js";

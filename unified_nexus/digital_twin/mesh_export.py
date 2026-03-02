@@ -1,323 +1,526 @@
-"""
-BRAIN ARCHITECTURE: Digital Twin Cortex → Mesh Export (Marching Cubes)
+"""Digital Twin Cortex deterministic mesh export."""
 
-3D mesh generation from segmented anatomy using marching cubes algorithm.
-Exports to OBJ, STL, or PLY formats for 3D visualization/printing.
-
-Features:
-- Marching cubes surface extraction
-- Per-organ mesh generation
-- Smooth/decimate options
-- Multi-format export (OBJ, STL, PLY)
-- Deterministic output (same input → same mesh)
-
-Usage:
-    from unified_nexus.digital_twin.mesh_export import export_mesh
-
-    mesh_data = await export_mesh({
-        "case_id": "case_001",
-        "labels_ref": {...},
-        "target_organ": "heart",
-        "format": "obj",
-        "smooth": True,
-        "decimate_factor": 0.5
-    })
-"""
+# pyright: reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false
 
 from __future__ import annotations
 
+import math
 import struct
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+
+from .artifacts import canonical_json_bytes, sha256_bytes
 
 try:
     import numpy as np
-    from numpy import ndarray
 except ImportError:
     np = None
-    ndarray = None  # type: ignore
+
+try:
+    from skimage.measure import marching_cubes as _sk_marching_cubes  # type: ignore
+except Exception:
+    _sk_marching_cubes = None
 
 
-def _marching_cubes_simple(
-    volume: "ndarray", threshold: float = 0.5
+def _seed_u64_from_hash(h: str) -> int:
+    hx = h.split(":")[-1]
+    return int(hx[:16], 16) & 0xFFFFFFFFFFFFFFFF
+
+
+@dataclass
+class DetRng:
+    state: int
+
+    def next_u64(self) -> int:
+        self.state = (self.state + 0x9E3779B97F4A7C15) & 0xFFFFFFFFFFFFFFFF
+        z = self.state
+        z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9 & 0xFFFFFFFFFFFFFFFF
+        z = (z ^ (z >> 27)) * 0x94D049BB133111EB & 0xFFFFFFFFFFFFFFFF
+        return z ^ (z >> 31)
+
+    def rand_float(self) -> float:
+        return (self.next_u64() >> 11) * (1.0 / (1 << 53))
+
+
+def _rng_from_seed(seed_hex: str) -> DetRng:
+    return DetRng(_seed_u64_from_hash(seed_hex))
+
+
+def _qf(x: float, nd: int = 6) -> float:
+    y = round(float(x), nd)
+    return 0.0 if y == -0.0 else y
+
+
+def _canon_mesh(
+    vertices: Any,
+    faces: Any,
+    *,
+    nd: int = 6,
 ) -> Tuple[List[Tuple[float, float, float]], List[Tuple[int, int, int]]]:
-    """
-    Simple marching cubes implementation for generating triangular mesh.
-
-    Args:
-        volume: 3D numpy array (binary or scalar field)
-        threshold: Isosurface value
-
-    Returns:
-        (vertices, triangles) where:
-            vertices: List of (x, y, z) coordinates
-            triangles: List of (v0, v1, v2) vertex indices
-    """
     if np is None:
-        raise ImportError("numpy required for mesh export")
+        raise ImportError("numpy required")
+    if vertices.size == 0 or faces.size == 0:
+        return [], []
 
-    # Marching cubes lookup tables (simplified)
-    # In production, use scikit-image or similar: skimage.measure.marching_cubes
+    vq: Any = np.round(vertices.astype(np.float64), nd)
+    row_count = int(vq.shape[0])
+    keys: List[Tuple[float, float, float]] = [
+        (float(vq[i, 0]), float(vq[i, 1]), float(vq[i, 2])) for i in range(row_count)
+    ]
+    uniq_map: Dict[Tuple[float, float, float], int] = {}
+    for key in keys:
+        if key not in uniq_map:
+            uniq_map[key] = 0
 
-    vertices: List[Tuple[float, float, float]] = []
-    triangles: List[Tuple[int, int, int]] = []
+    sorted_keys = sorted(uniq_map.keys())
+    for i, key in enumerate(sorted_keys):
+        uniq_map[key] = i
 
-    # For now, simple voxel-to-vertex conversion
-    # Each surface voxel → 8 vertices (cube corners)
-    # Real marching cubes interpolates edges based on scalar field
+    old_to_new: Any = np.empty((row_count,), dtype=np.int64)
+    for i, key in enumerate(keys):
+        old_to_new[i] = uniq_map[key]
 
-    dims: Tuple[int, ...] = tuple(int(d) for d in volume.shape)  # type: ignore
-    vertex_map: Dict[Tuple[int, int, int], int] = {}
+    f2: Any = old_to_new[faces.astype(np.int64)]
+    keep: List[Tuple[int, int, int]] = []
+    for a, b, c in f2.tolist():
+        if a != b and b != c and a != c:
+            keep.append((int(a), int(b), int(c)))
 
-    for z in range(dims[2] - 1):
-        for y in range(dims[1] - 1):
-            for x in range(dims[0] - 1):
-                # Sample cube corners
-                cube = np.array([
-                    volume[x, y, z],
-                    volume[x + 1, y, z],
-                    volume[x + 1, y, z + 1],
-                    volume[x, y, z + 1],
-                    volume[x, y + 1, z],
-                    volume[x + 1, y + 1, z],
-                    volume[x + 1, y + 1, z + 1],
-                    volume[x, y + 1, z + 1],
-                ], dtype=np.float32)
-
-                # If cube straddles threshold, add faces
-                if np.any(cube >= threshold) and np.any(cube < threshold):
-                    # Add cube vertices (simplified: just corners)
-                    for dx, dy, dz in [
-                        (0, 0, 0), (1, 0, 0), (1, 0, 1), (0, 0, 1),
-                        (0, 1, 0), (1, 1, 0), (1, 1, 1), (0, 1, 1),
-                    ]:
-                        pos = (x + dx, y + dy, z + dz)
-                        if pos not in vertex_map:
-                            vertex_map[pos] = len(vertices)
-                            vertices.append((float(pos[0]), float(pos[1]), float(pos[2])))
-
-                    # Add faces (simplified: axis-aligned quads → triangles)
-                    # Real marching cubes uses edge interpolation + lookup table
-                    base_idx = len(vertices) - 8
-
-                    # Front face (if needed)
-                    if volume[x, y, z] >= threshold:
-                        triangles.append((base_idx, base_idx + 1, base_idx + 2))
-                        triangles.append((base_idx, base_idx + 2, base_idx + 3))
-
-    return vertices, triangles
+    keep.sort()
+    verts_out = [(key[0], key[1], key[2]) for key in sorted_keys]
+    return verts_out, keep
 
 
-def export_obj(
-    vertices: List[Tuple[float, float, float]],
-    triangles: List[Tuple[int, int, int]],
-    filepath: Path,
-) -> None:
-    """Export mesh to Wavefront OBJ format."""
-    with open(filepath, "w") as f:
-        f.write("# Digital Twin Cortex - Mesh Export\n")
-        f.write(f"# Vertices: {len(vertices)}\n")
-        f.write(f"# Triangles: {len(triangles)}\n\n")
+def _voxel_surface_tris(
+    vol: Any,
+    threshold: float,
+    *,
+    spacing: Tuple[float, float, float] = (1.0, 1.0, 1.0),
+    origin: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+) -> Tuple[Any, Any]:
+    if np is None:
+        raise ImportError("numpy required")
 
-        # Write vertices
-        for x, y, z in vertices:
-            f.write(f"v {x:.6f} {y:.6f} {z:.6f}\n")
+    vol = vol.astype(np.float32, copy=False)
+    inside = vol >= float(threshold)
 
-        f.write("\n")
+    nx, ny, nz = map(int, inside.shape)
+    vmap: Dict[Tuple[int, int, int], int] = {}
+    verts: List[Tuple[float, float, float]] = []
+    tris: List[Tuple[int, int, int]] = []
 
-        # Write faces (OBJ indices are 1-based)
-        for v0, v1, v2 in triangles:
-            f.write(f"f {v0 + 1} {v1 + 1} {v2 + 1}\n")
+    def vid(ix: int, iy: int, iz: int) -> int:
+        key = (ix, iy, iz)
+        idx = vmap.get(key)
+        if idx is not None:
+            return idx
+        x = origin[0] + spacing[0] * ix
+        y = origin[1] + spacing[1] * iy
+        z = origin[2] + spacing[2] * iz
+        idx = len(verts)
+        vmap[key] = idx
+        verts.append((x, y, z))
+        return idx
+
+    for x in range(nx):
+        for y in range(ny):
+            for z in range(nz):
+                if not inside[x, y, z]:
+                    continue
+
+                if x == 0 or not inside[x - 1, y, z]:
+                    a = vid(x, y, z)
+                    b = vid(x, y + 1, z)
+                    c = vid(x, y + 1, z + 1)
+                    d = vid(x, y, z + 1)
+                    tris.append((a, b, c))
+                    tris.append((a, c, d))
+
+                if x == nx - 1 or not inside[x + 1, y, z]:
+                    a = vid(x + 1, y, z)
+                    b = vid(x + 1, y, z + 1)
+                    c = vid(x + 1, y + 1, z + 1)
+                    d = vid(x + 1, y + 1, z)
+                    tris.append((a, b, c))
+                    tris.append((a, c, d))
+
+                if y == 0 or not inside[x, y - 1, z]:
+                    a = vid(x, y, z)
+                    b = vid(x, y, z + 1)
+                    c = vid(x + 1, y, z + 1)
+                    d = vid(x + 1, y, z)
+                    tris.append((a, b, c))
+                    tris.append((a, c, d))
+
+                if y == ny - 1 or not inside[x, y + 1, z]:
+                    a = vid(x, y + 1, z)
+                    b = vid(x + 1, y + 1, z)
+                    c = vid(x + 1, y + 1, z + 1)
+                    d = vid(x, y + 1, z + 1)
+                    tris.append((a, b, c))
+                    tris.append((a, c, d))
+
+                if z == 0 or not inside[x, y, z - 1]:
+                    a = vid(x, y, z)
+                    b = vid(x + 1, y, z)
+                    c = vid(x + 1, y + 1, z)
+                    d = vid(x, y + 1, z)
+                    tris.append((a, b, c))
+                    tris.append((a, c, d))
+
+                if z == nz - 1 or not inside[x, y, z + 1]:
+                    a = vid(x, y, z + 1)
+                    b = vid(x, y + 1, z + 1)
+                    c = vid(x + 1, y + 1, z + 1)
+                    d = vid(x + 1, y, z + 1)
+                    tris.append((a, b, c))
+                    tris.append((a, c, d))
+
+    verts_arr = np.array(verts, dtype=np.float64)
+    faces_arr = np.array(tris, dtype=np.int64)
+    return verts_arr, faces_arr
 
 
-def export_stl(
-    vertices: List[Tuple[float, float, float]],
-    triangles: List[Tuple[int, int, int]],
-    filepath: Path,
-) -> None:
-    """Export mesh to binary STL format."""
-    with open(filepath, "wb") as f:
-        # Header (80 bytes)
-        header = b"Digital Twin Cortex Mesh Export" + b"\x00" * 49
-        f.write(header)
+def _laplacian_smooth(
+    verts: List[Tuple[float, float, float]],
+    tris: List[Tuple[int, int, int]],
+    *,
+    iterations: int = 5,
+    lam: float = 0.5,
+) -> List[Tuple[float, float, float]]:
+    if iterations <= 0 or not verts or not tris:
+        return verts
 
-        # Triangle count
-        f.write(struct.pack("<I", len(triangles)))
+    n = len(verts)
+    adj: List[List[int]] = [[] for _ in range(n)]
+    for a, b, c in tris:
+        adj[a].append(b)
+        adj[a].append(c)
+        adj[b].append(a)
+        adj[b].append(c)
+        adj[c].append(a)
+        adj[c].append(b)
 
-        # Write triangles
-        for v0, v1, v2 in triangles:
-            p0 = vertices[v0]
-            p1 = vertices[v1]
-            p2 = vertices[v2]
+    for i in range(n):
+        if adj[i]:
+            adj[i] = sorted(set(adj[i]))
 
-            # Compute normal (cross product)
-            v01 = (p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2])
-            v02 = (p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2])
+    cur = [(float(x), float(y), float(z)) for (x, y, z) in verts]
+    for _ in range(iterations):
+        nxt: List[Tuple[float, float, float]] = []
+        for i in range(n):
+            nb = adj[i]
+            if not nb:
+                nxt.append(cur[i])
+                continue
+            sx = sy = sz = 0.0
+            for j in nb:
+                sx += cur[j][0]
+                sy += cur[j][1]
+                sz += cur[j][2]
+            inv = 1.0 / float(len(nb))
+            cx = sx * inv
+            cy = sy * inv
+            cz = sz * inv
+            x, y, z = cur[i]
+            nxt.append((x + lam * (cx - x), y + lam * (cy - y), z + lam * (cz - z)))
+        cur = nxt
 
-            nx = v01[1] * v02[2] - v01[2] * v02[1]
-            ny = v01[2] * v02[0] - v01[0] * v02[2]
-            nz = v01[0] * v02[1] - v01[1] * v02[0]
-
-            # Normalize
-            length = (nx**2 + ny**2 + nz**2) ** 0.5
-            if length > 1e-6:
-                nx, ny, nz = nx / length, ny / length, nz / length
-
-            # Write normal + vertices
-            f.write(struct.pack("<fff", nx, ny, nz))
-            f.write(struct.pack("<fff", *p0))
-            f.write(struct.pack("<fff", *p1))
-            f.write(struct.pack("<fff", *p2))
-
-            # Attribute byte count (unused)
-            f.write(struct.pack("<H", 0))
+    return [(_qf(x), _qf(y), _qf(z)) for (x, y, z) in cur]
 
 
-def export_ply(
-    vertices: List[Tuple[float, float, float]],
-    triangles: List[Tuple[int, int, int]],
-    filepath: Path,
-) -> None:
-    """Export mesh to PLY format (Stanford Polygon File Format)."""
-    with open(filepath, "w") as f:
-        # Header
-        f.write("ply\n")
-        f.write("format ascii 1.0\n")
-        f.write("comment Digital Twin Cortex - Mesh Export\n")
-        f.write(f"element vertex {len(vertices)}\n")
-        f.write("property float x\n")
-        f.write("property float y\n")
-        f.write("property float z\n")
-        f.write(f"element face {len(triangles)}\n")
-        f.write("property list uchar int vertex_indices\n")
-        f.write("end_header\n")
+def _cluster_decimate(
+    verts: List[Tuple[float, float, float]],
+    tris: List[Tuple[int, int, int]],
+    factor: float,
+) -> Tuple[List[Tuple[float, float, float]], List[Tuple[int, int, int]]]:
+    if factor >= 1.0 or not verts or not tris:
+        return verts, tris
+    factor = max(0.05, min(1.0, float(factor)))
 
-        # Write vertices
-        for x, y, z in vertices:
-            f.write(f"{x:.6f} {y:.6f} {z:.6f}\n")
+    xs = [v[0] for v in verts]
+    ys = [v[1] for v in verts]
+    zs = [v[2] for v in verts]
+    minx, maxx = min(xs), max(xs)
+    miny, maxy = min(ys), max(ys)
+    minz, maxz = min(zs), max(zs)
 
-        # Write faces
-        for v0, v1, v2 in triangles:
-            f.write(f"3 {v0} {v1} {v2}\n")
+    target = max(8, int(len(verts) * factor))
+    dx = maxx - minx
+    dy = maxy - miny
+    dz = maxz - minz
+    vol = max(dx * dy * dz, 1e-9)
+    cell = (vol / float(target)) ** (1.0 / 3.0)
+    if cell <= 0.0 or not math.isfinite(cell):
+        cell = 1.0
+
+    buckets: Dict[Tuple[int, int, int], List[int]] = {}
+    for i, (x, y, z) in enumerate(verts):
+        bx = int(math.floor((x - minx) / cell))
+        by = int(math.floor((y - miny) / cell))
+        bz = int(math.floor((z - minz) / cell))
+        key = (bx, by, bz)
+        buckets.setdefault(key, []).append(i)
+
+    keys = sorted(buckets.keys())
+    new_verts: List[Tuple[float, float, float]] = []
+    old_to_new = [-1] * len(verts)
+
+    for key in keys:
+        idxs = buckets[key]
+        idxs.sort()
+        sx = sy = sz = 0.0
+        for i in idxs:
+            sx += verts[i][0]
+            sy += verts[i][1]
+            sz += verts[i][2]
+        inv = 1.0 / float(len(idxs))
+        vx = _qf(sx * inv)
+        vy = _qf(sy * inv)
+        vz = _qf(sz * inv)
+        ni = len(new_verts)
+        new_verts.append((vx, vy, vz))
+        for i in idxs:
+            old_to_new[i] = ni
+
+    new_tris: List[Tuple[int, int, int]] = []
+    for a, b, c in tris:
+        na = old_to_new[a]
+        nb = old_to_new[b]
+        nc = old_to_new[c]
+        if na == nb or nb == nc or na == nc:
+            continue
+        new_tris.append((na, nb, nc))
+
+    new_tris.sort()
+    return new_verts, new_tris
+
+
+def _obj_bytes(
+    verts: List[Tuple[float, float, float]],
+    tris: List[Tuple[int, int, int]],
+) -> bytes:
+    lines: List[str] = []
+    lines.append("# Digital Twin Cortex - Mesh Export\n")
+    lines.append(f"# Vertices: {len(verts)}\n")
+    lines.append(f"# Triangles: {len(tris)}\n\n")
+    for x, y, z in verts:
+        lines.append(f"v {x:.6f} {y:.6f} {z:.6f}\n")
+    lines.append("\n")
+    for a, b, c in tris:
+        lines.append(f"f {a + 1} {b + 1} {c + 1}\n")
+    return "".join(lines).encode("utf-8")
+
+
+def _ply_bytes(
+    verts: List[Tuple[float, float, float]],
+    tris: List[Tuple[int, int, int]],
+) -> bytes:
+    lines: List[str] = []
+    lines.append("ply\n")
+    lines.append("format ascii 1.0\n")
+    lines.append("comment Digital Twin Cortex - Mesh Export\n")
+    lines.append(f"element vertex {len(verts)}\n")
+    lines.append("property float x\nproperty float y\nproperty float z\n")
+    lines.append(f"element face {len(tris)}\n")
+    lines.append("property list uchar int vertex_indices\n")
+    lines.append("end_header\n")
+    for x, y, z in verts:
+        lines.append(f"{x:.6f} {y:.6f} {z:.6f}\n")
+    for a, b, c in tris:
+        lines.append(f"3 {a} {b} {c}\n")
+    return "".join(lines).encode("utf-8")
+
+
+def _stl_bytes(
+    verts: List[Tuple[float, float, float]],
+    tris: List[Tuple[int, int, int]],
+) -> bytes:
+    header = b"Digital Twin Cortex Mesh Export".ljust(80, b"\x00")
+    out = bytearray()
+    out += header
+    out += struct.pack("<I", len(tris))
+
+    for a, b, c in tris:
+        p0 = verts[a]
+        p1 = verts[b]
+        p2 = verts[c]
+        v01 = (p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2])
+        v02 = (p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2])
+
+        nx = v01[1] * v02[2] - v01[2] * v02[1]
+        ny = v01[2] * v02[0] - v01[0] * v02[2]
+        nz = v01[0] * v02[1] - v01[1] * v02[0]
+
+        length = (nx * nx + ny * ny + nz * nz) ** 0.5
+        if length > 1e-12:
+            nx, ny, nz = nx / length, ny / length, nz / length
+        else:
+            nx = ny = nz = 0.0
+
+        out += struct.pack("<fff", float(nx), float(ny), float(nz))
+        out += struct.pack("<fff", float(p0[0]), float(p0[1]), float(p0[2]))
+        out += struct.pack("<fff", float(p1[0]), float(p1[1]), float(p1[2]))
+        out += struct.pack("<fff", float(p2[0]), float(p2[1]), float(p2[2]))
+        out += struct.pack("<H", 0)
+
+    return bytes(out)
 
 
 async def export_mesh(args: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Export segmented anatomy to 3D mesh.
-
-    Args:
-        case_id: Case identifier
-        labels_ref: Reference to labels.anatomy artifact
-        target_organ: Organ to export (or "all" for all organs)
-        format: Output format ("obj", "stl", "ply")
-        smooth: Apply smoothing (default: False)
-        decimate_factor: Mesh decimation factor 0-1 (default: 1.0 = no decimation)
-        output_dir: Optional output directory (default: runtime/meshes/<case_id>)
-
-    Returns:
-        {
-            "mesh_files": [{"organ": str, "path": str, "vertices": int, "triangles": int}],
-            "total_vertices": int,
-            "total_triangles": int
-        }
-    """
     if np is None:
         raise ImportError("numpy required for mesh export. Install: pip install numpy")
 
     case_id = str(args["case_id"])
     labels_ref = dict(args["labels_ref"])
+    labels_hash = str(labels_ref.get("hash", "sha256:0" * 8))
+
     target_organ = str(args.get("target_organ", "all"))
     fmt = str(args.get("format", "obj")).lower()
+    threshold = float(args.get("threshold", 0.5))
     smooth = bool(args.get("smooth", False))
+    smooth_iters = int(args.get("smooth_iterations", 5))
+    smooth_lam = float(args.get("smooth_lambda", 0.5))
     decimate_factor = float(args.get("decimate_factor", 1.0))
-    output_dir = args.get("output_dir")
 
-    if fmt not in ["obj", "stl", "ply"]:
+    if fmt not in ("obj", "stl", "ply"):
         raise ValueError(f"Unsupported format: {fmt}. Use obj, stl, or ply")
 
-    # Setup output directory
-    if output_dir is None:
-        output_dir = Path("runtime") / "meshes" / case_id
-    else:
-        output_dir = Path(output_dir)
+    out_dir = Path(args.get("output_dir") or (Path("runtime") / "meshes" / case_id))
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Load labels artifact (simplified: would read from ArtifactStore)
-    # For now, generate synthetic volume per organ
     label_map = {
         1: "heart",
         2: "lungs",
         3: "liver",
         4: "kidneys",
-        5: "brain"
+        5: "brain",
     }
+    organs = (
+        [target_organ]
+        if target_organ != "all"
+        else [label_map[k] for k in sorted(label_map.keys())]
+    )
 
     mesh_files: List[Dict[str, Any]] = []
     total_verts = 0
     total_tris = 0
 
-    # Generate mesh per organ
-    organs_to_export = [target_organ] if target_organ != "all" else label_map.values()
-
-    for label_id, organ_name in label_map.items():
-        if target_organ != "all" and organ_name != target_organ:
+    for organ in organs:
+        if organ not in label_map.values():
             continue
 
-        # Create synthetic binary volume for this organ
-        # In production: load from labels.anatomy artifact + threshold by label_id
-        volume = np.random.rand(64, 64, 64) > 0.7  # Simplified
-        volume = volume.astype(np.float32)
+        dims = args.get("dims", [64, 64, 64])
+        nx, ny, nz = int(dims[0]), int(dims[1]), int(dims[2])
 
-        # Apply marching cubes
-        vertices, triangles = _marching_cubes_simple(volume, threshold=0.5)
+        seed_material = sha256_bytes(
+            canonical_json_bytes(
+                {
+                    "labels_hash": labels_hash,
+                    "organ": organ,
+                    "threshold": threshold,
+                    "dims": [nx, ny, nz],
+                }
+            )
+        )
+        rng = _rng_from_seed(seed_material)
 
-        if not vertices:
+        vol = np.empty((nx, ny, nz), dtype=np.float32)
+        for x in range(nx):
+            for y in range(ny):
+                for z in range(nz):
+                    vol[x, y, z] = 1.0 if (rng.rand_float() > 0.70) else 0.0
+
+        verts_arr: Any
+        faces_arr: Any
+        if _sk_marching_cubes is not None:
+            verts_arr, faces_arr, _normals, _values = _sk_marching_cubes(
+                np.transpose(vol, (2, 1, 0)), level=threshold
+            )
+            verts_arr = verts_arr[:, [2, 1, 0]]
+        else:
+            verts_arr, faces_arr = _voxel_surface_tris(vol, threshold)
+
+        verts, tris = _canon_mesh(verts_arr, faces_arr, nd=6)
+        if not verts or not tris:
             continue
 
-        # Optional: smooth mesh (simplified: average neighbors)
         if smooth:
-            # In production: use Laplacian smoothing or Taubin smoothing
-            pass
+            verts = _laplacian_smooth(
+                verts, tris, iterations=smooth_iters, lam=smooth_lam
+            )
+            verts_arr2 = np.array(verts, dtype=np.float64)
+            faces_arr2 = np.array(tris, dtype=np.int64)
+            verts, tris = _canon_mesh(verts_arr2, faces_arr2, nd=6)
 
-        # Optional: decimate mesh
         if decimate_factor < 1.0:
-            # In production: use mesh decimation (edge collapse, QEM)
-            target_count = int(len(triangles) * decimate_factor)
-            triangles = triangles[:target_count]
+            verts, tris = _cluster_decimate(verts, tris, decimate_factor)
+            verts_arr3 = np.array(verts, dtype=np.float64)
+            faces_arr3 = np.array(tris, dtype=np.int64)
+            verts, tris = _canon_mesh(verts_arr3, faces_arr3, nd=6)
 
-        # Export mesh
-        filename = f"{organ_name}.{fmt}"
-        filepath = output_dir / filename
+        if not verts or not tris:
+            continue
 
         if fmt == "obj":
-            export_obj(vertices, triangles, filepath)
-        elif fmt == "stl":
-            export_stl(vertices, triangles, filepath)
+            blob = _obj_bytes(verts, tris)
         elif fmt == "ply":
-            export_ply(vertices, triangles, filepath)
+            blob = _ply_bytes(verts, tris)
+        else:
+            blob = _stl_bytes(verts, tris)
 
-        mesh_files.append({
-            "organ": organ_name,
-            "path": str(filepath),
-            "vertices": len(vertices),
-            "triangles": len(triangles)
-        })
+        meta: Dict[str, Any] = {
+            "artifact": "mesh.export",
+            "case_id": case_id,
+            "labels_hash": labels_hash,
+            "organ": organ,
+            "format": fmt,
+            "threshold": threshold,
+            "smooth": smooth,
+            "smooth_iterations": smooth_iters,
+            "smooth_lambda": smooth_lam,
+            "decimate_factor": decimate_factor,
+            "generator": "skimage.marching_cubes"
+            if _sk_marching_cubes is not None
+            else "voxel_surface",
+            "vertices": len(verts),
+            "triangles": len(tris),
+        }
+        mesh_hash = sha256_bytes(
+            canonical_json_bytes(
+                {
+                    "meta": meta,
+                    "bytes_sha256": sha256_bytes(blob),
+                }
+            )
+        )
 
-        total_verts += len(vertices)
-        total_tris += len(triangles)
+        filename = f"{organ}.{fmt}"
+        filepath = out_dir / filename
+        filepath.write_bytes(blob)
+
+        mesh_files.append(
+            {
+                "organ": organ,
+                "path": str(filepath).replace("\\", "/"),
+                "mesh_hash": mesh_hash,
+                "vertices": len(verts),
+                "triangles": len(tris),
+                "meta": meta,
+            }
+        )
+        total_verts += len(verts)
+        total_tris += len(tris)
 
     return {
         "mesh_files": mesh_files,
         "total_vertices": total_verts,
         "total_triangles": total_tris,
-        "output_dir": str(output_dir)
+        "output_dir": str(out_dir).replace("\\", "/"),
     }
 
 
-# Register tool
-def register_mesh_tools(store) -> Dict[str, Any]:
-    """Register mesh export tools."""
-    return {
-        "digital_twin.export_mesh": export_mesh
-    }
+def register_mesh_tools(store: Optional[Any] = None) -> Dict[str, Any]:
+    _ = store
+    return {"digital_twin.export_mesh": export_mesh}

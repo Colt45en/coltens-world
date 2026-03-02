@@ -1,3 +1,4 @@
+/* eslint-disable no-redeclare */
 /**
  * NSG v1.0 Abstract Syntax Tree (AST) Schema
  *
@@ -11,18 +12,18 @@ import { z } from "zod";
  * Core type system for NSG
  */
 export const NSGType = z.enum([
-  "PHO",   // phonetic/phonological
-  "MOR",   // morpheme
-  "LEX",   // lexeme (word-level)
-  "SYN",   // syntax structure
-  "SEM",   // semantic field
-  "PRG",   // pragmatic act
-  "SOC",   // sociolinguistic marker
-  "HIS",   // historical transform
-  "TYP",   // typological class
-  "CMP",   // computational/constraint
-  "UNK",   // unknown (inferred later)
-  "PAIR",  // relationship (for Link)
+  "PHO", // phonetic/phonological
+  "MOR", // morpheme
+  "LEX", // lexeme (word-level)
+  "SYN", // syntax structure
+  "SEM", // semantic field
+  "PRG", // pragmatic act
+  "SOC", // sociolinguistic marker
+  "HIS", // historical transform
+  "TYP", // typological class
+  "CMP", // computational/constraint
+  "UNK", // unknown (inferred later)
+  "PAIR", // relationship (for Link)
 ]);
 
 export type NSGType = z.infer<typeof NSGType>;
@@ -41,7 +42,9 @@ export type Span = z.infer<typeof Span>;
 /**
  * Feature map (always sorted keys in canonical form)
  */
-export const Features = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({});
+export const Features = z
+  .record(z.string(), z.union([z.string(), z.number(), z.boolean()]))
+  .default({});
 
 export type Features = z.infer<typeof Features>;
 

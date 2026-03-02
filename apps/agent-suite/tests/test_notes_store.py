@@ -1,5 +1,10 @@
 from packages.core.policy import default_policy
-from packages.drivers.notes_store.driver import create_note, append_note, list_notes, read_note
+from packages.drivers.notes_store.driver import (
+    create_note,
+    append_note,
+    list_notes,
+    read_note,
+)
 
 
 def test_notes_crud(tmp_path):

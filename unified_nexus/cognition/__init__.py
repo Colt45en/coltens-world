@@ -21,7 +21,9 @@ from .memory import ImprintArchive
 from .operator_runtime import ToolRuntime
 
 
-def backoff_delay_s(attempt: int, *, base: float = 0.05, cap: float = 0.75, jitter: float = 0.20) -> float:
+def backoff_delay_s(
+    attempt: int, *, base: float = 0.05, cap: float = 0.75, jitter: float = 0.20
+) -> float:
     delay = min(cap, base * (2 ** (attempt - 1)))
     jitter_amount = delay * jitter * (random.random() * 2.0 - 1.0)
     return max(0.0, delay + jitter_amount)
@@ -68,13 +70,25 @@ class CognitionLane:
         )
         self.tools.register(
             ToolSpec(name="add", description="Add two numbers: a+b", timeout_s=1.0),
-            lambda args: {"ok": True, "result": float(args.get("a", 0.0)) + float(args.get("b", 0.0))},
-        )
-        self.tools.register(
-            ToolSpec(name="imprint_query", description="Query imprints by kind", timeout_s=2.0),
             lambda args: {
                 "ok": True,
-                "items": [i.__dict__ for i in self.memory.query(kind=args.get("kind"), limit=int(args.get("limit", 10)))],
+                "result": float(args.get("a", 0.0)) + float(args.get("b", 0.0)),
+            },
+        )
+        self.tools.register(
+            ToolSpec(
+                name="imprint_query",
+                description="Query imprints by kind",
+                timeout_s=2.0,
+            ),
+            lambda args: {
+                "ok": True,
+                "items": [
+                    i.__dict__
+                    for i in self.memory.query(
+                        kind=args.get("kind"), limit=int(args.get("limit", 10))
+                    )
+                ],
             },
         )
 
@@ -82,11 +96,17 @@ class CognitionLane:
         tool = str(evt.payload.get("tool", ""))
         args = dict(evt.payload.get("args", {}))
         res = await self.tools.call(tool, args)
-        self._write_imprint("tool_call", evt.trace_id, {"tool": tool, "args": args, "result": res})
+        self._write_imprint(
+            "tool_call", evt.trace_id, {"tool": tool, "args": args, "result": res}
+        )
         await self._emit_via_nucleus(
             event_type="cognition.tool_result",
             trace_id=evt.trace_id,
-            payload={"tool": tool, "result": res, "tool_command_id": evt.payload.get("command_id")},
+            payload={
+                "tool": tool,
+                "result": res,
+                "tool_command_id": evt.payload.get("command_id"),
+            },
             priority="normal",
             timeout_s=1.5,
             max_retries=3,
@@ -94,11 +114,18 @@ class CognitionLane:
 
     async def on_tick(self, evt: V1EventEnvelope) -> None:
         trust = 0.55 + 0.4 * random.random()
-        self.perception.ingest(Modality.TELEMETRY, {"heartbeat": evt.ts_ms, "tick": True}, self.cfg.agent_id, trust)
+        self.perception.ingest(
+            Modality.TELEMETRY,
+            {"heartbeat": evt.ts_ms, "tick": True},
+            self.cfg.agent_id,
+            trust,
+        )
 
         health = self.perception.get_health()
 
-        c_out = self.consciousness.cycle(perception_quality=health.quality, trust_avg=health.avg_trust)
+        c_out = self.consciousness.cycle(
+            perception_quality=health.quality, trust_avg=health.avg_trust
+        )
         self._last_consciousness = c_out
 
         grads = self._make_demo_gradients(health.avg_trust)
@@ -109,7 +136,11 @@ class CognitionLane:
             "tick",
             evt.trace_id,
             {
-                "perception": {"avg_trust": health.avg_trust, "quality": health.quality, "count": health.count},
+                "perception": {
+                    "avg_trust": health.avg_trust,
+                    "quality": health.quality,
+                    "count": health.count,
+                },
                 "consciousness": {
                     "emergence": c_out.emergence,
                     "state": c_out.state.value,
@@ -142,7 +173,9 @@ class CognitionLane:
         branch_penalty = 0.05
 
         health = self.perception.get_health()
-        snap = self._last_consciousness or self.consciousness.cycle(perception_quality=health.quality, trust_avg=health.avg_trust)
+        snap = self._last_consciousness or self.consciousness.cycle(
+            perception_quality=health.quality, trust_avg=health.avg_trust
+        )
         fed = self._last_fed or self.nfal.round([])
 
         decision = self.enforcement.decide_world_spawn(
@@ -184,7 +217,11 @@ class CognitionLane:
         )
 
         if world is None:
-            self._write_imprint("world_spawn_failed", evt.trace_id, {"reason": "auth_failed_or_generation_returned_none"})
+            self._write_imprint(
+                "world_spawn_failed",
+                evt.trace_id,
+                {"reason": "auth_failed_or_generation_returned_none"},
+            )
             await self._emit_via_nucleus(
                 event_type="cognition.world_failed",
                 trace_id=evt.trace_id,
@@ -287,5 +324,9 @@ class CognitionLane:
             trust = max(0.0, min(1.0, avg_trust + (rng.random() - 0.5) * 0.2))
             loss = max(0.0, 0.15 + (1.0 - trust) * 0.35 + rng.random() * 0.05)
             gradient = [(rng.random() - 0.5) * 0.2 for _ in range(dim)]
-            grads.append(LocalGradient(agent_id=f"agent_{i}", trust=trust, loss=loss, gradient=gradient))
+            grads.append(
+                LocalGradient(
+                    agent_id=f"agent_{i}", trust=trust, loss=loss, gradient=gradient
+                )
+            )
         return grads

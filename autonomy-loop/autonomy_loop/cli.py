@@ -35,7 +35,9 @@ def _print_json(obj: Any, pretty: bool) -> None:
         print(json.dumps(obj, ensure_ascii=False, indent=2, sort_keys=True))
     else:
         # CI-friendly: single line deterministic JSON
-        print(json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
+        print(
+            json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        )
 
 
 def _parse_since(since: str | None, days: int | None) -> str | None:
@@ -58,7 +60,9 @@ def _parse_since(since: str | None, days: int | None) -> str | None:
 def ingest(
     source_id: str = typer.Option(..., help="Unique source identifier"),
     kind: str = typer.Option("mixed", help="text | code | mixed"),
-    language_hint: str | None = typer.Option(None, help="Language (e.g., TypeScript, Python)"),
+    language_hint: str | None = typer.Option(
+        None, help="Language (e.g., TypeScript, Python)"
+    ),
     ci_json: bool = typer.Option(False, help="Emit single-line JSON (CI-friendly)."),
 ):
     """
@@ -66,7 +70,9 @@ def ingest(
     Output: EvidencePacket JSON to stdout.
     """
     raw = _read_stdin()
-    evidence = build_evidence_packet(raw, source_id, ExtractConfig(kind=kind, language_hint=language_hint))
+    evidence = build_evidence_packet(
+        raw, source_id, ExtractConfig(kind=kind, language_hint=language_hint)
+    )
     _print_json(evidence, pretty=not ci_json)
 
 
@@ -86,12 +92,14 @@ def run_batch(
     Output: Complete bundle (Evidence + Lexicon + Runes + ValidatedPlan + DecisionRecord).
     """
     raw = _read_stdin()
-    evidence = build_evidence_packet(raw, source_id, ExtractConfig(kind=kind, language_hint=language_hint))
+    evidence = build_evidence_packet(
+        raw, source_id, ExtractConfig(kind=kind, language_hint=language_hint)
+    )
     lex = build_lexicon_entries(evidence)
     runes = build_rune_rows(evidence)
     validated = run_gates(evidence, lex, runes)
 
-    decision = { # type: ignore
+    decision = {  # type: ignore
         "schema_version": "1.0.0",
         "decision_id": stable_id("decision", evidence["batch_id"], prefix="dec"),
         "batch_id": evidence["batch_id"],
@@ -118,26 +126,34 @@ def run_batch(
     for r in runes:
         tag = r.get("process_tag", "unknown_tag")
         if fail_on_unknown_tag and tag == "unknown_tag":
-            taxonomy_violations.append({"rune_id": r.get("rune_id"), "process_tag": tag})
+            taxonomy_violations.append(
+                {"rune_id": r.get("rune_id"), "process_tag": tag}
+            )
             continue
         if not is_process_tag_allowed(con, tag):
-            taxonomy_violations.append({"rune_id": r.get("rune_id"), "process_tag": tag})
+            taxonomy_violations.append(
+                {"rune_id": r.get("rune_id"), "process_tag": tag}
+            )
     if taxonomy_violations:
         # This is a governance failure: we produced a tag not in registry and not unknown_tag.
         # Or unknown_tag is disallowed (tight governance mode).
         # Force status to red (hard governance failure).
         validated["status"] = "red"
-        validated["gates"].append({
-            "gate": "taxonomy",
-            "passed": False,
-            "details": taxonomy_violations[:50],
-        })
+        validated["gates"].append(
+            {
+                "gate": "taxonomy",
+                "passed": False,
+                "details": taxonomy_violations[:50],
+            }
+        )
     else:
-        validated["gates"].append({
-            "gate": "taxonomy",
-            "passed": True,
-            "details": [],
-        })
+        validated["gates"].append(
+            {
+                "gate": "taxonomy",
+                "passed": True,
+                "details": [],
+            }
+        )
 
     insert_batch(con, evidence, validated, decision)
 
@@ -150,7 +166,14 @@ def run_batch(
         lex_id = entry["lexicon_id"]
         for claim in entry["semantics"]["meaning_claims"]:
             if claim.get("review_required", False):
-                review_id = stable_id("review", batch_id, "lexicon", lex_id, claim["claim_id"], prefix="rev")
+                review_id = stable_id(
+                    "review",
+                    batch_id,
+                    "lexicon",
+                    lex_id,
+                    claim["claim_id"],
+                    prefix="rev",
+                )
                 insert_review_item(
                     con=con,
                     review_id=review_id,
@@ -167,7 +190,9 @@ def run_batch(
         rune_id = row["rune_id"]
         for claim in row["meaning"]["meaning_claims"]:
             if claim.get("review_required", False):
-                review_id = stable_id("review", batch_id, "rune", rune_id, claim["claim_id"], prefix="rev")
+                review_id = stable_id(
+                    "review", batch_id, "rune", rune_id, claim["claim_id"], prefix="rev"
+                )
                 insert_review_item(
                     con=con,
                     review_id=review_id,
@@ -193,8 +218,12 @@ def run_batch(
 @app.command()
 def weekly_report(
     days: int = typer.Option(7, help="Look back N days"),
-    since: str | None = typer.Option(None, help="ISO8601 timestamp lower bound (overrides --days)."),
-    mode: str = typer.Option("operations", help="operations | rising_action | conflict"),
+    since: str | None = typer.Option(
+        None, help="ISO8601 timestamp lower bound (overrides --days)."
+    ),
+    mode: str = typer.Option(
+        "operations", help="operations | rising_action | conflict"
+    ),
     ci_json: bool = typer.Option(False, help="Emit single-line JSON (CI-friendly)."),
 ):
     """
@@ -202,6 +231,7 @@ def weekly_report(
     Output: WeeklyOpsReport JSON to stdout.
     """
     from .report import weekly_report_from_rows
+
     con = connect(DB_PATH)
     migrate(con)
     seed_taxonomy_process_tags(con, taxonomy_seed_rows())
@@ -211,7 +241,7 @@ def weekly_report(
         lb = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
     cur = con.execute(
         "SELECT validated_plan_json FROM batches WHERE created_at >= ? ORDER BY created_at ASC",
-        (lb,)
+        (lb,),
     )
     rows = []
     for (vp,) in cur.fetchall():
@@ -220,6 +250,7 @@ def weekly_report(
 
     report = weekly_report_from_rows(rows, mode=mode)
     _print_json(report, pretty=not ci_json)
+
 
 @app.command()
 def taxonomy_list(active_only: bool = typer.Option(True, help="Show only active tags")):
@@ -230,17 +261,29 @@ def taxonomy_list(active_only: bool = typer.Option(True, help="Show only active 
     migrate(con)
     seed_taxonomy_process_tags(con, taxonomy_seed_rows())
     if active_only:
-        cur = con.execute("SELECT tag, description, active, created_at FROM taxonomy_process_tags WHERE active = 1 ORDER BY tag ASC")
+        cur = con.execute(
+            "SELECT tag, description, active, created_at FROM taxonomy_process_tags WHERE active = 1 ORDER BY tag ASC"
+        )
     else:
-        cur = con.execute("SELECT tag, description, active, created_at FROM taxonomy_process_tags ORDER BY tag ASC")
-    out = [{"tag": t, "description": d, "active": bool(a), "created_at": c} for (t, d, a, c) in cur.fetchall()]
+        cur = con.execute(
+            "SELECT tag, description, active, created_at FROM taxonomy_process_tags ORDER BY tag ASC"
+        )
+    out = [
+        {"tag": t, "description": d, "active": bool(a), "created_at": c}
+        for (t, d, a, c) in cur.fetchall()
+    ]
     _print_json(out, pretty=True)
+
 
 @app.command()
 def replay_last(
     n: int = typer.Option(25, help="Replay last N batches"),
-    since: str | None = typer.Option(None, help="ISO8601 timestamp lower bound (limits which batches are replayed)."),
-    days: int | None = typer.Option(None, help="Replay only batches in the last N days (alternative to --since)."),
+    since: str | None = typer.Option(
+        None, help="ISO8601 timestamp lower bound (limits which batches are replayed)."
+    ),
+    days: int | None = typer.Option(
+        None, help="Replay only batches in the last N days (alternative to --since)."
+    ),
     fail_on_unknown_tag: bool = typer.Option(
         False,
         help="If set, unknown_tag becomes a taxonomy violation during replay.",
@@ -272,7 +315,7 @@ def replay_last(
     rows = cur.fetchall()
     drift = []
 
-    for (batch_id, ev_json, vp_json) in rows:
+    for batch_id, ev_json, vp_json in rows:
         evidence = json.loads(ev_json)
         prev_vp = json.loads(vp_json)
         prev_hashes = prev_vp.get("hashes", {})
@@ -292,25 +335,38 @@ def replay_last(
                 tax_bad.append({"rune_id": r.get("rune_id"), "process_tag": tag})
 
         if tax_bad:
-            drift.append({
-                "batch_id": batch_id,
-                "type": "taxonomy_violation",
-                "details": tax_bad[:20],
-            })
+            drift.append(
+                {
+                    "batch_id": batch_id,
+                    "type": "taxonomy_violation",
+                    "details": tax_bad[:20],
+                }
+            )
             continue
 
         if vp.get("hashes") != prev_hashes:
-            drift.append({
-                "batch_id": batch_id,
-                "type": "hash_drift",
-                "prev_hashes": prev_hashes,
-                "new_hashes": vp.get("hashes"),
-            })
+            drift.append(
+                {
+                    "batch_id": batch_id,
+                    "type": "hash_drift",
+                    "prev_hashes": prev_hashes,
+                    "new_hashes": vp.get("hashes"),
+                }
+            )
 
     if drift:
-        _print_json({"ok": False, "checked": len(rows), "drift_count": len(drift), "drift": drift}, pretty=not ci_json)
+        _print_json(
+            {
+                "ok": False,
+                "checked": len(rows),
+                "drift_count": len(drift),
+                "drift": drift,
+            },
+            pretty=not ci_json,
+        )
         raise typer.Exit(code=1)
     _print_json({"ok": True, "checked": len(rows)}, pretty=not ci_json)
+
 
 def main():
     """Entry point for CLI."""

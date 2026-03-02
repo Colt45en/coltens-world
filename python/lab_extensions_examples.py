@@ -10,15 +10,16 @@ Demonstrates how to extend LabGenerator with custom labs using various patterns:
 """
 
 from pathlib import Path
+
 from lab_extensions import (
     CustomLabGenerator,
-    RegistryLabGenerator,
     LabMetadata,
     LabSpec,
+    RegistryLabGenerator,
 )
 
-
 # ============= Example 1: Simple Subclassing =============
+
 
 class DataScienceLabGenerator(CustomLabGenerator):
     """
@@ -243,6 +244,7 @@ Learn to create publication-quality visualizations.
 
 # ============= Example 2: Template-Based Generation =============
 
+
 class AlgorithmLabGenerator(RegistryLabGenerator):
     """
     Generator that creates algorithm labs from templates.
@@ -250,100 +252,100 @@ class AlgorithmLabGenerator(RegistryLabGenerator):
     Demonstrates: Use templates to generate multiple similar labs quickly
     """
 
-        def __init__(self):
-            super().__init__()
-            self._add_sorting_labs()
-            self._add_search_labs()
-    
-        def _add_search_labs(self):
-            """Add search algorithm labs."""
-            algorithms = [
-                ("Linear Search", "Scan sequentially", "O(n)"),
-                ("Binary Search", "Divide search space", "O(log n)"),
-            ]
-    
-            for i, (name, desc, complexity) in enumerate(algorithms, 1):
-                lab_id = f"algo_search_{i:02d}_{name.lower().replace(' ', '_')}"
-    
-                spec = LabSpec(
-                    metadata=LabMetadata(
-                        lab_id=lab_id,
-                        title=f"Implement {name}",
-                        description=f"Implement {desc}",
-                        difficulty="intermediate",
-                        duration_hours=2.0,
-                        topics=["algorithms", "searching"],
-                        learning_outcomes=[
-                            f"Understand {name} algorithm",
-                            f"Analyze {complexity} complexity",
-                            "Implement in Python",
-                        ],
-                    ),
-                    main_code=f'''"""
+    def __init__(self):
+        super().__init__()
+        self._add_sorting_labs()
+        self._add_search_labs()
+
+    def _add_search_labs(self):
+        """Add search algorithm labs."""
+        algorithms = [
+            ("Linear Search", "Scan sequentially", "O(n)"),
+            ("Binary Search", "Divide search space", "O(log n)"),
+        ]
+
+        for i, (name, desc, complexity) in enumerate(algorithms, 1):
+            lab_id = f"algo_search_{i:02d}_{name.lower().replace(' ', '_')}"
+
+            spec = LabSpec(
+                metadata=LabMetadata(
+                    lab_id=lab_id,
+                    title=f"Implement {name}",
+                    description=f"Implement {desc}",
+                    difficulty="intermediate",
+                    duration_hours=2.0,
+                    topics=["algorithms", "searching"],
+                    learning_outcomes=[
+                        f"Understand {name} algorithm",
+                        f"Analyze {complexity} complexity",
+                        "Implement in Python",
+                    ],
+                ),
+                main_code=f'''"""
     Lab: {name} Implementation
-    
+
     Algorithm: {name}
     Description: {desc}
     Time Complexity: {complexity}
     """
-    
-    def {name.lower().replace(' ', '_')}(arr, target):
+
+    def {name.lower().replace(" ", "_")}(arr, target):
         """
         Implement {name} algorithm.
-    
+
         Args:
             arr: List of elements
             target: Element to search for
-    
+
         Returns:
             Index of target if found, -1 otherwise
         """
         # TODO: Implement {name}
         pass
-    
+
     if __name__ == "__main__":
         test_arr = [1, 3, 5, 7, 9, 11]
-        result = {name.lower().replace(' ', '_')}(test_arr, 7)
+        result = {name.lower().replace(" ", "_")}(test_arr, 7)
         print(f"Index: {{result}}")
     ''',
-                    test_code=f'''"""Tests for {name} implementation"""
+                test_code=f'''"""Tests for {name} implementation"""
     import pytest
-    
-    def test_{name.lower().replace(' ', '_')}_found():
+
+    def test_{name.lower().replace(" ", "_")}_found():
         """Test when element is found."""
         arr = [1, 3, 5, 7, 9]
         # TODO: Test that target is found
         pass
-    
-    def test_{name.lower().replace(' ', '_')}_not_found():
+
+    def test_{name.lower().replace(" ", "_")}_not_found():
         """Test when element is not found."""
         arr = [1, 3, 5, 7, 9]
         # TODO: Test that -1 is returned
         pass
-    
-    def test_{name.lower().replace(' ', '_')}_empty():
+
+    def test_{name.lower().replace(" ", "_")}_empty():
         """Test empty list."""
-        assert {name.lower().replace(' ', '_')}([], 5) == -1
+        assert {name.lower().replace(" ", "_")}([], 5) == -1
     ''',
-                    readme=f"""# {name} Implementation
-    
+                readme=f"""# {name} Implementation
+
     ## Algorithm Description
     {desc}
-    
+
     ## Complexity Analysis
     - Time: {complexity}
     - Space: O(1)
-    
+
     ## Success Criteria
     - All unit tests pass
     - Student explains time complexity
     - Code is well-commented
     """,
-                )
-    
-                self.register_template_lab(lab_id, spec)
-    
-        def _add_sorting_labs(self):
+            )
+
+            self.register_template_lab(lab_id, spec)
+
+    def _add_sorting_labs(self):
         """Add sorting algorithm labs."""
         algorithms = [
             ("Bubble Sort", "Swap adjacent elements", "O(n²)"),
@@ -376,7 +378,7 @@ Description: {desc}
 Time Complexity: {complexity}
 """
 
-def {name.lower().replace(' ', '_')}(arr):
+def {name.lower().replace(" ", "_")}(arr):
     """
     Implement {name} algorithm.
 
@@ -391,30 +393,30 @@ def {name.lower().replace(' ', '_')}(arr):
 
 if __name__ == "__main__":
     test_arr = [64, 34, 25, 12, 22, 11, 90]
-    result = {name.lower().replace(' ', '_')}(test_arr)
+    result = {name.lower().replace(" ", "_")}(test_arr)
     print(f"Sorted: {{result}}")
 ''',
                 test_code=f'''"""Tests for {name} implementation"""
 import pytest
 
-def test_{name.lower().replace(' ', '_')}_basic():
+def test_{name.lower().replace(" ", "_")}_basic():
     """Test basic sorting."""
     arr = [3, 1, 4, 1, 5, 9, 2, 6]
     # TODO: Test that result is sorted
     pass
 
-def test_{name.lower().replace(' ', '_')}_empty():
+def test_{name.lower().replace(" ", "_")}_empty():
     """Test empty list."""
-    assert {name.lower().replace(' ', '_')}([]) == []
+    assert {name.lower().replace(" ", "_")}([]) == []
 
-def test_{name.lower().replace(' ', '_')}_single():
+def test_{name.lower().replace(" ", "_")}_single():
     """Test single element."""
-    assert {name.lower().replace(' ', '_')}([42]) == [42]
+    assert {name.lower().replace(" ", "_")}([42]) == [42]
 
-def test_{name.lower().replace(' ', '_')}_duplicates():
+def test_{name.lower().replace(" ", "_")}_duplicates():
     """Test with duplicate elements."""
     arr = [3, 1, 3, 1, 3]
-    result = {name.lower().replace(' ', '_')}(arr)
+    result = {name.lower().replace(" ", "_")}(arr)
     assert result == [1, 1, 3, 3, 3]
 ''',
                 readme=f"""# {name} Implementation
@@ -437,6 +439,7 @@ def test_{name.lower().replace(' ', '_')}_duplicates():
 
 
 # ============= Example 3: Runtime Registration =============
+
 
 class PluggableLabGenerator(RegistryLabGenerator):
     """
@@ -508,11 +511,13 @@ def test_std_dev():
     gen.register_lab("stat01_basic", my_statistics_lab, metadata)
 
     print("Registered lab: stat01_basic")
-    print(f"Total labs: {len(gen.labs)}")
+    labs: dict[str, dict[str, str]] = gen.labs  # type: ignore[assignment]
+    print(f"Total labs: {len(labs)}")
     print(f"Lab metadata: {gen.get_lab_metadata('stat01_basic')}")
 
 
 # ============= Example 4: Custom Validation Hooks =============
+
 
 class ValidatingLabGenerator(CustomLabGenerator):
     """
@@ -523,7 +528,7 @@ class ValidatingLabGenerator(CustomLabGenerator):
 
     def __init__(self):
         super().__init__()
-        self.generation_log = []
+        self.generation_log: list[str] = []
 
     def _validate_lab(self, lab_id: str, lab_files: dict[str, str]) -> None:
         """Custom validation with stricter requirements."""
@@ -591,13 +596,12 @@ def example_4_validation_hooks():
 
 # ============= Example 5: Filtering & Discovery =============
 
+
 def example_5_filtering():
     """Example 5: Filter labs by criteria."""
     print("\n" + "=" * 60)
     print("Example 5: Lab Filtering & Discovery")
     print("=" * 60)
-
-    gen = AlgorithmLabGenerator()
 
     # Create extended generator with metadata
     extended = RegistryLabGenerator()
@@ -647,6 +651,7 @@ def example_5_filtering():
 
 # ============= Example 6: Export & Discovery =============
 
+
 def example_6_export():
     """Example 6: Export lab registry."""
     print("\n" + "=" * 60)
@@ -668,6 +673,7 @@ def example_6_export():
 
 # ============= Main Entry Point =============
 
+
 def main():
     """Run all examples."""
     print("\n" + "=" * 60)
@@ -677,13 +683,15 @@ def main():
     # Example 1: Simple subclassing
     print("\n1. Simple Subclassing")
     gen1 = DataScienceLabGenerator()
-    print(f"   Created generator with {len(gen1.labs)} labs")
+    labs1: dict[str, dict[str, str]] = gen1.labs  # type: ignore[assignment]
+    print(f"   Created generator with {len(labs1)} labs")
     print("   Base labs + Custom: pandas, cleaning, visualization")
 
     # Example 2: Template-based
     print("\n2. Template-Based Generation")
     gen2 = AlgorithmLabGenerator()
-    algo_labs = [lab for lab in gen2.labs.keys() if lab.startswith("algo_")]
+    labs2: dict[str, dict[str, str]] = gen2.labs  # type: ignore[assignment]
+    algo_labs = [lab for lab in labs2.keys() if lab.startswith("algo_")]
     print(f"   Created {len(algo_labs)} algorithm labs from templates")
 
     # Example 3: Runtime registration

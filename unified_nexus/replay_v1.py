@@ -24,7 +24,9 @@ class EventRecord(TypedDict, total=False):
 
 def read_events(log_path: Path) -> List[EventRecord]:
     events: List[EventRecord] = []
-    for line_no, line in enumerate(log_path.read_text(encoding="utf-8").splitlines(), start=1):
+    for line_no, line in enumerate(
+        log_path.read_text(encoding="utf-8").splitlines(), start=1
+    ):
         if not line.strip():
             continue
         try:
@@ -75,13 +77,20 @@ def replay(log_path: Path, out_db: Path) -> Dict[str, Any]:
 
         chain_prev = str(rec.get("chain_prev", ""))
         if chain_prev != prev_chain:
-            raise ValueError(f"Chain break at line {idx}: expected {prev_chain}, got {chain_prev}")
+            raise ValueError(
+                f"Chain break at line {idx}: expected {prev_chain}, got {chain_prev}"
+            )
 
         event_type_value = rec.get("event_type")
         ts_ms_value = rec.get("ts_ms")
         trace_id_value = rec.get("trace_id")
         event_id_value = rec.get("event_id")
-        if event_type_value is None or ts_ms_value is None or trace_id_value is None or event_id_value is None:
+        if (
+            event_type_value is None
+            or ts_ms_value is None
+            or trace_id_value is None
+            or event_id_value is None
+        ):
             raise ValueError(f"Missing required event fields at line {idx}")
 
         payload = dict(rec.get("payload", {}))
@@ -102,7 +111,9 @@ def replay(log_path: Path, out_db: Path) -> Dict[str, Any]:
                 f"Chain hash mismatch at line {idx}: expected {computed_chain}, got {chain_curr}"
             )
 
-        payload_json = json.dumps(envelope.payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        payload_json = json.dumps(
+            envelope.payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
         conn.execute(
             """
             INSERT INTO v1_events(seq, event_id, event_type, ts_ms, trace_id, payload_json, chain_prev, chain_curr)
@@ -136,7 +147,9 @@ def replay(log_path: Path, out_db: Path) -> Dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Replay v1 Nexus event log into a fresh SQLite DB")
+    parser = argparse.ArgumentParser(
+        description="Replay v1 Nexus event log into a fresh SQLite DB"
+    )
     parser.add_argument("--log", required=True, help="Path to runtime/events.v1.ndjson")
     parser.add_argument("--out-db", required=True, help="Output SQLite DB path")
     args = parser.parse_args()

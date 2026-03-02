@@ -47,10 +47,12 @@ except Exception:  # pragma: no cover
 Prophet = None
 try:  # pragma: no cover
     from prophet import Prophet as _Prophet  # type: ignore
+
     Prophet = _Prophet
 except Exception:  # pragma: no cover
     try:
         from fbprophet import Prophet as _Prophet  # type: ignore
+
         Prophet = _Prophet
     except Exception:
         Prophet = None  # type: ignore
@@ -65,8 +67,11 @@ except Exception:  # pragma: no cover
 # BusEnvelope v1 + Append-only Notes sink
 # =============================================================================
 
+
 def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    return (
+        datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    )
 
 
 def canonical_json(obj: Any) -> str:
@@ -153,9 +158,11 @@ class BusEnvelopeLogger:
 # Idle Autonomy Guard — Command/Effect Split
 # =============================================================================
 
+
 @dataclass
 class IdleGuardState:
     """Persistent guard state for any autonomous idle loop."""
+
     mode: str
     prompted: bool
     prompt_text: str
@@ -171,7 +178,13 @@ class IdleCommandReader:
     Reads idle.command.v1 envelopes from notes/events.jsonl.
     Uses a cursor file storing byteOffset so it only processes new commands.
     """
-    def __init__(self, *, events_path: str = "notes/events.jsonl", cursor_path: str = "notes/idle_cursor.json"):
+
+    def __init__(
+        self,
+        *,
+        events_path: str = "notes/events.jsonl",
+        cursor_path: str = "notes/idle_cursor.json",
+    ):
         self.events_path = Path(events_path)
         self.cursor_path = Path(cursor_path)
         self.cursor_path.parent.mkdir(parents=True, exist_ok=True)
@@ -187,7 +200,9 @@ class IdleCommandReader:
             return 0
 
     def _save_offset(self) -> None:
-        self.cursor_path.write_text(json.dumps({"byteOffset": self._offset}, indent=2), encoding="utf-8")
+        self.cursor_path.write_text(
+            json.dumps({"byteOffset": self._offset}, indent=2), encoding="utf-8"
+        )
 
     def read_new_commands(self) -> List[Dict[str, Any]]:
         if not self.events_path.exists():
@@ -322,7 +337,11 @@ class IdleAutonomyGuard:
         self.bus.append_jsonl(env)
         self.bus.append_md(
             title=f"idle.effect.v1:{status}",
-            bullets=[f"mode={self.mode}", f"envelopeId={env['id'][:12]}", f"payload={payload}"],
+            bullets=[
+                f"mode={self.mode}",
+                f"envelopeId={env['id'][:12]}",
+                f"payload={payload}",
+            ],
         )
         return env["id"]
 
@@ -343,7 +362,9 @@ class IdleAutonomyGuard:
             self.state.prompted = True
             self.state.prompt_text = text
             self._save_state()
-            self.emit_effect("prompted", {"prompt_text": text, "observedCommandId": observed_id})
+            self.emit_effect(
+                "prompted", {"prompt_text": text, "observedCommandId": observed_id}
+            )
             return
 
         if action == "approve":
@@ -381,10 +402,18 @@ class IdleAutonomyGuard:
             self.state.approval_token = ""
             self.state.approval_expires_ts = 0.0
             self._save_state()
-            self.emit_effect("revoked", {"reason": reason, "observedCommandId": observed_id})
+            self.emit_effect(
+                "revoked", {"reason": reason, "observedCommandId": observed_id}
+            )
             return
 
-        self.emit_effect("blocked", {"reason": f"blocked:unknown_action:{action}", "observedCommandId": observed_id})
+        self.emit_effect(
+            "blocked",
+            {
+                "reason": f"blocked:unknown_action:{action}",
+                "observedCommandId": observed_id,
+            },
+        )
 
     # ---- Gate execution ----
 
@@ -421,7 +450,10 @@ class IdleAutonomyGuard:
         self._save_state()
         self.emit_effect(
             "activated",
-            {"approval_token": self.state.approval_token, "prompt_text": self.state.prompt_text},
+            {
+                "approval_token": self.state.approval_token,
+                "prompt_text": self.state.prompt_text,
+            },
         )
 
 
@@ -429,12 +461,14 @@ class IdleAutonomyGuard:
 # Overseer Nexus — Orchestrator
 # =============================================================================
 
+
 class OverseerNexus:
     """
     Simple agent swarm orchestrator.
     - assign_task(task, agent_type): routes task to first matching agent instance
     - optimize_ai_swarm(): calls self_adjust() on all agents that have it
     """
+
     def __init__(self, agents: List[object]):
         self.agents = list(agents)
         self.task_queue: List[Dict[str, Any]] = []
@@ -470,6 +504,7 @@ class OverseerNexus:
 # =============================================================================
 # PrestAIChat — Cloud/local selection + offline memory
 # =============================================================================
+
 
 class PrestAIChat:
     def __init__(self, api_key: str):
@@ -531,6 +566,7 @@ class PrestAIChat:
 # Agent Stubs
 # =============================================================================
 
+
 class TaskManagerAgent:
     def process_task(self, task: str) -> str:
         return f"TaskManagerAgent processed: {task}"
@@ -558,6 +594,7 @@ class AutoOptimizerAgent:
 # =============================================================================
 # NSQ v6.2 — NovaSynapse
 # =============================================================================
+
 
 @dataclass
 class CompressionRecord:
@@ -621,12 +658,16 @@ class NovaSynapse:
     def _entropy_bytes(self, b: bytes) -> float:
         if not b:
             return 0.0
-        counts = np.bincount(np.frombuffer(b, dtype=np.uint8), minlength=256).astype(np.float64)
+        counts = np.bincount(np.frombuffer(b, dtype=np.uint8), minlength=256).astype(
+            np.float64
+        )
         probs = counts / counts.sum()
         nonzero = probs[probs > 0]
         return float(-np.sum(nonzero * np.log2(nonzero)))
 
-    def _compress_zlib(self, payload: bytes, level: int = 6) -> Tuple[bytes, float, float]:
+    def _compress_zlib(
+        self, payload: bytes, level: int = 6
+    ) -> Tuple[bytes, float, float]:
         pre_entropy = self._entropy_bytes(payload)
         c = zlib.compress(payload, level=level)
         post_entropy = self._entropy_bytes(c)
@@ -637,7 +678,11 @@ class NovaSynapse:
         mean = float(np.mean(x))
         scores = (x - mean).reshape(-1, 1).astype(np.float64)
         components = np.array([[1.0]], dtype=np.float64)
-        self._pca_params = {"mean": mean, "components": components, "orig_len": int(len(x))}
+        self._pca_params = {
+            "mean": mean,
+            "components": components,
+            "orig_len": int(len(x)),
+        }
         return scores
 
     def decompress(self, method: Optional[str] = None) -> np.ndarray:
@@ -654,7 +699,9 @@ class NovaSynapse:
             comps = np.asarray(self._pca_params["components"], dtype=np.float64)
             scores = np.asarray(self.compressed_data, dtype=np.float64)
             recon = (scores @ comps).reshape(-1) + mean
-            return recon[: int(self._pca_params["orig_len"])].astype(np.float64, copy=False)
+            return recon[: int(self._pca_params["orig_len"])].astype(
+                np.float64, copy=False
+            )
         raise ValueError(f"Unknown method for decompress: {m}")
 
     def _append_jsonl(self, rec: CompressionRecord) -> None:
@@ -692,7 +739,9 @@ class NovaSynapse:
             self.last_method = "zlib"
             chosen = "zlib"
             ratio = float(z_ratio)
-            rec = CompressionRecord(self._iter, "zlib", ratio, float(z_pre), float(z_post), 1)
+            rec = CompressionRecord(
+                self._iter, "zlib", ratio, float(z_pre), float(z_post), 1
+            )
         else:
             self.compressed_data = scores
             self.last_method = "pca"
@@ -722,7 +771,7 @@ class NovaSynapseAgent:
             out = []
             for i in range(n):
                 m, r = self.ns.auto_compress()
-                out.append(f"iter={i+1} method={m} ratio={r:.6f}")
+                out.append(f"iter={i + 1} method={m} ratio={r:.6f}")
             return "\n".join(out)
         return f"NovaSynapseAgent: unknown command '{cmd}'."
 
@@ -730,6 +779,7 @@ class NovaSynapseAgent:
 # =============================================================================
 # Trend Predictor — BusEnvelope + Notes + State + Tensor embed
 # =============================================================================
+
 
 class TrendPredictor:
     def __init__(
@@ -761,13 +811,23 @@ class TrendPredictor:
     def _compute_change(self, keyword: str, forecast_value: float) -> Dict[str, Any]:
         prev = self._state.get(keyword, {}).get("forecastValue")
         if prev is None:
-            return {"prevForecastValue": None, "deltaForecastValue": None, "pctForecastValue": None}
+            return {
+                "prevForecastValue": None,
+                "deltaForecastValue": None,
+                "pctForecastValue": None,
+            }
         prev = float(prev)
         delta = float(forecast_value - prev)
         pct = None if prev == 0.0 else float((delta / prev) * 100.0)
-        return {"prevForecastValue": prev, "deltaForecastValue": delta, "pctForecastValue": pct}
+        return {
+            "prevForecastValue": prev,
+            "deltaForecastValue": delta,
+            "pctForecastValue": pct,
+        }
 
-    def _update_state(self, keyword: str, forecast_date: str, forecast_value: float) -> None:
+    def _update_state(
+        self, keyword: str, forecast_date: str, forecast_value: float
+    ) -> None:
         self._state[keyword] = {
             "forecastDate": forecast_date,
             "forecastValue": float(forecast_value),
@@ -892,9 +952,17 @@ class TrendPredictor:
             forecast_date = str(forecast.iloc[-1]["ds"].date())
         else:
             forecast_value = float(forecast[-1]["yhat"]) if forecast else 0.0
-            forecast_date = str(forecast[-1]["ds"].date()) if forecast else str(datetime.now().date())
+            forecast_date = (
+                str(forecast[-1]["ds"].date())
+                if forecast
+                else str(datetime.now().date())
+            )
 
-        plot_path = self.plot_forecast(trained.get("model"), forecast, keyword) if plot else None
+        plot_path = (
+            self.plot_forecast(trained.get("model"), forecast, keyword)
+            if plot
+            else None
+        )
         change = self._compute_change(keyword, forecast_value)
 
         is_alert = forecast_value > self.alert_threshold
@@ -973,11 +1041,12 @@ class TrendPredictorAgent:
 # Demos / CLI
 # =============================================================================
 
+
 def demo_nsq() -> None:
     ns = NovaSynapse(1000, memory_file="ai_memory_v6_2.json", seed=42)
     for i in range(10):
         method, ratio = ns.auto_compress()
-        print(f"iter={i+1} method={method} ratio={ratio:.6f}")
+        print(f"iter={i + 1} method={method} ratio={ratio:.6f}")
     ns.save_memory()
     out = ns.export_log("compression_log.json")
     print("Exported log to:", out)
@@ -1022,7 +1091,9 @@ def run_idle_runtime(mode: str = "dream_idle") -> None:
       3. Check if can activate
       4. Mark activated if OK
     """
-    reader = IdleCommandReader(events_path="notes/events.jsonl", cursor_path="notes/idle_cursor.json")
+    reader = IdleCommandReader(
+        events_path="notes/events.jsonl", cursor_path="notes/idle_cursor.json"
+    )
     guard = IdleAutonomyGuard(mode=mode, approval_ttl_seconds=3600)
 
     print(f"[idle] starting runtime for mode={mode}")
@@ -1050,8 +1121,12 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Overseer Nexus AI Core (merged).")
     ap.add_argument("--demo", choices=["nsq", "trend", "overseer"], default=None)
     ap.add_argument("--keyword", type=str, default="AI automation")
-    ap.add_argument("--run-idle", action="store_true", help="Run idle autonomy guard runtime")
-    ap.add_argument("--idle-mode", type=str, default="dream_idle", help="Idle mode name")
+    ap.add_argument(
+        "--run-idle", action="store_true", help="Run idle autonomy guard runtime"
+    )
+    ap.add_argument(
+        "--idle-mode", type=str, default="dream_idle", help="Idle mode name"
+    )
     args = ap.parse_args()
 
     if args.run_idle:
@@ -1063,7 +1138,9 @@ def main() -> None:
     elif args.demo == "trend":
         demo_trend(keyword=args.keyword)
     else:
-        print("Use: python overseer_nexus_ai_core.py --demo [nsq|trend|overseer] --run-idle")
+        print(
+            "Use: python overseer_nexus_ai_core.py --demo [nsq|trend|overseer] --run-idle"
+        )
         print("  --demo nsq        : compression demo")
         print("  --demo trend      : trend prediction")
         print("  --demo overseer   : swarm orchestration")

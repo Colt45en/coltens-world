@@ -46,8 +46,12 @@ class GroundingTask(BaseModel):
     def _validate_box(cls, v: Optional[Box]) -> Optional[Box]:
         if v is None:
             return None
-        x1, y1, x2, y2 = (clamp_norm_int(int(v[0])), clamp_norm_int(int(v[1])),
-                          clamp_norm_int(int(v[2])), clamp_norm_int(int(v[3])))
+        x1, y1, x2, y2 = (
+            clamp_norm_int(int(v[0])),
+            clamp_norm_int(int(v[1])),
+            clamp_norm_int(int(v[2])),
+            clamp_norm_int(int(v[3])),
+        )
         if x1 > x2:
             raise ValueError("target_box must satisfy x1<=x2")
         if y1 > y2:

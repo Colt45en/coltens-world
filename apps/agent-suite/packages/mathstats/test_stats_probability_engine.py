@@ -19,6 +19,7 @@ from packages.mathstats.stats_probability_engine import (
 # Statistics Tests
 # =========================
 
+
 def test_percentile_empty_raises():
     """Percentile on empty data should raise ValueError"""
     try:
@@ -83,7 +84,9 @@ def test_rng_determinism_poisson():
     rng2 = random.Random(456)
     samples1 = RandomGenerator.poisson(lambd=5.0, size=10, rng=rng1)
     samples2 = RandomGenerator.poisson(lambd=5.0, size=10, rng=rng2)
-    assert samples1 == samples2, f"Poisson RNG not deterministic: {samples1} vs {samples2}"
+    assert samples1 == samples2, (
+        f"Poisson RNG not deterministic: {samples1} vs {samples2}"
+    )
 
 
 def test_beta_special_function_bounds():
@@ -96,7 +99,9 @@ def test_beta_special_function_bounds():
     ]
     for a, b, x in test_cases:
         result = _Special.reg_incomplete_beta(x, a, b)
-        assert 0.0 <= result <= 1.0, f"Beta out of bounds: {result} for a={a}, b={b}, x={x}"
+        assert 0.0 <= result <= 1.0, (
+            f"Beta out of bounds: {result} for a={a}, b={b}, x={x}"
+        )
         # monotonicity: increasing in x
         if x > 0.1:
             result_left = _Special.reg_incomplete_beta(x - 0.1, a, b)
@@ -116,7 +121,7 @@ def test_gamma_special_function_bounds():
         q = _Special.reg_upper_gamma(a, x)
         assert 0.0 <= p <= 1.0, f"Lower gamma out of bounds: {p}"
         assert 0.0 <= q <= 1.0, f"Upper gamma out of bounds: {q}"
-        assert abs(p + q - 1.0) < 1e-10, f"P + Q should equal 1: {p} + {q} = {p+q}"
+        assert abs(p + q - 1.0) < 1e-10, f"P + Q should equal 1: {p} + {q} = {p + q}"
 
 
 def test_t_test_one_sample_computation():
@@ -139,7 +144,9 @@ def test_chi_squared_goodness_of_fit():
 def test_binomial_rng_bounds():
     """Binomial RNG should respect [0,n] bounds"""
     samples = RandomGenerator.binomial(n=10, p=0.5, size=100)
-    assert all(0 <= s <= 10 for s in samples), f"Binomial samples out of bounds: {samples}"
+    assert all(0 <= s <= 10 for s in samples), (
+        f"Binomial samples out of bounds: {samples}"
+    )
 
 
 def test_exponential_rng_positive():

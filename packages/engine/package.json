@@ -38,6 +38,14 @@
       "import": "./dist/engine/src/contracts/tool_call.js",
       "types": "./dist/engine/src/contracts/tool_call.d.ts"
     },
+    "./contracts/sigil": {
+      "import": "./dist/engine/src/contracts/sigil/index.js",
+      "types": "./dist/engine/src/contracts/sigil/index.d.ts"
+    },
+    "./contracts/sigil/sigil.compile.v1": {
+      "import": "./dist/engine/src/contracts/sigil/sigil.compile.v1.js",
+      "types": "./dist/engine/src/contracts/sigil/sigil.compile.v1.d.ts"
+    },
     "./contracts/physics": {
       "import": "./dist/engine/src/contracts/physics/index.js",
       "types": "./dist/engine/src/contracts/physics/index.d.ts"
@@ -69,6 +77,18 @@
     "./world": {
       "import": "./dist/engine/src/world/index.js",
       "types": "./dist/engine/src/world/index.d.ts"
+    },
+    "./runtime/sigil": {
+      "import": "./dist/engine/src/runtime/sigil/index.js",
+      "types": "./dist/engine/src/runtime/sigil/index.d.ts"
+    },
+    "./runtime/sigil/sigil-compiler.v1": {
+      "import": "./dist/engine/src/runtime/sigil/sigil-compiler.v1.js",
+      "types": "./dist/engine/src/runtime/sigil/sigil-compiler.v1.d.ts"
+    },
+    "./runtime/sigil/sigil-tool.compile.v1": {
+      "import": "./dist/engine/src/runtime/sigil/sigil-tool.compile.v1.js",
+      "types": "./dist/engine/src/runtime/sigil/sigil-tool.compile.v1.d.ts"
     }
   },
   "scripts": {
@@ -77,7 +97,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@we/contracts": "workspace:*",
+    "@world-engine/contracts": "workspace:*",
     "@world-engine/protocol": "workspace:*",
     "@world-engine/bus": "workspace:*",
     "@world-engine/physics-contract": "workspace:*",

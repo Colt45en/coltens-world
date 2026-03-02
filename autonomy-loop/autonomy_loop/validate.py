@@ -29,7 +29,9 @@ def determinism_hash(obj: Any) -> str:
     return content_hash(canonical_json(obj))
 
 
-def _validate_schemas(evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]) -> dict[str, Any]:
+def _validate_schemas(
+    evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]
+) -> dict[str, Any]:
     """Gate 1: Schema validation."""
     errors: list[str] = []
     errors += schema_validate("EvidencePacket", evidence)
@@ -45,7 +47,9 @@ def _validate_schemas(evidence: dict[str, Any], lex: list[dict[str, Any]], runes
     }
 
 
-def _validate_traceability(evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]) -> dict[str, Any]:
+def _validate_traceability(
+    evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]
+) -> dict[str, Any]:
     """Gate 2: Traceability (batch_id + source_id propagation)."""
     trace_ok = True
     for item in lex + runes:
@@ -64,7 +68,9 @@ def _validate_traceability(evidence: dict[str, Any], lex: list[dict[str, Any]], 
     }
 
 
-def _compute_determinism_hashes(evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, str]]:
+def _compute_determinism_hashes(
+    evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]
+) -> tuple[dict[str, Any], dict[str, str]]:
     """Gate 3: Determinism (hashes)."""
     hashes = {
         "evidence_hash": determinism_hash(evidence),
@@ -79,7 +85,9 @@ def _compute_determinism_hashes(evidence: dict[str, Any], lex: list[dict[str, An
     return gate_result, hashes
 
 
-def _validate_confidence(lex: list[dict[str, Any]], runes: list[dict[str, Any]]) -> dict[str, Any]:
+def _validate_confidence(
+    lex: list[dict[str, Any]], runes: list[dict[str, Any]]
+) -> dict[str, Any]:
     """Gate 4: Confidence policy (either decent mean or review queue populated)."""
     confidences = []
     review_required_count = 0
@@ -100,18 +108,25 @@ def _validate_confidence(lex: list[dict[str, Any]], runes: list[dict[str, Any]])
     return {
         "gate": "confidence",
         "passed": confidence_ok,
-        "details": [{
-            "mean_confidence": round(mean_conf, 4),
-            "review_required_count": review_required_count,
-            "total_claims": len(confidences),
-        }],
+        "details": [
+            {
+                "mean_confidence": round(mean_conf, 4),
+                "review_required_count": review_required_count,
+                "total_claims": len(confidences),
+            }
+        ],
     }
 
 
 def _compute_status(gate_results: list[dict[str, Any]]) -> str:
     """Compute status: hard fail (schema, traceability) or soft warn (confidence)."""
-    hard_fail = any(g["gate"] in ("schema", "traceability") and not g["passed"] for g in gate_results)
-    soft_warn = any(g["gate"] in ("confidence",) and not g["passed"] for g in gate_results)
+    hard_fail = any(
+        g["gate"] in ("schema", "traceability") and not g["passed"]
+        for g in gate_results
+    )
+    soft_warn = any(
+        g["gate"] in ("confidence",) and not g["passed"] for g in gate_results
+    )
 
     if hard_fail:
         return "red"
@@ -121,9 +136,9 @@ def _compute_status(gate_results: list[dict[str, Any]]) -> str:
         return "green"
 
 
-def run_gates(evidence: dict[str, Any],
-              lex: list[dict[str, Any]],
-              runes: list[dict[str, Any]]) -> dict[str, Any]:
+def run_gates(
+    evidence: dict[str, Any], lex: list[dict[str, Any]], runes: list[dict[str, Any]]
+) -> dict[str, Any]:
     """
     Analyst: Run all gates. Status is COMPUTED FROM GATES ONLY (no vibes).
     """

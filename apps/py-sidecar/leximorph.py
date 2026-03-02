@@ -85,7 +85,9 @@ def extract_identifiers_with_spans(text: str) -> list[tuple[str, int, int]]:
 
 
 def extract_html_tags_with_spans(text: str) -> list[tuple[str, int, int]]:
-    return [(m.group(0), m.start(), m.end()) for m in _HTML_TAG_SNIPPET_RE.finditer(text)]
+    return [
+        (m.group(0), m.start(), m.end()) for m in _HTML_TAG_SNIPPET_RE.finditer(text)
+    ]
 
 
 def detect_identifier_style(s: str) -> str:
@@ -174,25 +176,120 @@ class AnalyzerRegistry:
 _DATA_DIR = Path(__file__).resolve().parent / "data" / "leximorph"
 
 DEFAULT_PREFIXES = [
-    "anti", "auto", "bi", "co", "counter", "de", "dis", "down", "extra",
-    "hyper", "il", "im", "in", "inter", "ir", "micro", "mis", "mono",
-    "multi", "non", "over", "post", "pre", "pro", "re", "semi", "sub",
-    "super", "trans", "tri", "ultra", "un", "under", "up",
+    "anti",
+    "auto",
+    "bi",
+    "co",
+    "counter",
+    "de",
+    "dis",
+    "down",
+    "extra",
+    "hyper",
+    "il",
+    "im",
+    "in",
+    "inter",
+    "ir",
+    "micro",
+    "mis",
+    "mono",
+    "multi",
+    "non",
+    "over",
+    "post",
+    "pre",
+    "pro",
+    "re",
+    "semi",
+    "sub",
+    "super",
+    "trans",
+    "tri",
+    "ultra",
+    "un",
+    "under",
+    "up",
 ]
 
 DEFAULT_SUFFIXES = [
-    "ability", "able", "ably", "acy", "al", "ally", "ance", "ant", "ary",
-    "ation", "ative", "ed", "en", "ence", "ent", "er", "ers", "ery",
-    "es", "est", "ful", "hood", "ible", "ibly", "ic", "ical", "ically",
-    "ing", "ion", "ish", "ism", "ist", "ity", "ive", "ization", "ize",
-    "less", "ly", "ment", "ness", "or", "ous", "ously", "s", "ship", "tion",
-    "ward", "wards", "y",
+    "ability",
+    "able",
+    "ably",
+    "acy",
+    "al",
+    "ally",
+    "ance",
+    "ant",
+    "ary",
+    "ation",
+    "ative",
+    "ed",
+    "en",
+    "ence",
+    "ent",
+    "er",
+    "ers",
+    "ery",
+    "es",
+    "est",
+    "ful",
+    "hood",
+    "ible",
+    "ibly",
+    "ic",
+    "ical",
+    "ically",
+    "ing",
+    "ion",
+    "ish",
+    "ism",
+    "ist",
+    "ity",
+    "ive",
+    "ization",
+    "ize",
+    "less",
+    "ly",
+    "ment",
+    "ness",
+    "or",
+    "ous",
+    "ously",
+    "s",
+    "ship",
+    "tion",
+    "ward",
+    "wards",
+    "y",
 ]
 
 DEFAULT_ROOTS = [
-    "believe", "build", "write", "code", "struct", "press", "compute", "form",
-    "act", "logic", "narrate", "view", "move", "place", "learn", "lock",
-    "kind", "happy", "run", "use", "name", "user", "type", "script", "style",
+    "believe",
+    "build",
+    "write",
+    "code",
+    "struct",
+    "press",
+    "compute",
+    "form",
+    "act",
+    "logic",
+    "narrate",
+    "view",
+    "move",
+    "place",
+    "learn",
+    "lock",
+    "kind",
+    "happy",
+    "run",
+    "use",
+    "name",
+    "user",
+    "type",
+    "script",
+    "style",
 ]
 
 DEFAULT_EXCEPTIONS: dict[str, dict[str, Any]] = {
@@ -204,8 +301,18 @@ DEFAULT_EXCEPTIONS: dict[str, dict[str, Any]] = {
         "root": "lock",
         "suffix": "-able",
         "candidates": [
-            {"prefix": "un-", "root": "lock", "suffix": "-able", "note": "can be unlocked"},
-            {"prefix": None, "root": "unlock", "suffix": "-able", "note": "able to unlock"},
+            {
+                "prefix": "un-",
+                "root": "lock",
+                "suffix": "-able",
+                "note": "can be unlocked",
+            },
+            {
+                "prefix": None,
+                "root": "unlock",
+                "suffix": "-able",
+                "note": "able to unlock",
+            },
         ],
         "review_required": True,
     },
@@ -245,7 +352,9 @@ def _load_exception_map() -> dict[str, dict[str, Any]]:
     return dict(DEFAULT_EXCEPTIONS)
 
 
-def _best_affix_matches(word: str, candidates: Sequence[str], is_prefix: bool) -> list[str]:
+def _best_affix_matches(
+    word: str, candidates: Sequence[str], is_prefix: bool
+) -> list[str]:
     w = word.lower()
     matches: list[str] = []
     for c in candidates:
@@ -285,7 +394,9 @@ class EnglishMorphAnalyzer:
     def __init__(self) -> None:
         self.prefixes = _load_seed_list("english_prefixes.json", DEFAULT_PREFIXES)
         self.suffixes = _load_seed_list("english_suffixes.json", DEFAULT_SUFFIXES)
-        self.known_roots = set(_load_seed_list("english_roots_seed.json", DEFAULT_ROOTS))
+        self.known_roots = set(
+            _load_seed_list("english_roots_seed.json", DEFAULT_ROOTS)
+        )
         self.exceptions = _load_exception_map()
 
     def supports(self, language: str, kind: str) -> bool:
@@ -308,11 +419,13 @@ class EnglishMorphAnalyzer:
             breakdown["alpha_only"] = 1
         return score, breakdown
 
-    def _candidate(self, word: str, prefix: str | None, suffix: str | None) -> dict[str, Any]:
+    def _candidate(
+        self, word: str, prefix: str | None, suffix: str | None
+    ) -> dict[str, Any]:
         core = word
         rule_hits: list[str] = []
         if prefix and core.startswith(prefix):
-            core = core[len(prefix):]
+            core = core[len(prefix) :]
             rule_hits.append("prefix_split")
         if suffix and core.endswith(suffix):
             core = core[: -len(suffix)]
@@ -324,7 +437,12 @@ class EnglishMorphAnalyzer:
         for variant, tag in _normalize_root_variants(core):
             sc, bd = self._score_root(variant)
             if sc > best_score:
-                best_root, best_score, best_breakdown, root_norm_rule = variant, sc, bd, tag
+                best_root, best_score, best_breakdown, root_norm_rule = (
+                    variant,
+                    sc,
+                    bd,
+                    tag,
+                )
         if root_norm_rule != "raw":
             rule_hits.append(root_norm_rule)
         return {
@@ -359,7 +477,11 @@ class EnglishMorphAnalyzer:
 
         exc = self.exceptions.get(lower)
         if exc:
-            parts = {"prefix": exc.get("prefix"), "root": exc.get("root"), "suffix": exc.get("suffix")}
+            parts = {
+                "prefix": exc.get("prefix"),
+                "root": exc.get("root"),
+                "suffix": exc.get("suffix"),
+            }
             review_required = bool(exc.get("review_required", False))
             return AnalyzedEntry(
                 entry=raw,
@@ -378,7 +500,9 @@ class EnglishMorphAnalyzer:
             )
 
         prefix_candidates = [None] + _best_affix_matches(lower, self.prefixes, True)[:4]
-        suffix_candidates = [None] + _best_affix_matches(lower, self.suffixes, False)[:6]
+        suffix_candidates = [None] + _best_affix_matches(lower, self.suffixes, False)[
+            :6
+        ]
         for forced in ("ation", "ization", "tion", "ing", "ness"):
             if lower.endswith(forced) and forced not in suffix_candidates:
                 suffix_candidates.append(forced)
@@ -398,7 +522,12 @@ class EnglishMorphAnalyzer:
             candidates = [self._candidate(lower, None, None)]
 
         candidates.sort(
-            key=lambda c: (c["score"], 1 if c["prefix"] else 0, 1 if c["suffix"] else 0, len(c["root"] or "")),
+            key=lambda c: (
+                c["score"],
+                1 if c["prefix"] else 0,
+                1 if c["suffix"] else 0,
+                len(c["root"] or ""),
+            ),
             reverse=True,
         )
         best = candidates[0]
@@ -413,13 +542,21 @@ class EnglishMorphAnalyzer:
         if len(best["root"] or "") < 3:
             base_conf -= 0.2
         confidence = max(0.0, min(1.0, round(base_conf, 4)))
-        review_required = confidence < DEFAULT_REVIEW_CONFIDENCE or ambiguity_delta <= 1 or len(best["root"] or "") < 3
+        review_required = (
+            confidence < DEFAULT_REVIEW_CONFIDENCE
+            or ambiguity_delta <= 1
+            or len(best["root"] or "") < 3
+        )
 
         return AnalyzedEntry(
             entry=raw,
             kind="word",
             language="en",
-            parts={"prefix": best["prefix"], "root": best["root"], "suffix": best["suffix"]},
+            parts={
+                "prefix": best["prefix"],
+                "root": best["root"],
+                "suffix": best["suffix"],
+            },
             meta={
                 "normalized": lower,
                 "confidence": confidence,
@@ -443,20 +580,87 @@ class EnglishMorphAnalyzer:
 
 
 JS_TS_KEYWORDS = {
-    "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "do",
-    "else", "enum", "export", "extends", "false", "finally", "for", "function", "if", "import", "in",
-    "instanceof", "new", "null", "return", "super", "switch", "this", "throw", "true", "try", "typeof",
-    "var", "void", "while", "with", "yield", "let", "static", "implements", "interface", "package",
-    "private", "protected", "public", "await", "async", "type", "namespace",
+    "break",
+    "case",
+    "catch",
+    "class",
+    "const",
+    "continue",
+    "debugger",
+    "default",
+    "delete",
+    "do",
+    "else",
+    "enum",
+    "export",
+    "extends",
+    "false",
+    "finally",
+    "for",
+    "function",
+    "if",
+    "import",
+    "in",
+    "instanceof",
+    "new",
+    "null",
+    "return",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "typeof",
+    "var",
+    "void",
+    "while",
+    "with",
+    "yield",
+    "let",
+    "static",
+    "implements",
+    "interface",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "await",
+    "async",
+    "type",
+    "namespace",
 }
 
-DOM_HINTS = {"document", "window", "element", "event", "target", "queryselector", "classname", "innerhtml", "dataset"}
-VERB_PREFIX_HINTS = ("get", "set", "is", "has", "can", "should", "create", "build", "load")
+DOM_HINTS = {
+    "document",
+    "window",
+    "element",
+    "event",
+    "target",
+    "queryselector",
+    "classname",
+    "innerhtml",
+    "dataset",
+}
+VERB_PREFIX_HINTS = (
+    "get",
+    "set",
+    "is",
+    "has",
+    "can",
+    "should",
+    "create",
+    "build",
+    "load",
+)
 
 
 class IdentifierAnalyzer:
     def supports(self, language: str, kind: str) -> bool:
-        return language in ("js", "ts", "javascript", "typescript") and kind in ("identifier", "word")
+        return language in ("js", "ts", "javascript", "typescript") and kind in (
+            "identifier",
+            "word",
+        )
 
     def analyze(self, text: str, language: str, kind: str) -> AnalyzedEntry:
         raw = text.strip()
@@ -476,9 +680,15 @@ class IdentifierAnalyzer:
                 classes.append("alpha_numeric")
             if tok.isupper() and len(tok) > 1 and tok.isalpha():
                 classes.append("acronym")
-            token_meta.append({"token": tok, "normalized": low, "index": idx, "classes": classes})
-        role_hint = "verb_like_prefix" if normalized and normalized[0] in VERB_PREFIX_HINTS else None
-        review_required = (len(tokens) == 0 and bool(raw))
+            token_meta.append(
+                {"token": tok, "normalized": low, "index": idx, "classes": classes}
+            )
+        role_hint = (
+            "verb_like_prefix"
+            if normalized and normalized[0] in VERB_PREFIX_HINTS
+            else None
+        )
+        review_required = len(tokens) == 0 and bool(raw)
         return AnalyzedEntry(
             entry=raw,
             kind="identifier",
@@ -496,8 +706,12 @@ class IdentifierAnalyzer:
         )
 
 
-TAG_RE = re.compile(r"<\s*(?P<tag>[a-zA-Z][a-zA-Z0-9:-]*)\s*(?P<attrs>[^>]*)>", re.DOTALL)
-ATTR_RE = re.compile(r"""(?P<name>[^\s=/>]+)\s*=\s*(?P<quote>["'])(?P<value>.*?)(?P=quote)""", re.DOTALL)
+TAG_RE = re.compile(
+    r"<\s*(?P<tag>[a-zA-Z][a-zA-Z0-9:-]*)\s*(?P<attrs>[^>]*)>", re.DOTALL
+)
+ATTR_RE = re.compile(
+    r"""(?P<name>[^\s=/>]+)\s*=\s*(?P<quote>["'])(?P<value>.*?)(?P=quote)""", re.DOTALL
+)
 
 
 class HtmlAnalyzer:
@@ -512,8 +726,19 @@ class HtmlAnalyzer:
                 entry=raw,
                 kind="html",
                 language="html",
-                parts={"tag": None, "attrs": {}, "classTokens": [], "idTokens": [], "dataAttrTokens": {}},
-                meta={"confidence": 0.2, "analyzer_version": ANALYZER_VERSION, "note": "no_tag_match", "review_required": True},
+                parts={
+                    "tag": None,
+                    "attrs": {},
+                    "classTokens": [],
+                    "idTokens": [],
+                    "dataAttrTokens": {},
+                },
+                meta={
+                    "confidence": 0.2,
+                    "analyzer_version": ANALYZER_VERSION,
+                    "note": "no_tag_match",
+                    "review_required": True,
+                },
             )
 
         tag = m.group("tag")
@@ -530,13 +755,21 @@ class HtmlAnalyzer:
         data_attr_tokens: dict[str, list[str]] = {}
         for name, value in attrs.items():
             if name.startswith("data-"):
-                data_attr_tokens[name] = split_identifier(name[5:]) + split_identifier(value)
+                data_attr_tokens[name] = split_identifier(name[5:]) + split_identifier(
+                    value
+                )
         oversized_attrs = any(len(v) > 512 for v in attrs.values())
         return AnalyzedEntry(
             entry=raw,
             kind="html",
             language="html",
-            parts={"tag": tag, "attrs": attrs, "classTokens": class_tokens, "idTokens": id_tokens, "dataAttrTokens": data_attr_tokens},
+            parts={
+                "tag": tag,
+                "attrs": attrs,
+                "classTokens": class_tokens,
+                "idTokens": id_tokens,
+                "dataAttrTokens": data_attr_tokens,
+            },
             meta={
                 "confidence": 0.55 if oversized_attrs else 0.85,
                 "analyzer_version": ANALYZER_VERSION,
@@ -620,11 +853,21 @@ class LexiStore:
         ]
         for col, typ in add_columns:
             if not self._has_column("analyzed_entries", col):
-                self.conn.execute(f"ALTER TABLE analyzed_entries ADD COLUMN {col} {typ}")
-        self.conn.execute("CREATE INDEX IF NOT EXISTS idx_entries_status ON analyzed_entries(status)")
-        self.conn.execute("CREATE INDEX IF NOT EXISTS idx_entries_confidence ON analyzed_entries(confidence)")
-        self.conn.execute("CREATE INDEX IF NOT EXISTS idx_entries_entry_hash ON analyzed_entries(entry_hash)")
-        self.conn.execute("CREATE INDEX IF NOT EXISTS idx_entries_run_id ON analyzed_entries(run_id)")
+                self.conn.execute(
+                    f"ALTER TABLE analyzed_entries ADD COLUMN {col} {typ}"
+                )
+        self.conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_entries_status ON analyzed_entries(status)"
+        )
+        self.conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_entries_confidence ON analyzed_entries(confidence)"
+        )
+        self.conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_entries_entry_hash ON analyzed_entries(entry_hash)"
+        )
+        self.conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_entries_run_id ON analyzed_entries(run_id)"
+        )
 
     def _create_v2_tables(self) -> None:
         self.conn.executescript(
@@ -696,7 +939,9 @@ class LexiStore:
         except sqlite3.OperationalError:
             pass
 
-    def _iter_part_index_rows(self, e: AnalyzedEntry) -> Iterable[tuple[str, str, str, Optional[int]]]:
+    def _iter_part_index_rows(
+        self, e: AnalyzedEntry
+    ) -> Iterable[tuple[str, str, str, Optional[int]]]:
         parts = e.parts if isinstance(e.parts, dict) else {}
         if e.kind == "word":
             for part_type in ("prefix", "root", "suffix"):
@@ -720,7 +965,10 @@ class LexiStore:
                         yield ("attr_name", k, k.lower(), None)
                     if isinstance(v, str) and v:
                         yield ("attr_value", v[:512], normalize_text(v)[:256], None)
-            for key, ptype in (("classTokens", "class_token"), ("idTokens", "id_token")):
+            for key, ptype in (
+                ("classTokens", "class_token"),
+                ("idTokens", "id_token"),
+            ):
                 toks = parts.get(key)
                 if isinstance(toks, list):
                     for i, tok in enumerate(toks):
@@ -732,10 +980,17 @@ class LexiStore:
                     if isinstance(toks, list):
                         for i, tok in enumerate(toks):
                             if isinstance(tok, str) and tok:
-                                yield ("data_attr_token", tok, normalize_identifier_token(tok), i)
+                                yield (
+                                    "data_attr_token",
+                                    tok,
+                                    normalize_identifier_token(tok),
+                                    i,
+                                )
 
     def _replace_parts_index(self, entry_id: int, e: AnalyzedEntry) -> None:
-        self.conn.execute("DELETE FROM analyzed_parts_index WHERE entry_id = ?", (entry_id,))
+        self.conn.execute(
+            "DELETE FROM analyzed_parts_index WHERE entry_id = ?", (entry_id,)
+        )
         rows = list(self._iter_part_index_rows(e))
         if not rows:
             return
@@ -747,8 +1002,14 @@ class LexiStore:
             [(entry_id, t, v, n, o, e.language, e.kind) for (t, v, n, o) in rows],
         )
 
-    def _insert_provenance(self, entry_id: int, provenance: ProvenanceRecord | dict[str, Any]) -> None:
-        p = provenance if isinstance(provenance, dict) else dataclasses.asdict(provenance)
+    def _insert_provenance(
+        self, entry_id: int, provenance: ProvenanceRecord | dict[str, Any]
+    ) -> None:
+        p = (
+            provenance
+            if isinstance(provenance, dict)
+            else dataclasses.asdict(provenance)
+        )
         self.conn.execute(
             """
             INSERT INTO analyzed_provenance(
@@ -772,7 +1033,15 @@ class LexiStore:
             ),
         )
 
-    def _append_review_event(self, entry_id: int, action: str, *, reason: str | None = None, actor: str = "system", notes: str | None = None) -> None:
+    def _append_review_event(
+        self,
+        entry_id: int,
+        action: str,
+        *,
+        reason: str | None = None,
+        actor: str = "system",
+        notes: str | None = None,
+    ) -> None:
         self.conn.execute(
             """
             INSERT INTO review_events(entry_id, action, reason, actor, notes, created_at_utc)
@@ -784,13 +1053,24 @@ class LexiStore:
     def _derive_status(self, meta: dict[str, Any], force_review: bool) -> str:
         if force_review or bool(meta.get("review_required", False)):
             return "needs_review"
-        return "needs_review" if float(meta.get("confidence", 0.0) or 0.0) < DEFAULT_REVIEW_CONFIDENCE else "auto_accepted"
+        return (
+            "needs_review"
+            if float(meta.get("confidence", 0.0) or 0.0) < DEFAULT_REVIEW_CONFIDENCE
+            else "auto_accepted"
+        )
 
     def _entry_hash(self, e: AnalyzedEntry) -> str:
         normalized = e.meta.get("normalized") if isinstance(e.meta, dict) else None
         if not normalized:
             normalized = normalize_text(e.entry)
-        return stable_hash_obj({"entry": e.entry, "kind": e.kind, "language": e.language, "normalized": normalized})
+        return stable_hash_obj(
+            {
+                "entry": e.entry,
+                "kind": e.kind,
+                "language": e.language,
+                "normalized": normalized,
+            }
+        )
 
     def _backfill_v2_columns(self) -> None:
         cur = self.conn.execute(
@@ -810,9 +1090,20 @@ class LexiStore:
             except Exception:
                 meta = {}
             normalized = meta.get("normalized") or normalize_text(str(r["entry"]))
-            entry_hash = stable_hash_obj({"entry": r["entry"], "kind": r["kind"], "language": r["language"], "normalized": normalized})
+            entry_hash = stable_hash_obj(
+                {
+                    "entry": r["entry"],
+                    "kind": r["kind"],
+                    "language": r["language"],
+                    "normalized": normalized,
+                }
+            )
             confidence = float(meta.get("confidence", 0.5) or 0.0)
-            status = "needs_review" if confidence < DEFAULT_REVIEW_CONFIDENCE else "auto_accepted"
+            status = (
+                "needs_review"
+                if confidence < DEFAULT_REVIEW_CONFIDENCE
+                else "auto_accepted"
+            )
             self.conn.execute(
                 """
                 UPDATE analyzed_entries
@@ -824,7 +1115,14 @@ class LexiStore:
                 """,
                 (entry_hash, ANALYZER_VERSION, confidence, status, int(r["id"])),
             )
-            fake = AnalyzedEntry(entry=str(r["entry"]), kind=str(r["kind"]), language=str(r["language"]), parts=parts, meta=meta, created_at_utc=str(r["created_at_utc"]))
+            fake = AnalyzedEntry(
+                entry=str(r["entry"]),
+                kind=str(r["kind"]),
+                language=str(r["language"]),
+                parts=parts,
+                meta=meta,
+                created_at_utc=str(r["created_at_utc"]),
+            )
             self._replace_parts_index(int(r["id"]), fake)
 
     def init(self) -> None:
@@ -845,9 +1143,18 @@ class LexiStore:
         return self._get_meta("analyzer_version", ANALYZER_VERSION) or ANALYZER_VERSION
 
     def stats(self) -> dict[str, Any]:
-        total = int(self.conn.execute("SELECT COUNT(*) AS n FROM analyzed_entries").fetchone()["n"])
-        rows = self.conn.execute("SELECT status, COUNT(*) AS n FROM analyzed_entries GROUP BY status ORDER BY n DESC").fetchall()
-        return {"entries": total, "by_status": {str(r["status"]): int(r["n"]) for r in rows}}
+        total = int(
+            self.conn.execute("SELECT COUNT(*) AS n FROM analyzed_entries").fetchone()[
+                "n"
+            ]
+        )
+        rows = self.conn.execute(
+            "SELECT status, COUNT(*) AS n FROM analyzed_entries GROUP BY status ORDER BY n DESC"
+        ).fetchall()
+        return {
+            "entries": total,
+            "by_status": {str(r["status"]): int(r["n"]) for r in rows},
+        }
 
     def insert(
         self,
@@ -892,11 +1199,20 @@ class LexiStore:
             ),
         )
         entry_id = int(cur.lastrowid)
-        self._replace_parts_index(entry_id, AnalyzedEntry(e.entry, e.kind, e.language, e.parts, meta, e.created_at_utc))
+        self._replace_parts_index(
+            entry_id,
+            AnalyzedEntry(e.entry, e.kind, e.language, e.parts, meta, e.created_at_utc),
+        )
         if provenance:
             self._insert_provenance(entry_id, provenance)
         if status == "needs_review":
-            self._append_review_event(entry_id, "flag_auto", reason="force_review" if force_review else "low_confidence_or_ambiguity")
+            self._append_review_event(
+                entry_id,
+                "flag_auto",
+                reason="force_review"
+                if force_review
+                else "low_confidence_or_ambiguity",
+            )
         try:
             self.conn.execute(
                 "INSERT INTO analyzed_entries_fts(rowid, entry, parts_json, meta_json) VALUES (?, ?, ?, ?)",
@@ -907,7 +1223,9 @@ class LexiStore:
         self.conn.commit()
         return entry_id
 
-    def _row_to_entry_dict(self, r: sqlite3.Row, include_provenance: bool = False) -> dict[str, Any]:
+    def _row_to_entry_dict(
+        self, r: sqlite3.Row, include_provenance: bool = False
+    ) -> dict[str, Any]:
         out = {
             "id": r["id"],
             "entry": r["entry"],
@@ -917,12 +1235,16 @@ class LexiStore:
             "meta": json.loads(r["meta_json"]),
             "created_at_utc": r["created_at_utc"],
             "entry_hash": r["entry_hash"] if "entry_hash" in r.keys() else None,
-            "analyzer_version": r["analyzer_version"] if "analyzer_version" in r.keys() else None,
+            "analyzer_version": r["analyzer_version"]
+            if "analyzer_version" in r.keys()
+            else None,
             "confidence": r["confidence"] if "confidence" in r.keys() else None,
             "status": r["status"] if "status" in r.keys() else None,
             "source_type": r["source_type"] if "source_type" in r.keys() else None,
             "run_id": r["run_id"] if "run_id" in r.keys() else None,
-            "updated_at_utc": r["updated_at_utc"] if "updated_at_utc" in r.keys() else None,
+            "updated_at_utc": r["updated_at_utc"]
+            if "updated_at_utc" in r.keys()
+            else None,
         }
         if include_provenance:
             out["provenance"] = self.get_provenance_for_entry(int(r["id"]))
@@ -958,10 +1280,14 @@ class LexiStore:
         like = f"%{text}%"
         where: list[str] = []
         if part_type:
-            where.append("(e.entry LIKE ? OR e.parts_json LIKE ? OR e.meta_json LIKE ? OR (p.part_type = ? AND p.part_norm LIKE ?))")
+            where.append(
+                "(e.entry LIKE ? OR e.parts_json LIKE ? OR e.meta_json LIKE ? OR (p.part_type = ? AND p.part_norm LIKE ?))"
+            )
             params.extend([like, like, like, part_type, like.lower()])
         else:
-            where.append("(e.entry LIKE ? OR e.parts_json LIKE ? OR e.meta_json LIKE ?)")
+            where.append(
+                "(e.entry LIKE ? OR e.parts_json LIKE ? OR e.meta_json LIKE ?)"
+            )
             params.extend([like, like, like])
         if language:
             where.append("e.language = ?")
@@ -1032,7 +1358,10 @@ class LexiStore:
                 base += 120
             if qlow in entry.lower():
                 base += 60
-            pcur = self.conn.execute("SELECT part_type, part_norm FROM analyzed_parts_index WHERE entry_id = ?", (int(r["id"]),))
+            pcur = self.conn.execute(
+                "SELECT part_type, part_norm FROM analyzed_parts_index WHERE entry_id = ?",
+                (int(r["id"]),),
+            )
             for pr in pcur.fetchall():
                 pnorm = str(pr["part_norm"])
                 ptype = str(pr["part_type"])
@@ -1048,10 +1377,15 @@ class LexiStore:
             return (base, conf, int(r["id"]))
 
         ranked = sorted(rows, key=score_row, reverse=True)[:limit]
-        return [self._row_to_entry_dict(r, include_provenance=include_provenance) for r in ranked]
+        return [
+            self._row_to_entry_dict(r, include_provenance=include_provenance)
+            for r in ranked
+        ]
 
     def get_entry_detail(self, entry_id: int) -> Optional[dict[str, Any]]:
-        row = self.conn.execute("SELECT * FROM analyzed_entries WHERE id = ?", (entry_id,)).fetchone()
+        row = self.conn.execute(
+            "SELECT * FROM analyzed_entries WHERE id = ?", (entry_id,)
+        ).fetchone()
         if not row:
             return None
         out = self._row_to_entry_dict(row, include_provenance=True)
@@ -1087,41 +1421,83 @@ class LexiStore:
         rows = self.conn.execute(sql, params).fetchall()
         return [self._row_to_entry_dict(r, include_provenance=True) for r in rows]
 
-    def review_entry(self, entry_id: int, *, action: str, actor: str = "user", reason: str | None = None, notes: str | None = None) -> Optional[dict[str, Any]]:
-        row = self.conn.execute("SELECT id, status FROM analyzed_entries WHERE id = ?", (entry_id,)).fetchone()
+    def review_entry(
+        self,
+        entry_id: int,
+        *,
+        action: str,
+        actor: str = "user",
+        reason: str | None = None,
+        notes: str | None = None,
+    ) -> Optional[dict[str, Any]]:
+        row = self.conn.execute(
+            "SELECT id, status FROM analyzed_entries WHERE id = ?", (entry_id,)
+        ).fetchone()
         if not row:
             return None
         if action not in {"approve", "reject", "note"}:
             raise ValueError("action must be approve|reject|note")
         if action == "approve":
-            self.conn.execute("UPDATE analyzed_entries SET status = ?, updated_at_utc = ? WHERE id = ?", ("reviewed_approved", utc_now_iso(), entry_id))
+            self.conn.execute(
+                "UPDATE analyzed_entries SET status = ?, updated_at_utc = ? WHERE id = ?",
+                ("reviewed_approved", utc_now_iso(), entry_id),
+            )
         elif action == "reject":
-            self.conn.execute("UPDATE analyzed_entries SET status = ?, updated_at_utc = ? WHERE id = ?", ("reviewed_rejected", utc_now_iso(), entry_id))
-        self._append_review_event(entry_id, action, reason=reason, actor=actor, notes=notes)
+            self.conn.execute(
+                "UPDATE analyzed_entries SET status = ?, updated_at_utc = ? WHERE id = ?",
+                ("reviewed_rejected", utc_now_iso(), entry_id),
+            )
+        self._append_review_event(
+            entry_id, action, reason=reason, actor=actor, notes=notes
+        )
         self.conn.commit()
         return self.get_entry_detail(entry_id)
 
-    def create_ingest_run(self, *, requested_by: str, root_path: str, config: dict[str, Any]) -> str:
+    def create_ingest_run(
+        self, *, requested_by: str, root_path: str, config: dict[str, Any]
+    ) -> str:
         run_id = f"ing_{uuid.uuid4().hex[:16]}"
         self.conn.execute(
             """
             INSERT INTO ingest_runs(run_id, started_at_utc, finished_at_utc, status, requested_by, root_path, config_json, stats_json, error_json)
             VALUES (?, ?, NULL, 'running', ?, ?, ?, ?, NULL)
             """,
-            (run_id, utc_now_iso(), requested_by, root_path, stable_json(config), stable_json({})),
+            (
+                run_id,
+                utc_now_iso(),
+                requested_by,
+                root_path,
+                stable_json(config),
+                stable_json({}),
+            ),
         )
         self.conn.commit()
         return run_id
 
-    def finish_ingest_run(self, run_id: str, *, status: str, stats: dict[str, Any], error: dict[str, Any] | None = None) -> None:
+    def finish_ingest_run(
+        self,
+        run_id: str,
+        *,
+        status: str,
+        stats: dict[str, Any],
+        error: dict[str, Any] | None = None,
+    ) -> None:
         self.conn.execute(
             "UPDATE ingest_runs SET finished_at_utc = ?, status = ?, stats_json = ?, error_json = ? WHERE run_id = ?",
-            (utc_now_iso(), status, stable_json(stats), stable_json(error) if error else None, run_id),
+            (
+                utc_now_iso(),
+                status,
+                stable_json(stats),
+                stable_json(error) if error else None,
+                run_id,
+            ),
         )
         self.conn.commit()
 
     def get_ingest_run(self, run_id: str) -> Optional[dict[str, Any]]:
-        row = self.conn.execute("SELECT * FROM ingest_runs WHERE run_id = ?", (run_id,)).fetchone()
+        row = self.conn.execute(
+            "SELECT * FROM ingest_runs WHERE run_id = ?", (run_id,)
+        ).fetchone()
         if not row:
             return None
         return {
@@ -1141,7 +1517,9 @@ class LexiStore:
         count = 0
         with open(out_path, "w", encoding="utf-8") as f:
             for row in cur.fetchall():
-                f.write(json.dumps(self._row_to_entry_dict(row), ensure_ascii=False) + "\n")
+                f.write(
+                    json.dumps(self._row_to_entry_dict(row), ensure_ascii=False) + "\n"
+                )
                 count += 1
         return count
 
@@ -1174,7 +1552,9 @@ def _iter_files_bounded(
         if not p.is_file():
             continue
         rel = p.relative_to(root_path).as_posix()
-        if include_globs and not any(fnmatch.fnmatch(rel, pat) for pat in include_globs):
+        if include_globs and not any(
+            fnmatch.fnmatch(rel, pat) for pat in include_globs
+        ):
             continue
         if exclude_globs and any(fnmatch.fnmatch(rel, pat) for pat in exclude_globs):
             continue
@@ -1209,7 +1589,19 @@ def ingest_files(
     if not root.exists() or not root.is_dir():
         raise ValueError(f"root_path is not a directory: {root_path}")
 
-    include_globs = list(include_globs or ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.html", "**/*.htm", "**/*.md", "**/*.txt"])
+    include_globs = list(
+        include_globs
+        or [
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.js",
+            "**/*.jsx",
+            "**/*.html",
+            "**/*.htm",
+            "**/*.md",
+            "**/*.txt",
+        ]
+    )
     exclude_globs = list(
         exclude_globs
         or [
@@ -1242,7 +1634,9 @@ def ingest_files(
         "record_provenance": bool(record_provenance),
         "dry_run": bool(dry_run),
     }
-    run_id = store.create_ingest_run(requested_by=requested_by, root_path=str(root), config=cfg)
+    run_id = store.create_ingest_run(
+        requested_by=requested_by, root_path=str(root), config=cfg
+    )
     stats: dict[str, Any] = {
         "files_scanned": 0,
         "files_processed": 0,
@@ -1256,7 +1650,13 @@ def ingest_files(
     }
 
     try:
-        for file_path in _iter_files_bounded(root, include_globs=include_globs, exclude_globs=exclude_globs, max_files=max_files, max_file_bytes=max_file_bytes):
+        for file_path in _iter_files_bounded(
+            root,
+            include_globs=include_globs,
+            exclude_globs=exclude_globs,
+            max_files=max_files,
+            max_file_bytes=max_file_bytes,
+        ):
             stats["files_scanned"] += 1
             mode = _detect_ingest_mode_from_ext(file_path)
             if not mode:
@@ -1275,7 +1675,9 @@ def ingest_files(
             seen_in_file: set[tuple[str, str, str, int, int]] = set()
             rel_path = str(file_path.relative_to(root))
 
-            def _handle_candidate(entry_text: str, lang: str, kind: str, start: int, end: int) -> None:
+            def _handle_candidate(
+                entry_text: str, lang: str, kind: str, start: int, end: int
+            ) -> None:
                 stats["candidates_seen"] += 1
                 key = (entry_text, lang, kind, start, end)
                 if key in seen_in_file:
@@ -1285,7 +1687,9 @@ def ingest_files(
                 analyzed = registry.analyze(text=entry_text, language=lang, kind=kind)
                 stats["entries_analyzed"] += 1
                 bucket = f"{analyzed.language}:{analyzed.kind}"
-                stats["by_language_kind"][bucket] = int(stats["by_language_kind"].get(bucket, 0)) + 1
+                stats["by_language_kind"][bucket] = (
+                    int(stats["by_language_kind"].get(bucket, 0)) + 1
+                )
                 if bool(analyzed.meta.get("review_required", False)):
                     stats["entries_flagged"] += 1
                 if store_results and not dry_run:
@@ -1301,7 +1705,7 @@ def ingest_files(
                             line_end=le,
                             col_start=cs,
                             col_end=ce,
-                            snippet=text[max(0, start - 40): min(len(text), end + 40)],
+                            snippet=text[max(0, start - 40) : min(len(text), end + 40)],
                             ingest_mode="batch",
                         )
                     store.insert(analyzed, prov, source_type="batch", run_id=run_id)
@@ -1325,7 +1729,9 @@ def ingest_files(
         store.finish_ingest_run(run_id, status="ok", stats=stats)
         return {"ok": True, "run_id": run_id, "status": "ok", "stats": stats}
     except Exception as e:
-        store.finish_ingest_run(run_id, status="error", stats=stats, error={"message": str(e)})
+        store.finish_ingest_run(
+            run_id, status="error", stats=stats, error={"message": str(e)}
+        )
         raise
 
 
@@ -1337,7 +1743,19 @@ def cmd_init(args: argparse.Namespace) -> int:
     store = LexiStore(args.db)
     try:
         store.init()
-        print(json.dumps({"ok": True, "db": store.db_path, "schema_version": store.schema_version(), "analyzer_version": store.analyzer_version(), "stats": store.stats()}, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    "ok": True,
+                    "db": store.db_path,
+                    "schema_version": store.schema_version(),
+                    "analyzer_version": store.analyzer_version(),
+                    "stats": store.stats(),
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0
     finally:
         store.close()
@@ -1366,10 +1784,28 @@ def cmd_analyze(args: argparse.Namespace) -> int:
                     snippet=args.snippet,
                     ingest_mode="on_demand",
                 )
-            stored_id = store.insert(analyzed, provenance, source_type=args.source_type, force_review=args.force_review, tags=args.tags or None)
+            stored_id = store.insert(
+                analyzed,
+                provenance,
+                source_type=args.source_type,
+                force_review=args.force_review,
+                tags=args.tags or None,
+            )
             detail = store.get_entry_detail(stored_id)
             status = detail.get("status") if detail else None
-        print(json.dumps({**out_obj, "stored": bool(args.store), "id": stored_id, "status": status, "schema_version": store.schema_version()}, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    **out_obj,
+                    "stored": bool(args.store),
+                    "id": stored_id,
+                    "status": status,
+                    "schema_version": store.schema_version(),
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0
     finally:
         store.close()
@@ -1379,7 +1815,14 @@ def cmd_query(args: argparse.Namespace) -> int:
     store = LexiStore(args.db)
     try:
         store.init()
-        rows = store.query_contains(args.contains, limit=args.limit, language=args.language, kind=args.kind, status=args.status, part_type=args.part_type)
+        rows = store.query_contains(
+            args.contains,
+            limit=args.limit,
+            language=args.language,
+            kind=args.kind,
+            status=args.status,
+            part_type=args.part_type,
+        )
         print(json.dumps(rows, ensure_ascii=False, indent=2))
         return 0
     finally:
@@ -1390,7 +1833,15 @@ def cmd_search(args: argparse.Namespace) -> int:
     store = LexiStore(args.db)
     try:
         store.init()
-        rows = store.search(args.q, language=args.language, kind=args.kind, status=args.status, part_type=args.part_type, limit=args.limit, include_provenance=args.include_provenance)
+        rows = store.search(
+            args.q,
+            language=args.language,
+            kind=args.kind,
+            status=args.status,
+            part_type=args.part_type,
+            limit=args.limit,
+            include_provenance=args.include_provenance,
+        )
         print(json.dumps(rows, ensure_ascii=False, indent=2))
         return 0
     finally:
@@ -1403,7 +1854,9 @@ def cmd_entry(args: argparse.Namespace) -> int:
         store.init()
         detail = store.get_entry_detail(args.id)
         if detail is None:
-            print(json.dumps({"ok": False, "error": "not_found", "id": args.id}, indent=2))
+            print(
+                json.dumps({"ok": False, "error": "not_found", "id": args.id}, indent=2)
+            )
             return 1
         print(json.dumps(detail, ensure_ascii=False, indent=2))
         return 0
@@ -1415,7 +1868,13 @@ def cmd_review_queue(args: argparse.Namespace) -> int:
     store = LexiStore(args.db)
     try:
         store.init()
-        rows = store.list_review_queue(language=args.language, kind=args.kind, limit=args.limit, min_confidence=args.min_confidence, status=args.status)
+        rows = store.list_review_queue(
+            language=args.language,
+            kind=args.kind,
+            limit=args.limit,
+            min_confidence=args.min_confidence,
+            status=args.status,
+        )
         print(json.dumps(rows, ensure_ascii=False, indent=2))
         return 0
     finally:
@@ -1426,9 +1885,17 @@ def cmd_review(args: argparse.Namespace) -> int:
     store = LexiStore(args.db)
     try:
         store.init()
-        detail = store.review_entry(args.id, action=args.action, actor=args.actor, reason=args.reason, notes=args.notes)
+        detail = store.review_entry(
+            args.id,
+            action=args.action,
+            actor=args.actor,
+            reason=args.reason,
+            notes=args.notes,
+        )
         if detail is None:
-            print(json.dumps({"ok": False, "error": "not_found", "id": args.id}, indent=2))
+            print(
+                json.dumps({"ok": False, "error": "not_found", "id": args.id}, indent=2)
+            )
             return 1
         print(json.dumps(detail, ensure_ascii=False, indent=2))
         return 0
@@ -1481,7 +1948,11 @@ def cmd_ingest_run(args: argparse.Namespace) -> int:
         store.init()
         run = store.get_ingest_run(args.run_id)
         if not run:
-            print(json.dumps({"ok": False, "error": "not_found", "run_id": args.run_id}, indent=2))
+            print(
+                json.dumps(
+                    {"ok": False, "error": "not_found", "run_id": args.run_id}, indent=2
+                )
+            )
             return 1
         print(json.dumps(run, ensure_ascii=False, indent=2))
         return 0
@@ -1490,7 +1961,9 @@ def cmd_ingest_run(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str]) -> int:
-    p = argparse.ArgumentParser(prog="leximorph", description="Automated word + code analysis system (v2)")
+    p = argparse.ArgumentParser(
+        prog="leximorph", description="Automated word + code analysis system (v2)"
+    )
     p.add_argument("--db", default=_default_db_path(), help="Path to SQLite DB")
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -1503,7 +1976,9 @@ def main(argv: list[str]) -> int:
     s_an.add_argument("--text", required=True)
     s_an.add_argument("--store", action="store_true")
     s_an.add_argument("--force-review", action="store_true")
-    s_an.add_argument("--source-type", default="manual", choices=["manual", "batch", "ide", "api"])
+    s_an.add_argument(
+        "--source-type", default="manual", choices=["manual", "batch", "ide", "api"]
+    )
     s_an.add_argument("--source-kind", default="text", choices=["text", "file", "http"])
     s_an.add_argument("--source-path")
     s_an.add_argument("--workspace-root")

@@ -10,7 +10,13 @@ from ...core.utils import ensure_dir
 from .undo import UndoJournal
 
 
-def list_dir(policy: PolicyConfig, directory: Path, *, recursive: bool = False, max_items: int = 5000) -> List[Dict[str, Any]]:
+def list_dir(
+    policy: PolicyConfig,
+    directory: Path,
+    *,
+    recursive: bool = False,
+    max_items: int = 5000,
+) -> List[Dict[str, Any]]:
     directory = assert_path_allowed(policy, directory)
     out: List[Dict[str, Any]] = []
     if not directory.exists():
@@ -19,19 +25,23 @@ def list_dir(policy: PolicyConfig, directory: Path, *, recursive: bool = False, 
     def _emit(p: Path) -> None:
         try:
             st = p.stat()
-            out.append({
-                "path": str(p),
-                "rel": str(p.relative_to(directory)),
-                "type": "dir" if p.is_dir() else "file",
-                "size": st.st_size,
-                "mtime": st.st_mtime,
-            })
+            out.append(
+                {
+                    "path": str(p),
+                    "rel": str(p.relative_to(directory)),
+                    "type": "dir" if p.is_dir() else "file",
+                    "size": st.st_size,
+                    "mtime": st.st_mtime,
+                }
+            )
         except Exception:
-            out.append({
-                "path": str(p),
-                "rel": str(p.relative_to(directory)),
-                "type": "dir" if p.is_dir() else "file",
-            })
+            out.append(
+                {
+                    "path": str(p),
+                    "rel": str(p.relative_to(directory)),
+                    "type": "dir" if p.is_dir() else "file",
+                }
+            )
 
     if recursive:
         for p in directory.rglob("*"):
@@ -58,7 +68,14 @@ def _iter_files(root: Path, recursive: bool = True):
                 yield p
 
 
-def find_by_name(policy: PolicyConfig, directory: Path, pattern: str, *, recursive: bool = True, max_hits: int = 500) -> List[str]:
+def find_by_name(
+    policy: PolicyConfig,
+    directory: Path,
+    pattern: str,
+    *,
+    recursive: bool = True,
+    max_hits: int = 500,
+) -> List[str]:
     directory = assert_path_allowed(policy, directory)
     rx = re.compile(pattern, flags=re.IGNORECASE)
     hits: List[str] = []
@@ -70,7 +87,14 @@ def find_by_name(policy: PolicyConfig, directory: Path, pattern: str, *, recursi
     return hits
 
 
-def find_by_content(policy: PolicyConfig, directory: Path, pattern: str, *, recursive: bool = True, max_hits: int = 200) -> List[Dict[str, Any]]:
+def find_by_content(
+    policy: PolicyConfig,
+    directory: Path,
+    pattern: str,
+    *,
+    recursive: bool = True,
+    max_hits: int = 200,
+) -> List[Dict[str, Any]]:
     directory = assert_path_allowed(policy, directory)
     rx = re.compile(pattern, flags=re.IGNORECASE)
     hits: List[Dict[str, Any]] = []
@@ -90,12 +114,14 @@ def find_by_content(policy: PolicyConfig, directory: Path, pattern: str, *, recu
             continue
         m = rx.search(text)
         if m:
-            snippet = text[max(0, m.start()-80):m.end()+80].replace("\n", " ")
+            snippet = text[max(0, m.start() - 80) : m.end() + 80].replace("\n", " ")
             hits.append({"path": str(p), "match": snippet[:240]})
     return hits
 
 
-def read_text_file(policy: PolicyConfig, path: Path, *, max_bytes: int = 256_000) -> str:
+def read_text_file(
+    policy: PolicyConfig, path: Path, *, max_bytes: int = 256_000
+) -> str:
     path = assert_path_allowed(policy, path)
     if not path.exists() or not path.is_file():
         raise FileNotFoundError(str(path))
@@ -104,7 +130,14 @@ def read_text_file(policy: PolicyConfig, path: Path, *, max_bytes: int = 256_000
     return path.read_text(encoding="utf-8", errors="ignore")
 
 
-def move_path(policy: PolicyConfig, src: Path, dst: Path, *, overwrite: bool = False, undo: Optional[UndoJournal] = None) -> Dict[str, Any]:
+def move_path(
+    policy: PolicyConfig,
+    src: Path,
+    dst: Path,
+    *,
+    overwrite: bool = False,
+    undo: Optional[UndoJournal] = None,
+) -> Dict[str, Any]:
     src = assert_path_allowed(policy, src)
     dst = assert_path_allowed(policy, dst)
     if not src.exists():
@@ -126,7 +159,14 @@ def move_path(policy: PolicyConfig, src: Path, dst: Path, *, overwrite: bool = F
     return {"ok": True, "src": str(src), "dst": str(dst)}
 
 
-def copy_path(policy: PolicyConfig, src: Path, dst: Path, *, overwrite: bool = False, undo: Optional[UndoJournal] = None) -> Dict[str, Any]:
+def copy_path(
+    policy: PolicyConfig,
+    src: Path,
+    dst: Path,
+    *,
+    overwrite: bool = False,
+    undo: Optional[UndoJournal] = None,
+) -> Dict[str, Any]:
     src = assert_path_allowed(policy, src)
     dst = assert_path_allowed(policy, dst)
     if not src.exists():
@@ -152,7 +192,13 @@ def copy_path(policy: PolicyConfig, src: Path, dst: Path, *, overwrite: bool = F
     return {"ok": True, "src": str(src), "dst": str(dst)}
 
 
-def mkdir(policy: PolicyConfig, path: Path, *, exist_ok: bool = True, undo: Optional[UndoJournal] = None) -> Dict[str, Any]:
+def mkdir(
+    policy: PolicyConfig,
+    path: Path,
+    *,
+    exist_ok: bool = True,
+    undo: Optional[UndoJournal] = None,
+) -> Dict[str, Any]:
     path = assert_path_allowed(policy, path)
     existed = path.exists()
     path.mkdir(parents=True, exist_ok=exist_ok)
@@ -161,7 +207,14 @@ def mkdir(policy: PolicyConfig, path: Path, *, exist_ok: bool = True, undo: Opti
     return {"ok": True, "path": str(path), "existed": existed}
 
 
-def rename_path(policy: PolicyConfig, src: Path, new_name: str, *, overwrite: bool = False, undo: Optional[UndoJournal] = None) -> Dict[str, Any]:
+def rename_path(
+    policy: PolicyConfig,
+    src: Path,
+    new_name: str,
+    *,
+    overwrite: bool = False,
+    undo: Optional[UndoJournal] = None,
+) -> Dict[str, Any]:
     src = assert_path_allowed(policy, src)
     if not src.exists():
         raise FileNotFoundError(str(src))
@@ -219,4 +272,11 @@ def organize_by_extension(
     if undo is not None and ops and not dry_run:
         undo.append({"op": "batch", "items": ops})
 
-    return {"ok": True, "dry_run": bool(dry_run), "directory": str(directory), "moved": moved, "skipped": skipped, "ops": ops[:2000]}
+    return {
+        "ok": True,
+        "dry_run": bool(dry_run),
+        "directory": str(directory),
+        "moved": moved,
+        "skipped": skipped,
+        "ops": ops[:2000],
+    }

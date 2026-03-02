@@ -5,7 +5,11 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator
 
-CANONICAL_JSON_KWARGS = {"separators": (",", ":"), "sort_keys": True, "ensure_ascii": False}
+CANONICAL_JSON_KWARGS = {
+    "separators": (",", ":"),
+    "sort_keys": True,
+    "ensure_ascii": False,
+}
 
 
 def ensure_agent_suite_on_path() -> None:
